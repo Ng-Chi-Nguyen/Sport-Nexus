@@ -1,4 +1,5 @@
 import Joi from "joi";
+import prisma from "../../db/prisma.js";
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]|:;"'<,>.?`~/]).{8,}$/;
 
@@ -7,9 +8,11 @@ let createUserSchema = Joi.object({
         'any.requied': 'Họ tên không được để trống',
     }),
     email: Joi.string().email().custom((value, helpers) => {
+        // 1. Kiểm tra lỗi cú pháp/chính tả (Logic Cũ)
         if (value.endsWith('@gail.com')) { 
             return helpers.error('string.custom');
         }
+        return value;
     }).required().messages({
         'string.email': 'Email không hợp lệ',
         'any.required': 'Emmail không được để trống',
