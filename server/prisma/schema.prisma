@@ -19,4 +19,185 @@ model Roles {
     slug        String        @unique
     name        String
     permissions Permissions[]
+    Users       Users[]
+}
+
+model Users {
+    id                 Int             @id @default(autoincrement())
+    full_name          String
+    email              String          @unique
+    password           String
+    phone_number       String?         @unique
+    avatar             String?         @db.Text
+    status             Boolean         @default(true)
+    is_verified        Boolean         @default(false)
+    verification_token String?
+    refresh_token      String?
+    created_at         DateTime        @default(now())
+    updated_at         DateTime        @updatedAt
+    role_id            Int
+    role               Roles           @relation(fields: [role_id], references: [id], onDelete: Cascade)
+    UserAddresses      UserAddresses[]
+    Orders             Orders[]
+    Coupons            Coupons[]
+    Carts              Carts[]
+    Reviews            Reviews[]
+}
+
+model UserAddresses {
+    id              Int     @id @default(autoincrement())
+    recipient_name  String
+    recipient_phone String
+    location_data   Json
+    detail_address  String
+    is_default      Boolean
+    type            String
+    user_id         Int
+    user            Users   @relation(fields: [user_id], references: [id])
+}
+
+model Categories {
+    id        Int        @id @default(autoincrement())
+    name      String
+    slug      String     @unique
+    image     String?    @db.Text
+    is_active Boolean    @default(true)
+    Products  Products[]
+}
+
+model Suppliers {
+    id             Int        @id @default(autoincrement())
+    contact_person String
+    email          String?
+    phone          String?
+    name           String
+    address        String?    @db.Text
+    Products       Products[]
+}
+
+model Brands {
+    id       Int        @id @default(autoincrement())
+    name     String
+    logo     String?
+    origin   String?    @db.Text
+    Products Products[]
+}
+
+model Products {
+    id              Int               @id @default(autoincrement())
+    name            String
+    slug            String            @unique
+    base_price      Decimal           @db.Decimal(10, 2)
+    is_active       String
+    description     String            @db.Text
+    thumbnail       String            @db.Text
+    created_at      DateTime          @default(now())
+    updated_at      DateTime          @updatedAt
+    category_id     Int
+    category        Categories        @relation(fields: [category_id], references: [id])
+    supplier_id     Int
+    supplier        Suppliers         @relation(fields: [supplier_id], references: [id])
+    brand_id        Int
+    brand           Brands            @relation(fields: [brand_id], references: [id])
+    ProductImages   ProductImages[]
+    ProductVariants ProductVariants[]
+    Reviews         Reviews[]
+}
+
+model ProductImages {
+    id         Int      @id @default(autoincrement())
+    url        String   @db.Text
+    is_primary Boolean  @default(false)
+    product_id Int
+    product    Products @relation(fields: [product_id], references: [id])
+}
+
+model ProductVariants {
+    id         Int          @id @default(autoincrement())
+    size       String
+    color      String
+    stock      Int
+    price      Decimal      @db.Decimal(10, 2)
+    product_id Int
+    product    Products     @relation(fields: [product_id], references: [id])
+    OrderItems OrderItems[]
+    CartItems  CartItems[]
+}
+
+model Coupons {
+    id              Int      @id @default(autoincrement())
+    code            String   @unique
+    discount_value  String
+    discount_type   String
+    max_discount    Int
+    min_order_value Int
+    start_date      DateTime
+    end_date        DateTime
+    usage_limit     Int
+    usage_count     Int
+    is_active       Boolean
+    Orders          Orders[]
+    Users           Users[]
+}
+
+model Orders {
+    id               Int          @id @default(autoincrement())
+    total_amount     Decimal      @db.Decimal(10, 2)
+    status           String       @default("Processing")
+    shipping_address String
+    payment_method   String       @default("Cash On Delivery")
+    payment_status   Boolean      @default(false)
+    discount_amount  Decimal      @db.Decimal(10, 2)
+    final_amount     Decimal      @db.Decimal(10, 2)
+    created_at       DateTime     @default(now())
+    coupon_id        Int
+    coupon           Coupons      @relation(fields: [coupon_id], references: [id])
+    user_id          Int
+    user             Users        @relation(fields: [user_id], references: [id])
+    OrderItems       OrderItems[]
+    Reviews          Reviews[]
+}
+
+model OrderItems {
+    id                 Int             @id @default(autoincrement())
+    quantity           Int
+    price_at_purchase  Decimal         @db.Decimal(10, 2)
+    order_id           Int
+    order              Orders          @relation(fields: [order_id], references: [id])
+    product_variant_id Int
+    product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id])
+}
+
+model Carts {
+    id         Int         @id @default(autoincrement())
+    updated_at DateTime    @updatedAt
+    user_id    Int
+    user       Users       @relation(fields: [user_id], references: [id])
+    CartItems  CartItems[]
+}
+
+model CartItems {
+    id                 Int             @id @default(autoincrement())
+    quantity           Int
+    product_variant_id Int
+    product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id])
+    cart_id            Int
+    cart               Carts           @relation(fields: [cart_id], references: [id])
+}
+
+model Reviews {
+    id            Int      @id @default(autoincrement())
+    rating        Int
+    comment       String?  @db.Text
+    media_urls    String?  @db.Text
+    reply_comment String?  @db.Text
+    is_hidden     Boolean
+    created_at    DateTime @default(now())
+    updated_at    DateTime @updatedAt
+    user_id       Int
+    user          Users    @relation(fields: [user_id], references: [id])
+    order_id      Int
+    order         Orders   @relation(fields: [order_id], references: [id])
+    product_id    Int
+    product       Products @relation(fields: [product_id], references: [id])
 }
