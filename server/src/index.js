@@ -8,6 +8,10 @@ dotenv.config();
 const app = express();
 const port = process.env.APP_PORT;
 
+// server nhận dữ liệu là json
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true }));
+
 connectDB();
 
 Routes(app);
