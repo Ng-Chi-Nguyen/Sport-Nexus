@@ -32,11 +32,13 @@ const userService = {
     },
 
     updateUser: async (userId, dataUpdate) => {
+        console.log(dataUpdate)
         let updateUser = await prisma.users.update({
             where: { id: userId },
             data: dataUpdate,
             select: {
                 id: true,
+                avatar: true,
                 full_name: true,
                 email: true,
                 phone_number: true,

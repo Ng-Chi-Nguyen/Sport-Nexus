@@ -1,3 +1,4 @@
+import { uploadAvatar } from "../../services/image.service.js";
 import userService from "../../services/management/user.service.js";
 
 const userController = {
@@ -31,8 +32,18 @@ const userController = {
     updateUser: async (req, res) => {
         let userId = parseInt(req.params.id);
         let dataUpdate = req.body;
+        let file = req.file;
+        console.log(file)
+
 
         try {
+
+            if (file) {
+                const avatarUrl = await uploadAvatar(file.buffer, userId);
+
+                dataUpdate.avatar = avatarUrl;
+            }
+
             let updateData = await userService.updateUser(userId, dataUpdate);
 
             return res.status(201).json({
@@ -40,6 +51,7 @@ const userController = {
                 message: "Cập nhật thành công",
                 data: updateData,
             });
+
         } catch (error) {
             return res.status(500).json({
                 message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
