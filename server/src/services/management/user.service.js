@@ -28,7 +28,25 @@ const userService = {
             }
         })
 
-        return newUser
+        return newUser;
+    },
+
+    updateUser: async (userId, dataUpdate) => {
+            let updateUser = await prisma.users.update({
+            where: { id: userId },
+            data: dataUpdate,
+            select: {
+                    id: true,
+                    full_name: true,
+                    email: true,
+                    phone_number: true,
+                    status: true,
+                    role_id: true,
+                    updated_at: true,
+                }
+            })
+    
+        return updateUser;
     }
 }
 

@@ -1,32 +1,51 @@
 import userService from "../../services/management/user.service.js";
 
+const userController = {
 
-export const createUserController = async (req, res) => {
-    // console.log(req.body)
-    let userData = req.body
-    // console.log(userData)
-    try {
+    createUser: async (req, res) => {
+        let userData = req.body;
+        // console.log(userData)
+        try {
 
-        let newUser = await userService.createUser(userData);
+            let newUser = await userService.createUser(userData);
+
+            return res.status(201).json({
+                success: true,
+                message: 'Tạo tài khoản thành công! Vui lòng kiểm tra email để xác minh.',
+                data: newUser
+            })
+            
+        } catch (error) {
+
+            if (error.code === 'P2002') {
+                return res.status(409).json({ 
+                    success: false, 
+                    message: 'Địa chỉ email này đã được đăng ký.' 
+                });
+            }
+
+            return res.status(500).json({ 
+                message: 'Lỗi server nội bộ trong quá trình tạo tài khoản.',
+                error: error.message
+            });
+        }
+    },
+
+    updateUser: async (req, res) => {
+        let userId = parseInt(req.params.id);
+        let dataUpdate = req.body;
+        console.log("ok")
+
+        console.log(userId, dataUpdate)
+
+        let updateData = await userService.updateUser(userId, dataUpdate)
 
         return res.status(201).json({
             success: true,
-            message: 'Tạo tài khoản thành công! Vui lòng kiểm tra email để xác minh.',
-            data: newUser
+            message: "Cập nhật thành công",
+            data: updateData
         })
-        
-    } catch (error) {
-
-        if (error.code === 'P2002') {
-             return res.status(409).json({ 
-                 success: false, 
-                 message: 'Địa chỉ email này đã được đăng ký.' 
-            });
-        }
-
-        return res.status(500).json({ 
-            message: 'Lỗi server nội bộ trong quá trình tạo tài khoản.',
-            error: error.message
-        });
-    }
+    },
 }
+
+export default userController;
