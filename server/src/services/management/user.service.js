@@ -1,5 +1,6 @@
 import prisma from "../../db/prisma.js";
 import bcrypt from "bcrypt";
+import { uploadImage } from "../image.service.js";
 
 const userService = {
     createUser: async (userData) => {
@@ -32,7 +33,19 @@ const userService = {
     },
 
     updateUser: async (userId, dataUpdate) => {
-        console.log(dataUpdate)
+        // console.log(dataUpdate)
+
+        let userToDelete = await prisma.users.findUnique({
+            where: { id: userId },
+            select: { avatar: true }
+        });
+
+        if (userToDelete?.avatar) {
+            const AVATAR_BUCKET = 'general-uploads'; // Hoặc tên Bucket của bạn
+            // Hàm deleteFile đã được xây dựng để phân tích URL và xóa file
+            await uploadImage.deleteFile(userToDelete.avatar, AVATAR_BUCKET);
+        }
+
         let updateUser = await prisma.users.update({
             where: { id: userId },
             data: dataUpdate,
@@ -51,7 +64,7 @@ const userService = {
         return updateUser;
     },
 
-    dataUser: async (userId) => {
+    getUserById: async (userId) => {
         let user = await prisma.users.findUnique({
             where: { id: userId },
             select: {
@@ -70,7 +83,7 @@ const userService = {
         return user;
     },
 
-    dataUsers: async () => {
+    getAllUser: async () => {
         let listUsers = await prisma.users.findMany({
             select: {
                 id: true,
@@ -89,6 +102,18 @@ const userService = {
     },
 
     deleteUser: async (userId) => {
+
+        const userToDelete = await prisma.users.findUnique({
+            where: { id: userId },
+            select: { avatar: true }
+        });
+
+        if (userToDelete?.avatar) {
+            const AVATAR_BUCKET = 'general-uploads'; // Hoặc tên Bucket của bạn
+            // Hàm deleteFile đã được xây dựng để phân tích URL và xóa file
+            await uploadImage.deleteFile(userToDelete.avatar, AVATAR_BUCKET);
+        }
+
         await prisma.users.delete({
             where: { id: userId }
         })

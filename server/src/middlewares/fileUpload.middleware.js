@@ -24,6 +24,7 @@ const upload = multer({
 
 // Hàm Middleware bạn sẽ sử dụng trong Route
 // 'avatar' là tên field Client gửi file lên (ví dụ: formData.append('avatar', file))
-const uploadImage = upload.single('avatar');
+const uploadImageAvatar = upload.single('avatar');
+const uploadImageLogoSupplier = upload.single('logo_url');
 
-export { uploadImage };
+export { uploadImageAvatar, uploadImageLogoSupplier };

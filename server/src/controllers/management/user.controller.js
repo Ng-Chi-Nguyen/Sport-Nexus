@@ -1,4 +1,4 @@
-import { uploadAvatar } from "../../services/image.service.js";
+import { uploadImage } from "../../services/image.service.js";
 import userService from "../../services/management/user.service.js";
 
 const userController = {
@@ -33,14 +33,10 @@ const userController = {
         let userId = parseInt(req.params.id);
         let dataUpdate = req.body;
         let file = req.file;
-        console.log(file)
-
-
+        // console.log(file)
         try {
-
             if (file) {
-                const avatarUrl = await uploadAvatar(file.buffer, userId);
-
+                const avatarUrl = await uploadImage.uploadAvatar(file.buffer, userId);
                 dataUpdate.avatar = avatarUrl;
             }
 
@@ -64,7 +60,7 @@ const userController = {
         let userId = parseInt(req.params.id);
 
         try {
-            let dataUser = await userService.dataUser(userId);
+            let dataUser = await userService.getUserById(userId);
 
             return res.status(201).json({
                 success: true,
@@ -80,7 +76,7 @@ const userController = {
 
     getAllUser: async (req, res) => {
         try {
-            let listUsers = await userService.dataUsers();
+            let listUsers = await userService.getAllUser();
 
             return res.status(201).json({
                 success: true,
