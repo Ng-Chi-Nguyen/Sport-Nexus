@@ -5,10 +5,10 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]|
 const userSchema = {
     createUser: Joi.object({
         full_name: Joi.string().required().messages({
-            'any.requied': 'Họ tên không được để trống',
+            'any.required': 'Họ tên không được để trống',
         }),
         email: Joi.string().email().custom((value, helpers) => {
-            if (value.endsWith('@gail.com')) { 
+            if (value.endsWith('@gail.com')) {
                 return helpers.error('string.custom');
             }
             return value;
@@ -32,7 +32,7 @@ const userSchema = {
     updateUser: Joi.object({
         full_name: Joi.string(),
         email: Joi.string().email().custom((value, helpers) => {
-            if (value.endsWith('@gail.com')) { 
+            if (value.endsWith('@gail.com')) {
                 return helpers.error('string.custom');
             }
             return value;

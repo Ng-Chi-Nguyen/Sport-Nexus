@@ -7,6 +7,7 @@ import { uploadImage } from '../../middlewares/fileUpload.middleware.js';
 const userRoute = express.Router();
 
 userRoute
+
     .post("/", validate(userSchema.createUser), userController.createUser)
     .get("/:id", userController.getUserById)
     .get("/", userController.getAllUser)
