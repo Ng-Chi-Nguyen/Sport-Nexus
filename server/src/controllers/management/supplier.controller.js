@@ -25,8 +25,25 @@ const supplierController = {
 
 
 
-    }
+    },
 
+    getSupplierById: async (req, res) => {
+        let supplierId = parseInt(req.params.id);
+        // console.log(supplierId)
+        try {
+            let supplier = await supplierService.getSupplierById(supplierId)
+
+            return res.status(200).json({
+                success: true,
+                data: supplier
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                error: error.message,
+            });
+        }
+    }
 
 }
 

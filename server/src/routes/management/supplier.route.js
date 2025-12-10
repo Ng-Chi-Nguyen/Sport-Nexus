@@ -8,5 +8,6 @@ const supplierRoute = express.Router();
 supplierRoute
 
     .post("/", validate(supplierSchema.createSupplier), supplierController.createSupplier)
+    .get("/:id", supplierController.getSupplierById)
 
 export default supplierRoute;

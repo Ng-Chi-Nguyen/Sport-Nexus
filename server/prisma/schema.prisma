@@ -72,6 +72,7 @@ model Suppliers {
     phone          String?
     name           String
     address        String?    @db.Text
+    logo_url       String?
     Products       Products[]
 }
 

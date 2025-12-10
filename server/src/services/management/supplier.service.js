@@ -22,6 +22,14 @@ const supplierService = {
         })
 
         return newSuplier;
+    },
+
+    getSupplierById: async (supplierId) => {
+        let supplier = await prisma.Suppliers.findUnique({
+            where: { id: supplierId }
+        })
+
+        return supplier;
     }
 }
 
