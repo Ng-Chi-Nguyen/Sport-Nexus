@@ -35,6 +35,14 @@ const userController = {
         let file = req.file;
         // console.log(file)
         try {
+
+            const currentUser = await brandService.getUserById(userId);
+            if (!currentUser) {
+                return res.status(404).json({
+                    message: "Không tìm thấy người dùng để cập nhật."
+                });
+            }
+
             if (file) {
                 const avatarUrl = await uploadImage.uploadAvatar(file.buffer, userId);
                 dataUpdate.avatar = avatarUrl;
@@ -94,6 +102,14 @@ const userController = {
         let userId = parseInt(req.params.id);
 
         try {
+
+            const currentUser = await brandService.getUserById(userId);
+            if (!currentUser) {
+                return res.status(404).json({
+                    message: "Không tìm thấy người dùng để xóa."
+                });
+            }
+
             await userService.deleteUser(userId);
 
             return res.status(201).json({

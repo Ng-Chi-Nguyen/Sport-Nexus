@@ -11,5 +11,7 @@ brandRoute
     .post("/", validate(brandSchema.createBrand), uploadImageLogoBrand, brandController.createBrand)
     .get("/:id", brandController.getBrandById)
     .get("/", brandController.getAllBrands)
+    .put("/:id", uploadImageLogoBrand, brandController.updateBrand)
+    .delete("/:id", brandController.deleteBrand)
 
 export default brandRoute;

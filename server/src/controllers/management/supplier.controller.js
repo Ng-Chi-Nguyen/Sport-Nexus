@@ -73,6 +73,13 @@ const supplierController = {
 
         try {
 
+            const currentSupplier = await brandService.getSupplierById(supplierId);
+            if (!currentSupplier) {
+                return res.status(404).json({
+                    message: "Không tìm thấy nhà cung cấp để cập nhật."
+                });
+            }
+
             if (file) {
 
                 let logo_url = await uploadImage.uploadLogoSupplier(file.buffer, supplierId);
@@ -100,6 +107,14 @@ const supplierController = {
         let supplierId = parseInt(req.params.id);
 
         try {
+
+            const currentSupplier = await brandService.getSupplierById(supplierId);
+            if (!currentSupplier) {
+                return res.status(404).json({
+                    message: "Không tìm thấy nhà cung cấp để cập nhật."
+                });
+            }
+
             await supplierService.deleteSupplier(supplierId);
 
             return res.status(201).json({
