@@ -18,6 +18,20 @@ const brandService = {
         })
 
         return newBrand;
+    },
+
+    getBrandById: async (brandId) => {
+        let brand = await prisma.Brands.findUnique({
+            where: { id: brandId },
+        })
+
+        return brand;
+    },
+
+    getAllBrands: async () => {
+        let brands = await prisma.Brands.findMany()
+
+        return brands;
     }
 }
 

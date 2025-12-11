@@ -9,5 +9,7 @@ const brandRoute = express.Router();
 brandRoute
 
     .post("/", validate(brandSchema.createBrand), uploadImageLogoBrand, brandController.createBrand)
+    .get("/:id", brandController.getBrandById)
+    .get("/", brandController.getAllBrands)
 
 export default brandRoute;
