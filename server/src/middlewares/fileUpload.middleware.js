@@ -26,5 +26,6 @@ const upload = multer({
 // 'avatar' là tên field Client gửi file lên (ví dụ: formData.append('avatar', file))
 const uploadImageAvatar = upload.single('avatar');
 const uploadImageLogoSupplier = upload.single('logo_url');
+const uploadImageLogoBrand = upload.single('logo');
 
-export { uploadImageAvatar, uploadImageLogoSupplier };
+export { uploadImageAvatar, uploadImageLogoSupplier, uploadImageLogoBrand };
