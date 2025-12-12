@@ -35,18 +35,8 @@ const brandService = {
     },
 
     updateBrand: async (brandId, dataUpdate) => {
-        const brandToDelete = await prisma.Brands.findUnique({
-            where: { id: brandId },
-            select: { logo: true }
-        });
 
-        if (brandToDelete?.logo) {
-            const BUCKET_NAME = 'general-uploads'; // Hoặc tên Bucket của bạn
-            // Hàm deleteFile đã được xây dựng để phân tích URL và xóa file
-            await uploadImage.deleteFile(brandToDelete.logo, BUCKET_NAME);
-        }
-
-
+        await deleteImage(brandId, "brands", "logo");
         let updateData = await prisma.Brands.update({
             where: { id: brandId },
             data: dataUpdate,
@@ -63,16 +53,7 @@ const brandService = {
     },
 
     deleteBrand: async (brandId) => {
-        const brandToDelete = await prisma.Brands.findUnique({
-            where: { id: brandId },
-            select: { logo: true }
-        });
-
-        if (brandToDelete?.logo) {
-            const BUCKET_NAME = 'general-uploads'; // Hoặc tên Bucket của bạn
-            // Hàm deleteFile đã được xây dựng để phân tích URL và xóa file
-            await uploadImage.deleteFile(brandToDelete.logo, BUCKET_NAME);
-        }
+        await deleteImage(brandId, "brands", "logo");
 
         await prisma.Brands.delete({
             where: { id: brandId }

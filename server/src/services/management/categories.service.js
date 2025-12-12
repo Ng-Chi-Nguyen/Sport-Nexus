@@ -1,4 +1,5 @@
 import prisma from "../../db/prisma.js";
+import { deleteImage } from "../../utils/deleteImage.utils.js";
 import { createAutoSlug } from "../../utils/slug.utils.js";
 
 const categoryService = {
@@ -47,6 +48,37 @@ const categoryService = {
         });
         return list_categories;
     },
+
+    updateCategory: async (categoryId, dataUpdate) => {
+
+        await deleteImage(categoryId, "categories", "image");
+
+        if (dataUpdate.name) {
+            let slug = await createAutoSlug(dataUpdate.name, "categories");
+            dataUpdate.slug = slug;
+        }
+
+        let updateData = await prisma.categories.update({
+            where: { id: categoryId },
+            data: dataUpdate,
+            select: {
+                id: true,
+                name: true,
+                image: true,
+                slug: true,
+                is_active: true
+            }
+        })
+
+        return updateData;
+    },
+
+    deleteCategory: async (categoryId) => {
+        await deleteImage(categoryId, "categories", "image");
+        await prisma.categories.delete({
+            where: { id: categoryId }
+        })
+    }
 }
 
 export default categoryService;

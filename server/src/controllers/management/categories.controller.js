@@ -61,6 +61,56 @@ const categoryController = {
             })
         }
     },
+
+    updateCategory: async (req, res) => {
+        let categoryId = parseInt(req.params.id);
+        let dataUpdate = req.body;
+        let file = req.file;
+        try {
+            let currentCategory = await categoryService.getCategoryById(categoryId)
+            if (!currentCategory) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy loại hàng trong hệ thống"
+                })
+            }
+
+            if (file) {
+                let image_url = await uploadImage.uploadImageCategory(file.buffer, categoryId);
+                dataUpdate.image = image_url;
+            }
+            let updateData = await categoryService.updateCategory(categoryId, dataUpdate);
+            return res.status(201).json({
+                success: true,
+                message: "Cập nhật loại hàng thành công",
+                data: updateData
+            })
+
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
+    },
+
+    deleteCategory: async (req, res) => {
+        let categoryId = parseInt(req.params.id);
+        try {
+
+            await categoryService.deleteCategory(categoryId);
+            return res.status(201).json({
+                success: true,
+                message: "Xóa loại hàng thành công",
+            })
+
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
+    }
 }
 
 export default categoryController;

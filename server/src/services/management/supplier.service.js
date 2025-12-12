@@ -43,18 +43,7 @@ const supplierService = {
 
     updateSuplier: async (supplierId, dataUpdate) => {
 
-        const supplierToDelete = await prisma.Suppliers.findUnique({
-            where: { id: supplierId },
-            select: { logo_url: true }
-        });
-
-        if (supplierToDelete?.logo_url) {
-            const AVATAR_BUCKET = 'general-uploads'; // Hoặc tên Bucket của bạn
-            // Hàm deleteFile đã được xây dựng để phân tích URL và xóa file
-            await uploadImage.deleteFile(supplierToDelete.logo_url, AVATAR_BUCKET);
-        }
-
-
+        await deleteImage(supplierId, "supplieres", "logo_url");
         let updateData = await prisma.Suppliers.update({
             where: { id: supplierId },
             data: dataUpdate,
@@ -74,17 +63,7 @@ const supplierService = {
 
     deleteSupplier: async (supplierId) => {
 
-        const supplierToDelete = await prisma.Suppliers.findUnique({
-            where: { id: supplierId },
-            select: { logo_url: true }
-        });
-
-        if (supplierToDelete?.logo_url) {
-            const AVATAR_BUCKET = 'general-uploads'; // Hoặc tên Bucket của bạn
-            // Hàm deleteFile đã được xây dựng để phân tích URL và xóa file
-            await uploadImage.deleteFile(supplierToDelete.logo_url, AVATAR_BUCKET);
-        }
-
+        await deleteImage(supplierId, "supplieres", "logo_url");
         await prisma.Suppliers.delete({
             where: {
                 id: supplierId,

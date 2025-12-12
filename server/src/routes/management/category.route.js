@@ -11,5 +11,7 @@ categoryRoute
     .post("/", validate(categorySchema.createCategory), uploadImageCategory, categoryController.createCategory)
     .get("/:id", categoryController.getCategoryById)
     .get("/", categoryController.getAllCategory)
+    .put("/:id", validate(categorySchema.updateCategory), uploadImageCategory, categoryController.updateCategory)
+    .delete("/:id", categoryController.deleteCategory)
 
 export default categoryRoute;

@@ -35,16 +35,7 @@ const userService = {
     updateUser: async (userId, dataUpdate) => {
         // console.log(dataUpdate)
 
-        let userToDelete = await prisma.users.findUnique({
-            where: { id: userId },
-            select: { avatar: true }
-        });
-
-        if (userToDelete?.avatar) {
-            const AVATAR_BUCKET = 'general-uploads'; // Hoặc tên Bucket của bạn
-            // Hàm deleteFile đã được xây dựng để phân tích URL và xóa file
-            await uploadImage.deleteFile(userToDelete.avatar, AVATAR_BUCKET);
-        }
+        await deleteImage(userId, "users", "avatar");
 
         let updateUser = await prisma.users.update({
             where: { id: userId },
@@ -103,17 +94,7 @@ const userService = {
 
     deleteUser: async (userId) => {
 
-        const userToDelete = await prisma.users.findUnique({
-            where: { id: userId },
-            select: { avatar: true }
-        });
-
-        if (userToDelete?.avatar) {
-            const AVATAR_BUCKET = 'general-uploads'; // Hoặc tên Bucket của bạn
-            // Hàm deleteFile đã được xây dựng để phân tích URL và xóa file
-            await uploadImage.deleteFile(userToDelete.avatar, AVATAR_BUCKET);
-        }
-
+        await deleteImage(userId, "users", "avatar");
         await prisma.users.delete({
             where: { id: userId }
         })
