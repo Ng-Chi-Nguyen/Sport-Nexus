@@ -1,8 +1,7 @@
 import sharp from 'sharp';
-import path from 'path';
 import { supabase } from '../configs/supabase.config.js';
 
-const GENERAL_BUCKET = 'general-uploads';
+const GENERAL_BUCKET = process.env.SUPABASE_GENERAL_BUCKET_NAME;
 
 const uploadImage = {
     uploadAvatar: async (fileBuffer, userId) => {
@@ -79,6 +78,37 @@ const uploadImage = {
         const fileExtension = 'webp';
         // Ví dụ: logo_supplier/101_1678887766.webp
         const filePath = `logo_brands/${namePrefix}_${Date.now()}.${fileExtension}`;
+
+        // 3. THỰC HIỆN UPLOAD lên Supabase Storage
+        const { error } = await supabase.storage
+            .from(GENERAL_BUCKET)
+            .upload(filePath, optimizedBuffer, {
+                contentType: `image/${fileExtension}`,
+                upsert: true, // Cho phép ghi đè nếu tồn tại (tùy chọn)
+            });
+        if (error) {
+            throw new Error('Lỗi upload lên Supabase: ' + error.message);
+        }
+
+        // 4. Lấy URL công khai
+        const { data: publicUrlData } = supabase.storage
+            .from(GENERAL_BUCKET)
+            .getPublicUrl(filePath);
+
+        return publicUrlData.publicUrl; // Trả về URL đã được CDN hóa
+    },
+
+    uploadImageCategory: async (fileBuffer, namePrefix) => {
+        // 1. TỐI ƯU HÌNH ẢNH bằng SHARP
+        const optimizedBuffer = await sharp(fileBuffer)
+            .resize(200, 200, { fit: 'cover' }) // Đảm bảo kích thước chuẩn
+            .webp({ quality: 80 })             // Nén và chuyển sang WEBP
+            .toBuffer();                       // Trả về Buffer đã tối ưu
+
+        // 2. Tạo đường dẫn và tên file duy nhất
+        const fileExtension = 'webp';
+        // Ví dụ: logo_supplier/101_1678887766.webp
+        const filePath = `image_categories/${namePrefix}_${Date.now()}.${fileExtension}`;
 
         // 3. THỰC HIỆN UPLOAD lên Supabase Storage
         const { error } = await supabase.storage

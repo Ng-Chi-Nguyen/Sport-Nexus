@@ -27,5 +27,11 @@ const upload = multer({
 const uploadImageAvatar = upload.single('avatar');
 const uploadImageLogoSupplier = upload.single('logo_url');
 const uploadImageLogoBrand = upload.single('logo');
+const uploadImageCategory = upload.single('image');
 
-export { uploadImageAvatar, uploadImageLogoSupplier, uploadImageLogoBrand };
+export {
+    uploadImageAvatar,
+    uploadImageLogoSupplier,
+    uploadImageLogoBrand,
+    uploadImageCategory
+};

@@ -27,7 +27,7 @@ const userSchema = {
             'string.pattern.base': 'Số điện thoại chỉ sữ dụng số'
         }),
         avatar: Joi.string().base64({ paddingRequired: true }).default(null)
-    }),
+    }).unknown(false),
 
     updateUser: Joi.object({
         full_name: Joi.string(),
@@ -49,7 +49,7 @@ const userSchema = {
         }),
         avatar: Joi.string().base64({ paddingRequired: true }).default(null),
         status: Joi.boolean().optional(),
-    })
+    }).unknown(false)
 }
 
 
