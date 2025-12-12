@@ -12,6 +12,8 @@ model Permissions {
     slug  String  @unique
     name  String
     Roles Roles[]
+
+    @@map("permissions")
 }
 
 model Roles {
@@ -20,6 +22,8 @@ model Roles {
     name        String
     permissions Permissions[]
     Users       Users[]
+
+    @@map("roles")
 }
 
 model Users {
@@ -42,6 +46,8 @@ model Users {
     Coupons            Coupons[]
     Carts              Carts[]
     Reviews            Reviews[]
+
+    @@map("users")
 }
 
 model UserAddresses {
@@ -54,6 +60,8 @@ model UserAddresses {
     type            String
     user_id         Int
     user            Users   @relation(fields: [user_id], references: [id])
+
+    @@map("useraddresses")
 }
 
 model Categories {
@@ -63,6 +71,8 @@ model Categories {
     image     String?    @db.Text
     is_active Boolean    @default(true)
     Products  Products[]
+
+    @@map("categories")
 }
 
 model Suppliers {
@@ -74,6 +84,8 @@ model Suppliers {
     address        String?    @db.Text
     logo_url       String?
     Products       Products[]
+
+    @@map("suppliers")
 }
 
 model Brands {
@@ -82,6 +94,8 @@ model Brands {
     logo     String?
     origin   String?    @db.Text
     Products Products[]
+
+    @@map("brands")
 }
 
 model Products {
@@ -103,6 +117,8 @@ model Products {
     ProductImages   ProductImages[]
     ProductVariants ProductVariants[]
     Reviews         Reviews[]
+
+    @@map("products")
 }
 
 model ProductImages {
@@ -111,6 +127,8 @@ model ProductImages {
     is_primary Boolean  @default(false)
     product_id Int
     product    Products @relation(fields: [product_id], references: [id])
+
+    @@map("productimages")
 }
 
 model ProductVariants {
@@ -123,6 +141,8 @@ model ProductVariants {
     product    Products     @relation(fields: [product_id], references: [id])
     OrderItems OrderItems[]
     CartItems  CartItems[]
+
+    @@map("productvariants")
 }
 
 model Coupons {
@@ -139,6 +159,8 @@ model Coupons {
     is_active       Boolean
     Orders          Orders[]
     Users           Users[]
+
+    @@map("coupons")
 }
 
 model Orders {
@@ -157,6 +179,8 @@ model Orders {
     user             Users        @relation(fields: [user_id], references: [id])
     OrderItems       OrderItems[]
     Reviews          Reviews[]
+
+    @@map("orders")
 }
 
 model OrderItems {
@@ -167,6 +191,8 @@ model OrderItems {
     order              Orders          @relation(fields: [order_id], references: [id])
     product_variant_id Int
     product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id])
+
+    @@map("orderitems")
 }
 
 model Carts {
@@ -175,6 +201,8 @@ model Carts {
     user_id    Int
     user       Users       @relation(fields: [user_id], references: [id])
     CartItems  CartItems[]
+
+    @@map("carts")
 }
 
 model CartItems {
@@ -184,6 +212,8 @@ model CartItems {
     product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id])
     cart_id            Int
     cart               Carts           @relation(fields: [cart_id], references: [id])
+
+    @@map("cartitems")
 }
 
 model Reviews {
@@ -201,4 +231,6 @@ model Reviews {
     order         Orders   @relation(fields: [order_id], references: [id])
     product_id    Int
     product       Products @relation(fields: [product_id], references: [id])
+
+    @@map("reviews")
 }
