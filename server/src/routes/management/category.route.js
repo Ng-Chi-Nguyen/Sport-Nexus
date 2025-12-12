@@ -9,5 +9,7 @@ const categoryRoute = express.Router();
 categoryRoute
 
     .post("/", validate(categorySchema.createCategory), uploadImageCategory, categoryController.createCategory)
+    .get("/:id", categoryController.getCategoryById)
+    .get("/", categoryController.getAllCategory)
 
 export default categoryRoute;

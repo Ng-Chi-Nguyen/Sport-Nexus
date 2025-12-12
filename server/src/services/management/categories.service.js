@@ -18,7 +18,35 @@ const categoryService = {
         })
 
         return newCategory;
-    }
+    },
+
+    getCategoryById: async (categoryId) => {
+        let category = await prisma.categories.findUnique({
+            where: { id: categoryId },
+            select: {
+                id: true,
+                name: true,
+                image: true,
+                slug: true,
+                is_active: true
+            }
+        })
+
+        return category;
+    },
+
+    getAllCategory: async () => {
+        let list_categories = await prisma.categories.findMany({
+            select: {
+                id: true,
+                name: true,
+                image: true,
+                slug: true,
+                is_active: true
+            }
+        });
+        return list_categories;
+    },
 }
 
 export default categoryService;

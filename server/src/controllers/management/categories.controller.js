@@ -26,7 +26,41 @@ const categoryController = {
                 error: error.message,
             })
         }
-    }
+    },
+
+    getCategoryById: async (req, res) => {
+
+        let categoryId = parseInt(req.params.id)
+
+        try {
+            let category = await categoryService.getCategoryById(categoryId)
+
+            return res.status(201).json({
+                success: true,
+                data: category
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                error: error.message,
+            })
+        }
+    },
+
+    getAllCategory: async (req, res) => {
+        try {
+            let list_categories = await categoryService.getAllCategory();
+            return res.status(201).json({
+                success: true,
+                data: list_categories
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                error: error.message,
+            })
+        }
+    },
 }
 
 export default categoryController;
