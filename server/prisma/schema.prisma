@@ -56,7 +56,7 @@ model UserAddresses {
     recipient_phone String
     location_data   Json
     detail_address  String
-    is_default      Boolean
+    is_default      Boolean @default(false)
     type            String
     user_id         Int
     user            Users   @relation(fields: [user_id], references: [id])

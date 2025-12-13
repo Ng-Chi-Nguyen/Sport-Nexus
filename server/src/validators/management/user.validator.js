@@ -47,7 +47,7 @@ const userSchema = {
             'string.length': 'Số điện thoại phải 10 số',
             'string.pattern.base': 'Số điện thoại chỉ sữ dụng số'
         }),
-        avatar: Joi.string().base64({ paddingRequired: true }).default(null),
+        avatar: Joi.string().base64({ paddingRequired: true }),
         status: Joi.boolean().optional(),
     }).unknown(false)
 }
