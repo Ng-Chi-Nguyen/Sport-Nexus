@@ -27,6 +27,71 @@ const couponController = {
                 code: error.code
             })
         }
+    },
+
+    getCouponById: async (req, res) => {
+        let couponId = parseInt(req.params.id);
+        try {
+            let coupon = await couponService.getCouponById(couponId);
+            return res.status(200).json({
+                success: true,
+                data: coupon
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
+    },
+
+    getAllCoupon: async (req, res) => {
+        try {
+            let list_coupons = await couponService.getAllCoupon();
+            return res.status(200).json({
+                success: true,
+                data: list_coupons
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
+    },
+
+    updateCoupon: async (req, res) => {
+        let dataUpdate = req.body;
+        let couponId = parseInt(req.params.id);
+        try {
+            let updateData = await couponService.updateCoupon(couponId, dataUpdate)
+            return res.status(200).json({
+                success: true,
+                data: updateData,
+                message: "Đã cập nhật mã giảm giá"
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            })
+        }
+    },
+
+    deleteCoupon: async (req, res) => {
+        let couponId = parseInt(req.params.id);
+        try {
+            await couponService.deleteCoupon(couponId)
+            return res.status(200).json({
+                success: true,
+                message: "Đã xóa mã giảm giá"
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
     }
 }
 

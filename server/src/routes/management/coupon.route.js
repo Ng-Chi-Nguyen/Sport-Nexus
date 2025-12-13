@@ -7,5 +7,9 @@ const couponRoute = express.Router()
 couponRoute
 
     .post("/", validate(couponSchema.createCoupon), couponController.createCoupon)
+    .get("/:id", couponController.getCouponById)
+    .get("/", couponController.getAllCoupon)
+    .put("/:id", validate(couponSchema.updateCoupon), couponController.updateCoupon)
+    .delete("/:id", couponController.deleteCoupon)
 
 export default couponRoute;

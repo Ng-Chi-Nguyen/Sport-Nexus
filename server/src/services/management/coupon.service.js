@@ -36,6 +36,32 @@ const couponService = {
         })
 
         return newCoupon;
+    },
+
+    getCouponById: async (couponId) => {
+        let coupon = await prisma.coupons.findUnique({
+            where: { id: couponId },
+        })
+        return coupon;
+    },
+
+    getAllCoupon: async () => {
+        let list_coupons = await prisma.coupons.findMany()
+        return list_coupons;
+    },
+
+    updateCoupon: async (couponId, dataUpdate) => {
+        let updateData = await prisma.coupons.update({
+            where: { id: couponId },
+            data: dataUpdate
+        })
+        return updateData;
+    },
+
+    deleteCoupon: async (couponId) => {
+        await prisma.coupons.delete({
+            where: { id: couponId }
+        })
     }
 }
 
