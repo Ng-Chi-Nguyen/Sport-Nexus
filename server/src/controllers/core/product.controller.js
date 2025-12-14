@@ -113,6 +113,53 @@ const productController = {
                 message: error.message
             })
         }
+    },
+
+    updateProduct: async (req, res) => {
+        let dataUpdate = req.body;
+        let productId = parseInt(req.params.id);
+        let file = req.file;
+
+        try {
+            if (file) {
+                let thumbnail_url = await uploadImage.uploadThumbnail(file.buffer, productId)
+                dataUpdate.thumbnail = thumbnail_url;
+            }
+            let updateProduct = await productService.updateProduct(productId, dataUpdate);
+
+            return res.status(200).json({
+                success: true,
+                message: "Cập nhật sản phẩm thành công",
+                data: updateProduct
+            })
+
+        } catch (error) {
+            if (error.code === 'P2025')
+                return res.status(404).json({ message: "Không tìm thấy mã sản phẩm." });
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
+    },
+
+    deleteProduct: async (req, res) => {
+        try {
+            let productId = parseInt(req.params.id);
+            await productService.deleteProduct(productId);
+
+            return res.status(200).json({
+                success: true,
+                message: "Xóa sản phẩm thành công",
+            })
+        } catch (error) {
+            if (error.code === 'P2025')
+                return res.status(404).json({ message: "Không tìm thấy mã sản phẩm." });
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
     }
 }
 

@@ -1,4 +1,5 @@
 import prisma from "../../db/prisma.js";
+import { deleteImage } from "../../utils/deleteImage.utils.js";
 import { createAutoSlug } from "../../utils/slug.utils.js";
 
 const productService = {
@@ -56,6 +57,24 @@ const productService = {
     getAllProduct: async () => {
         let list_products = await prisma.Products.findMany()
         return list_products;
+    },
+
+    updateProduct: async (productId, dataUPdate) => {
+        await deleteImage(productId, "Products", "thumbnail");
+        if (dataUPdate.name) {
+            let slug = await createAutoSlug(dataUPdate.name, "Products");
+            dataUPdate.slug = slug;
+        }
+        let updateProduct = await prisma.Products.update({
+            where: { id: productId },
+            data: dataUPdate
+        })
+        return updateProduct
+    },
+
+    deleteProduct: async (productId) => {
+        await deleteImage(productId, "Products", "thumbnail");
+        await prisma.Products.delete({ where: { id: productId } })
     }
 }
 

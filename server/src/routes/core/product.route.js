@@ -15,5 +15,7 @@ productRoute
     .get("/category/:id", productController.getProductByCategoryId)
     .get("/supplier/:id", productController.getProductBySupplierId)
     .get("/", productController.getAllProduct)
+    .put("/:id", validate(productSchema.updateProduct), uploadThubnailProduct, productController.updateProduct)
+    .delete("/:id", productController.deleteProduct)
 
 export default productRoute;
