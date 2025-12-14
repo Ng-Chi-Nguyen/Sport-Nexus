@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from "Joi";
 
 const supplierSchema = {
     createSupplier: Joi.object({

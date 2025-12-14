@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from "Joi";
 
 const userAddressSchema = {
     createUserAddress: Joi.object({

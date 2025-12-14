@@ -28,10 +28,12 @@ const uploadImageAvatar = upload.single('avatar');
 const uploadImageLogoSupplier = upload.single('logo_url');
 const uploadImageLogoBrand = upload.single('logo');
 const uploadImageCategory = upload.single('image');
+const uploadThubnailProduct = upload.single('thumbnail');
 
 export {
     uploadImageAvatar,
     uploadImageLogoSupplier,
     uploadImageLogoBrand,
-    uploadImageCategory
+    uploadImageCategory,
+    uploadThubnailProduct
 };

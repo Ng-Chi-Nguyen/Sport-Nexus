@@ -103,7 +103,7 @@ model Products {
     name            String
     slug            String            @unique
     base_price      Decimal           @db.Decimal(10, 2)
-    is_active       String
+    is_active       Boolean           @default(true)
     description     String            @db.Text
     thumbnail       String            @db.Text
     created_at      DateTime          @default(now())
