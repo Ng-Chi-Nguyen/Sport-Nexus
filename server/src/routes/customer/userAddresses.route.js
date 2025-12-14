@@ -10,5 +10,7 @@ userAddressRoute
     .post("/", validate(userAddressSchema.createUserAddress), userAddressController.createUserAddress)
     .get("/:id", userAddressController.getUserAddressId)
     .get("/user/:userId", userAddressController.getUserAddressByUserId)
+    .put("/:id", validate(userAddressSchema.updateUserAddress), userAddressController.updateUserAddress)
+    .delete("/:id", userAddressController.deleteUserAddress)
 
 export default userAddressRoute;

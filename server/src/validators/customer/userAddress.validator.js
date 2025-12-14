@@ -46,6 +46,45 @@ const userAddressSchema = {
         }).default('home'),
         is_default: Joi.boolean().optional(),
         user_id: Joi.number().required()
+    }),
+    updateUserAddress: Joi.object({
+        recipient_name: Joi.string().min(3).max(100).messages({
+            'string.min': 'Tên thương hiệu phải có ít nhất {#limit} ký tự.',
+            'string.max': 'Tên thương hiệu không được vượt quá {#limit} ký tự.',
+        }),
+        recipient_phone: Joi.string().length(10).messages({
+            'any.length': 'Số điện thoại phải 10 số',
+        }),
+        detail_address: Joi.string().max(155).messages({
+            'string.max': 'Tên thương hiệu không được vượt quá {#limit} ký tự.',
+        }),
+        location_data: Joi.object({
+            // 1. Dữ liệu Tỉnh/Thành phố
+            province: Joi.object({
+                name: Joi.string(),
+                code: Joi.number(),
+            }).messages({
+                'object.base': 'Dữ liệu Tỉnh/Thành phố phải là một đối tượng.',
+            }),
+
+            // 2. Dữ liệu Quận/Huyện
+            district: Joi.object({
+                name: Joi.string(),
+                code: Joi.number(),
+            }),
+
+            // 3. Dữ liệu Phường/Xã
+            ward: Joi.object({
+                name: Joi.string(),
+                code: Joi.number(),
+            }),
+
+        }),
+        type: Joi.string().valid('home', 'office', 'company').messages({
+            'any.only': 'Loại giảm giá phải là "home, office" hoặc "company".',
+        }),
+        is_default: Joi.boolean().optional(),
+        user_id: Joi.number()
     })
 }
 

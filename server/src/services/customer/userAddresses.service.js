@@ -68,6 +68,43 @@ const userAddressService = {
         })
         return userAddresses;
     },
+
+    updateUserAddress: async (addressId, dataUpdate) => {
+        let currentAddress = await prisma.userAddresses.findUnique({
+            where: { id: addressId },
+            select: { location_data: true }
+        });
+
+        if (!currentAddress) {
+            throw new Error("Không tìm thấy địa chỉ.");
+        }
+
+        let dataToUpdate = { ...dataUpdate };
+
+        if (dataUpdate.location_data) {
+            let oldLocationData = currentAddress.location_data || {};
+
+            let mergedLocationData = {
+                province: { ...oldLocationData.province, ...dataUpdate.location_data.province },
+                district: { ...oldLocationData.district, ...dataUpdate.location_data.district },
+                ward: { ...oldLocationData.ward, ...dataUpdate.location_data.ward },
+            };
+
+            dataToUpdate.location_data = mergedLocationData;
+        }
+
+        let updatedAddress = await prisma.userAddresses.update({
+            where: { id: addressId },
+            data: dataToUpdate,
+        });
+
+        return updatedAddress;
+    },
+
+    deleteUserAddress: async (addressId) => {
+        await checkExistKey("id", addressId, "userAddresses")
+        await prisma.userAddresses.delete({ where: { id: addressId } })
+    }
 };
 
 export default userAddressService;
