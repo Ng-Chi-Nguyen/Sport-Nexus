@@ -76,14 +76,15 @@ model Categories {
 }
 
 model Suppliers {
-    id             Int        @id @default(autoincrement())
+    id             Int              @id @default(autoincrement())
     contact_person String
     email          String?
     phone          String?
     name           String
-    address        String?    @db.Text
+    address        String?          @db.Text
     logo_url       String?
     Products       Products[]
+    PurchaseOrders PurchaseOrders[]
 
     @@map("suppliers")
 }
@@ -132,15 +133,17 @@ model ProductImages {
 }
 
 model ProductVariants {
-    id         Int          @id @default(autoincrement())
-    size       String
-    color      String
-    stock      Int
-    price      Decimal      @db.Decimal(10, 2)
-    product_id Int
-    product    Products     @relation(fields: [product_id], references: [id])
-    OrderItems OrderItems[]
-    CartItems  CartItems[]
+    id                 Int                  @id @default(autoincrement())
+    size               String
+    color              String
+    stock              Int
+    price              Decimal              @db.Decimal(10, 2)
+    product_id         Int
+    product            Products             @relation(fields: [product_id], references: [id])
+    OrderItems         OrderItems[]
+    CartItems          CartItems[]
+    SitockMovements    SitockMovements[]
+    PurchaseOrderItems PurchaseOrderItems[]
 
     @@map("productvariants")
 }
@@ -235,4 +238,44 @@ model Reviews {
     product       Products @relation(fields: [product_id], references: [id])
 
     @@map("reviews")
+}
+
+model SitockMovements {
+    id              Int             @id @default(autoincrement())
+    variant_id      Int
+    variant         ProductVariants @relation(fields: [variant_id], references: [id])
+    type            String          @db.VarChar(50)
+    quantity_change Int
+    reference_id    Int?
+    reason          String?         @db.VarChar(255)
+    created_at      DateTime        @default(now())
+
+    @@map("stockmovements")
+}
+
+model PurchaseOrders {
+    id Int @id @default(autoincrement())
+
+    supplier_id            Int
+    supplier               Suppliers            @relation(fields: [supplier_id], references: [id])
+    order_date             DateTime             @default(now())
+    expected_delivery_date DateTime
+    status                 String               @default("PENDING") @db.VarChar(50) // Trạng thái: PENDING, RECEIVED, CANCELLED, etc.
+    total_cost             Decimal              @db.Decimal(10, 2)
+    PurchaseOrderItems     PurchaseOrderItems[]
+
+    @@map("purchaseorders")
+}
+
+model PurchaseOrderItems {
+    id                 Int             @id @default(autoincrement())
+    purchase_order_id  Int
+    purchase_order     PurchaseOrders  @relation(fields: [purchase_order_id], references: [id])
+    product_variant_id Int
+    product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id])
+    quantity           Int
+    unit_cost_price    Decimal         @db.Decimal(10, 2)
+    quantity_received  Int             @default(0)
+
+    @@map("purchaseorderitems")
 }
