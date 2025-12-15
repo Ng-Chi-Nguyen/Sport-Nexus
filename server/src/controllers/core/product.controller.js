@@ -9,9 +9,16 @@ const productController = {
         // console.log(file)
         try {
 
+            // if (file) {
+            //     let thumbnail_url = await uploadImage.uploadThumbnail(file.buffer, "new_brand")
+            //     productData.thumbnail = thumbnail_url;
+            // }
+
             if (file) {
-                let thumbnail_url = await uploadImage.uploadThumbnail(file.buffer, "new_brand")
-                productData.thumbnail = thumbnail_url;
+                // Lưu trữ buffer của file vào productData để gửi sang service
+                productData.fileBuffer = file.buffer;
+                // Xóa trường thumbnail khỏi productData để không lưu vào DB ngay
+                productData.thumbnail = null;
             }
 
             productData.category_id = parseInt(productData.category_id);

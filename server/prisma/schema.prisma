@@ -16,6 +16,7 @@ model Permissions {
     @@map("permissions")
 }
 
+// Roles Done
 model Roles {
     id          Int           @id @default(autoincrement())
     slug        String        @unique
@@ -26,6 +27,7 @@ model Roles {
     @@map("roles")
 }
 
+// Users Done
 model Users {
     id                 Int             @id @default(autoincrement())
     full_name          String
@@ -50,6 +52,7 @@ model Users {
     @@map("users")
 }
 
+// UserAddresses Done
 model UserAddresses {
     id              Int     @id @default(autoincrement())
     recipient_name  String
@@ -64,6 +67,7 @@ model UserAddresses {
     @@map("useraddresses")
 }
 
+// Categories Done
 model Categories {
     id        Int        @id @default(autoincrement())
     name      String
@@ -75,6 +79,7 @@ model Categories {
     @@map("categories")
 }
 
+// Suppliers Done
 model Suppliers {
     id             Int              @id @default(autoincrement())
     contact_person String
@@ -89,6 +94,7 @@ model Suppliers {
     @@map("suppliers")
 }
 
+// Brands Done
 model Brands {
     id       Int        @id @default(autoincrement())
     name     String
@@ -99,6 +105,7 @@ model Brands {
     @@map("brands")
 }
 
+// Products Done
 model Products {
     id              Int               @id @default(autoincrement())
     name            String
@@ -106,7 +113,7 @@ model Products {
     base_price      Decimal           @db.Decimal(10, 2)
     is_active       Boolean           @default(true)
     description     String            @db.Text
-    thumbnail       String            @db.Text
+    thumbnail       String?           @db.Text
     created_at      DateTime          @default(now())
     updated_at      DateTime          @updatedAt
     category_id     Int

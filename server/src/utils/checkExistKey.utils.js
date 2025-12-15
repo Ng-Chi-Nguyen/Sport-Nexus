@@ -2,7 +2,7 @@ import prisma from "../db/prisma.js";
 
 export const checkExistKey = async (key, value, model) => {
     if (!value || typeof value !== 'number' || value <= 0) {
-        throw new Error(`${value} không hợp lệ.`);
+        throw new Error(`${key} ${value} không hợp lệ.`);
     }
 
     const userExists = await prisma[model].findUnique({
@@ -11,6 +11,6 @@ export const checkExistKey = async (key, value, model) => {
     });
 
     if (!userExists) {
-        throw new Error(`${value} không tồn tại.`);
+        throw new Error(`${key} ${value} không tồn tại.`);
     }
 };

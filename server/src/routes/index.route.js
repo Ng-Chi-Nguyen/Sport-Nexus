@@ -1,4 +1,5 @@
 import productRoute from "./core/product.route.js";
+import productImageRoute from "./core/productImage.route.js";
 import userAddressRoute from "./customer/useraddresses.route.js";
 import brandRoute from "./management/brand.route.js";
 import categoryRoute from "./management/category.route.js";
@@ -20,6 +21,7 @@ const Routes = (app) => {
 
     // Core - cốt lỗi của hệ thống (Management và Customer)
     app.use("/api/v1/core/product/", productRoute)
+    app.use("/api/v1/core/product-image/", productImageRoute)
 }
 
 export default Routes;
