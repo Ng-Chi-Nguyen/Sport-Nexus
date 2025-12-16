@@ -39,7 +39,116 @@ const productImageController = {
                 message: error.message
             })
         }
-    }
+    },
+
+    getProductImageById: async (req, res) => {
+        let productImgId = parseInt(req.params.id)
+        try {
+            let productImg = await productImageService.getProductImageById(productImgId)
+            return res.status(500).json({
+                success: true,
+                data: productImg
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
+    },
+
+    getProductImageByProductId: async (req, res) => {
+        let productId = parseInt(req.params.id)
+        try {
+            let productImg = await productImageService.getProductImageByProductId(productId)
+            return res.status(500).json({
+                success: true,
+                data: productImg
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
+    },
+
+    updateProductImage: async (req, res) => {
+        let productId = parseInt(req.params.id);
+        let files = req.files;
+
+        const currentImagesJsonId = req.body.current_image_ids;
+        // Chuyển đổi chuỗi thành đối tượng/mảng JSON
+        const currentImages = JSON.parse(currentImagesJsonId);
+
+        // console.log("productId: ", productId)
+        // console.log("files: ", files)
+        // console.log("currentImages: ", currentImages)
+
+        try {
+            const uploadPromises = files.map(file => {
+                console.log("Processing file for product ID:", productId);
+                return uploadImage.uploadProductImage(
+                    file.buffer,
+                    `product_images_${Date.now()}`,
+                    productId
+                );
+            });
+            const newUrls = await Promise.all(uploadPromises);
+            // console.log(newUrls)
+            // 2. Gọi Service để xử lý XÓA, CẬP NHẬT METADATA cũ, và THÊM URL mới
+            let updatedProduct = await productImageService.updateProductImage(
+                productId,
+                currentImages,
+                newUrls
+            );
+
+            return res.status(200).json({
+                success: true,
+                message: `Cập nhật thư viện ảnh cho Sản phẩm ID ${productId} thành công.`,
+                data: updatedProduct
+            });
+
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    },
+
+
+    deleteProductImageById: async (req, res) => {
+        let productId = parseInt(req.params.id)
+        try {
+            await productImageService.deleteProductImageById(productId)
+            return res.status(200).json({
+                success: true,
+                message: "Xóa hình ảnh mô tả thành công"
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
+    },
+
+    deleteProductImageByProductId: async (req, res) => {
+        let productId = parseInt(req.params.id)
+        try {
+            await productImageService.deleteProductImageByProductId(productId)
+            return res.status(200).json({
+                success: true,
+                message: "Xóa hình ảnh mô tả thành công"
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
+    },
 }
 
 export default productImageController;
