@@ -12,7 +12,7 @@ const userAddressService = {
                 let newUserAddress = await prisma.$transaction([
                     prisma.userAddresses.updateMany({
                         where: {
-                            user_id: user_id,
+                            user: { connect: { id: user_id } },
                             is_default: true,
                         },
                         data: {

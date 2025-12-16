@@ -48,6 +48,7 @@ model Users {
     Coupons            Coupons[]
     Carts              Carts[]
     Reviews            Reviews[]
+    SystemLogs         SystemLogs[]
 
     @@map("users")
 }
@@ -129,6 +130,7 @@ model Products {
     @@map("products")
 }
 
+// ProductsImages Done
 model ProductImages {
     id         Int      @id @default(autoincrement())
     url        String   @db.Text
@@ -140,19 +142,41 @@ model ProductImages {
 }
 
 model ProductVariants {
-    id                 Int                  @id @default(autoincrement())
-    size               String
-    color              String
-    stock              Int
-    price              Decimal              @db.Decimal(10, 2)
-    product_id         Int
-    product            Products             @relation(fields: [product_id], references: [id])
+    id         Int      @id @default(autoincrement())
+    stock      Int
+    price      Decimal  @db.Decimal(10, 2)
+    product_id Int
+    product    Products @relation(fields: [product_id], references: [id])
+
+    VariableAttributes VariableAttributes[]
+
     OrderItems         OrderItems[]
     CartItems          CartItems[]
     SitockMovements    SitockMovements[]
     PurchaseOrderItems PurchaseOrderItems[]
 
     @@map("productvariants")
+}
+
+model AttributeKeys {
+    id                 Int                  @id @default(autoincrement())
+    name               String               @unique @db.VarChar(191)
+    unit               String?              @db.VarChar(50)
+    VariableAttributes VariableAttributes[]
+
+    @@map("attributekeys")
+}
+
+model VariableAttributes {
+    id               Int             @id @default(autoincrement())
+    variable_id      Int
+    variable         ProductVariants @relation(fields: [variable_id], references: [id])
+    attribute_key_id Int
+    attributeKey     AttributeKeys   @relation(fields: [attribute_key_id], references: [id])
+    value            String          @db.VarChar(191)
+
+    @@unique([variable_id, attribute_key_id])
+    @@map("variableattributes")
 }
 
 model Coupons {
@@ -285,4 +309,20 @@ model PurchaseOrderItems {
     quantity_received  Int             @default(0)
 
     @@map("purchaseorderitems")
+}
+
+model SystemLogs {
+    id        Int      @id @default(autoincrement())
+    timestamp DateTime @default(now())
+    user_id   Int
+    user      Users    @relation(fields: [user_id], references: [id])
+
+    action_type String @db.VarChar(50) // Ví dụ: CREATE, UPDATE, DELETE, STOCK_ADJUSTMENT
+    entity_type String @db.VarChar(50) // Ví dụ: ProductVariants, Orders, User
+    entity_id   Int? // ID của bản ghi bị ảnh hưởng
+
+    // Sử dụng kiểu Json để lưu trữ cấu trúc dữ liệu phức tạp (ví dụ: {oldPrice: 100, newPrice: 120})
+    details Json?
+
+    @@map("systemlogs")
 }
