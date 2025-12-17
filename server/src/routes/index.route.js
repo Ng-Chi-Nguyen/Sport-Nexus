@@ -1,3 +1,4 @@
+import attriButeKeyRoute from "./core/attributekey.route.js";
 import productRoute from "./core/product.route.js";
 import productImageRoute from "./core/productImage.route.js";
 import productVariantRoute from "./core/productvariants.route.js";
@@ -24,6 +25,7 @@ const Routes = (app) => {
     app.use("/api/v1/core/product/", productRoute)
     app.use("/api/v1/core/product-image/", productImageRoute)
     app.use("/api/v1/core/product-variant/", productVariantRoute)
+    app.use("/api/v1/core/variant-attribute-key/", attriButeKeyRoute)
 }
 
 export default Routes;
