@@ -118,11 +118,11 @@ model Products {
     created_at      DateTime          @default(now())
     updated_at      DateTime          @updatedAt
     category_id     Int
-    category        Categories        @relation(fields: [category_id], references: [id])
+    category        Categories        @relation(fields: [category_id], references: [id], onDelete: Cascade)
     supplier_id     Int
-    supplier        Suppliers         @relation(fields: [supplier_id], references: [id])
+    supplier        Suppliers         @relation(fields: [supplier_id], references: [id], onDelete: Cascade)
     brand_id        Int
-    brand           Brands            @relation(fields: [brand_id], references: [id])
+    brand           Brands            @relation(fields: [brand_id], references: [id], onDelete: Cascade)
     ProductImages   ProductImages[]
     ProductVariants ProductVariants[]
     Reviews         Reviews[]
@@ -146,7 +146,7 @@ model ProductVariants {
     stock      Int
     price      Decimal  @db.Decimal(10, 2)
     product_id Int
-    product    Products @relation(fields: [product_id], references: [id])
+    product    Products @relation(fields: [product_id], references: [id], onDelete: Cascade)
 
     VariableAttributes VariableAttributes[]
 
@@ -170,9 +170,9 @@ model AttributeKeys {
 model VariableAttributes {
     id               Int             @id @default(autoincrement())
     variable_id      Int
-    variable         ProductVariants @relation(fields: [variable_id], references: [id])
+    variable         ProductVariants @relation(fields: [variable_id], references: [id], onDelete: Cascade)
     attribute_key_id Int
-    attributeKey     AttributeKeys   @relation(fields: [attribute_key_id], references: [id])
+    attributeKey     AttributeKeys   @relation(fields: [attribute_key_id], references: [id], onDelete: Cascade)
     value            String          @db.VarChar(191)
 
     @@unique([variable_id, attribute_key_id])
@@ -210,9 +210,9 @@ model Orders {
     final_amount     Decimal      @db.Decimal(10, 2)
     created_at       DateTime     @default(now())
     coupon_id        Int
-    coupon           Coupons      @relation(fields: [coupon_id], references: [id])
+    coupon           Coupons      @relation(fields: [coupon_id], references: [id], onDelete: Cascade)
     user_id          Int
-    user             Users        @relation(fields: [user_id], references: [id])
+    user             Users        @relation(fields: [user_id], references: [id], onDelete: Cascade)
     OrderItems       OrderItems[]
     Reviews          Reviews[]
 
@@ -224,9 +224,9 @@ model OrderItems {
     quantity           Int
     price_at_purchase  Decimal         @db.Decimal(10, 2)
     order_id           Int
-    order              Orders          @relation(fields: [order_id], references: [id])
+    order              Orders          @relation(fields: [order_id], references: [id], onDelete: Cascade)
     product_variant_id Int
-    product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id])
+    product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
 
     @@map("orderitems")
 }
@@ -235,7 +235,7 @@ model Carts {
     id         Int         @id @default(autoincrement())
     updated_at DateTime    @updatedAt
     user_id    Int
-    user       Users       @relation(fields: [user_id], references: [id])
+    user       Users       @relation(fields: [user_id], references: [id], onDelete: Cascade)
     CartItems  CartItems[]
 
     @@map("carts")
@@ -245,9 +245,9 @@ model CartItems {
     id                 Int             @id @default(autoincrement())
     quantity           Int
     product_variant_id Int
-    product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id])
+    product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
     cart_id            Int
-    cart               Carts           @relation(fields: [cart_id], references: [id])
+    cart               Carts           @relation(fields: [cart_id], references: [id], onDelete: Cascade)
 
     @@map("cartitems")
 }
@@ -262,11 +262,11 @@ model Reviews {
     created_at    DateTime @default(now())
     updated_at    DateTime @updatedAt
     user_id       Int
-    user          Users    @relation(fields: [user_id], references: [id])
+    user          Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
     order_id      Int
-    order         Orders   @relation(fields: [order_id], references: [id])
+    order         Orders   @relation(fields: [order_id], references: [id], onDelete: Cascade)
     product_id    Int
-    product       Products @relation(fields: [product_id], references: [id])
+    product       Products @relation(fields: [product_id], references: [id], onDelete: Cascade)
 
     @@map("reviews")
 }
@@ -274,7 +274,7 @@ model Reviews {
 model SitockMovements {
     id              Int             @id @default(autoincrement())
     variant_id      Int
-    variant         ProductVariants @relation(fields: [variant_id], references: [id])
+    variant         ProductVariants @relation(fields: [variant_id], references: [id], onDelete: Cascade)
     type            String          @db.VarChar(50)
     quantity_change Int
     reference_id    Int?

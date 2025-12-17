@@ -62,11 +62,11 @@ const productService = {
     },
 
     getProductByBrandId: async (brandId) => {
-        console.log(brandId)
+        // console.log(brandId)
         let product = await prisma.Products.findMany({
             where: { brand_id: brandId }
         })
-        console.log(product)
+        // console.log(product)
         return product;
     },
 
