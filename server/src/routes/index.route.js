@@ -2,6 +2,7 @@ import attriButeKeyRoute from "./core/attributekey.route.js";
 import productRoute from "./core/product.route.js";
 import productImageRoute from "./core/productImage.route.js";
 import productVariantRoute from "./core/productvariants.route.js";
+import cartItemRoute from "./customer/cartItem.route.js";
 import userAddressRoute from "./customer/useraddresses.route.js";
 import brandRoute from "./management/brand.route.js";
 import categoryRoute from "./management/category.route.js";
@@ -20,6 +21,7 @@ const Routes = (app) => {
 
     // Customer - Khách hàng
     app.use("/api/v1/customer/user-address/", userAddressRoute)
+    app.use("/api/v1/customer/cart-item/", cartItemRoute)
 
     // Core - cốt lỗi của hệ thống (Management và Customer)
     app.use("/api/v1/core/product/", productRoute)

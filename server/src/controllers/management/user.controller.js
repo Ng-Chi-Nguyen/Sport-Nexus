@@ -103,14 +103,14 @@ const userController = {
 
         try {
 
-            const currentUser = await brandService.getUserById(userId);
+            const currentUser = await userService.getUserById(userId);
             if (!currentUser) {
                 return res.status(404).json({
                     message: "Không tìm thấy người dùng để xóa."
                 });
             }
 
-            await userService.deleteUser(userId);
+            await userService.deleteUser(userId, currentUser);
 
             return res.status(201).json({
                 success: true,

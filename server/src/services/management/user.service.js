@@ -29,6 +29,12 @@ const userService = {
             },
         });
 
+        await prisma.carts.create({
+            data: {
+                user_id: newUser.id
+            }
+        })
+
         return newUser;
     },
 
@@ -92,9 +98,10 @@ const userService = {
         return listUsers;
     },
 
-    deleteUser: async (userId) => {
-
-        await deleteImage(userId, "users", "avatar");
+    deleteUser: async (userId, currentUser) => {
+        if (currentUser.avatar) {
+            await deleteImage(userId, "users", "avatar");
+        }
         await prisma.users.delete({
             where: { id: userId }
         })
