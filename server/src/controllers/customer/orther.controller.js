@@ -118,10 +118,16 @@ const orderController = {
     },
 
     updateOrder: async (req, res) => {
-        let dataUpdate = req.body;
+        const { items, ...dataUpdate } = req.body;
         let orderId = parseInt(req.params.id);
         try {
-            let updateOrder = await orderService.updateOrder(orderId, dataUpdate);
+            if (!items || !Array.isArray(items) || items.length === 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Danh sách sản phẩm (items) không được để trống khi cập nhật."
+                });
+            }
+            let updateOrder = await orderService.updateOrder(orderId, dataUpdate, items);
             return res.status(200).json({
                 success: true,
                 message: "Cập nhật đơn hàng thành công",

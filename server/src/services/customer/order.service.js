@@ -77,14 +77,39 @@ const orderService = {
         return orders;
     },
 
-    updateOrder: async (orderId, dataUpdate) => {
+    updateOrder: async (orderId, dataUpdate, items) => {
+        // 1. Xóa các items cũ
+        await prisma.OrderItems.deleteMany({
+            where: {
+                order_id: orderId
+            }
+        });
+
+        // 2. Cập nhật Order và tạo lại items mới
         let updateOrder = await prisma.Orders.update({
             where: { id: orderId },
-            data: dataUpdate,
+            data: {
+                shipping_address: dataUpdate.shipping_address,
+                status: dataUpdate.status,
+                total_amount: dataUpdate.total_amount,
+                final_amount: dataUpdate.final_amount,
+                payment_status: dataUpdate.payment_status || "Pending",
+                discount_amount: dataUpdate.discount_amount || 0,
+
+                // Khối này nằm TRONG data là đúng
+                OrderItems: {
+                    create: items.map(item => ({
+                        product_variant_id: Number(item.product_variant_id), // Ép kiểu Number để chắc chắn
+                        quantity: Number(item.quantity),
+                        price_at_purchase: item.price_at_purchase
+                    }))
+                }
+            }, // Kết thúc khối data tại đây
             include: {
                 OrderItems: true
             }
-        })
+        });
+
         return updateOrder;
     },
 
