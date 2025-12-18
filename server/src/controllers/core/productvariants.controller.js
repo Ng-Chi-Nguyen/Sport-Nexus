@@ -31,6 +31,12 @@ const productVariantController = {
         let variantId = parseInt(req.params.id);
         try {
             let variant = await productVariantService.getProductVariantById(variantId);
+            if (!variant || variant.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                });
+            }
             return res.status(200).json({
                 success: true,
                 data: variant
@@ -47,6 +53,12 @@ const productVariantController = {
         let productId = parseInt(req.params.id)
         try {
             let variants = await productVariantService.getProductVariantByProductid(productId);
+            if (!variants || variants.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                });
+            }
             return res.status(200).json({
                 success: true,
                 data: variants

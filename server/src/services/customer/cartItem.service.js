@@ -13,6 +13,70 @@ const cartItemService = {
         })
         return newCartItem;
     },
+
+    getCartItemById: async (cartItemId) => {
+        let cartItem = await prisma.CartItems.findUnique({
+            where: { id: cartItemId },
+            include: {
+                product_variant: {
+                    include: {
+                        product: true,
+                        VariableAttributes: {
+                            include: {
+                                attributeKey: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        return cartItem;
+    },
+
+    getCartItemByCartId: async (cartId) => {
+        let cartItems = await prisma.CartItems.findMany({
+            where: { cart_id: cartId },
+            include: {
+                product_variant: {
+                    include: {
+                        product: true,
+                        VariableAttributes: {
+                            include: {
+                                attributeKey: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        return cartItems;
+    },
+
+    updateCartItem: async (cartItemId, dataUpdate) => {
+        let updateCartItem = await prisma.CartItems.update({
+            where: { id: cartItemId },
+            data: dataUpdate,
+            include: {
+                product_variant: {
+                    include: {
+                        product: true,
+                        VariableAttributes: {
+                            include: {
+                                attributeKey: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        return updateCartItem;
+    },
+
+    deleteCartItem: async (cartItemId) => {
+        await prisma.CartItems.delete({
+            where: { id: cartItemId }
+        })
+    }
 }
 
 export default cartItemService;

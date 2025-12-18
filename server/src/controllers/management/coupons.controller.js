@@ -33,6 +33,14 @@ const couponController = {
         let couponId = parseInt(req.params.id);
         try {
             let coupon = await couponService.getCouponById(couponId);
+
+            if (!coupon || coupon.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
+
             return res.status(200).json({
                 success: true,
                 data: coupon
@@ -48,6 +56,14 @@ const couponController = {
     getAllCoupon: async (req, res) => {
         try {
             let list_coupons = await couponService.getAllCoupon();
+
+            if (!list_coupons || list_coupons.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
+
             return res.status(200).json({
                 success: true,
                 data: list_coupons
@@ -71,6 +87,11 @@ const couponController = {
                 message: "Đã cập nhật mã giảm giá"
             })
         } catch (error) {
+
+            if (error.code === 'P2025') {
+                return res.status(404).json({ message: "Không tìm thấy mã giảm giá để cập nhật." });
+            }
+
             return res.status(500).json({
                 success: false,
                 message: error.message,
@@ -87,6 +108,11 @@ const couponController = {
                 message: "Đã xóa mã giảm giá"
             })
         } catch (error) {
+
+            if (error.code === 'P2025') {
+                return res.status(404).json({ message: "Không tìm thấy mã giảm giá để xóa." });
+            }
+
             return res.status(500).json({
                 success: false,
                 message: error.message

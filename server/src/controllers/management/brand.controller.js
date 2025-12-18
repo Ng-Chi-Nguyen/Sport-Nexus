@@ -34,6 +34,14 @@ const brandController = {
         let brandId = parseInt(req.params.id);
         try {
             let brand = await brandService.getBrandById(brandId);
+
+            if (!brand || brand.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
+
             return res.status(200).json({
                 success: true,
                 data: brand
@@ -49,6 +57,14 @@ const brandController = {
     getAllBrands: async (req, res) => {
         try {
             let list_brands = await brandService.getAllBrands();
+
+            if (!list_brands || list_brands.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
+
             return res.status(200).json({
                 success: true,
                 data: list_brands
@@ -69,18 +85,13 @@ const brandController = {
         try {
 
             const currentBrand = await brandService.getBrandById(brandId);
-            if (!currentBrand) {
-                return res.status(404).json({
-                    message: "Không tìm thấy thương hiệu để cập nhật."
-                });
-            }
 
             if (file) {
                 let logo_url = await uploadImage.uploadLogoBrand(file.buffer, brandId)
                 dataUpdate.logo = logo_url;
             }
 
-            let updateData = await brandService.updateBrand(brandId, dataUpdate);
+            let updateData = await brandService.updateBrand(brandId, dataUpdate, currentBrand);
 
             return res.status(200).json({
                 success: true,
@@ -90,7 +101,7 @@ const brandController = {
 
         } catch (error) {
 
-            if (error.code === 'P2025' || error.message.includes('Record to update not found')) {
+            if (error.code === 'P2025') {
                 return res.status(404).json({ message: "Không tìm thấy thương hiệu để cập nhật." });
             }
 
@@ -120,6 +131,14 @@ const brandController = {
             })
 
         } catch (error) {
+
+            if (error.code === "P2025") {
+                return res.status(409).json({
+                    success: false,
+                    message: "Không tìm thấy thương hiệu.",
+                })
+            }
+
             return res.status(500).json({
                 message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
                 error: error.message,

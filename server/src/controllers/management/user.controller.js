@@ -68,11 +68,18 @@ const userController = {
         let userId = parseInt(req.params.id);
 
         try {
-            let dataUser = await userService.getUserById(userId);
+            let user = await userService.getUserById(userId);
+
+            if (!user || user.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
 
             return res.status(201).json({
                 success: true,
-                data: dataUser,
+                data: user,
             });
         } catch (error) {
             return res.status(500).json({
@@ -84,11 +91,18 @@ const userController = {
 
     getAllUser: async (req, res) => {
         try {
-            let listUsers = await userService.getAllUser();
+            let list_users = await userService.getAllUser();
+
+            if (!list_users || list_users.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
 
             return res.status(201).json({
                 success: true,
-                data: listUsers,
+                data: list_users,
             });
         } catch (error) {
             return res.status(500).json({

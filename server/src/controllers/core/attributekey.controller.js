@@ -23,6 +23,13 @@ const attributeKeyController = {
         let atttrId = parseInt(req.params.id);
         try {
             let attributeKey = await attributeKeyService.getAttributeKeyById(atttrId)
+
+            if (!attributeKey || attributeKey.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                });
+            }
             return res.status(200).json({
                 success: true,
                 data: attributeKey
@@ -37,10 +44,18 @@ const attributeKeyController = {
 
     getAllAttributeKey: async (req, res) => {
         try {
-            let attributeKey = await attributeKeyService.getAllAttributeKey();
+            let attributeKeys = await attributeKeyService.getAllAttributeKey();
+
+            if (!attributeKeys || attributeKeys.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                });
+            }
+
             return res.status(200).json({
                 success: true,
-                data: attributeKey
+                data: attributeKeys
             })
         } catch (error) {
             return res.status(500).json({
@@ -61,7 +76,7 @@ const attributeKeyController = {
             })
         } catch (error) {
             if (error.code === 'P2025')
-                return res.status(404).json({ message: "Không tìm thấy mã sản phẩm." });
+                return res.status(404).json({ message: "Không tìm thấy thuộc tính." });
             return res.status(500).json({
                 success: false,
                 message: error.message
@@ -79,7 +94,7 @@ const attributeKeyController = {
             })
         } catch (error) {
             if (error.code === 'P2025')
-                return res.status(404).json({ message: "Không tìm thấy mã sản phẩm." });
+                return res.status(404).json({ message: "Không tìm thấy thuộc tính." });
             return res.status(500).json({
                 success: false,
                 message: error.message

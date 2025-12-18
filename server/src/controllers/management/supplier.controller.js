@@ -38,6 +38,13 @@ const supplierController = {
         try {
             let supplier = await supplierService.getSupplierById(supplierId)
 
+            if (!supplier || supplier.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
+
             return res.status(200).json({
                 success: true,
                 data: supplier
@@ -52,11 +59,18 @@ const supplierController = {
 
     getAllSupplier: async (req, res) => {
         try {
-            let supplier = await supplierService.getAllSuppliers()
+            let list_suppliers = await supplierService.getAllSuppliers()
+
+            if (!list_suppliers || list_suppliers.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
 
             return res.status(200).json({
                 success: true,
-                data: supplier
+                data: list_suppliers
             })
         } catch (error) {
             return res.status(500).json({
@@ -96,6 +110,11 @@ const supplierController = {
             })
 
         } catch (error) {
+
+            if (error.code === 'P2025') {
+                return res.status(404).json({ message: "Không tìm thấy nhà cung cấp giá để cập nhật." });
+            }
+
             return res.status(500).json({
                 message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
                 error: error.message,
@@ -111,7 +130,7 @@ const supplierController = {
             const currentSupplier = await brandService.getSupplierById(supplierId);
             if (!currentSupplier) {
                 return res.status(404).json({
-                    message: "Không tìm thấy nhà cung cấp để cập nhật."
+                    message: "Không tìm thấy nhà cung cấp để xóa."
                 });
             }
 
@@ -122,14 +141,6 @@ const supplierController = {
                 message: "Nhà cung cấp đã được xóa khỏi hệ thống",
             });
         } catch (error) {
-
-            if (error.code === "P2025") {
-                return res.status(409).json({
-                    success: false,
-                    message: "Không tìm thấy người dùng trong hệ thống.",
-                });
-            }
-
             return res.status(500).json({
                 message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
                 error: error.message,

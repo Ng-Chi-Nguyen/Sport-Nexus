@@ -35,8 +35,9 @@ const brandService = {
     },
 
     updateBrand: async (brandId, dataUpdate) => {
-
-        await deleteImage(brandId, "brands", "logo");
+        if (currentBrand.logo) {
+            await deleteImage(brandId, "brands", "logo");
+        }
         let updateData = await prisma.Brands.update({
             where: { id: brandId },
             data: dataUpdate,

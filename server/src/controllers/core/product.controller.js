@@ -45,6 +45,12 @@ const productController = {
         let productId = parseInt(req.params.id);
         try {
             let product = await productService.getProductById(productId);
+            if (!product || product.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                });
+            }
             return res.status(200).json({
                 success: true,
                 data: product,
@@ -61,6 +67,12 @@ const productController = {
         let suppliertId = parseInt(req.params.id);
         try {
             let product = await productService.getProductBySupplierId(suppliertId);
+            if (!product || product.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                });
+            }
             return res.status(200).json({
                 success: true,
                 data: product
@@ -78,7 +90,13 @@ const productController = {
         try {
             // console.log(brandId)
             let product = await productService.getProductByBrandId(brandId);
-            console.log(product)
+            if (!product || product.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                });
+            }
+            // console.log(product)
             return res.status(200).json({
                 success: true,
                 data: product
@@ -95,6 +113,12 @@ const productController = {
         let categoryId = parseInt(req.params.id);
         try {
             let product = await productService.getProductByCategoryId(categoryId);
+            if (!product || product.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                });
+            }
             return res.status(200).json({
                 success: true,
                 data: product
@@ -109,10 +133,16 @@ const productController = {
 
     getAllProduct: async (req, res) => {
         try {
-            let list_product = await productService.getAllProduct();
+            let list_products = await productService.getAllProduct();
+            if (!list_products || list_products.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                });
+            }
             return res.status(200).json({
                 success: true,
-                data: list_product
+                data: list_products
             })
         } catch (error) {
             return res.status(500).json({

@@ -33,7 +33,14 @@ const categoryController = {
         let categoryId = parseInt(req.params.id)
 
         try {
-            let category = await categoryService.getCategoryById(categoryId)
+            let category = await categoryService.getCategoryById(categoryId);
+
+            if (!category || category.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
 
             return res.status(201).json({
                 success: true,
@@ -50,6 +57,14 @@ const categoryController = {
     getAllCategory: async (req, res) => {
         try {
             let list_categories = await categoryService.getAllCategory();
+
+            if (!list_categories || list_categories.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
+
             return res.status(201).json({
                 success: true,
                 data: list_categories
@@ -87,6 +102,11 @@ const categoryController = {
             })
 
         } catch (error) {
+
+            if (error.code === 'P2025') {
+                return res.status(404).json({ message: "Không tìm thấy danh mục để cập nhật." });
+            }
+
             return res.status(500).json({
                 success: false,
                 message: error.message
@@ -105,6 +125,12 @@ const categoryController = {
             })
 
         } catch (error) {
+
+            if (error.code === 'P2025') {
+                return res.status(404).json({ message: "Không tìm thấy danh mục để xóa." });
+            }
+
+
             return res.status(500).json({
                 success: false,
                 message: error.message

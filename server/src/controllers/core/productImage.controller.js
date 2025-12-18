@@ -44,7 +44,13 @@ const productImageController = {
     getProductImageById: async (req, res) => {
         let productImgId = parseInt(req.params.id)
         try {
-            let productImg = await productImageService.getProductImageById(productImgId)
+            let productImg = await productImageService.getProductImageById(productImgId);
+            if (!productImg || productImg.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                });
+            }
             return res.status(500).json({
                 success: true,
                 data: productImg
@@ -61,6 +67,12 @@ const productImageController = {
         let productId = parseInt(req.params.id)
         try {
             let productImg = await productImageService.getProductImageByProductId(productId)
+            if (!productImg || productImg.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                });
+            }
             return res.status(500).json({
                 success: true,
                 data: productImg
@@ -87,7 +99,7 @@ const productImageController = {
 
         try {
             const uploadPromises = files.map(file => {
-                console.log("Processing file for product ID:", productId);
+                // console.log("Processing file for product ID:", productId);
                 return uploadImage.uploadProductImage(
                     file.buffer,
                     `product_images_${Date.now()}`,
@@ -110,6 +122,8 @@ const productImageController = {
             });
 
         } catch (error) {
+            if (error.code === 'P2025')
+                return res.status(404).json({ message: "Không tìm thấy hình ảnh phụ sản phẩm." });
             return res.status(500).json({
                 success: false,
                 message: error.message
@@ -127,6 +141,8 @@ const productImageController = {
                 message: "Xóa hình ảnh mô tả thành công"
             })
         } catch (error) {
+            if (error.code === 'P2025')
+                return res.status(404).json({ message: "Không tìm thấy hình ảnh phụ sản phẩm." });
             return res.status(500).json({
                 success: false,
                 message: error.message
