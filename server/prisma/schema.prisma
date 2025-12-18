@@ -141,6 +141,7 @@ model ProductImages {
     @@map("productimages")
 }
 
+// ProductVariants Done
 model ProductVariants {
     id         Int      @id @default(autoincrement())
     stock      Int
@@ -158,6 +159,7 @@ model ProductVariants {
     @@map("productvariants")
 }
 
+// AttributeKeys Done
 model AttributeKeys {
     id                 Int                  @id @default(autoincrement())
     name               String               @unique @db.VarChar(191)
@@ -167,6 +169,7 @@ model AttributeKeys {
     @@map("attributekeys")
 }
 
+// AttributeKeys Done
 model VariableAttributes {
     id               Int             @id @default(autoincrement())
     variable_id      Int
@@ -179,6 +182,7 @@ model VariableAttributes {
     @@map("variableattributes")
 }
 
+// Coupons Done
 model Coupons {
     id              Int      @id @default(autoincrement())
     code            String   @unique
@@ -199,20 +203,43 @@ model Coupons {
     @@map("coupons")
 }
 
+enum OrderStatus {
+    Processing
+    Shipping
+    Delivered
+    Cancelled
+    Refunded
+}
+
+enum PaymentMethod {
+    COD // Thanh toán khi nhận hàng
+    BANK_TRANSFER // Chuyển khoản ngân hàng
+    MOMO // Ví MoMo
+    VNPAY // Cổng VNPay
+    CREDIT_CARD // Thẻ tín dụng
+}
+
+enum PaymentStatus {
+    Pending // Đang chờ
+    Paid // Đã thanh toán
+    Failed // Thất bại
+    Refunded // Đã hoàn tiền
+}
+
 model Orders {
-    id               Int          @id @default(autoincrement())
-    total_amount     Decimal      @db.Decimal(10, 2)
-    status           String       @default("Processing")
+    id               Int           @id @default(autoincrement())
+    total_amount     Decimal       @db.Decimal(10, 2)
+    status           OrderStatus   @default(Processing)
     shipping_address String
-    payment_method   String       @default("Cash On Delivery")
-    payment_status   Boolean      @default(false)
-    discount_amount  Decimal      @db.Decimal(10, 2)
-    final_amount     Decimal      @db.Decimal(10, 2)
-    created_at       DateTime     @default(now())
-    coupon_id        Int
-    coupon           Coupons      @relation(fields: [coupon_id], references: [id], onDelete: Cascade)
-    user_id          Int
-    user             Users        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    payment_method   PaymentMethod @default(COD)
+    payment_status   PaymentStatus @default(Pending)
+    discount_amount  Decimal       @db.Decimal(10, 2)
+    final_amount     Decimal       @db.Decimal(10, 2)
+    created_at       DateTime      @default(now())
+    coupon_code      String?
+    coupon           Coupons?      @relation(fields: [coupon_code], references: [code], onDelete: Cascade)
+    user_email       String
+    user             Users         @relation(fields: [user_email], references: [email], onDelete: Cascade)
     OrderItems       OrderItems[]
     Reviews          Reviews[]
 
@@ -231,6 +258,7 @@ model OrderItems {
     @@map("orderitems")
 }
 
+// Cart Done
 model Carts {
     id         Int         @id @default(autoincrement())
     updated_at DateTime    @updatedAt
@@ -241,6 +269,7 @@ model Carts {
     @@map("carts")
 }
 
+// CartItems Done
 model CartItems {
     id                 Int             @id @default(autoincrement())
     quantity           Int
