@@ -3,7 +3,7 @@
 ## Ngôn ngữ
 
 - **BẮT BUỘC**: Viết tất cả commit message bằng tiếng Việt.
-- Không được trộn lẫn tiếng Anh, tiếng Việt.
+- Không được trộn lẫn tiếng Anh, tiếng Việt
 
 ## Cấu trúc commit message
 

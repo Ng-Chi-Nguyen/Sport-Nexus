@@ -14,4 +14,4 @@ userRoute
     .put("/:id", validate(userSchema.updateUser), uploadImageAvatar, userController.updateUser)
     .delete("/:id", userController.deleteUserById)
 
-export default userRoute; 
+export default userRoute;

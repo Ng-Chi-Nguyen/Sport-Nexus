@@ -23,6 +23,7 @@ const userController = {
             }
 
             return res.status(500).json({
+                success: false,
                 message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
                 error: error.message,
             });

@@ -3,8 +3,8 @@ import prisma from "../../db/prisma.js";
 const orderService = {
     createOrder: async (orderData) => {
         let { total_amount, status, shipping_address, payment_method,
-            payment_status, discount_amount, final_amount, coupon_code, user_email } = orderData;
-        console.log(orderData)
+            payment_status, discount_amount, final_amount, coupon_code, user_email, items } = orderData;
+        // console.log(orderData)
         let newOrder = await prisma.Orders.create({
             data: {
                 total_amount: total_amount,
@@ -17,7 +17,17 @@ const orderService = {
                 coupon: coupon_code
                     ? { connect: { code: coupon_code } }
                     : undefined,
-                user: { connect: { email: user_email } }
+                user: { connect: { email: user_email } },
+                OrderItems: {
+                    create: items.map(item => ({
+                        product_variant_id: item.product_variant_id,
+                        quantity: item.quantity,
+                        price_at_purchase: item.price_at_purchase
+                    }))
+                },
+            },
+            include: {
+                OrderItems: true
             }
         })
 
@@ -26,16 +36,22 @@ const orderService = {
 
     getOrderById: async (orderId) => {
         let order = await prisma.Orders.findUnique({
-            where: { id: orderId }
+            where: { id: orderId },
+            include: {
+                OrderItems: true
+            }
         })
 
         return order;
     },
 
     getOrderByEmail: async (email) => {
-        console.log(email)
+        // console.log(email)
         let orders = await prisma.Orders.findMany({
-            where: { user_email: email }
+            where: { user_email: email },
+            include: {
+                OrderItems: true
+            }
         })
 
         return orders;
@@ -43,14 +59,21 @@ const orderService = {
 
     getOrderByCode: async (code) => {
         let orders = await prisma.Orders.findMany({
-            where: { coupon_code: code }
+            where: { coupon_code: code },
+            include: {
+                OrderItems: true
+            }
         })
 
         return orders;
     },
 
     getAllOrder: async () => {
-        let orders = await prisma.Orders.findMany()
+        let orders = await prisma.Orders.findMany({
+            include: {
+                OrderItems: true
+            }
+        })
         return orders;
     },
 
@@ -58,6 +81,9 @@ const orderService = {
         let updateOrder = await prisma.Orders.update({
             where: { id: orderId },
             data: dataUpdate,
+            include: {
+                OrderItems: true
+            }
         })
         return updateOrder;
     },

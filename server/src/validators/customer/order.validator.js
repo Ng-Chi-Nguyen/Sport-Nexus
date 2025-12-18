@@ -23,7 +23,20 @@ const orderSchema = {
         final_amount: Joi.number().precision(2).min(0).required(),
 
         coupon_code: Joi.string().allow(null).default(null),
-        user_email: Joi.string().required()
+        user_email: Joi.string().required(),
+        items: Joi.array().items(
+            Joi.object({
+                product_variant_id: Joi.number().integer().required().messages({
+                    'any.required': 'ID biến thể sản phẩm là bắt buộc'
+                }),
+                quantity: Joi.number().integer().min(1).required().messages({
+                    'number.min': 'Số lượng phải ít nhất là 1'
+                }),
+                price_at_purchase: Joi.number().min(0).required()
+            })
+        ).min(1).required().messages({
+            'array.min': 'Đơn hàng phải có ít nhất một sản phẩm'
+        })
     }),
 
     updateOrder: Joi.object({
@@ -46,7 +59,20 @@ const orderSchema = {
         final_amount: Joi.number().precision(2).min(0),
 
         // coupon_code: Joi.string().allow(null).default(null),
-        user_email: Joi.string()
+        user_email: Joi.string(),
+        items: Joi.array().items(
+            Joi.object({
+                product_variant_id: Joi.number().integer().messages({
+                    'any.required': 'ID biến thể sản phẩm là bắt buộc'
+                }),
+                quantity: Joi.number().integer().min(1).messages({
+                    'number.min': 'Số lượng phải ít nhất là 1'
+                }),
+                price_at_purchase: Joi.number().min(0)
+            })
+        ).min(1).messages({
+            'array.min': 'Đơn hàng phải có ít nhất một sản phẩm'
+        })
     }),
 }
 
