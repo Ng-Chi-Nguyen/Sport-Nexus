@@ -115,6 +115,54 @@ const orderController = {
                 error: error.message
             })
         }
+    },
+
+    updateOrder: async (req, res) => {
+        let dataUpdate = req.body;
+        let orderId = parseInt(req.params.id);
+        try {
+            let updateOrder = await orderService.updateOrder(orderId, dataUpdate);
+            return res.status(200).json({
+                success: true,
+                message: "Cập nhật đơn hàng thành công",
+                data: updateOrder
+            })
+        } catch (error) {
+            if (error.code === "P2025") {
+                return res.status(409).json({
+                    success: false,
+                    message: "Không tìm thấy đơn hàng.",
+                })
+            }
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                error: error.message
+            })
+        }
+    },
+
+    deleteOrder: async (req, res) => {
+        let orderId = parseInt(req.params.id);
+        try {
+            await orderService.deleteOrder(orderId);
+            return res.status(200).json({
+                success: true,
+                message: "Xóa đơn hàng thành công"
+            })
+        } catch (error) {
+            if (error.code === "P2025") {
+                return res.status(409).json({
+                    success: false,
+                    message: "Không tìm thấy đơn hàng.",
+                })
+            }
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                error: error.message
+            })
+        }
     }
 }
 

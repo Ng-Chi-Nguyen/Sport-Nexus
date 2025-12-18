@@ -12,5 +12,7 @@ orderRoute
     .get("/email/:email", orderController.getOrderByEmail)
     .get("/code/:code", orderController.getOrderByCode)
     .get("/", orderController.getAllOrder)
+    .put("/:id", validate(orderSchema.updateOrder), orderController.updateOrder)
+    .delete("/:id", orderController.deleteOrder)
 
 export default orderRoute;

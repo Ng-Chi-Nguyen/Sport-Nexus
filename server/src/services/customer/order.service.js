@@ -53,6 +53,20 @@ const orderService = {
         let orders = await prisma.Orders.findMany()
         return orders;
     },
+
+    updateOrder: async (orderId, dataUpdate) => {
+        let updateOrder = await prisma.Orders.update({
+            where: { id: orderId },
+            data: dataUpdate,
+        })
+        return updateOrder;
+    },
+
+    deleteOrder: async (orderId) => {
+        await prisma.Orders.delete({
+            where: { id: orderId }
+        })
+    }
 }
 
 export default orderService;
