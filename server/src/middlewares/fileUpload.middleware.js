@@ -30,6 +30,7 @@ const uploadImageLogoBrand = upload.single('logo');
 const uploadImageCategory = upload.single('image');
 const uploadThubnailProduct = upload.single('thumbnail');
 const uploadProductImage = upload.array('url', 10);
+const uploadMediaImage = upload.array('media_urls', 5);
 
 export {
     uploadImageAvatar,
@@ -37,5 +38,6 @@ export {
     uploadImageLogoBrand,
     uploadImageCategory,
     uploadThubnailProduct,
-    uploadProductImage
+    uploadProductImage,
+    uploadMediaImage
 };

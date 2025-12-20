@@ -4,6 +4,7 @@ import productImageRoute from "./core/productImage.route.js";
 import productVariantRoute from "./core/productvariants.route.js";
 import cartItemRoute from "./customer/cartItem.route.js";
 import orderRoute from "./customer/order.route.js";
+import reviewRoute from "./customer/review.route.js";
 import userAddressRoute from "./customer/useraddresses.route.js";
 import brandRoute from "./management/brand.route.js";
 import categoryRoute from "./management/category.route.js";
@@ -24,6 +25,7 @@ const Routes = (app) => {
     app.use("/api/v1/customer/user-address/", userAddressRoute)
     app.use("/api/v1/customer/cart-item/", cartItemRoute)
     app.use("/api/v1/customer/order/", orderRoute)
+    app.use("/api/v1/customer/review/", reviewRoute)
 
     // Core - cốt lỗi của hệ thống (Management và Customer)
     app.use("/api/v1/core/product/", productRoute)

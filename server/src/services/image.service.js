@@ -29,6 +29,10 @@ const uploadImage = {
         return uploadFileToSupabase(fileBuffer, `products_images/product_${productId}`, namePrefix);
     },
 
+    uploadMediaImage: async (fileBuffer, namePrefix, productId) => {
+        return uploadFileToSupabase(fileBuffer, `media_images/product_${productId}`, namePrefix);
+    },
+
     deleteFile: async (fileUrl, bucketName) => {
         if (!fileUrl) return;
         const bucketIndex = fileUrl.indexOf(`/public/${bucketName}/`);

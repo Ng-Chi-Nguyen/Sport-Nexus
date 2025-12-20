@@ -226,6 +226,7 @@ enum PaymentStatus {
     Refunded // Đã hoàn tiền
 }
 
+// Orders Done
 model Orders {
     id               Int           @id @default(autoincrement())
     total_amount     Decimal       @db.Decimal(10, 2)
@@ -246,6 +247,7 @@ model Orders {
     @@map("orders")
 }
 
+// OrderItems Done
 model OrderItems {
     id                 Int             @id @default(autoincrement())
     quantity           Int
@@ -285,9 +287,9 @@ model Reviews {
     id            Int      @id @default(autoincrement())
     rating        Int
     comment       String?  @db.Text
-    media_urls    String?  @db.Text
+    media_urls    Json
     reply_comment String?  @db.Text
-    is_hidden     Boolean
+    is_hidden     Boolean  @default(true)
     created_at    DateTime @default(now())
     updated_at    DateTime @updatedAt
     user_id       Int
