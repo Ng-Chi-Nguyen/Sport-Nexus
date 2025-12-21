@@ -322,14 +322,20 @@ model StockMovements {
     @@map("stockmovements")
 }
 
-model PurchaseOrders {
-    id Int @id @default(autoincrement())
+enum StatusPurchaseOrders {
+    PENDING // Đang chờ
+    RECEIVED // Đã nhận đủ
+    PARTIALLY_RECEIVED // Đã nhận một phần
+    CANCELLED // Đã hủy
+}
 
+model PurchaseOrders {
+    id                     Int                  @id @default(autoincrement())
     supplier_id            Int
     supplier               Suppliers            @relation(fields: [supplier_id], references: [id])
     order_date             DateTime             @default(now())
     expected_delivery_date DateTime
-    status                 String               @default("PENDING") @db.VarChar(50) // Trạng thái: PENDING, RECEIVED, CANCELLED, etc.
+    status                 StatusPurchaseOrders @default(PENDING)
     total_cost             Decimal              @db.Decimal(10, 2)
     PurchaseOrderItems     PurchaseOrderItems[]
 

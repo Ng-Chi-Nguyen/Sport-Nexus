@@ -57,6 +57,7 @@ const stockMovementController = {
             return res.status(500).json({
                 success: false,
                 message: "Lỗi server nội bộ.",
+                error: error.message
             });
         }
     },
@@ -78,6 +79,7 @@ const stockMovementController = {
             return res.status(500).json({
                 success: false,
                 message: "Lỗi server nội bộ.",
+                error: error.message
             });
         }
     },
@@ -96,9 +98,10 @@ const stockMovementController = {
             if (error.code === 'P2025') {
                 return res.status(404).json({ message: "Không tìm thấy tồn kho để cập nhật." });
             }
-            return res.status(201).json({
-                success: true,
-                data: stockMovements
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server nội bộ",
+                error: error.message
             });
         }
     },
@@ -115,9 +118,10 @@ const stockMovementController = {
             if (error.code === 'P2025') {
                 return res.status(404).json({ message: "Không tìm thấy tồn kho để cập nhật." });
             }
-            return res.status(201).json({
-                success: true,
-                data: stockMovements
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server nội bộ",
+                error: error.message
             });
         }
     }

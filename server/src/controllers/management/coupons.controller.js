@@ -23,9 +23,9 @@ const couponController = {
 
             return res.status(500).json({
                 success: false,
-                message: error.message,
-                code: error.code
-            })
+                message: "Lỗi server nội bộ",
+                error: error.message
+            });
         }
     },
 
@@ -71,8 +71,9 @@ const couponController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
-            })
+                message: "Lỗi server nội bộ",
+                error: error.message
+            });
         }
     },
 
@@ -115,8 +116,9 @@ const couponController = {
 
             return res.status(500).json({
                 success: false,
-                message: error.message
-            })
+                message: "Lỗi server nội bộ",
+                error: error.message
+            });
         }
     }
 }
