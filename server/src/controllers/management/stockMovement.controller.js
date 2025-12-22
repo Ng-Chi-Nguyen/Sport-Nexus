@@ -27,6 +27,7 @@ const stockMovementController = {
                     message: "Không có tồn kho"
                 });
             }
+            // console.log(stockMovement)
             return res.status(201).json({
                 success: true,
                 data: stockMovement
@@ -35,6 +36,7 @@ const stockMovementController = {
             return res.status(500).json({
                 success: false,
                 message: "Lỗi server nội bộ.",
+                error: error.message
             });
         }
     },
@@ -85,7 +87,7 @@ const stockMovementController = {
     },
 
     updateStockMovement: async (req, res) => {
-        let dataUpdate = req, body;
+        let dataUpdate = req.body;
         let stockId = parseInt(req.params.id)
         try {
             let updateStock = await stockMovementService.updateStockMovement(stockId, dataUpdate);

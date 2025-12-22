@@ -309,6 +309,7 @@ enum TypeStock {
     ADJUSTMENT // Điều chỉnh / Kiểm kê
 }
 
+// StockMovements Done
 model StockMovements {
     id              Int             @id @default(autoincrement())
     variant_id      Int
@@ -329,6 +330,7 @@ enum StatusPurchaseOrders {
     CANCELLED // Đã hủy
 }
 
+// PurchaseOrders Done
 model PurchaseOrders {
     id                     Int                  @id @default(autoincrement())
     supplier_id            Int
@@ -342,6 +344,7 @@ model PurchaseOrders {
     @@map("purchaseorders")
 }
 
+// PurchaseOrderItems Done
 model PurchaseOrderItems {
     id                 Int             @id @default(autoincrement())
     purchase_order_id  Int

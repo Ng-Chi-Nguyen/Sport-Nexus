@@ -2,21 +2,22 @@ import prisma from "../../db/prisma.js";
 
 const stockMovementService = {
     createStockMovement: async (dataStockMovement) => {
-        let { variant_id, type, quantity_change, referen_id, reason } = dataStockMovement;
-        let newStockMovement = await prisma.stockMovements.create({
+        let { variant_id, type, quantity_change, reference_id, reason } = dataStockMovement;
+        console.log(dataStockMovement)
+        let newStockMovement = await prisma.StockMovements.create({
             data: {
-                variant: variant_id,
+                variant: { connect: { id: variant_id } },
                 type: type,
                 quantity_change: quantity_change,
                 reason: reason,
-                reference_id: referen_id
+                reference_id: reference_id
             }
         })
         return newStockMovement;
     },
 
     getStockMovementById: async (stockId) => {
-        let stock = await prisma.StockMovements.findUniQue({
+        let stock = await prisma.StockMovements.findUnique({
             where: { id: stockId }
         })
         return stock;
@@ -35,6 +36,7 @@ const stockMovementService = {
     },
 
     updateStockMovement: async (stockId, dataStockMovement) => {
+        console.log(dataStockMovement)
         let updateStock = await prisma.StockMovements.update({
             where: { id: stockId },
             data: dataStockMovement
