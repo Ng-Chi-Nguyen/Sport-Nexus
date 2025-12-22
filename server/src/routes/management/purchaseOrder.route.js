@@ -8,5 +8,9 @@ purchaseOrderRoute
 
     .post("/", validate(purchaseOrderSchema.createPurchaseOrder), purchaseOrderController.createPurchaseOrder)
     .put("/:id", validate(purchaseOrderSchema.updatePurchaseOrder), purchaseOrderController.updatePurchaseOrder)
+    .get("/:id", purchaseOrderController.getPurchaseOrderById)
+    .get("/supplier/:id", purchaseOrderController.getPurchaseOrderBySupplierId)
+    .get("/", purchaseOrderController.getAllPurchaseOrder)
+    .delete("/:id", purchaseOrderController.deletePurchaseOrder)
 
 export default purchaseOrderRoute;

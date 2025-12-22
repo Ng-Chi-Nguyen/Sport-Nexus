@@ -25,7 +25,7 @@ const purchaseOrderService = {
 
     updatePurchaseOrder: async (purschaseOrderId, dataUpdate) => {
         let { supplier_id, expected_delivery_date, total_cost, items } = dataUpdate;
-        console.log(dataUpdate)
+        // console.log(dataUpdate)
         let updatePurchaseOrder = await prisma.PurchaseOrders.update({
             where: { id: purschaseOrderId },
             data: {
@@ -49,13 +49,39 @@ const purchaseOrderService = {
     },
 
     getPurchaseOrderById: async (purchaseOrderId) => {
-
+        let purchaseOrder = await prisma.PurchaseOrders.findUnique({
+            where: { id: purchaseOrderId },
+            include: {
+                PurchaseOrderItems: true
+            }
+        })
+        return purchaseOrder;
     },
 
     getPurchaseOrderBySupplierId: async (supplierId) => {
-
+        let purchaseOrders = await prisma.PurchaseOrders.findMany({
+            where: { supplier_id: supplierId },
+            include: {
+                PurchaseOrderItems: true
+            }
+        })
+        return purchaseOrders;
     },
 
+    getAllPurchaseOrder: async () => {
+        let purchaseOrders = await prisma.PurchaseOrders.findMany({
+            include: {
+                PurchaseOrderItems: true
+            }
+        })
+        return purchaseOrders;
+    },
+
+    deletePurchaseOrder: async (purchaseOrderId) => {
+        await prisma.PurchaseOrders.delete({
+            where: { id: purchaseOrderId }
+        })
+    }
 }
 
 export default purchaseOrderService;

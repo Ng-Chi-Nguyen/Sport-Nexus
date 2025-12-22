@@ -332,7 +332,7 @@ enum StatusPurchaseOrders {
 model PurchaseOrders {
     id                     Int                  @id @default(autoincrement())
     supplier_id            Int
-    supplier               Suppliers            @relation(fields: [supplier_id], references: [id])
+    supplier               Suppliers            @relation(fields: [supplier_id], references: [id], onDelete: Cascade)
     order_date             DateTime             @default(now())
     expected_delivery_date DateTime
     status                 StatusPurchaseOrders @default(PENDING)
@@ -345,9 +345,9 @@ model PurchaseOrders {
 model PurchaseOrderItems {
     id                 Int             @id @default(autoincrement())
     purchase_order_id  Int
-    purchase_order     PurchaseOrders  @relation(fields: [purchase_order_id], references: [id])
+    purchase_order     PurchaseOrders  @relation(fields: [purchase_order_id], references: [id], onDelete: Cascade)
     product_variant_id Int
-    product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id])
+    product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
     quantity           Int
     unit_cost_price    Decimal         @db.Decimal(10, 2)
     quantity_received  Int             @default(0)
