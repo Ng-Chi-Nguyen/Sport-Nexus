@@ -1,3 +1,4 @@
+import authRoute from "./auth/auth.route.js";
 import attriButeKeyRoute from "./core/attributekey.route.js";
 import productRoute from "./core/product.route.js";
 import productImageRoute from "./core/productImage.route.js";
@@ -38,6 +39,9 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}core/product-image/`, productImageRoute)
     app.use(`${api_prefix_v1}core/product-variant/`, productVariantRoute)
     app.use(`${api_prefix_v1}core/variant-attribute-key/`, attriButeKeyRoute)
+
+    // Auth - Xác thực
+    app.use(`${api_prefix_v1}auth/`, authRoute)
 }
 
 export default Routes;
