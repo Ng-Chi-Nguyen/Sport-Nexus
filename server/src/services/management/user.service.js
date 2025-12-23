@@ -9,7 +9,7 @@ const userService = {
         // console.log(full_name, email, password, phone_number, avatar)
 
         let password_hash = await bcrypt.hash(password, 10);
-
+        let vToken = crypto.randomUUID();
         let newUser = await prisma.Users.create({
             data: {
                 full_name: full_name,
@@ -18,6 +18,7 @@ const userService = {
                 phone_number: phone_number,
                 avatar: avatar,
                 status: true,
+                verification_token: vToken,
                 is_verified: false,
                 role_id: 3,
             },

@@ -45,10 +45,32 @@ const authService = {
             { expiresIn: '15m' }
         );
 
+        const refresh_token = jwt.sign(
+            { id: user.id },
+            process.env.JWT_ACCESS_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        await prisma.Users.update({
+            where: { id: user.id },
+            data: { refresh_token: refresh_token }
+        });
+
         delete user.password;
         delete user.verification_token;
+        user.refresh_token = refresh_token;
 
         return { user, accessToken };
+    },
+
+    logout: async (userId) => {
+        await prisma.Users.update({
+            where: { id: Number(userId) },
+            data: {
+                refresh_token: null,
+                updated_at: new Date()
+            }
+        });
     }
 }
 
