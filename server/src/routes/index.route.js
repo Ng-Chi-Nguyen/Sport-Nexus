@@ -14,6 +14,7 @@ import purchaseOrderRoute from "./management/purchaseOrder.route.js";
 import stockMovementRoute from "./management/stockMovement.route.js";
 import supplierRoute from "./management/supplier.route.js";
 import userRoute from "./management/user.route.js";
+import homeRoute from "./web/home.route.js";
 
 const Routes = (app) => {
 
@@ -42,6 +43,9 @@ const Routes = (app) => {
 
     // Auth - Xác thực
     app.use(`${api_prefix_v1}auth/`, authRoute)
+
+    // Web - Hiện thì data các trang / Route các trang
+    app.use(`${api_prefix_v1}home/`, homeRoute)
 }
 
 export default Routes;
