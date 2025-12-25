@@ -4,9 +4,10 @@ import { Outlet } from "react-router-dom";
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="h-screen overflow-hidden flex flex-col">
+      <Header className="h-[65px] shrink-0 mb-[100px]" />
+
+      <main className="flex-1 overflow-hidden">
         <Outlet />
       </main>
     </div>

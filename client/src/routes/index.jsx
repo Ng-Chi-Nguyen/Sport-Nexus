@@ -4,6 +4,8 @@ import { createBrowserRouter } from "react-router-dom";
 import homeService from "../services/homeService";
 import App from "@/App";
 import HomePage from "@/pages/Home";
+import Dashboard from "@/pages/Admin/Dashboard/dashboard";
+import AdminLayout from "@/layouts/AdminLayout";
 // import HomePage from "@/pages/Home";
 // import homeService from "@/services/homeService";
 
@@ -33,6 +35,17 @@ const router = createBrowserRouter([
       },
     ],
     // loader: homeLoader,
+  },
+  {
+    path: "/dashboard-management",
+    element: <App />,
+    children: [
+      {
+        path: "",
+        element: <AdminLayout />,
+        children: [{ index: true, element: <Dashboard /> }],
+      },
+    ],
   },
 ]);
 

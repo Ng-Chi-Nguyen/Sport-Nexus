@@ -9,16 +9,16 @@ import {
 } from "lucide-react";
 import Logo from "./logo";
 import SearchHeader from "./search";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
     <>
-      <header className="w-full bg-white border-b shadow-sm">
+      <header className="w-full bg-white border-b shadow-sm h-[65px]">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-8">
           <div className="flex-shrink-0">
             <Logo />
           </div>
-
           <div className="flex-1 max-w-2xl">
             <SearchHeader />
           </div>
@@ -35,13 +35,16 @@ const Header = () => {
           </div>
           <span className="border border-solid w-[1px] h-8"></span>
           <div className="flex items-center">
-            <div className=" mr-3 cursor-pointer group">
+            <Link
+              to="/dashboard-management"
+              className=" mr-3 cursor-pointer group"
+            >
               <LayoutDashboard
                 size={28}
                 strokeWidth={1}
                 className="group-hover:text-blue-600 transition-colors"
               />
-            </div>
+            </Link>
             <div className="border border-solid flex items-center mr-5 px-3 py-1">
               <User className="text-blue-500" />
               <p className="text-blue-500 font-bold">Tài khoản</p>
