@@ -3,7 +3,10 @@ import { Search } from "lucide-react";
 const SearchHeader = () => {
   return (
     <div className="relative">
-      <Search className="absolute left-1 top-2 w-5 h-5 text-gray-500" />
+      <Search
+        className="absolute left-1 top-3 w-5 h-5 text-gray-500"
+        strokeWidth={0.5}
+      />
       <input
         type="text"
         placeholder="Tìm kiếm sản phẩm"
