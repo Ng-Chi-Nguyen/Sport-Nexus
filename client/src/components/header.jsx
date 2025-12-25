@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import Logo from "./logo";
 import SearchHeader from "./search";
-import LogoVN from "@/assets/CoVNam.jpg";
 
 const Header = () => {
   return (
