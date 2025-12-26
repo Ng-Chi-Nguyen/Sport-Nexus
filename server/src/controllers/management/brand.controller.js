@@ -22,7 +22,7 @@ const brandController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: "Lỗi server nội bộ.",
                 error: error.message,
             });
         }

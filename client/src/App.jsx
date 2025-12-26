@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 function App() {
   return (
     <div className="h-screen overflow-hidden flex flex-col">
-      <Header className="h-[65px] shrink-0 mb-[100px]" />
+      <Header className="h-[65px] shrink-0" />
 
       <main className="flex-1 overflow-hidden">
         <Outlet />

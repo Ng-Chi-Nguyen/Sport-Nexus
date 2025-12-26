@@ -1,3 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,800;1,800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        /* Sử dụng font Inter mặc định, chữ mượt trên mọi màn hình */
+        @apply font-sans text-slate-900 antialiased bg-white;
+    }
+
+    /* Định nghĩa tiêu đề kiểu thể thao: Chữ in hoa và hơi nghiêng */
+    h1,
+    h2,
+    h3 {
+        @apply font-display uppercase italic tracking-tighter;
+    }
+}
+
+/* --- TÙY CHỈNH THANH CUỘN TOÀN TRANG --- */
+/* --- Cấu hình thanh cuộn mỏng, vuông và ẩn hiện khi hover --- */
+
+/* 1. Thiết lập độ rộng mỏng và vuông cho toàn bộ web */
+::-webkit-scrollbar {
+    width: 6px;
+    /* Độ mỏng bạn muốn */
+    height: 6px;
+    /* Cho thanh cuộn ngang */
+}
+
+/* 2. Phần đường ray (track) luôn để trong suốt */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* 3. Phần tay cầm (thumb): Mặc định là trong suốt để "ẩn" đi */
+::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 0px;
+    /* Hình vuông hoàn toàn theo ý bạn */
+    transition: background 0.3s ease;
+}
+
+/* 4. CHÌA KHÓA: Khi hover vào trang (body) hoặc bất kỳ vùng cuộn nào, 
+      thì thanh cuộn của vùng đó mới hiện màu #4facf3 */
+*:hover::-webkit-scrollbar-thumb {
+    background: #4facf3;
+}
+
+/* 5. Khi di chuột trực tiếp vào thanh cuộn thì cho màu đậm hơn một chút (tùy chọn) */
+::-webkit-scrollbar-thumb:hover {
+    background: #3b95d1;
+}
+
+/* Hỗ trợ cho Firefox (Firefox chưa hỗ trợ ẩn hiện hover mượt như Webkit) */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+*:hover {
+    scrollbar-color: #4facf3 transparent;
+}

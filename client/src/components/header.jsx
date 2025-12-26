@@ -16,7 +16,7 @@ const Header = () => {
     <>
       <header className="w-full bg-white border-b shadow-sm h-[65px]">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-8">
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 w-[200px]">
             <Logo />
           </div>
           <div className="flex-1 max-w-2xl">
@@ -35,10 +35,7 @@ const Header = () => {
           </div>
           <span className="border border-solid w-[1px] h-8"></span>
           <div className="flex items-center">
-            <Link
-              to="/dashboard-management"
-              className=" mr-3 cursor-pointer group"
-            >
+            <Link to="/managament" className=" mr-3 cursor-pointer group">
               <LayoutDashboard
                 size={28}
                 strokeWidth={1}
