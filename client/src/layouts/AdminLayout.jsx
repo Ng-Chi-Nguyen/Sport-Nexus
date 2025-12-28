@@ -214,7 +214,7 @@ const AdminLayout = () => {
         ))}
       </div>
       <div className="flex-1 flex flex-col border-l border-blue-400">
-        <div className="flex-1 bg-white">
+        <div className="flex-1 bg-white p-2">
           <Outlet />
         </div>
       </div>
