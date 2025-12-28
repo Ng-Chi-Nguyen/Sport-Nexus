@@ -2,7 +2,7 @@ import { ChevronRight } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 const Breadcrumbs = (props) => {
-  console.log("Dữ liệu nhận được:", props.data);
+  //   console.log("Dữ liệu nhận được:", props.data);
   return (
     <nav className="flex items-center space-x-2 text-sm">
       {props.data.map((item, index) => {
@@ -12,10 +12,10 @@ const Breadcrumbs = (props) => {
           <React.Fragment key={index}>
             <Link
               to={item.route}
-              className={`transition-colors duration-200 ${
+              className={`transition-colors duration-200 my-2 ${
                 isLast
                   ? "text-[#4facf3] font-bold uppercase italic tracking-tighter"
-                  : "text-gray-500 hover:text-gray-700 cursor-pointer"
+                  : "text-gray-500 hover:text-gray-700"
               }`}
             >
               {item.title}

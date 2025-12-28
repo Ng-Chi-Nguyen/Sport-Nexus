@@ -162,12 +162,10 @@ const AdminLayout = () => {
       <div className="w-[20%] h-screen overflow-y-auto custom-scrollbar transition-all duration-300 p-3">
         {sidebarSections.map((section, index) => (
           <div key={index} className="mb-6">
-            {/* Tiêu đề nhóm - font 900 và màu xanh đặc trưng của bạn */}
             <p className="font-[900] text-[#4facf3] text-[16px] mb-2 tracking-tight">
               {section.title}
             </p>
 
-            {/* Danh sách items trong nhóm */}
             <ul className="border-l-[5px] border-[#4facf3] pl-2 space-y-1">
               {section.items.map((item) => (
                 <NavLink
@@ -181,7 +179,6 @@ const AdminLayout = () => {
                 >
                   {({ isActive }) => (
                     <>
-                      {/* Icon: Tự động đổi màu khi Active hoặc Hover */}
                       <span
                         className={`
                   transition-transform duration-200 group-hover:scale-110
@@ -193,7 +190,6 @@ const AdminLayout = () => {
                       </span>
 
                       <div className="ml-2">
-                        {/* Label: text 17px như yêu cầu */}
                         <span
                           className={`
                     ml-2 text-[17px] transition-colors duration-200 
@@ -214,6 +210,7 @@ const AdminLayout = () => {
         ))}
       </div>
       <div className="flex-1 flex flex-col border-l border-blue-400">
+        <div className=""></div>
         <div className="flex-1 bg-white p-2">
           <Outlet />
         </div>

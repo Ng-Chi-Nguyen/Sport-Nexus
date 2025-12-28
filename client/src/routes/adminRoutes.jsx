@@ -1,8 +1,11 @@
 import { lazy } from "react";
 
 // Lazy load các trang để giảm dung lượng file ban đầu
-const Dashboard = lazy(() => import("@/pages/Admin/Dashboard/dashboard"));
+// User
 const UserPage = lazy(() => import("@/pages/Admin/users"));
+const CreateUserPage = lazy(() => import("@/pages/Admin/users/create"));
+
+const Dashboard = lazy(() => import("@/pages/Admin/Dashboard/dashboard"));
 const ProductPage = lazy(() => import("@/pages/Admin/products"));
 const BrandPage = lazy(() => import("@/pages/Admin/brands"));
 const CartPage = lazy(() => import("@/pages/Admin/Carts"));
@@ -20,12 +23,12 @@ const RolePage = lazy(() => import("@/pages/Admin/roles"));
 const Category = lazy(() => import("@/pages/Admin/categories"));
 const Review = lazy(() => import("@/pages/Admin/reviews"));
 const Variant = lazy(() => import("@/pages/Admin/productVariant"));
-
 export const adminRoutes = {
-  path: "managament", // Tiền tố chung
+  path: "management", // Tiền tố chung
   children: [
     { path: "dashboard", element: <Dashboard /> },
     { path: "users", element: <UserPage /> },
+    { path: "users/create", element: <CreateUserPage /> },
     { path: "products", element: <ProductPage /> },
     { path: "orders", element: <OrderPage /> },
     { path: "brands", element: <BrandPage /> },

@@ -26,6 +26,10 @@ export default {
         'body-lg': ['1.125rem', { lineHeight: '1.75' }],
         'tiny': ['0.625rem', { lineHeight: '1rem' }], // 10px
       },
+      colors: {
+        'primary': '#4facf3',
+        'btn': 'bg-blue-500',
+      },
     },
   },
   plugins: [],
