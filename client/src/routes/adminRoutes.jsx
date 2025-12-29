@@ -21,8 +21,11 @@ const SupplierPage = lazy(() => import("@/pages/Admin/suppliers"));
 const LogPage = lazy(() => import("@/pages/Admin/systemlogs"));
 const AddressPage = lazy(() => import("@/pages/Admin/useraddresses"));
 // Role
-const RolePage = lazy(() => import("@/pages/Admin/roles"));
-const CreateRolePage = lazy(() => import("@/pages/Admin/roles/create"));
+const PermissionPage = lazy(() => import("@/pages/Admin/permissions"));
+const CreatePermissionPage = lazy(() =>
+  import("@/pages/Admin/permissions/create")
+);
+const EditPermissionPage = lazy(() => import("@/pages/Admin/permissions/edit"));
 
 const Category = lazy(() => import("@/pages/Admin/categories"));
 const Review = lazy(() => import("@/pages/Admin/reviews"));
@@ -46,11 +49,20 @@ export const adminRoutes = {
     { path: "purchase-item", element: <PurchaseOrderItemPage /> },
     { path: "purchase", element: <PurchaseOrderPage /> },
 
-    { path: "roles", element: <RolePage /> },
     {
-      path: "roles/create",
-      element: <CreateRolePage />,
+      path: "permissions",
+      element: <PermissionPage />,
       loader: LoaderPermissions.getGroups,
+    },
+    {
+      path: "permissions/create",
+      element: <CreatePermissionPage />,
+      loader: LoaderPermissions.getGroups,
+    },
+    {
+      path: `permissions/edit/:slug`,
+      element: <EditPermissionPage />,
+      loader: LoaderPermissions.getBySlug,
     },
 
     { path: "stocks", element: <StockPage /> },

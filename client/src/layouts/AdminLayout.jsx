@@ -116,7 +116,7 @@ const AdminLayout = () => {
       hoverClass: "group-hover:text-orange-600",
     },
     {
-      path: `${prefix_path}/roles`,
+      path: `${prefix_path}/permissions`,
       icon: <KeySquare strokeWidth={1} />,
       label: "Phân quyền",
       className: "text-[#d50707]",

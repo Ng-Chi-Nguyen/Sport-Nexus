@@ -28,9 +28,30 @@ const permissionService = {
         return updateRole;
     },
 
+    updatePermissionBySlug: async (permissionSlug, dataUpdate) => {
+        console.log(permissionSlug)
+        if (dataUpdate.name) {
+            let slug = await createAutoSlug(dataUpdate.name, "Permissions")
+            dataUpdate.slug = slug;
+        }
+        let updateRole = await prisma.Permissions.update({
+            where: { slug: permissionSlug },
+            data: dataUpdate
+        })
+        return updateRole;
+    },
+
     getRoleById: async (roleId) => {
         let role = await prisma.Permissions.findUnique({
             where: { id: roleId },
+        })
+        return role;
+    },
+
+    getRoleBySlug: async (roleSlug) => {
+        // console.log(roleSlug)
+        let role = await prisma.Permissions.findUnique({
+            where: { slug: roleSlug },
         })
         return role;
     },

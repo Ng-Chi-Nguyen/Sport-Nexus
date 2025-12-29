@@ -15,22 +15,22 @@ const breadcrumbData = [
   },
   {
     title: "Phân quyền",
-    route: "/management/roles",
+    route: "/management/permissions",
   },
   {
-    title: "Thêm quyền",
+    title: "Chỉnh sữa quyền",
     route: "#",
   },
 ];
 
-const CreateRolePage = () => {
+const CreatePermissionPage = () => {
   const navigate = useNavigate();
-  const groupedData = useLoaderData(); // Lấy dữ liệu từ loader của bạn
+  const permissionData = useLoaderData();
 
   // Dữ liệu gữi đi
-  const [selectedRole, setSelectedRole] = useState("");
-  const [selectedAction, setSelectedAction] = useState("");
-  const [permissionName, setPermissionName] = useState("");
+  const [selectedRole, setSelectedRole] = useState(permissionData.module);
+  const [selectedAction, setSelectedAction] = useState(permissionData.action);
+  const [permissionName, setPermissionName] = useState(permissionData.name);
   // -----------
 
   const moduleLabels = {
@@ -56,8 +56,6 @@ const CreateRolePage = () => {
     { slug: "delete", name: "🗑️ Xóa dữ liệu (Delete)" },
   ];
 
-  const allRoles = Object.values(groupedData).flat();
-
   const handleSubmit = async (e) => {
     e.preventDefault(); // Ngăn trang web tải lại
 
@@ -68,18 +66,20 @@ const CreateRolePage = () => {
       action: selectedAction,
     };
 
-    const response = await permissionApi.create(formData);
+    const response = await permissionApi.update(permissionData.slug, formData);
 
     if (response.success) {
       navigate(-1);
     }
   };
 
+  //   console.log(permissionData);
+
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
       <div className="">
-        <h2>Thêm quyền</h2>
+        <h2>Sữa quyền</h2>
         <form onSubmit={handleSubmit}>
           <div className="flex w-full">
             <div className="w-full flex gap-4 my-2">
@@ -124,7 +124,7 @@ const CreateRolePage = () => {
                 </div>
               </div>
               <div className="w-fit group flex flex-col flex-col-reverse">
-                <ButtonSubmit name={"Thêm"} />
+                <ButtonSubmit name={"Sửa"} />
               </div>
               <div className="w-fit group flex flex-col flex-col-reverse">
                 <ButtonGoback />
@@ -137,4 +137,4 @@ const CreateRolePage = () => {
   );
 };
 
-export default CreateRolePage;
+export default CreatePermissionPage;

@@ -1,4 +1,4 @@
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Button3DLink = (props) => {
@@ -10,8 +10,8 @@ const Button3DLink = (props) => {
         <Link
           to={route}
           className="
-            inline-flex items-center justify-center gap-2 
-            py-1.5 px-3 w-fit
+            inline-flex items-center justify-center gap-2
+            py-4 px-8 w-fit
             bg-[#4facf3] text-white 
             rounded-[4px] border-none
             transition-all duration-75
@@ -22,7 +22,7 @@ const Button3DLink = (props) => {
             "
         >
           <Plus size={18} strokeWidth={2.5} />
-          <span className="text-[15px] font-medium leading-none">
+          <span className="text-[18px] font-medium leading-none">
             {name || "Thêm người dùng"}
           </span>
         </Link>
@@ -75,4 +75,40 @@ const ButtonGoback = () => {
   );
 };
 
-export { Button3DLink, ButtonSubmit, ButtonGoback };
+const BtnEdit = (props) => {
+  let { route } = props;
+  return (
+    <Link
+      to={route}
+      className="flex items-center justify-center p-2 bg-[#4facf3] text-white border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] rounded-[5px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 transition-all duration-150 group"
+      title="Chỉnh sửa"
+    >
+      <Pencil
+        size={18}
+        strokeWidth={2.5}
+        className="group-hover:rotate-12 transition-transform"
+      />
+      <span className="ml-1 text-sm font-bold uppercase">Sửa</span>
+    </Link>
+  );
+};
+
+const BtnDelete = (props) => {
+  let { route } = props;
+  return (
+    <Link
+      to={route}
+      className="flex items-center justify-center p-2 bg-red-500 text-white border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] rounded-[5px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 transition-all duration-150 group"
+      title="Xóa dữ liệu"
+    >
+      <Trash2
+        size={18}
+        strokeWidth={2.5}
+        className="group-hover:shake-animation"
+      />
+      <span className="ml-1 text-sm font-bold uppercase">Xóa</span>
+    </Link>
+  );
+};
+
+export { Button3DLink, ButtonSubmit, ButtonGoback, BtnEdit, BtnDelete };

@@ -41,10 +41,59 @@ const permissionController = {
         }
     },
 
+    updatePermissionBySlug: async (req, res) => {
+        let permissionSlug = (req.params.slug)
+        let dataUpdate = req.body;
+        try {
+            let updateRole = await permissionService.updatePermissionBySlug(permissionSlug, dataUpdate);
+            return res.status(201).json({
+                success: true,
+                message: "Quyền đã được thêm",
+                data: updateRole
+            });
+        } catch (error) {
+            if (error.code === 'P2025') {
+                return res.status(404).json({ success: false, message: "Không tìm thấy quyền." });
+            }
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server nội bộ",
+                error: error.message,
+            });
+        }
+    },
+
+
     getRoleById: async (req, res) => {
         let roleId = parseInt(req.params.id)
         try {
             let role = await permissionService.getRoleById(roleId);
+            if (!role || role.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy quyền."
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                data: role
+            });
+        } catch (error) {
+            if (error.code === 'P2025') {
+                return res.status(404).json({ success: false, message: "Không tìm thấy quyền." });
+            }
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server nội bộ",
+                error: error.message,
+            });
+        }
+    },
+
+    getRoleBySlug: async (req, res) => {
+        let roleSlug = (req.params.slug)
+        try {
+            let role = await permissionService.getRoleBySlug(roleSlug);
             if (!role || role.length === 0) {
                 return res.status(404).json({
                     success: false,
