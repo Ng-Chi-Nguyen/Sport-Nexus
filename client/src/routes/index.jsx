@@ -4,11 +4,13 @@ import HomePage from "@/pages/Home";
 import AdminLayout from "@/layouts/AdminLayout";
 import { adminRoutes } from "./adminRoutes"; // Import module vừa tạo
 import NotFound from "@/pages/NotFound";
+import LoadingSpinner from "@/components/ui/loadingSpinner";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    HydrateFallback: LoadingSpinner,
     children: [
       { index: true, element: <HomePage /> },
       {

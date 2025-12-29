@@ -2,11 +2,13 @@ import { Eye, EyeClosed, ImagePlus, X } from "lucide-react";
 import { useState } from "react";
 
 const InputFrom = (props) => {
-  let { type, placeholder } = props;
+  let { type, placeholder, onChange, value } = props;
   return (
     <>
       <input
         type={type}
+        value={value} // Nhận giá trị từ cha truyền vào
+        onChange={onChange}
         placeholder={placeholder}
         className="peer py-3 px-3 cursor-pointer transition-all border border-gray-500 outline-none rounded-[5px] focus:border-primary focus:ring-1 focus:ring-primary"
       />

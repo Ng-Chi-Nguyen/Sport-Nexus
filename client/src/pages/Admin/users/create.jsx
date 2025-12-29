@@ -4,6 +4,7 @@ import Label from "@/components/ui/label";
 import { InputFile } from "@/components/ui/input";
 import { ToogleSwitchBlue3D } from "@/components/ui/toogleSwitch";
 import { useState } from "react";
+import { useLoaderData } from "react-router-dom";
 
 const breadcrumbData = [
   {
@@ -21,10 +22,12 @@ const breadcrumbData = [
 ];
 
 const CreateUserPage = () => {
+  const groupedPermissions = useLoaderData();
   const [showPermissions, setShowPermissions] = useState(false);
   const handleToggle = () => {
     setShowPermissions(!showPermissions);
   };
+  // console.log(groupedPermissions);
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
@@ -63,13 +66,9 @@ const CreateUserPage = () => {
                 <Label name={showPermissions ? "Quản lý" : "Thường"} />
               </div>
               {showPermissions ? (
-                <>
-                  <div className="">ok</div>
-                </>
+                <div className="">ok</div>
               ) : (
-                <>
-                  <div className="">not ok</div>
-                </>
+                <div className="">not ok</div>
               )}
             </div>
           </div>

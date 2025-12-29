@@ -1,7 +1,7 @@
 import prisma from "../../db/prisma.js";
 import { createAutoSlug } from "../../utils/slug.utils.js";
 
-const roleService = {
+const permissionService = {
     createRole: async (dataRole) => {
         let { name, module, action } = dataRole;
         let slug = await createAutoSlug(name, "Permissions")
@@ -65,4 +65,4 @@ const roleService = {
     },
 }
 
-export default roleService;
+export default permissionService;

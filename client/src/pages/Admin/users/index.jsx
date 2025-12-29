@@ -1,5 +1,5 @@
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { Button3D } from "@/components/ui/button";
+import { Button3DLink } from "@/components/ui/button";
 import { Outlet } from "react-router-dom";
 
 const breadcrumbData = [
@@ -22,7 +22,11 @@ const UserPage = () => {
           <div className="w-[80%] border border-red-500 mr-3">
             <p>Search</p>
           </div>
-          <Button3D className="w-[20%]" name="Thêm người dùng" />
+          <Button3DLink
+            route={"/management/users/create"}
+            className="w-[20%]"
+            name="Thêm người dùng"
+          />
         </div>
       </div>
       <div className="">

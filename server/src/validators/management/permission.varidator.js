@@ -1,7 +1,7 @@
 import Joi from "Joi";
 
-const roleSchema = {
-    createRole: Joi.object({
+const permissionSchema = {
+    createPermission: Joi.object({
         name: Joi.string().min(3).max(100).required().messages({
             'any.required': 'Tên quyền không được để trống',
             'string.min': 'Tên quyền phải có ít nhất {#limit} ký tự.',
@@ -19,11 +19,11 @@ const roleSchema = {
         }),
     }),
 
-    updateRole: Joi.object({
+    updatePermission: Joi.object({
         name: Joi.string(),
         module: Joi.string(),
         action: Joi.string(),
     }).min(1).unknown(false)
 }
 
-export default roleSchema;
+export default permissionSchema;

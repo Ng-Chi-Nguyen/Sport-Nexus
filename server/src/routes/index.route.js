@@ -11,11 +11,12 @@ import brandRoute from "./management/brand.route.js";
 import categoryRoute from "./management/category.route.js";
 import couponRoute from "./management/coupon.route.js";
 import purchaseOrderRoute from "./management/purchaseOrder.route.js";
-import roleRoute from "./management/role.route.js";
+import roleRoute from "./management/permission.route.js";
 import stockMovementRoute from "./management/stockMovement.route.js";
 import supplierRoute from "./management/supplier.route.js";
 import userRoute from "./management/user.route.js";
 import homeRoute from "./web/home.route.js";
+import permissionRoute from "./management/permission.route.js";
 
 const Routes = (app) => {
 
@@ -29,7 +30,7 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}management/coupon/`, couponRoute)
     app.use(`${api_prefix_v1}management/stock/`, stockMovementRoute)
     app.use(`${api_prefix_v1}management/purchase-order/`, purchaseOrderRoute)
-    app.use(`${api_prefix_v1}management/role/`, roleRoute)
+    app.use(`${api_prefix_v1}management/permission/`, permissionRoute)
 
     // Customer - Khách hàng
     app.use(`${api_prefix_v1}customer/user-address/`, userAddressRoute)

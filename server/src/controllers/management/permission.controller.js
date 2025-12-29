@@ -1,10 +1,10 @@
-import roleService from "../../services/management/role.service.js";
+import permissionService from "../../services/management/permission.service.js";
 
-const roleController = {
+const permissionController = {
     createRole: async (req, res) => {
         let dataRole = req.body;
         try {
-            let newRole = await roleService.createRole(dataRole);
+            let newRole = await permissionService.createRole(dataRole);
             return res.status(201).json({
                 success: true,
                 message: "Quyền đã được thêm",
@@ -23,7 +23,7 @@ const roleController = {
         let roleId = parseInt(req.params.id)
         let dataUpdate = req.body;
         try {
-            let updateRole = await roleService.updateRole(roleId, dataUpdate);
+            let updateRole = await permissionService.updateRole(roleId, dataUpdate);
             return res.status(201).json({
                 success: true,
                 message: "Quyền đã được thêm",
@@ -44,7 +44,7 @@ const roleController = {
     getRoleById: async (req, res) => {
         let roleId = parseInt(req.params.id)
         try {
-            let role = await roleService.getRoleById(roleId);
+            let role = await permissionService.getRoleById(roleId);
             if (!role || role.length === 0) {
                 return res.status(404).json({
                     success: false,
@@ -69,7 +69,7 @@ const roleController = {
 
     getAllRole: async (req, res) => {
         try {
-            let roles = await roleService.getAllRole();
+            let roles = await permissionService.getAllRole();
             if (!roles || roles.length === 0) {
                 return res.status(404).json({
                     success: false,
@@ -94,7 +94,7 @@ const roleController = {
 
     getAllRoleGroups: async (req, res) => {
         try {
-            let groupedRoles = await roleService.getAllRoleGroups();
+            let groupedRoles = await permissionService.getAllRoleGroups();
             if (!groupedRoles || Object.keys(groupedRoles).length === 0) {
                 return res.status(404).json({
                     success: false,
@@ -120,7 +120,7 @@ const roleController = {
     deleteRole: async (req, res) => {
         let roleId = parseInt(req.params.id)
         try {
-            let roles = await roleService.deleteRole(roleId);
+            let roles = await permissionService.deleteRole(roleId);
             return res.status(200).json({
                 success: true,
                 message: "Quyền đã được xóa"
@@ -138,4 +138,4 @@ const roleController = {
     },
 }
 
-export default roleController;
+export default permissionController;
