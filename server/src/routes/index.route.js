@@ -11,6 +11,7 @@ import brandRoute from "./management/brand.route.js";
 import categoryRoute from "./management/category.route.js";
 import couponRoute from "./management/coupon.route.js";
 import purchaseOrderRoute from "./management/purchaseOrder.route.js";
+import roleRoute from "./management/role.route.js";
 import stockMovementRoute from "./management/stockMovement.route.js";
 import supplierRoute from "./management/supplier.route.js";
 import userRoute from "./management/user.route.js";
@@ -21,13 +22,14 @@ const Routes = (app) => {
     const api_prefix_v1 = "/api/v1/";
 
     // Management / Người quản lý - Admin
-    app.use(`${api_prefix_v1}managament/user/`, userRoute)
-    app.use(`${api_prefix_v1}managament/supplier/`, supplierRoute)
-    app.use(`${api_prefix_v1}managament/brand/`, brandRoute)
-    app.use(`${api_prefix_v1}managament/category/`, categoryRoute)
-    app.use(`${api_prefix_v1}managament/coupon/`, couponRoute)
-    app.use(`${api_prefix_v1}managament/stock/`, stockMovementRoute)
-    app.use(`${api_prefix_v1}managament/purchase-order/`, purchaseOrderRoute)
+    app.use(`${api_prefix_v1}management/user/`, userRoute)
+    app.use(`${api_prefix_v1}management/supplier/`, supplierRoute)
+    app.use(`${api_prefix_v1}management/brand/`, brandRoute)
+    app.use(`${api_prefix_v1}management/category/`, categoryRoute)
+    app.use(`${api_prefix_v1}management/coupon/`, couponRoute)
+    app.use(`${api_prefix_v1}management/stock/`, stockMovementRoute)
+    app.use(`${api_prefix_v1}management/purchase-order/`, purchaseOrderRoute)
+    app.use(`${api_prefix_v1}management/role/`, roleRoute)
 
     // Customer - Khách hàng
     app.use(`${api_prefix_v1}customer/user-address/`, userAddressRoute)

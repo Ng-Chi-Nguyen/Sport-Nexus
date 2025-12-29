@@ -19,7 +19,7 @@ import {
 import { NavLink, Outlet } from "react-router-dom";
 
 const AdminLayout = () => {
-  const prefix_path = "/managament";
+  const prefix_path = "/management";
 
   const menuSalesMarketing = [
     {

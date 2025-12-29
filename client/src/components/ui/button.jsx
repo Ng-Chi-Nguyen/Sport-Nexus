@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const Button = (props) => {
+const Button3D = (props) => {
   let { name } = props;
   return (
     <>
@@ -30,4 +30,4 @@ const Button = (props) => {
   );
 };
 
-export { Button };
+export { Button3D };

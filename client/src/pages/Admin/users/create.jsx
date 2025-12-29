@@ -55,12 +55,12 @@ const CreateUserPage = () => {
             </div>
 
             <div className="flex my-2 w-1/3 border border-black-500 flex-col">
-              <div className="w-full border border-red-500 h-[25px]">
+              <div className="w-full h-[25px]">
                 <ToogleSwitchBlue3D
                   checked={showPermissions}
                   onChange={handleToggle}
                 />
-                <Label name="Quyền" />
+                <Label name={showPermissions ? "Quản lý" : "Thường"} />
               </div>
               {showPermissions ? (
                 <>
