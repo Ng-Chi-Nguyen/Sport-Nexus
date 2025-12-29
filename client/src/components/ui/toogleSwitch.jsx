@@ -1,6 +1,6 @@
 const ToogleSwitchBlue3D = (props) => {
   let { checked, onChange } = props;
-  console.log(checked);
+  // console.log(checked);
   return (
     <>
       <label className="relative inline-flex cursor-pointer select-none">

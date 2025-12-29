@@ -1,5 +1,3 @@
-import React from "react";
-
 const Badge = ({ children, color = "gray" }) => {
   // Định nghĩa bảng màu dựa trên mã bạn đã gửi
   const colorMap = {

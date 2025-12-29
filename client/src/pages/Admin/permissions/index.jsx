@@ -1,14 +1,20 @@
+import { useMemo } from "react";
+import { LayoutDashboard } from "lucide-react";
 import { useLoaderData } from "react-router-dom";
-import React, { useMemo } from "react";
-
+// components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { Button3DLink } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
-import { PERMISSION_TRANSLATIONS } from "@/constants/permission";
 import Badge from "@/components/ui/badge";
 import { BtnDelete, BtnEdit } from "@/components/ui/button";
+// contacts
+import { PERMISSION_TRANSLATIONS } from "@/constants/permission";
 
 const breadcrumbData = [
+  {
+    title: <LayoutDashboard size={20} />,
+    route: "",
+  },
   {
     title: "Quản lý người dùng & phần quyền",
     route: "",

@@ -1,6 +1,4 @@
 import {
-  ChevronDown,
-  Languages,
   LayoutDashboard,
   NotebookText,
   Settings,

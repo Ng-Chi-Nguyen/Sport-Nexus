@@ -1,5 +1,5 @@
-import { Eye, EyeClosed, ImagePlus, X } from "lucide-react";
 import { useState } from "react";
+import { Eye, EyeClosed, ImagePlus, X } from "lucide-react";
 
 const InputFrom = (props) => {
   let { type, placeholder, onChange, value } = props;

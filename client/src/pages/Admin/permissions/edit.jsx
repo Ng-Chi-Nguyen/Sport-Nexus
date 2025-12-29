@@ -1,14 +1,21 @@
+import { useState } from "react";
+import { LayoutDashboard } from "lucide-react";
+import { useLoaderData, useNavigate } from "react-router-dom";
+// components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { InputFrom } from "@/components/ui/input";
 import Label from "@/components/ui/label";
 import Select from "@/components/ui/select";
 import { ButtonSubmit } from "@/components/ui/button";
-import { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
 import { ButtonGoback } from "@/components/ui/button";
+// api
 import permissionApi from "@/api/permissionApi";
 
 const breadcrumbData = [
+  {
+    title: <LayoutDashboard size={20} />,
+    route: "",
+  },
   {
     title: "Quản lý người dùng & phần quyền",
     route: "",
