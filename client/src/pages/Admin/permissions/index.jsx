@@ -1,11 +1,15 @@
+import { useMemo } from "react";
+import { LayoutDashboard } from "lucide-react";
+import { useLoaderData, useSearchParams } from "react-router-dom";
+// components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnDelete, BtnEdit, Button3DLink } from "@/components/ui/button";
 import Pagination from "@/components/ui/pagination";
 import { SearchTable } from "@/components/ui/search";
 import Badge from "@/components/ui/badge";
-import { LayoutDashboard } from "lucide-react";
-import { useMemo } from "react";
-import { useLoaderData, useSearchParams } from "react-router-dom";
+import Tooltip from "@/components/ui/tooltip";
+
+import { PERMISSION_TRANSLATIONS } from "@/constants/permission";
 
 const breadcrumbData = [
   {
@@ -87,9 +91,59 @@ const PermissionPagePage = () => {
                 </th>
                 <th scope="col" className="px-6 py-4 font-black text-center">
                   Bảng
+                  <Tooltip
+                    content={
+                      <div className="space-y-3">
+                        {/* Hiển thị danh sách Modules */}
+                        <div>
+                          <p className="text-[#4facf3] border-b border-[#4facf3] mb-1 pb-1">
+                            BẢNG (MODULES):
+                          </p>
+                          <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                            {Object.entries(
+                              PERMISSION_TRANSLATIONS.modules
+                            ).map(([key, value]) => (
+                              <div
+                                key={key}
+                                className="flex justify-between gap-2"
+                              >
+                                <span className="text-gray-400">{key}:</span>
+                                <span className="text-white">{value}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  />
                 </th>
                 <th scope="col" className="px-6 py-4 font-black text-center">
                   Quyền
+                  <Tooltip
+                    content={
+                      <div className="space-y-3">
+                        {/* Hiển thị danh sách Actions */}
+                        <div>
+                          <p className="text-[#4facf3] border-b border-[#4facf3] mb-1 pb-1">
+                            HÀNH ĐỘNG (ACTIONS):
+                          </p>
+                          <div className="grid grid-cols-1 gap-y-1">
+                            {Object.entries(
+                              PERMISSION_TRANSLATIONS.actions
+                            ).map(([key, value]) => (
+                              <div
+                                key={key}
+                                className="flex justify-between gap-2"
+                              >
+                                <span className="text-gray-400">{key}:</span>
+                                <span className="text-white">{value}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  />
                 </th>
                 <th scope="col" className="px-6 py-4 font-black text-center">
                   Mã (Slug)

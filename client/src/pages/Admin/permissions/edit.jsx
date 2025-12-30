@@ -9,7 +9,7 @@ import Select from "@/components/ui/select";
 import { ButtonSubmit } from "@/components/ui/button";
 import { ButtonGoback } from "@/components/ui/button";
 // api
-import permissionApi from "@/api/permissionApi";
+import permissionApi from "@/api/management/permissionApi";
 
 const breadcrumbData = [
   {

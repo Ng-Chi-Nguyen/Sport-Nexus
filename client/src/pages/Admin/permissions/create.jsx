@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+// components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { InputFrom } from "@/components/ui/input";
 import Label from "@/components/ui/label";
 import Select from "@/components/ui/select";
 import { ButtonSubmit } from "@/components/ui/button";
 import { ButtonGoback } from "@/components/ui/button";
-import permissionApi from "@/api/permissionApi";
+// api
+import permissionApi from "@/api/management/permissionApi";
+
 const breadcrumbData = [
   {
     title: <LayoutDashboard size={20} />,
