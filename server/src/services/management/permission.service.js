@@ -61,22 +61,43 @@ const permissionService = {
         return roles;
     },
 
-    getAllRoleGroups: async () => {
-        const permissions = await prisma.Permissions.findMany({
-            orderBy: {
-                module: 'asc'
-            }
-        });
+    getAllRoleGroups: async (page = 1) => {
+        try {
+            const limit = 6;
+            const currentPage = Math.max(1, parseInt(page) || 1); // Đảm bảo page luôn là số dương
+            const skip = (currentPage - 1) * limit; // Công thức: $skip = (page - 1) \times limit$
 
-        const groupedPermissions = permissions.reduce((acc, permission) => {
-            const key = permission.module || 'others'; // Nếu module trống thì cho vào nhóm 'others'
-            if (!acc[key]) {
-                acc[key] = [];
-            }
-            acc[key].push(permission);
-            return acc;
-        }, {});
-        return groupedPermissions;
+            // 1. Lấy dữ liệu và tổng số bản ghi đồng thời
+            const [permissions, totalItems] = await Promise.all([
+                prisma.Permissions.findMany({
+                    take: limit,
+                    skip: skip,
+                    orderBy: { module: 'asc' }
+                }),
+                prisma.Permissions.count()
+            ]);
+
+            // 2. Nhóm dữ liệu theo module
+            const groupedPermissions = permissions.reduce((acc, permission) => {
+                const key = permission.module || 'others';
+                if (!acc[key]) acc[key] = [];
+                acc[key].push(permission);
+                return acc;
+            }, {});
+
+            // 3. Trả về đúng cấu trúc, tuyệt đối không dùng dấu { ... }
+            return {
+                data: groupedPermissions,
+                pagination: {
+                    totalItems,
+                    totalPages: Math.ceil(totalItems / limit),
+                    currentPage: currentPage,
+                    itemsPerPage: limit
+                }
+            };
+        } catch (error) {
+            throw new Error("Service Error: " + error.message);
+        }
     },
 
     deleteRole: async (roleId) => {

@@ -52,12 +52,17 @@ export const adminRoutes = {
     {
       path: "permissions",
       element: <PermissionPage />,
-      loader: LoaderPermissions.getGroups,
+      loader: async ({ request }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get("page") || 1; // Trích xuất ?page= từ URL
+
+        // Truyền giá trị page vào hàm getGroups bạn đã viết
+        return LoaderPermissions.getGroups(page);
+      },
     },
     {
       path: "permissions/create",
       element: <CreatePermissionPage />,
-      loader: LoaderPermissions.getGroups,
     },
     {
       path: `permissions/edit/:slug`,

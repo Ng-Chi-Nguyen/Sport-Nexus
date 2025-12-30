@@ -1,8 +1,15 @@
+import { Outlet } from "react-router-dom";
+// components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { Button3DLink } from "@/components/ui/button";
-import { Outlet } from "react-router-dom";
+import { SearchTable } from "@/components/ui/search";
+import { LayoutDashboard } from "lucide-react";
 
 const breadcrumbData = [
+  {
+    title: <LayoutDashboard size={20} />,
+    route: "",
+  },
   {
     title: "Quản lý người dùng & phần quyền",
     route: "",
@@ -18,20 +25,19 @@ const UserPage = () => {
     <>
       <Breadcrumbs data={breadcrumbData} />
       <div className="p-2">
-        <div className="flex">
-          <div className="w-[80%] border border-red-500 mr-3">
-            <p>Search</p>
+        <div className="flex items-center gap-4">
+          <div className="w-[70%] relative group">
+            <SearchTable placeholder="Tìm kiếm quyền hạn..." />
           </div>
           <Button3DLink
-            route={"/management/users/create"}
-            className="w-[20%]"
+            route={"/management/permissions/create"}
+            className="w-[30%]"
             name="Thêm người dùng"
           />
         </div>
       </div>
       <div className="">
-        List User
-        <Outlet />
+        <h2 className="py-2">Danh sách người dùng</h2>
       </div>
     </>
   );

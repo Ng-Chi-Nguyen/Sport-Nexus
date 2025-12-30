@@ -5,8 +5,13 @@ import { InputFile } from "@/components/ui/input";
 import { ToogleSwitchBlue3D } from "@/components/ui/toogleSwitch";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
+import { LayoutDashboard } from "lucide-react";
 
 const breadcrumbData = [
+  {
+    title: <LayoutDashboard size={20} />,
+    route: "",
+  },
   {
     title: "Quản lý người dùng & phần quyền",
     route: "",

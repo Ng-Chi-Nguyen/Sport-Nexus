@@ -143,25 +143,22 @@ const permissionController = {
 
     getAllRoleGroups: async (req, res) => {
         try {
-            let groupedRoles = await permissionService.getAllRoleGroups();
-            if (!groupedRoles || Object.keys(groupedRoles).length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Không tìm thấy quyền nào được thiết lập."
-                });
-            }
+            // 1. Phải lấy từ req.query vì Frontend gửi qua URL (?page=1)
+            // Thêm parseInt và kiểm tra nếu không phải số thì mặc định là 1
+            const page = parseInt(req.query.page) || 1;
+
+            const result = await permissionService.getAllRoleGroups(page);
+
             return res.status(200).json({
                 success: true,
-                data: groupedRoles
+                data: result.data,
+                pagination: result.pagination
             });
         } catch (error) {
-            if (error.code === 'P2025') {
-                return res.status(404).json({ success: false, message: "Không tìm thấy quyền." });
-            }
+            console.error("Backend Error:", error); // Log ra terminal để debug
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
-                error: error.message,
+                message: error.message
             });
         }
     },
