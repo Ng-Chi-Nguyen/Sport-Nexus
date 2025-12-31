@@ -7,6 +7,7 @@ const authController = {
             let user = await authService.login(dataLogin);
             return res.status(200).json({
                 success: true,
+                message: "Sport Nexus xin chào",
                 data: user
             })
         } catch (error) {

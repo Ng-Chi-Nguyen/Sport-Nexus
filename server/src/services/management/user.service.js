@@ -20,7 +20,7 @@ const userService = {
                 status: true,
                 verification_token: vToken,
                 is_verified: false,
-                role_id: 3,
+                role_id: 5,
             },
             select: {
                 id: true,

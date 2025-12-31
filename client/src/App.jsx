@@ -1,6 +1,7 @@
 import Header from "@/components/header";
 import "./App.css";
 import { Outlet } from "react-router-dom";
+import { Toaster } from "sonner";
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Header className="h-[65px] shrink-0" />
 
       <main className="flex-1 overflow-hidden">
+        <Toaster position="top-right" richColors />
         <Outlet />
       </main>
     </div>

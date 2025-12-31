@@ -1,6 +1,13 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { FacebookIcon } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+// components
 import { FloatingInput } from "@/components/ui/input";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
+import ShowToast from "@/components/ui/toast";
+import { FloatingInputPassword } from "@/components/ui/input";
+// api
+import authApi from "@/api/auth/auth";
 
 const breadcrumbsData = [
   {
@@ -14,6 +21,35 @@ const breadcrumbsData = [
 ];
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+  // state login
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = {
+      username: username,
+      password: password,
+    };
+    // console.log(formData);
+    try {
+      const response = await authApi.login(formData);
+      console.log(response);
+      if (response.success) {
+        const { accessToken, user } = response.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        ShowToast("success", "Chào mừng " + user.full_name);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+      ShowToast("error", error.response.data.message);
+    }
+  };
+
   return (
     <div className="bg-gray-100 pb-[52px] relative">
       <Breadcrumbs data={breadcrumbsData} />
@@ -27,31 +63,24 @@ const LoginForm = () => {
             ĐĂNG NHẬP
           </h2>
           <p className="text-gray-500 text-sm mb-8 text-center font-medium">
-            Đăng nhập Sport Nexus
+            Sport Nexus
           </p>
-          <form className="space-y-6">
-            {/* Sử dụng component FloatingInput của bạn */}
-            <FloatingInput id="fullname" label="Họ và tên" required />
-
+          <form onSubmit={handleSubmit} className="space-y-6">
             <FloatingInput
               id="email"
-              label="Địa chỉ Email"
+              label="Địa chỉ Email / Số điện thoại"
               type="email"
               required
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
 
-            <FloatingInput
+            <FloatingInputPassword
               id="password"
               label="Mật khẩu"
-              type="password"
               required
-            />
-
-            <FloatingInput
-              id="confirmPassword"
-              label="Xác nhận mật khẩu"
-              type="password"
-              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
 
             {/* Nút bấm 3D đồng bộ màu xanh #4facf3 */}
@@ -74,6 +103,36 @@ const LoginForm = () => {
               </Link>
             </div>
           </form>
+          <p className="text-gray-500 text-sm my-2 text-center font-medium">
+            Hoặc
+          </p>
+          <div className="flex justify-center mt-3 gap-2">
+            <Link
+              to=""
+              className="p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+            >
+              <FacebookIcon size={20} className="text-white" />
+            </Link>
+            <Link
+              to=""
+              className="p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+            >
+              <svg
+                width={20}
+                height={20}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* Đường nét vẽ biểu tượng chữ G đơn giản */}
+                <path d="M12 12h8.5" />
+                <path d="M20.5 12a8.5 8.5 0 1 1-2.5-6" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

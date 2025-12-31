@@ -4,7 +4,7 @@ import userService from "../../services/management/user.service.js";
 const userController = {
     createUser: async (req, res) => {
         let userData = req.body;
-        // console.log(userData)
+        console.log(userData)
         try {
             let newUser = await userService.createUser(userData);
 
@@ -18,7 +18,7 @@ const userController = {
             if (error.code === "P2002") {
                 return res.status(409).json({
                     success: false,
-                    message: "Địa chỉ email này đã được đăng ký.",
+                    message: "Địa chỉ email hoặc số điện thoại này đã được đăng ký.",
                 });
             }
 

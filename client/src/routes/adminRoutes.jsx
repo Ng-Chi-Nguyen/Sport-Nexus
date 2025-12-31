@@ -5,7 +5,6 @@ import { lazy } from "react";
 const UserPage = lazy(() => import("@/pages/Admin/users"));
 const CreateUserPage = lazy(() => import("@/pages/Admin/users/create"));
 import { LoaderPermissions } from "./loaders";
-import AdminLayout from "@/layouts/AdminLayout";
 
 const Dashboard = lazy(() => import("@/pages/Admin/Dashboard/dashboard"));
 const ProductPage = lazy(() => import("@/pages/Admin/products"));
@@ -34,7 +33,6 @@ const Variant = lazy(() => import("@/pages/Admin/productVariant"));
 
 export const adminRoutes = {
   path: "management", // Tiền tố chung
-  element: <AdminLayout />,
   children: [
     { path: "dashboard", element: <Dashboard /> },
     { path: "users", element: <UserPage /> },

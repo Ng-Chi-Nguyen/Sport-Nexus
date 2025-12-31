@@ -1,6 +1,12 @@
-import { Link } from "react-router-dom";
-import { FloatingInput } from "@/components/ui/input";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+// components
+import { FloatingInput, FloatingInputPassword } from "@/components/ui/input";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
+import ShowToast from "@/components/ui/toast";
+// api
+import authApi from "@/api/auth/auth";
+import { toast } from "sonner";
 
 const breadcrumbsData = [
   {
@@ -14,6 +20,33 @@ const breadcrumbsData = [
 ];
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
+  // state value register
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  // -----------------
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = {
+      full_name: name,
+      email: email,
+      password: password,
+      phone_number: phone,
+    };
+    try {
+      const response = await authApi.create(formData);
+      console.log(response);
+      if (response.success) {
+        ShowToast("success", response.message);
+        navigate("/auth/login");
+      }
+    } catch (error) {
+      ShowToast("error", error.response.data.message);
+    }
+  };
+
   return (
     <div className="bg-gray-100">
       <Breadcrumbs data={breadcrumbsData} />
@@ -30,27 +63,46 @@ const RegisterForm = () => {
             Tạo tài khoản mới cho Sport Nexus
           </p>
 
-          <form className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Sử dụng component FloatingInput của bạn */}
-            <FloatingInput id="fullname" label="Họ và tên" required />
+            <FloatingInput
+              id="full_name" // Bổ sung ID
+              name="full_name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              label="Họ và tên"
+              required
+            />
 
             <FloatingInput
               id="email"
+              name="email"
               label="Địa chỉ Email"
               type="email"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <FloatingInputPassword
+              id="password"
+              name="password"
+              label="Mật khẩu"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
 
             <FloatingInput
-              id="password"
-              label="Mật khẩu"
-              type="password"
+              id="phone_number"
+              name="phone_number"
+              label="Số điện thoại"
+              type="phone"
               required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
 
-            <FloatingInput id="phone_number" label="Số điện thoại" required />
-
-            {/* Nút bấm 3D đồng bộ màu xanh #4facf3 */}
             <button
               type="submit"
               className="w-full bg-[#4facf3] hover:bg-[#3d9bdb] text-white font-black py-4 rounded-lg 

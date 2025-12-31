@@ -12,6 +12,9 @@ import Logo from "./logo";
 import SearchHeader from "./search";
 
 const Header = () => {
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
+
   return (
     <>
       <header className="w-full bg-white border-b shadow-sm h-[65px]">
@@ -45,13 +48,31 @@ const Header = () => {
                 className="group-hover:text-blue-600 transition-colors"
               />
             </Link>
-            <Link
-              to="/auth/register"
-              className="border border-solid flex items-center mr-5 px-3 py-1"
-            >
-              <User className="text-blue-500" />
-              <p className="text-blue-500 font-bold">Tài khoản</p>
-            </Link>
+            {user ? (
+              <Link
+                to="/profile"
+                className="border border-solid flex items-center mr-5 px-3 py-1"
+              >
+                <User className="text-blue-500" />
+                <div className="flex flex-col ml-2">
+                  <p className="text-blue-500 text-[14px] font-bold">
+                    {user.full_name}
+                  </p>
+                  <p className="text-gray-500 text-[8px] -mt-[4px]">
+                    {user.email}
+                  </p>
+                </div>
+              </Link>
+            ) : (
+              <Link
+                to="/auth/login"
+                className="border border-solid flex items-center mr-5 px-3 py-1"
+              >
+                <User className="text-blue-500" />
+                <p className="text-blue-500 font-bold">Tài khoản</p>
+              </Link>
+            )}
+
             <button className="relative text-blue-500 p-1 rounded-[50%] cursor-pointer p-[8px]">
               <ShoppingCart />
               <span className="absolute top-[3px] right-[2px] w-2 h-2 bg-red-600 rounded-[50%]"></span>
