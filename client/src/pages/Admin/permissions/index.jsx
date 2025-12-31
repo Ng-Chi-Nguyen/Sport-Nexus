@@ -1,6 +1,10 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { LayoutDashboard } from "lucide-react";
-import { useLoaderData, useSearchParams } from "react-router-dom";
+import {
+  useLoaderData,
+  useRevalidator,
+  useSearchParams,
+} from "react-router-dom";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnDelete, BtnEdit, Button3DLink } from "@/components/ui/button";
@@ -8,8 +12,11 @@ import Pagination from "@/components/ui/pagination";
 import { SearchTable } from "@/components/ui/search";
 import Badge from "@/components/ui/badge";
 import Tooltip from "@/components/ui/tooltip";
-
+import { ConfirmDelete } from "@/components/ui/confirm";
+// constants
 import { PERMISSION_TRANSLATIONS } from "@/constants/permission";
+// api
+import permissionApi from "@/api/management/permissionApi";
 
 const breadcrumbData = [
   {
@@ -36,6 +43,11 @@ const ACTION_COLORS = {
 const PermissionPagePage = () => {
   const response = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
+  const revalidator = useRevalidator();
+
+  // state
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   // 1. Lấy danh sách 6 item cho bảng
   const permissionsData = response?.data || {};
 
@@ -52,14 +64,28 @@ const PermissionPagePage = () => {
   }, [permissionsData]);
 
   // LOG KIỂM TRA: Pagination Info lúc này phải hiện totalPages: 2
-  console.log("Pagination Info thực tế:", paginationInfo);
-
+  // console.log("Pagination Info thực tế:", paginationInfo);
   // LOG để kiểm tra - Bây giờ sẽ hiện Array(6)
-  console.log("Pagination Info:", paginationInfo);
-  console.log("Dữ liệu bảng thực tế:", allPermissions);
+  // console.log("Pagination Info:", paginationInfo);
+  // console.log("Dữ liệu bảng thực tế:", allPermissions);
 
   const handlePageChange = (newPage) => {
     setSearchParams({ page: newPage });
+  };
+
+  const openConfirm = (slug) => {
+    setDeleteTarget(slug);
+    setIsConfirmOpen(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await permissionApi.delete(deleteTarget); // Gọi API xóa
+      revalidator.revalidate(); // Cập nhật UI
+      setIsConfirmOpen(false); // Đóng modal
+    } catch (error) {
+      console.error("Lỗi xóa:", error);
+    }
   };
 
   return (
@@ -82,7 +108,7 @@ const PermissionPagePage = () => {
       <div className="p-2 mt-6">
         <h3 className="mb-2">Danh sách quyền</h3>
 
-        <div className="relative overflow-x-auto bg-white border-2 border-[#323232] shadow-[4px_4px_0px_0px_#323232] rounded-[5px]">
+        <div className="relative bg-white border-2 border-[#323232] shadow-[4px_4px_0px_0px_#323232] rounded-[5px]">
           <table className="w-full text-sm text-left text-[#323232]">
             <thead className="text-sm uppercase bg-[#f8f9fa] border-b-2 border-[#323232]">
               <tr>
@@ -182,9 +208,7 @@ const PermissionPagePage = () => {
                           route={`/management/permissions/edit/${permission.slug}`}
                         />
                         <BtnDelete
-                          onClick={() =>
-                            console.log("Delete ID:", permission.id)
-                          }
+                          onClick={() => openConfirm(permission.slug)}
                         />
                       </div>
                     </td>
@@ -194,7 +218,7 @@ const PermissionPagePage = () => {
                 <tr>
                   <td
                     colSpan="5"
-                    className="px-6 py-10 text-center text-gray-400 italic"
+                    className="px-6 py-3 text-center text-gray-400 italic"
                   >
                     Không có quyền nào
                   </td>
@@ -211,6 +235,13 @@ const PermissionPagePage = () => {
             onPageChange={handlePageChange}
           />
         </div>
+        <ConfirmDelete
+          isOpen={isConfirmOpen}
+          title="Xóa quyền hạn"
+          message={`Bạn đang thực hiện xóa quyền "${deleteTarget}". Dữ liệu này sẽ mất vĩnh viễn khỏi Sport Nexus.`}
+          onConfirm={handleDelete}
+          onCancel={() => setIsConfirmOpen(false)}
+        />
       </div>
     </>
   );

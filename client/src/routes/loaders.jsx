@@ -5,7 +5,7 @@ const LoaderPermissions = {
     const response = await axiosClient.get(
       `/management/permission/groups?page=${page}`
     );
-    console.log(response);
+    // console.log(response);
     return response; // Trả về cấu trúc { data, pagination }
   },
   getBySlug: async ({ params }) => {

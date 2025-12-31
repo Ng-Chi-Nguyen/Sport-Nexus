@@ -1,14 +1,12 @@
-import Header from "@/components/Header";
-import { useLoaderData } from "react-router-dom";
+import Footer from "@/components/footer";
 
 const HomePage = () => {
-  // const homeData = useLoaderData();
-  // console.log(homeData)
   return (
     <>
-      <div className="p-8">
+      <div className="p-8 mt-[100px]">
         <h1 className="text-2xl font-bold">Sport Nexus - Trang Chủ</h1>
       </div>
+      <Footer />
     </>
   );
 };

@@ -166,7 +166,27 @@ const permissionController = {
     deleteRole: async (req, res) => {
         let roleId = parseInt(req.params.id)
         try {
-            let roles = await permissionService.deleteRole(roleId);
+            await permissionService.deleteRole(roleId);
+            return res.status(200).json({
+                success: true,
+                message: "Quyền đã được xóa"
+            });
+        } catch (error) {
+            if (error.code === 'P2025') {
+                return res.status(404).json({ success: false, message: "Không tìm thấy quyền." });
+            }
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server nội bộ",
+                error: error.message,
+            });
+        }
+    },
+
+    deleteBySlug: async (req, res) => {
+        let slug = (req.params.slug)
+        try {
+            await permissionService.deleteBySlug(slug);
             return res.status(200).json({
                 success: true,
                 message: "Quyền đã được xóa"

@@ -1,13 +1,15 @@
 import {
+  Icon,
   LayoutDashboard,
   NotebookText,
   Settings,
   ShoppingCart,
   User,
 } from "lucide-react";
+import { Link } from "react-router-dom";
+
 import Logo from "./logo";
 import SearchHeader from "./search";
-import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -33,24 +35,38 @@ const Header = () => {
           </div>
           <span className="border border-solid w-[1px] h-8"></span>
           <div className="flex items-center">
-            <Link to="/managament" className=" mr-3 cursor-pointer group">
+            <Link
+              to="/management/dashboard"
+              className=" mr-3 cursor-pointer group"
+            >
               <LayoutDashboard
                 size={28}
                 strokeWidth={1}
                 className="group-hover:text-blue-600 transition-colors"
               />
             </Link>
-            <div className="border border-solid flex items-center mr-5 px-3 py-1">
+            <Link
+              to="/auth/register"
+              className="border border-solid flex items-center mr-5 px-3 py-1"
+            >
               <User className="text-blue-500" />
               <p className="text-blue-500 font-bold">Tài khoản</p>
-            </div>
+            </Link>
             <button className="relative text-blue-500 p-1 rounded-[50%] cursor-pointer p-[8px]">
               <ShoppingCart />
               <span className="absolute top-[3px] right-[2px] w-2 h-2 bg-red-600 rounded-[50%]"></span>
             </button>
             <span className="border border-solid w-[1px] h-4 ml-2"></span>
             <div className="ml-2 flex items-center cursor-pointer">
-              <Settings size={25} strokeWidth={0.6} />
+              <div className="flex items-center justify-center p-4">
+                {/* Nút chứa icon với phong cách Neo-brutalism */}
+                <button className="group rounded-full transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">
+                  <Settings
+                    size={24}
+                    className="text-[#4facf3] transition-transform duration-700 group-hover:animate-spin"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>

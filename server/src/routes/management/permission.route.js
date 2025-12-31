@@ -16,5 +16,6 @@ permissionRoute
     .get("/:id", permissionController.getRoleById)
     .get("/", permissionController.getAllRole)
     .delete("/:id", permissionController.deleteRole)
+    .delete("/slug/:slug", permissionController.deleteBySlug)
 
 export default permissionRoute;

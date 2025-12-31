@@ -1,10 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App";
-import HomePage from "@/pages/Home";
-import AdminLayout from "@/layouts/AdminLayout";
 import { adminRoutes } from "./adminRoutes"; // Import module vừa tạo
 import NotFound from "@/pages/NotFound";
+import AdminLayout from "@/layouts/AdminLayout";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
+import { authRoutes } from "./authRoute";
+import { webRoutes } from "./webRoute";
 
 const router = createBrowserRouter([
   {
@@ -12,7 +13,14 @@ const router = createBrowserRouter([
     element: <App />,
     HydrateFallback: LoadingSpinner,
     children: [
-      { index: true, element: <HomePage /> },
+      {
+        path: webRoutes.path,
+        children: webRoutes.children,
+      },
+      {
+        path: authRoutes.path,
+        children: authRoutes.children,
+      },
       {
         path: adminRoutes.path,
         element: <AdminLayout />,

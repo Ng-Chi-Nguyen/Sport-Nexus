@@ -105,6 +105,12 @@ const permissionService = {
             where: { id: roleId }
         })
     },
+
+    deleteBySlug: async (slug) => {
+        await prisma.Permissions.delete({
+            where: { slug: slug }
+        })
+    },
 }
 
 export default permissionService;

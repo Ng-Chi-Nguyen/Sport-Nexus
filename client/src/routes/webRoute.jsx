@@ -1,11 +1,10 @@
-// import { lazy } from "react";
-// const CreateUserPage = lazy(() => import("@/pages/Admin/users/create"));
-// export const webRoutes = {
-//   path: "managament",
-//   children: [
-//     {
-//       path: "users/create",
-//       element: <CreateUserPage />,
-//     },
-//   ],
-// };
+import { lazy } from "react";
+const HomePage = lazy(() => import("@/pages/Home/"));
+export const webRoutes = {
+  children: [
+    {
+      path: "",
+      element: <HomePage />,
+    },
+  ],
+};

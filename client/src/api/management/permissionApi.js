@@ -9,6 +9,10 @@ const permissionApi = {
         const url = `/management/permission/slug/${slug}`;
         return axiosClient.put(url, data);
     },
+    delete: (slug) => {
+        const url = `/management/permission/slug/${slug}`;
+        return axiosClient.delete(url);
+    }
 };
 
 export default permissionApi;

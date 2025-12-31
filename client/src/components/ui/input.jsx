@@ -98,4 +98,47 @@ const InputFile = ({ label, name }) => {
   );
 };
 
-export { InputFrom, InputPassword, InputFile };
+const FloatingInput = ({
+  label,
+  id,
+  type = "text",
+  required = false,
+  name,
+  ...props
+}) => {
+  return (
+    <div className="relative w-full">
+      <input
+        id={id}
+        name={name || id}
+        type={type}
+        required={required}
+        placeholder=" " // Quan trọng: Khoảng trắng để kích hoạt CSS logic
+        className="peer w-full p-[10px_15px] text-base rounded-lg border border-[#8d8d8d] 
+                   tracking-wider outline-none transition-all 
+                   /* Màu focus đặc trưng của Sport Nexus */
+                   focus:border-[#4facf3] focus:ring-1 focus:ring-[#4facf3]/20"
+        {...props}
+      />
+      <label
+        htmlFor={id}
+        className="absolute left-[15px] top-[10px] text-[#8d8d8d] pointer-events-none 
+                   transition-all duration-300
+                   /* Hiệu ứng khi nhấn vào (Focus) */
+                   peer-focus:-translate-y-[22px] peer-focus:-translate-x-2 
+                   peer-focus:scale-[0.8] peer-focus:bg-white peer-focus:px-1 
+                   peer-focus:text-[#4facf3] peer-focus:font-bold
+                   /* Giữ nhãn ở trên khi đã có dữ liệu */
+                   peer-[:not(:placeholder-shown)]:-translate-y-[22px] 
+                   peer-[:not(:placeholder-shown)]:-translate-x-2 
+                   peer-[:not(:placeholder-shown)]:scale-[0.8] 
+                   peer-[:not(:placeholder-shown)]:bg-white 
+                   peer-[:not(:placeholder-shown)]:px-1"
+      >
+        {label}
+      </label>
+    </div>
+  );
+};
+
+export { InputFrom, InputPassword, InputFile, FloatingInput };

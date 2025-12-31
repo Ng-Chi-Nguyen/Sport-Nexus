@@ -94,20 +94,27 @@ const BtnEdit = (props) => {
 };
 
 const BtnDelete = (props) => {
-  let { route } = props;
+  // Bóc tách thêm onClick từ props
+  const { onClick, className } = props;
+
   return (
-    <Link
-      to={route}
-      className="flex items-center justify-center p-2 bg-red-500 text-white border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] rounded-[5px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 transition-all duration-150 group"
+    <button
+      type="button"
+      /* Kích hoạt hàm handleDelete từ cha truyền xuống */
+      onClick={onClick}
+      className={`flex items-center justify-center p-2 bg-red-500 text-white 
+        border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] 
+        rounded-[5px] hover:translate-x-[2px] hover:translate-y-[2px] 
+        hover:shadow-none active:scale-95 transition-all duration-150 group ${className}`}
       title="Xóa dữ liệu"
     >
       <Trash2
         size={18}
         strokeWidth={2.5}
-        className="group-hover:shake-animation"
+        className="group-hover:animate-bounce"
       />
       <span className="ml-1 text-sm font-bold uppercase">Xóa</span>
-    </Link>
+    </button>
   );
 };
 
