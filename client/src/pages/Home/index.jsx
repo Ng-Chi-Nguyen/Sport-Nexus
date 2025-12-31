@@ -8,7 +8,6 @@ const HomePage = () => {
         <h1 className="text-2xl font-bold">Sport Nexus - Trang Chủ</h1>
         {user ? <>ok</> : <>not ok</>}
       </div>
-      <Footer />
     </>
   );
 };

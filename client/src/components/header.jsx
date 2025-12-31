@@ -51,7 +51,7 @@ const Header = () => {
             {user ? (
               <Link
                 to="/profile"
-                className="border border-solid flex items-center mr-5 px-3 py-1"
+                className="border-b-2 border-b-blue-500 flex items-center mr-5 px-3 py-1 hover:bg-blue-100 duration-500"
               >
                 <User className="text-blue-500" />
                 <div className="flex flex-col ml-2">

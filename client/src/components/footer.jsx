@@ -23,16 +23,10 @@ const Footer = () => {
             nâng cao trải nghiệm người dùng trong dự án khóa luận tốt nghiệp.
           </p>
           <div className="flex gap-4">
-            <Link
-              to=""
-              className="p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
-            >
+            <Link to="" className="btn-neo">
               <FacebookIcon size={20} className="text-white" />
             </Link>
-            <Link
-              to=""
-              className="p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
-            >
+            <Link to="" className="btn-neo">
               <svg
                 width={20} // Tăng lên 24 để to rõ hơn
                 height={20} // Phải bằng width để icon không bị dẹt
@@ -46,22 +40,13 @@ const Footer = () => {
                 <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
               </svg>
             </Link>
-            <Link
-              to=""
-              className="p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
-            >
+            <Link to="" className="btn-neo">
               <Youtube size={20} className="text-white" />
             </Link>
-            <Link
-              to=""
-              className="p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
-            >
+            <Link to="" className="btn-neo">
               <Instagram size={20} className="text-white" />
             </Link>
-            <Link
-              to=""
-              className="p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
-            >
+            <Link to="" className="btn-neo">
               <Mail size={20} className="text-white" />
             </Link>
           </div>

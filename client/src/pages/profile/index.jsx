@@ -1,25 +1,169 @@
-import React from "react";
+import Breadcrumbs from "@/components/ui/breadcrumbs";
+// image
+import logoDefault from "@/assets/images/logodefault.jpg";
 import {
-  User,
-  Mail,
-  Phone,
-  ShieldCheck,
-  Calendar,
-  Edit3,
-  CheckCircle2,
-  XCircle,
+  CircleCheck,
+  FileUser,
+  ListOrdered,
+  LogOut,
+  MapPinHouse,
+  RotateCcwKey,
+  ShieldOff,
 } from "lucide-react";
-import { Footer } from "@/components/footer";
+import { Link, NavLink, Outlet } from "react-router-dom";
+
+const breadcrumbsData = [
+  {
+    title: "Trang chủ",
+    route: "/",
+  },
+  {
+    title: "Hồ sơ cá nhân",
+    route: "",
+  },
+];
+
+const menuProfile = [
+  {
+    name: "Hồ sơ",
+    path: "/profile",
+    exact: true,
+    icon: <FileUser color="#112aee" size={15} />,
+  },
+  {
+    name: "Địa chỉ",
+    path: "/profile/address",
+    exact: false,
+    icon: <MapPinHouse color="#112aee" size={15} />,
+  },
+  {
+    name: "Đơn hàng",
+    path: "/profile/order",
+    exact: false,
+    icon: <ListOrdered color="#112aee" size={15} />,
+  },
+  {
+    name: "Đổi mật khẩu",
+    path: "/profile/reset-password",
+    exact: false,
+    icon: <RotateCcwKey color="#112aee" size={15} />,
+  },
+];
 
 const ProfilePage = () => {
-  // 1. Lấy và giải mã dữ liệu từ localStorage
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
 
   return (
     <div className="">
-      <p>Hồ sơ cá nhân</p>
-      <Footer />
+      <Breadcrumbs data={breadcrumbsData} />
+      <div className="flex">
+        <div className="relative z-1 overflow-hidden w-[30%] p-3 bg-white border border-[#ddd] mr-5">
+          <div className="absolute w-[300px] h-[300px] bg-primary rotate-[45deg] -right-[100px] -top-[50px] z-0 rounded-[30px] shadow-[5px_5px_10px_rgba(0,0,0,0.08)]"></div>
+          <div className="relative z-10">
+            <div className="border-b border-solid border-gray-400 pb-3 z-10">
+              <div className="border-4 border-primary w-[150px] overflow-hidden h-auto rounded-[50%] mx-auto">
+                <img
+                  src={user.avatar ? user.avatar : logoDefault}
+                  alt="avatar"
+                />
+              </div>
+              <p className="text-center mt-1 text-[22px] uppercase font-black">
+                {user.full_name}
+              </p>
+              <div className="bg-[#4facf3] text-center border-2 border-[#323232] text-[#FFF] uppercase w-[60%] font-black italic mx-auto py-[2px] px-2 mt-3 text-[14px]">
+                {user.role.name}
+              </div>
+            </div>
+            <div className="bg-blue-100 border-2 border-b-[#4facf3]">
+              <div className="flex ml-7 mr-3">
+                <p className="font-bold">Trạng thái: </p>
+                <span className="ml-2 text-blue-600 font-bold">
+                  {user.status ? (
+                    <div className="flex items-center">
+                      <p className="mr-1">Hoạt động</p>
+                      <span>
+                        <CircleCheck color="#2b3beeff" size={17} />
+                      </span>
+                    </div>
+                  ) : (
+                    "Đã khóa"
+                  )}
+                </span>
+              </div>
+              <div className="flex ml-7 mr-3">
+                <p className="font-bold">Xác thực: </p>
+                <span className="ml-2 text-red-400 font-bold  mt-0">
+                  {user.is_verified ? (
+                    <div className="flex items-center">
+                      <p className="mr-1">Đã xác thực</p>
+                      <span>
+                        <CircleCheck color="#2bee38" />
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <p className="mr-1">Chưa xác thực </p>
+                      <span>
+                        <ShieldOff color="#ee2b2b" size={17} />
+                      </span>
+                    </div>
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="">
+              <ul className="px-[30px] pt-[10px]">
+                {menuProfile.map((item) => (
+                  <li>
+                    <NavLink
+                      key={item.path}
+                      to={item.path}
+                      end={item.exact} // Áp dụng end cho trang chủ Profile
+                      className={({ isActive }) => `
+                    flex items-center gap-3 px-4 py-1 transition-all border-2 border-transparent
+                    ${
+                      isActive
+                        ? "bg-blue-50 text-blue-600 border-l-[#4facf3] font-bold"
+                        : "text-gray-500 hover:bg-gray-100 hover:text-blue-500"
+                    }
+                  `}
+                    >
+                      {item.icon}
+                      <span className="text-[14px]">{item.name}</span>
+                    </NavLink>
+                  </li>
+                ))}
+                <li>
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) => `
+                    flex items-center gap-3 px-4 py-1 transition-all border-2 border-transparent
+                    ${
+                      isActive
+                        ? "bg-blue-50 text-blue-600 border-l-[#4facf3]"
+                        : "text-gray-500 hover:bg-red-100 hover:text-red-500"
+                    }
+                  `}
+                  >
+                    <LogOut color="#ee1111" size={15} />
+                    <span className="text-[14px] text-[#ee1111]">
+                      Đăng xuất
+                    </span>
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="relative z-1 w-[70%] border border-[#ddd] overflow-hidden">
+          <div className="absolute w-[300px] h-[300px] bg-primary rotate-[45deg] -left-[215px] -top-[50px] z-0 rounded-[30px] shadow-[5px_5px_10px_rgba(0,0,0,0.08)]"></div>
+          <div className="absolute w-[300px] h-[300px] bg-primary rotate-[45deg] -right-[100px] bottom-[40px] z-0 rounded-[30px] shadow-[5px_5px_10px_rgba(0,0,0,0.08)]"></div>
+          <div className="z-10 p-4">
+            <Outlet />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

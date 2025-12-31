@@ -18,6 +18,17 @@
     }
 }
 
+@layer components {
+    .btn-neo {
+        @apply p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all flex items-center justify-center;
+    }
+
+    /* Bạn có thể tạo thêm phiên bản màu đỏ cho nút Logout */
+    .btn-neo-danger {
+        @apply btn-neo bg-[#ff5252] text-white;
+    }
+}
+
 /* --- TÙY CHỈNH THANH CUỘN TOÀN TRANG --- */
 /* --- Cấu hình thanh cuộn mỏng, vuông và ẩn hiện khi hover --- */
 

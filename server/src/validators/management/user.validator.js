@@ -4,7 +4,7 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]|
 
 const userSchema = {
     createUser: Joi.object({
-        full_name: Joi.string().required().messages({
+        full_name: Joi.string().max(50).required().messages({
             'any.required': 'Họ tên không được để trống',
         }),
         email: Joi.string().email().custom((value, helpers) => {
