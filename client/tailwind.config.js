@@ -16,7 +16,7 @@ export default {
       fontFamily: {
         // Font chính cho nội dung (Sạch sẽ, dễ đọc)
         sans: ['"Inter"', 'sans-serif'],
-        // Font cho tiêu đề (Mạnh mẽ, cá tính)
+        // Font cho tiêu đề
         display: ['"Montserrat"', 'sans-serif'],
       },
       // 3. Định nghĩa kích thước chữ tùy chỉnh
