@@ -206,6 +206,7 @@ const PermissionPagePage = () => {
                       <div className="flex gap-3 justify-center">
                         <BtnEdit
                           route={`/management/permissions/edit/${permission.slug}`}
+                          name="Sửa"
                         />
                         <BtnDelete
                           onClick={() => openConfirm(permission.slug)}

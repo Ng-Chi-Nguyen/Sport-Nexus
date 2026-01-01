@@ -76,11 +76,11 @@ const ButtonGoback = () => {
 };
 
 const BtnEdit = (props) => {
-  let { route } = props;
+  let { route, name } = props;
   return (
     <Link
       to={route}
-      className="flex items-center justify-center p-2 bg-[#4facf3] text-white border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] rounded-[5px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 transition-all duration-150 group"
+      className="flex items-center justify-center p-2 bg-[#f39e4f] text-white border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] rounded-[5px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 transition-all duration-150 group"
       title="Chỉnh sửa"
     >
       <Pencil
@@ -88,7 +88,7 @@ const BtnEdit = (props) => {
         strokeWidth={2.5}
         className="group-hover:rotate-12 transition-transform"
       />
-      <span className="ml-1 text-sm font-bold uppercase">Sửa</span>
+      <span className="ml-1 text-sm font-bold uppercase">{name}</span>
     </Link>
   );
 };

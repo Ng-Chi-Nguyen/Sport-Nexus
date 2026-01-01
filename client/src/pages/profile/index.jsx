@@ -10,18 +10,15 @@ import {
   RotateCcwKey,
   ShieldOff,
 } from "lucide-react";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 
-const breadcrumbsData = [
-  {
-    title: "Trang chủ",
-    route: "/",
-  },
-  {
-    title: "Hồ sơ cá nhân",
-    route: "",
-  },
-];
+const breadcrumbNameMap = {
+  "/profile": "Tài khoản",
+  "/profile/address": "Địa chỉ",
+  "/profile/order": "Đơn hàng",
+  "/profile/reset-password": "Đổi mật khẩu",
+  "/profile/edit": "Chỉnh sữa thông tin tài khoản",
+};
 
 const menuProfile = [
   {
@@ -51,8 +48,24 @@ const menuProfile = [
 ];
 
 const ProfilePage = () => {
+  const location = useLocation();
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
+
+  const base = [{ title: "Trang chủ", route: "/" }];
+  const currentPath = location.pathname;
+
+  let breadcrumbsData = [...base];
+
+  if (currentPath === "/profile") {
+    breadcrumbsData.push({ title: "Tài khoản", route: "" });
+  } else if (breadcrumbNameMap[currentPath]) {
+    // Nếu là trang con, thêm cả "Hồ sơ cá nhân" và trang hiện tại
+    breadcrumbsData.push(
+      { title: "Tài khoản", route: "/profile" },
+      { title: breadcrumbNameMap[currentPath], route: "" }
+    );
+  }
 
   return (
     <div className="">
@@ -114,8 +127,8 @@ const ProfilePage = () => {
             </div>
             <div className="">
               <ul className="px-[30px] pt-[10px]">
-                {menuProfile.map((item) => (
-                  <li>
+                {menuProfile.map((item, index) => (
+                  <li key={index}>
                     <NavLink
                       key={item.path}
                       to={item.path}

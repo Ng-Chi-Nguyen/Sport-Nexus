@@ -37,7 +37,7 @@ const RegisterForm = () => {
     };
     try {
       const response = await authApi.create(formData);
-      console.log(response);
+      // console.log(response);
       if (response.success) {
         ShowToast("success", response.message);
         navigate("/auth/login");

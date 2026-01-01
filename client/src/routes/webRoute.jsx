@@ -6,6 +6,7 @@ const ResetPassword = lazy(() => import("@/pages/profile/resetPassword"));
 const Profile = lazy(() => import("@/pages/profile/profile"));
 const Order = lazy(() => import("@/pages/profile/order"));
 const Address = lazy(() => import("@/pages/profile/address"));
+const EditProfile = lazy(() => import("@/pages/profile/editProfile"));
 
 export const webRoutes = {
   children: [
@@ -21,6 +22,7 @@ export const webRoutes = {
         { path: "address", element: <Address /> },
         { path: "reset-password", element: <ResetPassword /> },
         { path: "order", element: <Order /> },
+        { path: "edit", element: <EditProfile /> },
       ],
     },
   ],

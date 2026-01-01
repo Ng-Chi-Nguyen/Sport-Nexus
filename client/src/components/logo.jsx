@@ -4,7 +4,7 @@ const Logo = () => {
   return (
     <Link
       to="/"
-      className="flex items-center gap-2 no-underline cursor-pointer"
+      className="flex items-center gap-2 no-underline cursor-pointer select-none"
     >
       <span className="text-2xl font-black tracking-tighter uppercase italic">
         <span className="text-slate-800">Sport</span>
