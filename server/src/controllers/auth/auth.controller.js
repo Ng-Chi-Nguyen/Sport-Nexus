@@ -11,8 +11,7 @@ const authController = {
                 data: user
             })
         } catch (error) {
-            const statusCode = error.status || 500;
-            return res.status(statusCode).json({
+            return res.status(500).json({
                 success: false,
                 message: error.message
             });
@@ -20,8 +19,8 @@ const authController = {
     },
 
     logout: async (req, res) => {
+        let userId = parseInt(req.params.id);
         try {
-            let userId = parseInt(req.user.id);
 
             await authService.logout(userId);
 
@@ -30,7 +29,38 @@ const authController = {
                 message: "Hẹn gặp lại bạn!"
             });
         } catch (error) {
-            return res.status(error.status || 500).json({
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    },
+
+    verifyAccount: async (req, res) => {
+        let { token } = req.params;
+        console.log(token)
+        if (!token) {
+            return res.status(500).json({
+                success: false,
+                message: "Không tìm thấy token"
+            })
+        }
+        try {
+            let result = await authService.verifyAccount(token);
+
+            res.clearCookie('token'); // Nếu bạn có dùng cookie
+
+            if (!result) {
+                console.log("Xác thực thất bại");
+                console.log(result)
+                return res.status(302).redirect("http://localhost:5173/home?status=error");
+            }
+
+            console.log("Xác thực thành công, đang chuyển hướng...");
+            // Sử dụng status 302 (Found) để ép trình duyệt chuyển hướng
+            return res.status(302).redirect("http://localhost:5173/home?status=success");
+        } catch (error) {
+            return res.status(500).json({
                 success: false,
                 message: error.message
             });

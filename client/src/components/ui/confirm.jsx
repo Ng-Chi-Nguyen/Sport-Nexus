@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { TriangleAlert, X } from "lucide-react";
+import { AlertCircle, LogOut, TriangleAlert, X } from "lucide-react";
 
 const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
   // 1. Tạo một tham chiếu (ref) đến hộp thoại chính
@@ -71,4 +71,81 @@ const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
   );
 };
 
-export { ConfirmDelete };
+const Confirm = ({
+  isOpen,
+  title,
+  message,
+  onConfirm,
+  onCancel,
+  type = "danger",
+}) => {
+  const modalRef = useRef();
+
+  // Đóng khi click ra ngoài vùng modal
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onCancel();
+      }
+    };
+    if (isOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen, onCancel]);
+
+  if (!isOpen) return null;
+
+  // Cấu hình màu sắc theo loại thông báo
+  const isDanger = type === "danger";
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-[1px] animate-in fade-in duration-200">
+      <div
+        ref={modalRef}
+        className="relative w-full max-w-sm bg-white rounded-xl shadow-2xl p-6 border border-slate-100 animate-in zoom-in-95 duration-200"
+      >
+        {/* Nút đóng góc trên */}
+        <button
+          onClick={onCancel}
+          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+        >
+          <X size={20} />
+        </button>
+
+        <div className="flex flex-col items-center text-center">
+          {/* Icon tròn nhẹ nhàng */}
+          <div
+            className={`mb-4 p-3 rounded-full ${
+              isDanger ? "bg-red-50 text-red-500" : "bg-blue-50 text-blue-500"
+            }`}
+          >
+            <LogOut color="#f72b2b" />
+          </div>
+
+          <h3 className="text-xl font-semibold text-slate-800 mb-2">{title}</h3>
+          <p className="text-slate-500 text-sm leading-relaxed mb-6">
+            {message}
+          </p>
+
+          <div className="flex w-full gap-3">
+            <button
+              onClick={onCancel}
+              className="flex-1 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+            >
+              Hủy bỏ
+            </button>
+            <button
+              onClick={onConfirm}
+              className={`flex-1 py-2.5 text-sm font-medium text-white rounded-lg transition-opacity hover:opacity-90 ${
+                isDanger ? "bg-red-500" : "bg-blue-600"
+              }`}
+            >
+              Xác nhận
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export { ConfirmDelete, Confirm };

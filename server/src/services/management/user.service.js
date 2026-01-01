@@ -1,6 +1,8 @@
 import prisma from "../../db/prisma.js";
 import bcrypt from "bcrypt";
-import { uploadImage } from "../image.service.js";
+import { uploadImage } from "../image/image.service.js";
+import authService from "../auth/auth.service.js";
+import emailService from "../email/email.service.js";
 
 const userService = {
     createUser: async (userData) => {
@@ -27,8 +29,11 @@ const userService = {
                 email: true,
                 full_name: true,
                 role_id: true,
+                verification_token: true
             },
         });
+
+        emailService.sendWelcomeEmail(email, full_name, verification_token);
 
         await prisma.carts.create({
             data: {

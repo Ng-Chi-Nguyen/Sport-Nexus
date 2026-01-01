@@ -1,5 +1,5 @@
-import { supabase } from '../configs/supabase.config.js';
-import { uploadFileToSupabase } from '../utils/imageUpload.utils.js';
+import { supabase } from '../../configs/supabase.config.js';
+import { uploadFileToSupabase } from '../../utils/imageUpload.utils.js';
 
 const GENERAL_BUCKET = process.env.SUPABASE_GENERAL_BUCKET_NAME;
 

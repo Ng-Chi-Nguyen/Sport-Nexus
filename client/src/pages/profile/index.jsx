@@ -10,7 +10,18 @@ import {
   RotateCcwKey,
   ShieldOff,
 } from "lucide-react";
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  NavLink,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import { useState } from "react";
+import { Confirm } from "@/components/ui/confirm";
+import authApi from "@/api/auth/auth";
+import { toast } from "sonner";
 
 const breadcrumbNameMap = {
   "/profile": "Tài khoản",
@@ -49,8 +60,10 @@ const menuProfile = [
 
 const ProfilePage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const base = [{ title: "Trang chủ", route: "/" }];
   const currentPath = location.pathname;
@@ -66,6 +79,20 @@ const ProfilePage = () => {
       { title: breadcrumbNameMap[currentPath], route: "" }
     );
   }
+
+  const handleLogoutClick = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const confirmLogout = async () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+    await authApi.logout(user.id);
+    setIsLogoutModalOpen(false);
+    toast.success("Đăng xuất thành công. Hẹn gặp lại bạn!");
+    navigate("/auth/login");
+  };
 
   return (
     <div className="">
@@ -109,9 +136,9 @@ const ProfilePage = () => {
                 <span className="ml-2 text-red-400 font-bold  mt-0">
                   {user.is_verified ? (
                     <div className="flex items-center">
-                      <p className="mr-1">Đã xác thực</p>
+                      <p className="mr-1 text-[#2bee38]">Đã xác thực</p>
                       <span>
-                        <CircleCheck color="#2bee38" />
+                        <CircleCheck color="#2bee38" size={17} />
                       </span>
                     </div>
                   ) : (
@@ -148,22 +175,15 @@ const ProfilePage = () => {
                   </li>
                 ))}
                 <li>
-                  <NavLink
-                    to="/"
-                    className={({ isActive }) => `
-                    flex items-center gap-3 px-4 py-1 transition-all border-2 border-transparent
-                    ${
-                      isActive
-                        ? "bg-blue-50 text-blue-600 border-l-[#4facf3]"
-                        : "text-gray-500 hover:bg-red-100 hover:text-red-500"
-                    }
-                  `}
+                  <button
+                    onClick={handleLogoutClick}
+                    className="w-full flex items-center gap-3 px-4 py-1 transition-all border-l-2 border-transparent text-gray-500 hover:bg-red-50 hover:text-red-500 hover:border-l-red-500"
                   >
-                    <LogOut color="#ee1111" size={15} />
+                    <LogOut size={15} color="#ee1111" />
                     <span className="text-[14px] text-[#ee1111]">
                       Đăng xuất
                     </span>
-                  </NavLink>
+                  </button>
                 </li>
               </ul>
             </div>
@@ -177,6 +197,12 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
+      <Confirm
+        isOpen={isLogoutModalOpen}
+        onConfirm={confirmLogout}
+        message="Bạn có chắc chắn muốn rời khỏi hệ thống Sport Nexus không? Chúng tôi sẽ đợi bạn quay lại!"
+        onCancel={() => setIsLogoutModalOpen(false)}
+      />
     </div>
   );
 };

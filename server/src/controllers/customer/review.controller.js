@@ -1,5 +1,5 @@
 import reviewService from "../../services/customer/review.service.js";
-import { uploadImage } from "../../services/image.service.js";
+import { uploadImage } from "../../services/image/image.service.js";
 
 const reviewController = {
     createReview: async (req, res) => {

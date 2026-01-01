@@ -71,6 +71,26 @@ const authService = {
                 updated_at: new Date()
             }
         });
+    },
+
+    verifyAccount: async (token) => {
+        const user = await prisma.Users.findFirst({
+            where: { verification_token: token },
+        })
+
+        if (!user) {
+            return `Không tìm thấy User`;
+        }
+
+        const updatedUser = await prisma.Users.update({
+            where: { id: user.id },
+            data: {
+                verification_token: null,
+                is_verified: true
+            }
+        })
+
+        return updatedUser;
     }
 }
 

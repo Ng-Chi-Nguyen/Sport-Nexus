@@ -1,4 +1,4 @@
-import { uploadImage } from "../../services/image.service.js";
+import { uploadImage } from "../../services/image/image.service.js";
 import userService from "../../services/management/user.service.js";
 
 const userController = {

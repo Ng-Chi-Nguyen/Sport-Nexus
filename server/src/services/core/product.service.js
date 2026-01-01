@@ -1,7 +1,7 @@
 import prisma from "../../db/prisma.js";
 import { deleteImage } from "../../utils/deleteImage.utils.js";
 import { createAutoSlug } from "../../utils/slug.utils.js";
-import { uploadImage } from "../image.service.js";
+import { uploadImage } from "../image/image.service.js";
 
 const productService = {
     createProduct: async (productData) => {

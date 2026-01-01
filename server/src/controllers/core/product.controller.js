@@ -1,5 +1,5 @@
 import productService from "../../services/core/product.service.js";
-import { uploadImage } from "../../services/image.service.js";
+import { uploadImage } from "../../services/image/image.service.js";
 
 const productController = {
     createProduct: async (req, res) => {

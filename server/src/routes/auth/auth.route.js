@@ -8,5 +8,7 @@ const authRoute = express.Router();
 authRoute
 
     .post("/login", validate(authSchema.login), authController.login)
+    .post("/logout/:id", authController.logout)
+    .get("/token/:token", authController.verifyAccount)
 
 export default authRoute;

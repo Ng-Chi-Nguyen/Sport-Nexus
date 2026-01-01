@@ -1,6 +1,6 @@
 import prisma from "../../db/prisma.js";
 import { deleteImage } from "../../utils/deleteImage.utils.js";
-import { uploadImage } from "../image.service.js";
+import { uploadImage } from "../image/image.service.js";
 
 const productImageService = {
     createProductImage: async (uploadedUrls, product_id) => {

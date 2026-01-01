@@ -1,5 +1,5 @@
 import productImageService from "../../services/core/productImage.service.js";
-import { uploadImage } from "../../services/image.service.js";
+import { uploadImage } from "../../services/image/image.service.js";
 import { checkExistKey } from "../../utils/checkExistKey.utils.js";
 
 const productImageController = {

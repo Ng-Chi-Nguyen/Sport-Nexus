@@ -1,4 +1,4 @@
-import { uploadImage } from "../../services/image.service.js";
+import { uploadImage } from "../../services/image/image.service.js";
 import brandService from "../../services/management/brand.service.js";
 
 const brandController = {

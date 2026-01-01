@@ -14,7 +14,7 @@ import SearchHeader from "./search";
 const Header = () => {
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
-
+  console.log(user);
   return (
     <>
       <header className="w-full bg-white border-b shadow-sm h-[65px]">
@@ -38,16 +38,19 @@ const Header = () => {
           </div>
           <span className="border border-solid w-[1px] h-8"></span>
           <div className="flex items-center">
-            <Link
-              to="/management/dashboard"
-              className=" mr-3 cursor-pointer group"
-            >
-              <LayoutDashboard
-                size={28}
-                strokeWidth={1}
-                className="group-hover:text-blue-600 transition-colors"
-              />
-            </Link>
+            {user && user.role_id !== 5 && (
+              <Link
+                to="/management/dashboard"
+                className="mr-3 cursor-pointer group"
+              >
+                <LayoutDashboard
+                  size={28}
+                  strokeWidth={1}
+                  className="group-hover:text-blue-600 transition-colors"
+                />
+              </Link>
+            )}
+
             {user ? (
               <Link
                 to="/profile"

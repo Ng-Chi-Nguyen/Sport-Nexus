@@ -1,5 +1,5 @@
 import prisma from "../db/prisma.js"
-import { uploadImage } from "../services/image.service.js";
+import { uploadImage } from "../services/image/image.service.js";
 
 export const deleteImage = async (recordId, modelName, fieldName) => {
 

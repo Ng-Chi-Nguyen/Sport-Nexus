@@ -3,11 +3,15 @@ import dotenv from 'dotenv';
 import { connectDB } from './db/prisma.js';
 import Routes from "./routes/index.route.js";
 import cors from 'cors';
+import configViewEngine from "./configs/view.config.js";
 
 dotenv.config();
 
 const app = express();
 const port = process.env.APP_PORT;
+
+// Gọi cấu hình View Engine
+configViewEngine(app);
 
 app.use(cors({
   origin: 'http://localhost:5173', // Cho phép React của bạn
