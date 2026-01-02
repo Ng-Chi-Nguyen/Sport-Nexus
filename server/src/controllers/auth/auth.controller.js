@@ -38,7 +38,7 @@ const authController = {
 
     verifyAccount: async (req, res) => {
         let { token } = req.params;
-        console.log(token)
+        // console.log(token)
         if (!token) {
             return res.status(500).json({
                 success: false,
@@ -53,17 +53,15 @@ const authController = {
             if (!result) {
                 console.log("Xác thực thất bại");
                 console.log(result)
-                return res.status(302).redirect("http://localhost:5173/home?status=error");
+                return res.status(302).redirect("http://localhost:5173");
             }
 
             console.log("Xác thực thành công, đang chuyển hướng...");
             // Sử dụng status 302 (Found) để ép trình duyệt chuyển hướng
-            return res.status(302).redirect("http://localhost:5173/home?status=success");
+            return res.status(302).redirect("http://localhost:5173");
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            });
+            console.error("Lỗi hệ thống trong verifyAccount:", error.message);
+            return res.redirect("http://localhost:5173");
         }
     }
 }

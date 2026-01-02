@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { Button3DLink } from "@/components/ui/button";
+import { BtnAdd } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
 import { LayoutDashboard } from "lucide-react";
 
@@ -26,10 +26,10 @@ const UserPage = () => {
       <Breadcrumbs data={breadcrumbData} />
       <div className="p-2">
         <div className="flex items-center gap-4">
-          <div className="w-[70%] relative group">
+          <div className="flex-1 relative group">
             <SearchTable placeholder="Tìm kiếm quyền hạn..." />
           </div>
-          <Button3DLink
+          <BtnAdd
             route={"/management/permissions/create"}
             className="w-[30%]"
             name="Thêm người dùng"

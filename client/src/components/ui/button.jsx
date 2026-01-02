@@ -1,37 +1,33 @@
-import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Pencil, Plus, Trash, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Button3DLink = (props) => {
-  let { name, route } = props;
-  // console.log(route);
+const BtnAdd = ({ name, route }) => {
   return (
-    <>
-      <button className="active:shadow-none active:translate-x-[3px] active:translate-y-[3px] shadow-[3px_3px_0px_0px_#fafafa] transition-all rounded-[10px]">
-        <Link
-          to={route}
-          className="
-            inline-flex items-center justify-center gap-2
-            py-4 px-8 w-fit
-            bg-[#4facf3] text-white 
-            rounded-[4px] border-none
-            transition-all duration-75
-            active:translate-x-[2px] active:translate-y-[2px]
-            shadow-[4px_4px_2px_2px_rgba(0,0,0,0.1)]
-            active:shadow-none
-            cursor-pointer
-            "
-        >
-          <Plus size={18} strokeWidth={2.5} />
-          <span className="text-[18px] font-medium leading-none">
-            {name || "Thêm người dùng"}
-          </span>
-        </Link>
-      </button>
-    </>
+    <Link
+      to={route}
+      className="
+        inline-flex items-center justify-center gap-2
+        py-2.5 px-6 w-fit
+        bg-[#4facf3] text-white 
+        font-bold text-[16px]
+        border-2 border-[#1a1a1a]
+        rounded-[8px]
+        shadow-[4px_4px_0px_0px_#1a1a1a]
+        active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
+        cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 transition-all duration-150 group
+      "
+    >
+      <Plus
+        size={20}
+        strokeWidth={4}
+        className="group-hover:rotate-90 transition-transform"
+      />
+      <span className="">{name || "Thêm mới"}</span>
+    </Link>
   );
 };
 
-const ButtonSubmit = (props) => {
+const BtnSubmit = (props) => {
   const { name } = props;
   return (
     <>
@@ -49,7 +45,7 @@ const ButtonSubmit = (props) => {
   );
 };
 
-const ButtonGoback = () => {
+const BtnGoback = () => {
   const navigate = useNavigate(); // Khởi tạo hàm điều hướng
 
   const handleGoBack = () => {
@@ -94,28 +90,44 @@ const BtnEdit = (props) => {
 };
 
 const BtnDelete = (props) => {
-  // Bóc tách thêm onClick từ props
+  // Bóc tách thêm onClick và className từ props
   const { onClick, className } = props;
 
   return (
     <button
       type="button"
-      /* Kích hoạt hàm handleDelete từ cha truyền xuống */
       onClick={onClick}
-      className={`flex items-center justify-center p-2 bg-red-500 text-white 
+      className={`group relative flex items-center justify-center py-2 px-4 bg-[#ee1111] text-white 
         border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] 
         rounded-[5px] hover:translate-x-[2px] hover:translate-y-[2px] 
-        hover:shadow-none active:scale-95 transition-all duration-150 group ${className}`}
+        hover:shadow-none active:translate-x-[3px] 
+        active:translate-y-[3px] active:shadow-none transition-all duration-200 ${className}`}
       title="Xóa dữ liệu"
     >
-      <Trash2
-        size={18}
-        strokeWidth={2.5}
-        className="group-hover:animate-bounce"
-      />
-      <span className="ml-1 text-sm font-bold uppercase">Xóa</span>
+      <div className="relative w-[18px] h-[18px] mr-2">
+        {/* 1. Phần Nắp - Chỉ lấy phần trên cùng */}
+        <Trash2
+          size={18}
+          strokeWidth={2.5}
+          className="absolute top-0 left-0 z-10 origin-bottom-left transition-transform duration-300
+           ease-in-out group-hover:-rotate-[35deg] group-hover:-translate-y-0 group-hover:translate-x-1.5"
+          style={{ clipPath: "inset(0 0 65% 0)" }} // Cắt bỏ 65% phía dưới
+        />
+
+        {/* 2. Phần Thân - Cắt bỏ phần nắp phía trên để không bị 2 nắp */}
+        <Trash2
+          size={18}
+          strokeWidth={2.5}
+          className="absolute top-0 left-0 z-0"
+          style={{ clipPath: "inset(35% 0 0 0)" }} // Cắt bỏ 35% phía trên (phần nắp)
+        />
+      </div>
+
+      <span className="text-[14px] font-black uppercase tracking-wider">
+        Xóa
+      </span>
     </button>
   );
 };
 
-export { Button3DLink, ButtonSubmit, ButtonGoback, BtnEdit, BtnDelete };
+export { BtnAdd, BtnSubmit, BtnGoback, BtnEdit, BtnDelete };

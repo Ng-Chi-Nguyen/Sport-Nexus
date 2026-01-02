@@ -10,10 +10,10 @@ const emailService = {
         const templatePath = path.resolve('src/views/emails/welcome.ejs');
         // console.log("Đang tìm file tại:", templatePath);
         // 2. Render HTML
-        console.log(token)
+        // console.log(token)
         const html = await ejs.renderFile(templatePath, {
             full_name: full_name,
-            verify_url: `http://localhost:8080/auth/token/${token}`
+            verify_url: `http://localhost:8080/api/v1/auth/token/${token}`
         });
 
         // 3. Thực hiện gửi mail

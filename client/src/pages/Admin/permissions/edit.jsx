@@ -6,8 +6,7 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { InputFrom } from "@/components/ui/input";
 import Label from "@/components/ui/label";
 import Select from "@/components/ui/select";
-import { ButtonSubmit } from "@/components/ui/button";
-import { ButtonGoback } from "@/components/ui/button";
+import { BtnSubmit, BtnGoback } from "@/components/ui/button";
 // api
 import permissionApi from "@/api/management/permissionApi";
 
@@ -131,10 +130,10 @@ const CreatePermissionPage = () => {
                 </div>
               </div>
               <div className="w-fit group flex flex-col flex-col-reverse">
-                <ButtonSubmit name={"Sửa"} />
+                <BtnSubmit name={"Sửa"} />
               </div>
               <div className="w-fit group flex flex-col flex-col-reverse">
-                <ButtonGoback />
+                <BtnGoback />
               </div>
             </div>
           </div>

@@ -10,7 +10,7 @@ const authApi = {
     return axiosClient.post(url, data);
   },
   logout: (userId) => {
-    console.log(userId);
+    // console.log(userId);
     const url = `/auth/logout/${userId}`;
     return axiosClient.post(url);
   },

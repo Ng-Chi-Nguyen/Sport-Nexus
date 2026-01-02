@@ -14,7 +14,7 @@ import SearchHeader from "./search";
 const Header = () => {
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
-  console.log(user);
+  // console.log(user);
   return (
     <>
       <header className="w-full bg-white border-b shadow-sm h-[65px]">

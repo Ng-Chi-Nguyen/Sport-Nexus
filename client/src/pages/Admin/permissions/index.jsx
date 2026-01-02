@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { BtnDelete, BtnEdit, Button3DLink } from "@/components/ui/button";
+import { BtnDelete, BtnEdit, BtnAdd } from "@/components/ui/button";
 import Pagination from "@/components/ui/pagination";
 import { SearchTable } from "@/components/ui/search";
 import Badge from "@/components/ui/badge";
@@ -92,12 +92,12 @@ const PermissionPagePage = () => {
     <>
       <Breadcrumbs data={breadcrumbData} />
 
-      <div className="p-2 mt-4">
+      <div className="p-2">
         <div className="flex items-center gap-4">
           <div className="w-[80%] relative group">
             <SearchTable placeholder="Search permissions..." />
           </div>
-          <Button3DLink
+          <BtnAdd
             route={"/management/permissions/create"}
             className="w-[20%]"
             name="Thêm quyền"
@@ -105,7 +105,7 @@ const PermissionPagePage = () => {
         </div>
       </div>
 
-      <div className="p-2 mt-6">
+      <div className="p-2">
         <h3 className="mb-2">Danh sách quyền</h3>
 
         <div className="relative bg-white border-2 border-[#323232] shadow-[4px_4px_0px_0px_#323232] rounded-[5px]">

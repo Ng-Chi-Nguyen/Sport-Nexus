@@ -33,7 +33,7 @@ const userService = {
             },
         });
 
-        emailService.sendWelcomeEmail(email, full_name, verification_token);
+        emailService.sendWelcomeEmail(email, full_name, vToken);
 
         await prisma.carts.create({
             data: {

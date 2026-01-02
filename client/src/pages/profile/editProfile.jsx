@@ -1,6 +1,6 @@
 import { FloatingInput } from "@/components/ui/input";
 import { InputFile } from "@/components/ui/input";
-import { ButtonSubmit } from "@/components/ui/button";
+import { BtnSubmit, BtnGoback } from "@/components/ui/button";
 
 const EditProfile = () => {
   return (
@@ -21,8 +21,13 @@ const EditProfile = () => {
             <div className="">
               <FloatingInput id="1" label="Số điện thoại" />
             </div>
-            <div className="">
-              <ButtonSubmit name="Chỉnh sữa" />
+            <div className="flex gap-2">
+              <div className="">
+                <BtnSubmit name="Chỉnh sữa" />
+              </div>
+              <div className="">
+                <BtnGoback />
+              </div>
             </div>
           </div>
         </form>
