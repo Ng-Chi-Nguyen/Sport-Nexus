@@ -29,7 +29,7 @@ const permissionService = {
     },
 
     updatePermissionBySlug: async (permissionSlug, dataUpdate) => {
-        console.log(permissionSlug)
+        // console.log(permissionSlug)
         if (dataUpdate.name) {
             let slug = await createAutoSlug(dataUpdate.name, "Permissions")
             dataUpdate.slug = slug;
@@ -65,13 +65,13 @@ const permissionService = {
         try {
             const limit = 6;
             const currentPage = Math.max(1, parseInt(page) || 1); // Đảm bảo page luôn là số dương
-            const skip = (currentPage - 1) * limit; // Công thức: $skip = (page - 1) \times limit$
+            const skip = (currentPage - 1) * limit; // Công thức: $skip = (page - 1) * limit$
 
             // 1. Lấy dữ liệu và tổng số bản ghi đồng thời
             const [permissions, totalItems] = await Promise.all([
                 prisma.Permissions.findMany({
-                    take: limit,
-                    skip: skip,
+                    take: limit, // Lấy 6 dòng
+                    skip: skip, // Bỏ qua các dòng của các trang trước đó
                     orderBy: { module: 'asc' }
                 }),
                 prisma.Permissions.count()
@@ -79,7 +79,7 @@ const permissionService = {
 
             // 2. Nhóm dữ liệu theo module
             const groupedPermissions = permissions.reduce((acc, permission) => {
-                const key = permission.module || 'others';
+                const key = permission.module;
                 if (!acc[key]) acc[key] = [];
                 acc[key].push(permission);
                 return acc;

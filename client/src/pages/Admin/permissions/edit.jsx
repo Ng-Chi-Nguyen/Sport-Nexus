@@ -29,6 +29,29 @@ const breadcrumbData = [
   },
 ];
 
+const moduleLabels = {
+  users: "👤 Quản lý Người dùng",
+  roles: "🔑 Vai trò & Phân quyền",
+  permissions: "🛡️ Danh mục Quyền hạn",
+  products: "📦 Sản phẩm",
+  categories: "📂 Danh mục Sản phẩm",
+  brands: "🏷️ Thương hiệu",
+  orders: "🛒 Đơn hàng",
+  coupons: "🎟️ Mã giảm giá",
+  suppliers: "🏭 Nhà cung cấp",
+  purchaseorders: "📝 Đơn nhập hàng",
+  stockmovements: "📉 Biến động kho",
+  reviews: "⭐ Đánh giá khách hàng",
+  systemlogs: "📋 Nhật ký hệ thống",
+};
+
+const actionOptions = [
+  { slug: "create", name: "✨ Thêm mới (Create)" },
+  { slug: "read", name: "👁️ Xem dữ liệu (Read)" },
+  { slug: "update", name: "📝 Chỉnh sửa (Update)" },
+  { slug: "delete", name: "🗑️ Xóa dữ liệu (Delete)" },
+];
+
 const CreatePermissionPage = () => {
   const navigate = useNavigate();
   const permissionData = useLoaderData();
@@ -38,29 +61,7 @@ const CreatePermissionPage = () => {
   const [selectedAction, setSelectedAction] = useState(permissionData.action);
   const [permissionName, setPermissionName] = useState(permissionData.name);
   // -----------
-
-  const moduleLabels = {
-    users: "👤 Quản lý Người dùng",
-    roles: "🔑 Vai trò & Phân quyền",
-    permissions: "🛡️ Danh mục Quyền hạn",
-    products: "📦 Sản phẩm",
-    categories: "📂 Danh mục Sản phẩm",
-    brands: "🏷️ Thương hiệu",
-    orders: "🛒 Đơn hàng",
-    coupons: "🎟️ Mã giảm giá",
-    suppliers: "🏭 Nhà cung cấp",
-    purchaseorders: "📝 Đơn nhập hàng",
-    stockmovements: "📉 Biến động kho",
-    reviews: "⭐ Đánh giá khách hàng",
-    systemlogs: "📋 Nhật ký hệ thống",
-  };
-
-  const actionOptions = [
-    { slug: "create", name: "✨ Thêm mới (Create)" },
-    { slug: "read", name: "👁️ Xem dữ liệu (Read)" },
-    { slug: "update", name: "📝 Chỉnh sửa (Update)" },
-    { slug: "delete", name: "🗑️ Xóa dữ liệu (Delete)" },
-  ];
+  console.log(permissionData);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Ngăn trang web tải lại

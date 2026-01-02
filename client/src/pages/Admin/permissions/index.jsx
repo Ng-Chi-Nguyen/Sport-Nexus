@@ -56,7 +56,6 @@ const PermissionPagePage = () => {
     totalPages: 1,
     currentPage: 1,
   };
-
   const allPermissions = useMemo(() => {
     if (!permissionsData) return [];
     // Làm phẳng mảng users để render 6 dòng

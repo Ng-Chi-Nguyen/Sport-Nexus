@@ -29,47 +29,48 @@
     }
 }
 
-/* --- TÙY CHỈNH THANH CUỘN TOÀN TRANG --- */
-/* --- Cấu hình thanh cuộn mỏng, vuông và ẩn hiện khi hover --- */
-
-/* 1. Thiết lập độ rộng mỏng và vuông cho toàn bộ web */
-::-webkit-scrollbar {
-    width: 6px;
-    /* Độ mỏng bạn muốn */
-    height: 6px;
-    /* Cho thanh cuộn ngang */
+/* 1. Reset vùng chứa */
+.custom-scrollbar {
+    overflow-y: auto !important;
+    /* Ngăn nội dung bị nhảy khi thanh cuộn hiện/ẩn */
+    scrollbar-gutter: stable;
 }
 
-/* 2. Phần đường ray (track) luôn để trong suốt */
-::-webkit-scrollbar-track {
-    background: transparent;
+/* 2. Cấu hình thanh cuộn mỏng (Chrome, Edge, Safari) */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px !important;
+    /* Độ mỏng như đường kẻ bạn muốn */
 }
 
-/* 3. Phần tay cầm (thumb): Mặc định là trong suốt để "ẩn" đi */
-::-webkit-scrollbar-thumb {
-    background: transparent;
-    border-radius: 0px;
-    /* Hình vuông hoàn toàn theo ý bạn */
-    transition: background 0.3s ease;
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent !important;
+    /* Luôn trong suốt nền */
 }
 
-/* 4. CHÌA KHÓA: Khi hover vào trang (body) hoặc bất kỳ vùng cuộn nào, 
-      thì thanh cuộn của vùng đó mới hiện màu #4facf3 */
-*:hover::-webkit-scrollbar-thumb {
-    background: #4facf3;
+/* 3. Tay cầm (Thumb) - MẶC ĐỊNH LÀ ẨN */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: transparent !important;
+    border-radius: 20px !important;
 }
 
-/* 5. Khi di chuột trực tiếp vào thanh cuộn thì cho màu đậm hơn một chút (tùy chọn) */
-::-webkit-scrollbar-thumb:hover {
-    background: #3b95d1;
+/* 4. CHÌA KHÓA: Chỉ hiện màu xanh khi RÊ CHUỘT VÀO SIDEBAR */
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: #4facf3 !important;
 }
 
-/* Hỗ trợ cho Firefox (Firefox chưa hỗ trợ ẩn hiện hover mượt như Webkit) */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
+/* 5. Khi di chuột TRỰC TIẾP vào thanh cuộn thì đậm hơn tí */
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #3b95d1 !important;
 }
 
-*:hover {
-    scrollbar-color: #4facf3 transparent;
+/* 6. Hỗ trợ Firefox (Dành cho 5% người dùng còn lại) */
+@supports (scrollbar-width: thin) {
+    .custom-scrollbar {
+        scrollbar-width: thin !important;
+        scrollbar-color: transparent transparent !important;
+    }
+
+    .custom-scrollbar:hover {
+        scrollbar-color: #4facf3 transparent !important;
+    }
 }

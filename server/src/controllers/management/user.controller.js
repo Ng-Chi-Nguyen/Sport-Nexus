@@ -91,8 +91,10 @@ const userController = {
     },
 
     getAllUser: async (req, res) => {
+        const page = parseInt(req.query.page) || 1;
+        // console.log(page)
         try {
-            let list_users = await userService.getAllUser();
+            let list_users = await userService.getAllUser(page);
 
             if (!list_users || list_users.length === 0) {
                 return res.status(404).json({

@@ -1,7 +1,5 @@
 import prisma from "../../db/prisma.js";
 import bcrypt from "bcrypt";
-import { uploadImage } from "../image/image.service.js";
-import authService from "../auth/auth.service.js";
 import emailService from "../email/email.service.js";
 
 const userService = {
@@ -29,7 +27,6 @@ const userService = {
                 email: true,
                 full_name: true,
                 role_id: true,
-                verification_token: true
             },
         });
 
@@ -86,22 +83,48 @@ const userService = {
         return user;
     },
 
-    getAllUser: async () => {
-        let listUsers = await prisma.users.findMany({
-            select: {
-                id: true,
-                full_name: true,
-                email: true,
-                phone_number: true,
-                avatar: true,
-                status: true,
-                is_verified: true,
-                role_id: true,
-                created_at: true,
-                updated_at: true,
-            },
-        });
-        return listUsers;
+    getAllUser: async (page) => {
+        const limit = 6;
+        const currentPage = Math.max(1, page);
+        // console.log(currentPage)
+        const skip = (currentPage - 1) * limit;
+        // console.log(skip)
+
+        let [listUsers, totalItems] = await Promise.all([
+            prisma.Users.findMany({
+                take: limit,
+                skip: skip,
+                select: {
+                    id: true,
+                    full_name: true,
+                    email: true,
+                    phone_number: true,
+                    avatar: true,
+                    status: true,
+                    is_verified: true,
+                    role_id: true,
+                    created_at: true,
+                    updated_at: true,
+                    role: {
+                        select: {
+                            id: true,
+                            name: true
+                        }
+                    }
+                },
+            }),
+            prisma.Users.count(),
+        ])
+
+        return {
+            data: listUsers,
+            pagination: {
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+                currentPage: currentPage,
+                itemsPerPage: limit
+            }
+        };
     },
 
     deleteUser: async (userId, currentUser) => {

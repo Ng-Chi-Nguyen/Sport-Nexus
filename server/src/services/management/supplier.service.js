@@ -1,5 +1,4 @@
 import prisma from "../../db/prisma.js";
-import { uploadImage } from "../image/image.service.js";
 
 const supplierService = {
     createSuplier: async (supplierData) => {
