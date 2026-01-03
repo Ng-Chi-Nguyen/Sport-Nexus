@@ -146,6 +146,23 @@ const userController = {
                 error: error.message,
             });
         }
+    },
+
+    updateExtraPermissions: async (req, res) => {
+        try {
+            const userId = parseInt(req.params.id);
+            const { permissionIds } = req.body;
+
+            const result = await userService.updateUserPermissions(userId, permissionIds);
+
+            return res.status(200).json({
+                success: true,
+                message: "Cập nhật quyền thành công",
+                data: result
+            });
+        } catch (error) {
+            return res.status(500).json({ success: false, error: error.message });
+        }
     }
 };
 

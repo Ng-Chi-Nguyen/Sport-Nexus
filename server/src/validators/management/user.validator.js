@@ -50,7 +50,9 @@ const userSchema = {
         avatar: Joi.string().base64({ paddingRequired: true }),
         status: Joi.boolean().optional(),
         is_verified: Joi.boolean().optional(),
-        slug: Joi.string()
+        slug: Joi.string(),
+
+        permissionIds: Joi.array().items(Joi.number().integer()).required(),
     }).unknown(false)
 }
 

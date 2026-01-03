@@ -79,11 +79,27 @@ const userService = {
                     role_id: true,
                     created_at: true,
                     updated_at: true,
+                    // 1. Lấy quyền từ Role (Quyền mặc định của chức vụ)
                     role: {
                         select: {
                             id: true,
                             slug: true,
-                            name: true
+                            name: true,
+                            permissions: { // Thêm phần này để lấy danh sách quyền của Role
+                                select: {
+                                    id: true,
+                                    module: true,
+                                    action: true
+                                }
+                            }
+                        }
+                    },
+                    // 2. Lấy quyền riêng của User (Extra permissions - nếu DB bạn có quan hệ này)
+                    permissions: {
+                        select: {
+                            id: true,
+                            module: true,
+                            action: true
                         }
                     }
                 },
@@ -144,7 +160,21 @@ const userService = {
         await prisma.users.delete({
             where: { id: userId }
         })
+    },
+
+    updateUserPermissions: async (userId, permissionIds) => {
+        return await prisma.users.update({
+            where: { id: userId },
+            data: {
+                permissions: {
+                    set: permissionIds.map(id => ({ id: id }))
+                }
+            },
+            include: {
+                permissions: true
+            }
+        });
     }
-};
+}
 
 export default userService;

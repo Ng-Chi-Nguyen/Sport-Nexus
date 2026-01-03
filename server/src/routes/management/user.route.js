@@ -12,6 +12,7 @@ userRoute
     .get("/:id", userController.getUserById)
     .get("/", userController.getAllUser)
     .put("/:id", validate(userSchema.updateUser), uploadImageAvatar, userController.updateUser)
+    .put('/permissions/:id', userController.updateExtraPermissions)
     .delete("/:id", userController.deleteUserById)
 
 export default userRoute;

@@ -8,8 +8,10 @@ const LoaderUser = {
   },
   getUserById: async ({ params }) => {
     const { userId } = params;
+    // console.log(userId);
     const url = `/management/user/${userId}`;
     const response = await axiosClient.get(url);
+    // console.log(response);
     return response;
   },
 };

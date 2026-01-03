@@ -24,6 +24,19 @@ const LoaderPermissions = {
       return {};
     }
   },
+
+  getAllPermissions: async () => {
+    try {
+      const response = await axiosClient.get("/management/permission");
+      if (response.success) {
+        return response;
+      }
+      return [];
+    } catch (error) {
+      console.error("Loader Error (getAllPermissions):", error);
+      return [];
+    }
+  },
 };
 
 export { LoaderPermissions };

@@ -14,6 +14,7 @@ model Permissions {
     module String
     action String
     Roles  Roles[]
+    Users  Users[]
 
     @@map("permissions")
 }
@@ -51,6 +52,7 @@ model Users {
     Carts              Carts[]
     Reviews            Reviews[]
     SystemLogs         SystemLogs[]
+    permissions        Permissions[]
 
     @@map("users")
 }

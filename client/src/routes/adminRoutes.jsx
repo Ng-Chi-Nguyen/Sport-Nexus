@@ -63,7 +63,16 @@ export const adminRoutes = {
     {
       path: "users/add-role/:userId",
       element: <AddRolePermissionPage />,
-      // loader: LoaderUser.getUserById,
+      loader: async ({ params }) => {
+        const [user, allPermissions] = await Promise.all([
+          // 2. Phải GỌI hàm () và TRUYỀN { params } vào
+          LoaderUser.getUserById({ params }),
+          LoaderPermissions.getAllPermissions(),
+        ]);
+
+        // console.log("Dữ liệu user:", user);
+        return { user, allPermissions };
+      },
     },
     { path: "products", element: <ProductPage /> },
     { path: "orders", element: <OrderPage /> },
