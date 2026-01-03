@@ -1,15 +1,18 @@
-// components/ui/select.jsx
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 
-const Select = ({ options, value, onChange, placeholder = "Chọn một mục" }) => {
+const Select = ({
+  options,
+  value,
+  onChange,
+  placeholder = "Chọn một mục",
+  label,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // 1. Chuyển đổi Object thành Array nếu cần thiết
-  const safeOptions = React.useMemo(() => {
+  const safeOptions = useMemo(() => {
     if (Array.isArray(options)) return options;
     if (options && typeof options === "object") {
-      // Chuyển { users: "Quản lý..." } thành [{ slug: "users", name: "Quản lý..." }]
       return Object.entries(options).map(([key, val]) => ({
         slug: key,
         name: val,
@@ -18,37 +21,53 @@ const Select = ({ options, value, onChange, placeholder = "Chọn một mục" }
     return [];
   }, [options]);
 
-  // 2. Tìm option dựa trên safeOptions
   const selectedOption = safeOptions.find((opt) => opt.slug === value);
 
   return (
     <div
-      className="relative w-fit min-w-[200px] cursor-pointer text-[#323232] group font-medium"
+      className={`relative w-full min-w-[320px] cursor-pointer text-[#323232] font-medium transition-all ${
+        /* Khi mở, cả cụm bao gồm cả nhãn sẽ nhảy lên z-9999 */
+        isOpen ? "z-[9999]" : "z-10"
+      }`}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
+      {/* NHÃN (LABEL) - Đưa vào trong để không bao giờ bị mất */}
+      {label && (
+        <label
+          className={`absolute -top-2 left-3 bg-white px-1 font-bold text-[12px] transition-all duration-300 z-[120] ${
+            isOpen ? "text-[#4facf3]" : "text-[#323232]"
+          }`}
+        >
+          {label} <span className="text-red-500">*</span>
+        </label>
+      )}
+
+      {/* TRIGGER */}
       <div
-        className={`bg-white p-[10px] mb-[5px] rounded-[5px] relative z-[100] text-[15px] flex items-center justify-between border-2 transition-all duration-300 shadow-[4px_4px_0px_0px_#323232] ${
+        className={`bg-white p-[10px] rounded-[5px] relative z-[100] text-[15px] flex items-center justify-between border-2 transition-all duration-300 shadow-[4px_4px_0px_0px_#323232] ${
           isOpen ? "border-[#4facf3]" : "border-[#323232]"
         }`}
       >
-        <span>{selectedOption ? selectedOption.name : placeholder}</span>
+        <span className="truncate mr-2">
+          {selectedOption ? selectedOption.name : placeholder}
+        </span>
         <ChevronDown
           size={15}
           className={`transition-transform duration-300 ${
-            isOpen ? "rotate-0 text-[#4facf3]" : "-rotate-90 text-[#323232]"
+            isOpen ? "rotate-180 text-[#4facf3]" : "rotate-0 text-[#323232]"
           }`}
         />
       </div>
 
+      {/* DROPDOWN MENU */}
       <div
-        className={`flex flex-col rounded-[5px] p-[5px] bg-white border-2 border-[#323232] shadow-[4px_4px_0px_0px_#4facf3] absolute w-full transition-all duration-300 z-50 ${
+        className={`flex flex-col rounded-[5px] p-[5px] bg-white border-2 border-[#323232] shadow-[4px_4px_0px_0px_#4facf3] absolute left-0 w-full transition-all duration-300 z-[110] max-h-[300px] overflow-y-auto custom-scrollbar ${
           isOpen
-            ? "opacity-100 top-full visible"
-            : "opacity-0 top-[calc(100%-20px)] invisible"
+            ? "opacity-100 top-[calc(100%+2px)] visible"
+            : "opacity-0 top-[calc(100%-10px)] invisible pointer-events-none"
         }`}
       >
-        {/* DÙNG safeOptions Ở ĐÂY THAY VÌ options */}
         {safeOptions.map((option) => (
           <div
             key={option.slug}
@@ -56,7 +75,7 @@ const Select = ({ options, value, onChange, placeholder = "Chọn một mục" }
               onChange(option.slug);
               setIsOpen(false);
             }}
-            className={`rounded-[5px] p-[8px] text-[14px] transition-colors duration-200 w-full cursor-pointer hover:bg-[#4facf3] hover:text-white ${
+            className={`rounded-[4px] p-[10px] text-[14px] transition-colors duration-200 w-full cursor-pointer whitespace-nowrap hover:bg-[#4facf3] hover:text-white ${
               value === option.slug
                 ? "text-white font-bold bg-[#4facf3]"
                 : "text-[#323232]"

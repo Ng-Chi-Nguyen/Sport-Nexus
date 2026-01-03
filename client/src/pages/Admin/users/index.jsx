@@ -21,6 +21,7 @@ import { ConfirmDelete } from "@/components/ui/confirm";
 import Pagination from "@/components/ui/pagination";
 import { BtnDelete, BtnEdit } from "@/components/ui/button";
 import Badge from "@/components/ui/badge";
+import userApi from "@/api/management/userApi";
 
 const breadcrumbData = [
   {
@@ -49,7 +50,7 @@ const UserPage = () => {
   // 1. Lấy danh sách 6 item cho bảng
   const usersData = responses?.data?.data || {};
 
-  console.log(responses);
+  // console.log(responses);
   // 2. Lấy pagination thực tế (bây giờ sẽ là 2)
   const paginationInfo = responses?.data?.pagination || {
     totalPages: 1,
@@ -204,7 +205,7 @@ const UserPage = () => {
                               />
                               <BtnDelete onClick={() => openConfirm(user.id)} />
                               <BtnAdd
-                                route={`/management/users/edit/${user.id}`}
+                                route={`/management/users/add-role/${user.id}`}
                                 name="Quyền"
                               />
 

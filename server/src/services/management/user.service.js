@@ -1,6 +1,7 @@
 import prisma from "../../db/prisma.js";
 import bcrypt from "bcrypt";
 import emailService from "../email/email.service.js";
+import { deleteImage } from "../../utils/deleteImage.utils.js";
 
 const userService = {
     createUser: async (userData) => {
@@ -42,45 +43,53 @@ const userService = {
     },
 
     updateUser: async (userId, dataUpdate) => {
-        // console.log(dataUpdate)
-
-        await deleteImage(userId, "users", "avatar");
-
-        let updateUser = await prisma.users.update({
+        const { slug, ...restData } = dataUpdate;
+        // console.log(slug)
+        let updatedUser = await prisma.users.update({
             where: { id: userId },
-            data: dataUpdate,
+            data: {
+                ...restData,
+                role: slug ? {
+                    connect: { slug: slug }
+                } : undefined
+            },
             select: {
                 id: true,
-                avatar: true,
                 full_name: true,
-                email: true,
-                phone_number: true,
-                status: true,
                 role_id: true,
-                updated_at: true,
-            },
+                role: { select: { id: true, name: true, slug: true } }
+            }
         });
 
-        return updateUser;
+        return updatedUser;
     },
 
     getUserById: async (userId) => {
-        let user = await prisma.users.findUnique({
-            where: { id: userId },
-            select: {
-                id: true,
-                full_name: true,
-                email: true,
-                phone_number: true,
-                avatar: true,
-                status: true,
-                is_verified: true,
-                role_id: true,
-                created_at: true,
-                updated_at: true,
-            },
-        });
-        return user;
+        let [user] = await Promise.all([
+            prisma.users.findUnique({
+                where: { id: userId },
+                select: {
+                    id: true,
+                    full_name: true,
+                    email: true,
+                    phone_number: true,
+                    avatar: true,
+                    status: true,
+                    is_verified: true,
+                    role_id: true,
+                    created_at: true,
+                    updated_at: true,
+                    role: {
+                        select: {
+                            id: true,
+                            slug: true,
+                            name: true
+                        }
+                    }
+                },
+            }),
+        ])
+        return { user };
     },
 
     getAllUser: async (page) => {
@@ -90,7 +99,7 @@ const userService = {
         const skip = (currentPage - 1) * limit;
         // console.log(skip)
 
-        let [listUsers, totalItems] = await Promise.all([
+        let [listUsers, totalItems, listPermissions] = await Promise.all([
             prisma.Users.findMany({
                 take: limit,
                 skip: skip,
@@ -118,6 +127,7 @@ const userService = {
 
         return {
             data: listUsers,
+            dataPermission: listPermissions,
             pagination: {
                 totalItems,
                 totalPages: Math.ceil(totalItems / limit),

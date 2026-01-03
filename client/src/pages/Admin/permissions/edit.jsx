@@ -64,7 +64,7 @@ const CreatePermissionPage = () => {
   console.log(permissionData);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Ngăn trang web tải lại
+    e.preventDefault();
 
     // 2. Gom dữ liệu thành một Object
     const formData = {
@@ -87,7 +87,10 @@ const CreatePermissionPage = () => {
       <Breadcrumbs data={breadcrumbData} />
       <div className="">
         <h2>Sữa quyền</h2>
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={handleSubmit}
+          className="border border-gray-200 rounded-[10px] w-fit p-4"
+        >
           <div className="flex w-full">
             <div className="w-full flex gap-4 my-2">
               <div className="flex flex-col w-1/4 flex-col-reverse">
@@ -130,12 +133,14 @@ const CreatePermissionPage = () => {
                   />
                 </div>
               </div>
-              <div className="w-fit group flex flex-col flex-col-reverse">
-                <BtnSubmit name={"Sửa"} />
-              </div>
-              <div className="w-fit group flex flex-col flex-col-reverse">
-                <BtnGoback />
-              </div>
+            </div>
+          </div>
+          <div className="flex gap-3 justify-end mt-2">
+            <div className="w-fit group flex flex-col flex-col-reverse">
+              <BtnSubmit name={"Sửa"} />
+            </div>
+            <div className="w-fit group flex flex-col flex-col-reverse">
+              <BtnGoback />
             </div>
           </div>
         </form>

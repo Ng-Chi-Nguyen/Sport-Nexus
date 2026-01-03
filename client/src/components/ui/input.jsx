@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeClosed, ImagePlus, X } from "lucide-react";
 
 const InputFrom = (props) => {
@@ -41,59 +41,93 @@ const InputPassword = (props) => {
   );
 };
 
-const InputFile = ({ label, name }) => {
-  const [selectedImage, setSelectedImage] = useState(null);
+const InputFile = ({ label, value, onChange }) => {
+  const [preview, setPreview] = useState(null);
 
-  const handleImageChange = (e) => {
+  // Xử lý hiển thị ban đầu và khi value thay đổi
+  useEffect(() => {
+    if (!value) {
+      setPreview(null);
+      return;
+    }
+
+    // Nếu value là đối tượng File (người dùng vừa chọn)
+    if (value instanceof File) {
+      const objectUrl = URL.createObjectURL(value);
+      setPreview(objectUrl);
+      // Cleanup để tránh rò rỉ bộ nhớ
+      return () => URL.revokeObjectURL(objectUrl);
+    }
+
+    // Nếu value là string (URL từ database)
+    if (typeof value === "string") {
+      setPreview(value);
+    }
+  }, [value]);
+
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Tạo đường dẫn tạm thời cho file ảnh
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
+      onChange(file); // Gửi file lên cha để cập nhật state
     }
   };
 
-  const handleRemoveImage = () => {
-    setSelectedImage(null);
+  const handleRemove = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onChange(null); // Xóa ảnh ở state cha
   };
 
   return (
-    <div className="flex flex-col justify-center gap-2 w-full">
-      {/* Label phong cách Sport Nexus */}
+    <div className="flex flex-col gap-2 w-full">
       {label && (
-        <label className="text-sm font-semibold text-gray-700">{label}</label>
+        <label className="text-sm font-black uppercase text-[#323232]">
+          {label}
+        </label>
       )}
 
-      <div className="m-auto relative w-[200px] h-[200px] border-2 border-dashed border-gray-300  rounded-full bg-gray-50 hover:border-[#4facf3] transition-colors flex items-center justify-center overflow-hidden">
-        {selectedImage ? (
+      <label
+        className="relative group m-auto w-[200px] h-[200px] rounded-full bg-gray-50 hover:border-[#4facf3] 
+        transition-all flex items-center justify-center overflow-hidden cursor-pointer"
+      >
+        <input
+          type="file"
+          className="hidden"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+
+        {preview ? (
           <>
-            {/* Ảnh xem trước */}
             <img
-              src={selectedImage}
+              src={preview}
               alt="Preview"
-              className="w-full h-full object-cover rounded-full"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.style.display = "none"; // Ẩn ảnh nếu đường dẫn lỗi
+              }}
             />
-            {/* Nút xóa ảnh */}
+            {/* Overlay khi hover */}
+            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <ImagePlus size={30} className="text-white" />
+            </div>
+
+            {/* Nút Xóa */}
             <button
-              onClick={handleRemoveImage}
-              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all shadow-md"
+              type="button"
+              onClick={handleRemove}
+              className="absolute top-2 right-4 p-1 bg-red-500 text-white rounded-full border-2 border-[#323232] hover:scale-110 transition-transform z-30 shadow-[2px_2px_0px_0px_#323232]"
             >
               <X size={16} />
             </button>
           </>
         ) : (
-          <label className="flex flex-col items-center justify-center cursor-pointer rounded-full">
-            <ImagePlus size={32} className="text-gray-400 mb-2" />
-            <span className="text-sm text-gray-500">Nhấn để tải ảnh lên</span>
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageChange}
-            />
-          </label>
+          <div className="flex flex-col items-center justify-center text-gray-400">
+            <ImagePlus size={32} className="mb-2" />
+            <span className="text-[12px] font-bold">NHẤN ĐỂ TẢI ẢNH</span>
+          </div>
         )}
-      </div>
+      </label>
     </div>
   );
 };
@@ -149,9 +183,9 @@ const FloatingInputPassword = ({ label, id, ...props }) => {
         onClick={() => setShowPass(!showPass)}
       >
         {showPass ? (
-          <EyeClosed size={20} strokeWidth={1.5} />
-        ) : (
           <Eye size={20} strokeWidth={1.5} />
+        ) : (
+          <EyeClosed size={20} strokeWidth={1.5} />
         )}
       </div>
 

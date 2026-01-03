@@ -57,13 +57,21 @@ const permissionService = {
     },
 
     getAllRole: async () => {
-        let roles = await prisma.Permissions.findMany()
-        return roles;
+        // 2. Nhóm dữ liệu theo module
+        let permissions = await prisma.Permissions.findMany();
+        const groupedPermissions = permissions.reduce((acc, permission) => {
+            const key = permission.module;
+            if (!acc[key]) acc[key] = [];
+            acc[key].push(permission);
+            return acc;
+        }, {});
+
+        return groupedPermissions;
     },
 
     getAllRoleGroups: async (page = 1) => {
         try {
-            const limit = 6;
+            const limit = 4;
             const currentPage = Math.max(1, parseInt(page) || 1); // Đảm bảo page luôn là số dương
             const skip = (currentPage - 1) * limit; // Công thức: $skip = (page - 1) * limit$
 

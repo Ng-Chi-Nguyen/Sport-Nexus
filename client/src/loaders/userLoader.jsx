@@ -1,11 +1,17 @@
 import axiosClient from "@/api/axiosClient";
 
-const LoaderUsser = {
+const LoaderUser = {
   getAllUsers: async (page = 1) => {
     const url = `/management/user?page=${page}`;
-    const reponse = await axiosClient.get(url);
-    return reponse;
+    const response = await axiosClient.get(url);
+    return response;
+  },
+  getUserById: async ({ params }) => {
+    const { userId } = params;
+    const url = `/management/user/${userId}`;
+    const response = await axiosClient.get(url);
+    return response;
   },
 };
 
-export default LoaderUsser;
+export default LoaderUser;

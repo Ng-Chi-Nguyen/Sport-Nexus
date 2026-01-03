@@ -37,7 +37,7 @@ const userController = {
         // console.log(file)
         try {
 
-            const currentUser = await brandService.getUserById(userId);
+            const currentUser = await userService.getUserById(userId);
             if (!currentUser) {
                 return res.status(404).json({
                     message: "Không tìm thấy người dùng để cập nhật."
@@ -70,7 +70,6 @@ const userController = {
 
         try {
             let user = await userService.getUserById(userId);
-
             if (!user || user.length === 0) {
                 return res.status(404).json({
                     success: false,

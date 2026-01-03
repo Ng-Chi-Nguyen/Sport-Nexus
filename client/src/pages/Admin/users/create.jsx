@@ -38,7 +38,7 @@ const CreateUserPage = () => {
       <Breadcrumbs data={breadcrumbData} />
       <div className="">
         <h2 className="mb-2">Thêm người dùng</h2>
-        <form>
+        <form className="border border-gray-200 rounded-[10px]">
           <div className="flex my-2">
             <div className="flex my-2 w-1/4 p-3 justify-center">
               <InputFile label="Ảnh đại diện" />

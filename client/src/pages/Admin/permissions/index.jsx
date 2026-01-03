@@ -109,7 +109,7 @@ const PermissionPagePage = () => {
 
         <div className="relative bg-white border-2 border-[#323232] shadow-[4px_4px_0px_0px_#323232] rounded-[5px]">
           <table className="w-full text-sm text-left text-[#323232]">
-            <thead className="text-sm uppercase bg-[#f8f9fa] border-b-2 border-[#323232]">
+            <thead className="text-sm uppercase bg-primary border-b-2 border-[#323232]">
               <tr>
                 <th scope="col" className="px-6 py-4 font-black text-center">
                   Tên quyền

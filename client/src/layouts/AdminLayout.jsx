@@ -159,7 +159,7 @@ const AdminLayout = () => {
   // console.log(menuItems);
   return (
     <div className="flex h-[calc(100vh-65px)] max-w-[1440px] mx-auto px-4">
-      <div className="w-[20%] h-screen overflow-y-auto custom-scrollbar transition-all duration-300 p-3">
+      <div className="w-[20%] h-screen overflow-y-auto bg-[#1E293B] text-[#fff] custom-scrollbar transition-all duration-300 p-3">
         {sidebarSections.map((section, index) => (
           <div key={index} className="mb-6">
             <p className="font-[900] text-[#4facf3] text-[16px] mb-2 tracking-tight">

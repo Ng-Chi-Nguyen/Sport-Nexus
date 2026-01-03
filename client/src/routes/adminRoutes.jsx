@@ -1,12 +1,16 @@
 import { lazy } from "react";
 // Loader
 import { LoaderPermissions } from "@/loaders/permissionLoader";
-import LoaderUsser from "@/loaders/userLoader";
+import LoaderUser from "@/loaders/userLoader";
 
 // Lazy load các trang để giảm dung lượng file ban đầu
 // User
 const UserPage = lazy(() => import("@/pages/Admin/users"));
 const CreateUserPage = lazy(() => import("@/pages/Admin/users/create"));
+const EditUserPage = lazy(() => import("@/pages/Admin/users/edit"));
+const AddRolePermissionPage = lazy(() =>
+  import("@/pages/Admin/users/addRolePermission")
+);
 
 const Dashboard = lazy(() => import("@/pages/Admin/Dashboard/dashboard"));
 const ProductPage = lazy(() => import("@/pages/Admin/products"));
@@ -37,18 +41,29 @@ export const adminRoutes = {
   path: "management", // Tiền tố chung
   children: [
     { path: "dashboard", element: <Dashboard /> },
+    // User
     {
       path: "users",
       element: <UserPage />,
       loader: async ({ request }) => {
         const url = new URL(request.url);
         const page = url.searchParams.get("page") || 1; // Trích xuất ?page= từ URL
-        return LoaderUsser.getAllUsers(page);
+        return LoaderUser.getAllUsers(page);
       },
     },
     {
       path: "users/create",
       element: <CreateUserPage />,
+    },
+    {
+      path: "users/edit/:userId",
+      element: <EditUserPage />,
+      loader: LoaderUser.getUserById,
+    },
+    {
+      path: "users/add-role/:userId",
+      element: <AddRolePermissionPage />,
+      // loader: LoaderUser.getUserById,
     },
     { path: "products", element: <ProductPage /> },
     { path: "orders", element: <OrderPage /> },
