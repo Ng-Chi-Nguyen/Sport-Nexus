@@ -1,9 +1,10 @@
-import Breadcrumbs from "@/components/ui/breadcrumbs";
-import PermissionTable from "@/components/permissionTable";
 import { LayoutDashboard } from "lucide-react";
 import { useLoaderData } from "react-router-dom";
-import userApi from "@/api/management/userApi";
 import { toast } from "sonner";
+// components
+import Breadcrumbs from "@/components/ui/breadcrumbs";
+import PermissionTable from "@/components/permissionTable";
+import userApi from "@/api/management/userApi";
 
 const breadcrumbData = [
   {

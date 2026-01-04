@@ -1,13 +1,14 @@
+import { useState } from "react";
+import { LayoutDashboard } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+// components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { FloatingInputPassword, FloatingInput } from "@/components/ui/input";
 import { InputFile } from "@/components/ui/input";
-import { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import { LayoutDashboard } from "lucide-react";
 import { BtnGoback, BtnSubmit } from "@/components/ui/button";
 import Select from "@/components/ui/select";
-import CustomCheckbox from "@/components/ui/ckeckbox";
-import { toast } from "sonner";
+// api
 import userApi from "@/api/management/userApi";
 
 const breadcrumbData = [

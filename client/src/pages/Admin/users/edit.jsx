@@ -1,20 +1,15 @@
 import { useState } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { useLoaderData, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import {
-  InputFile,
-  FloatingInputPassword,
-  FloatingInput,
-} from "@/components/ui/input";
+import { InputFile, FloatingInput } from "@/components/ui/input";
 import CustomCheckbox from "@/components/ui/ckeckbox";
 import Select from "@/components/ui/select";
 import { BtnGoback, BtnSubmit } from "@/components/ui/button";
-// utils
 // api
 import userApi from "@/api/management/userApi";
-import { toast } from "sonner";
 
 const breadcrumbData = [
   {
@@ -116,7 +111,7 @@ const EditUserPage = () => {
       }
     } catch (error) {
       // 1. Log để kiểm tra cấu trúc lỗi thực tế trong Console
-      console.log("Cấu trúc error nhận được:", error);
+      // console.log("Cấu trúc error nhận được:", error);
 
       // 2. Lấy thông báo lỗi linh hoạt
       // Nếu có Interceptor: dùng error.message

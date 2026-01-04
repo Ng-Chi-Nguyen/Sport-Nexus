@@ -174,7 +174,7 @@ const AdminLayout = () => {
                   className={({ isActive }) => `
               group flex items-center py-2 px-1 rounded-lg cursor-pointer transition-all duration-200
               ${item.hoverClass} 
-              ${isActive ? "bg-gray-100" : "hover:bg-gray-100"}
+              ${isActive ? "bg-[#2c3e50]" : "hover:bg-[#252525]"}
             `}
                 >
                   {({ isActive }) => (

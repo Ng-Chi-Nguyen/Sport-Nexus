@@ -12,15 +12,16 @@ import {
   X,
   Lock,
 } from "lucide-react";
+import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
-
 import { ConfirmDelete } from "@/components/ui/confirm";
 import Pagination from "@/components/ui/pagination";
 import { BtnDelete, BtnEdit } from "@/components/ui/button";
 import Badge from "@/components/ui/badge";
+// api
 import userApi from "@/api/management/userApi";
 
 const breadcrumbData = [
@@ -84,7 +85,19 @@ const UserPage = () => {
       revalidator.revalidate(); // Cập nhật UI
       setIsConfirmOpen(false); // Đóng modal
     } catch (error) {
-      console.error("Lỗi xóa:", error);
+      // 1. Log để kiểm tra cấu trúc lỗi thực tế trong Console
+      console.log("Cấu trúc error nhận được:", error);
+      setIsConfirmOpen(false);
+      // 2. Lấy thông báo lỗi linh hoạt
+      // Nếu có Interceptor: dùng error.message
+      // Nếu không có Interceptor: dùng error.response?.data?.message
+      const errorMessage =
+        error.message ||
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0] ||
+        "Đã có lỗi xảy ra!";
+
+      toast.error(errorMessage);
     }
   };
 

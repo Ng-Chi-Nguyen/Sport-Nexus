@@ -14,28 +14,23 @@ const breadcrumbData = [
   },
   {
     title: "Thương hiệu",
+    route: "management/brands",
+  },
+  {
+    title: "Thêm thương hiệu",
     route: "",
   },
 ];
 
-const BrandPage = () => {
+const CreateBrandPage = () => {
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
       <div className="">
-        <div className="flex items-center gap-4">
-          <div className="flex-1 relative group">
-            <SearchTable placeholder="Tìm kiếm quyền hạn..." />
-          </div>
-          <BtnAdd
-            route={"/management/brands/create"}
-            className="w-[30%]"
-            name="Thêm thương hiệu"
-          />
-        </div>
+        <h2>Thêm thương hiệu</h2>
       </div>
     </>
   );
 };
 
-export default BrandPage;
+export default CreateBrandPage;

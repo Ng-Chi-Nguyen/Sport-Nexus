@@ -14,7 +14,9 @@ const AddRolePermissionPage = lazy(() =>
 
 const Dashboard = lazy(() => import("@/pages/Admin/Dashboard/dashboard"));
 const ProductPage = lazy(() => import("@/pages/Admin/products"));
+// Brands
 const BrandPage = lazy(() => import("@/pages/Admin/brands"));
+const CreateBrandPage = lazy(() => import("@/pages/Admin/brands/create"));
 const CartPage = lazy(() => import("@/pages/Admin/Carts"));
 const CouponPage = lazy(() => import("@/pages/Admin/coupons"));
 const OrderPage = lazy(() => import("@/pages/Admin/orders"));
@@ -60,6 +62,7 @@ export const adminRoutes = {
       element: <EditUserPage />,
       loader: LoaderUser.getUserById,
     },
+    // End User
     {
       path: "users/add-role/:userId",
       element: <AddRolePermissionPage />,
@@ -76,7 +79,10 @@ export const adminRoutes = {
     },
     { path: "products", element: <ProductPage /> },
     { path: "orders", element: <OrderPage /> },
+    // Brands
     { path: "brands", element: <BrandPage /> },
+    { path: "brands/create", element: <CreateBrandPage /> },
+    // End Brands
     { path: "carts", element: <CartPage /> },
     { path: "coupons", element: <CouponPage /> },
     { path: "purchase-item", element: <PurchaseOrderItemPage /> },

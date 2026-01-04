@@ -15,6 +15,6 @@ userRoute
     .get("/", userController.getAllUser)
     .put("/:id", verifyToken, checkPermission("sua-nguoi-dung"), uploadImageAvatar, validate(userSchema.updateUser), userController.updateUser)
     .put('/permissions/:id', userController.updateExtraPermissions)
-    .delete("/:id", userController.deleteUserById)
+    .delete("/:id", verifyToken, checkPermission("xoa-nguoi-dung"), userController.deleteUserById)
 
 export default userRoute;
