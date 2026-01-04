@@ -16,10 +16,10 @@ function App() {
   );
   return (
     <div className="h-screen overflow-hidden flex flex-col">
+      <Toaster position="top-right" richColors />
       <Header className="h-[65px] shrink-0" />
 
       <main className="flex-1 overflow-hidden">
-        <Toaster position="top-right" richColors />
         {!isManagementView ? (
           <div className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8">
             <Outlet />

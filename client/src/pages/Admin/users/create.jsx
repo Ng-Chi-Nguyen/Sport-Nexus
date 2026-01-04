@@ -32,7 +32,7 @@ const breadcrumbData = [
 const roleOptions = [
   { slug: "admin", name: "Quản trị viên hệ thống" },
   { slug: "warehouse_manager", name: "Quản lý kho" },
-  { slug: "purchasing_staffe", name: "Nhân viên nhập hàng" },
+  { slug: "purchasing_staff", name: "Nhân viên nhập hàng" },
   { slug: "sales_staff", name: "Nhân viên bán hàng" },
   { slug: "customer", name: "Khách hàng" },
 ];
@@ -146,7 +146,7 @@ const CreateUserPage = () => {
 
                   <div className="flex gap-3 justify-center">
                     <div className="w-fit group flex flex-col flex-col-reverse">
-                      <BtnSubmit name={"Sửa"} />
+                      <BtnSubmit name={"Thêm"} />
                     </div>
                     <div className="w-fit group flex flex-col flex-col-reverse">
                       <BtnGoback />

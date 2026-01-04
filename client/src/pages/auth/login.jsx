@@ -35,12 +35,12 @@ const LoginForm = () => {
     // console.log(formData);
     try {
       const response = await authApi.login(formData);
-      console.log(response);
+      // console.log(response);
       if (response.success) {
         const { accessToken, user } = response.data;
         localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", user.refresh_token);
         localStorage.setItem("user", JSON.stringify(user));
-
         ShowToast("success", "Chào mừng " + user.full_name);
         navigate("/");
       }

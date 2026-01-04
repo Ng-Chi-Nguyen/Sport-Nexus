@@ -109,17 +109,25 @@ const EditUserPage = () => {
     // console.log("===============================");
 
     try {
-      // 4. Gọi API - Phải truyền nguyên cục 'data' (FormData)
-      // Và phải đảm bảo headers là 'multipart/form-data'
       const response = await userApi.update(user.id, data);
       if (response.success) {
         toast.success("Cập nhật thành công!");
         navigate(-1);
       }
     } catch (error) {
-      console.log("Lỗi trả về:", error.response?.data);
-      // Nếu Joi vẫn báo 'must be a string', xem giải thích bên dưới
-      toast.error(error.response?.data?.errors?.[0]);
+      // 1. Log để kiểm tra cấu trúc lỗi thực tế trong Console
+      console.log("Cấu trúc error nhận được:", error);
+
+      // 2. Lấy thông báo lỗi linh hoạt
+      // Nếu có Interceptor: dùng error.message
+      // Nếu không có Interceptor: dùng error.response?.data?.message
+      const errorMessage =
+        error.message ||
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0] ||
+        "Đã có lỗi xảy ra!";
+
+      toast.error(errorMessage);
     }
   };
   // console.log(selectedRole);

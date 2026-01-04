@@ -63,7 +63,26 @@ const authController = {
             console.error("Lỗi hệ thống trong verifyAccount:", error.message);
             return res.redirect("http://localhost:5173");
         }
-    }
+    },
+
+    refreshToken: async (req, res) => {
+        try {
+            const { refreshToken } = req.body;
+            console.log(refreshToken)
+            // Gọi logic từ Service
+            const result = await authService.refreshToken(refreshToken);
+
+            // Trả về kết quả thành công
+            return res.status(200).json(result);
+
+        } catch (error) {
+            // Xử lý các lỗi được ném ra từ Service
+            const status = error.status || 500;
+            const message = error.message || "Lỗi server nội bộ";
+
+            return res.status(status).json({ message });
+        }
+    },
 }
 
 export default authController;

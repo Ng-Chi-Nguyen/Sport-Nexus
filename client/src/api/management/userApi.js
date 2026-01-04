@@ -3,7 +3,11 @@ import axiosClient from "../axiosClient";
 const userApi = {
     create: (data) => {
         const url = '/management/user';
-        return axiosClient.post(url, data);
+        return axiosClient.post(url, data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        });
     },
     update: (userId, data) => {
         return axiosClient.put(`/management/user/${userId}`, data, {

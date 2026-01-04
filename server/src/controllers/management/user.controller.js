@@ -3,17 +3,17 @@ import userService from "../../services/management/user.service.js";
 
 const userController = {
     createUser: async (req, res) => {
-        console.log("ok")
+        // console.log("ok")
         let userData = req.body;
         let file = req.file;
-        console.log(file)
+        // console.log(file)
         // console.log(userData)
         try {
             if (file) {
-                const avatarUrl = await uploadImage.uploadAvatar(file.buffer, userId);
+                const avatarUrl = await uploadImage.uploadAvatar(file.buffer, "new_avatar");
                 userData.avatar = avatarUrl;
             }
-            console.log(userData)
+            // console.log(userData)
             let newUser = await userService.createUser(userData);
 
             return res.status(201).json({
@@ -42,7 +42,7 @@ const userController = {
         let userId = parseInt(req.params.id);
         let dataUpdate = req.body;
         let file = req.file;
-        console.log(file)
+        // console.log(file)
         try {
 
             const currentUser = await userService.getUserById(userId);

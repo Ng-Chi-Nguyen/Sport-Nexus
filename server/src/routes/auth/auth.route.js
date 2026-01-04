@@ -9,6 +9,7 @@ authRoute
 
     .post("/login", validate(authSchema.login), authController.login)
     .post("/logout/:id", authController.logout)
+    .post("/refresh-token", authController.refreshToken)
     .get("/token/:token", authController.verifyAccount)
 
 export default authRoute;

@@ -6,9 +6,11 @@ import { deleteImage } from "../../utils/deleteImage.utils.js";
 const userService = {
     createUser: async (userData) => {
         const { full_name, email, password, phone_number, avatar, slug } = userData;
-
+        const roleExists = await prisma.Roles.findUnique({
+            where: { slug: slug }
+        });
+        console.log(roleExists)
         // console.log(full_name, email, password, phone_number, avatar)
-        if (!role_id) role_id = 5;
         let password_hash = await bcrypt.hash(password, 10);
         let vToken = crypto.randomUUID();
         let newUser = await prisma.Users.create({
@@ -21,10 +23,9 @@ const userService = {
                 status: true,
                 verification_token: vToken,
                 is_verified: false,
-                role_id: role_id,
-                role: slug ? {
-                    connect: { slug: slug }
-                } : undefined
+                role: {
+                    connect: { id: roleExists.id } // Connect bằng ID vừa tìm được cho chắc chắn
+                }
             },
             select: {
                 id: true,

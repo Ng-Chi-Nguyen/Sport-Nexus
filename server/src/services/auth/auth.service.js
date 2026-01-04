@@ -47,7 +47,7 @@ const authService = {
 
         const refresh_token = jwt.sign(
             { id: user.id },
-            process.env.JWT_ACCESS_SECRET,
+            process.env.JWT_REFRESH_SECRET,
             { expiresIn: '7d' }
         );
 
@@ -91,7 +91,58 @@ const authService = {
         })
 
         return updatedUser;
-    }
+    },
+
+    refreshToken: async (refreshToken) => {
+        if (!refreshToken) {
+            throw { status: 401, message: "Không có Refresh Token" };
+        }
+
+        try {
+            // 1. Giải mã Refresh Token
+            const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+            // 2. Tìm User và so khớp token trong DB
+            const user = await prisma.Users.findUnique({
+                where: { id: decoded.id },
+            });
+
+            if (!user || user.refresh_token !== refreshToken) {
+                throw { status: 403, message: "Refresh Token không hợp lệ hoặc đã bị thu hồi" };
+            }
+
+            // 3. Tạo Access Token mới (Thời gian sống 15 phút)
+            const newAccessToken = jwt.sign(
+                {
+                    id: user.id,
+                    role: user.role_id,
+                    email: user.email
+                },
+                process.env.JWT_ACCESS_SECRET,
+                { expiresIn: "15m" }
+            );
+
+            return { accessToken: newAccessToken };
+
+        } catch (error) {
+            // Nếu lỗi do jwt.verify (hết hạn 7 ngày)
+            if (error.name === "TokenExpiredError") {
+                const payload = jwt.decode(refreshToken);
+
+                if (payload && payload.id) {
+                    await prisma.Users.update({
+                        where: { id: payload.id },
+                        data: { refresh_token: null }
+                    });
+                    console.log(`>>> Đã xóa Refresh Token hết hạn của User ID: ${payload.id}`);
+                }
+
+                throw { status: 403, message: "Phiên đăng nhập đã hết hạn hoàn toàn. Vui lòng đăng nhập lại." };
+            }
+
+            throw { status: 403, message: "Token không hợp lệ" };
+        }
+    },
 }
 
 export default authService;
