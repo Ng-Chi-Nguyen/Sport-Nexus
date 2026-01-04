@@ -26,7 +26,8 @@ const userSchema = {
             'any.required': 'Số điện thoại không được để trống',
             'string.pattern.base': 'Số điện thoại chỉ sữ dụng số'
         }),
-        avatar: Joi.string().base64({ paddingRequired: true }).default(null)
+        avatar: Joi.string().base64({ paddingRequired: true }).default(null),
+        slug: Joi.string(),
     }).unknown(false),
 
     updateUser: Joi.object({
@@ -52,9 +53,8 @@ const userSchema = {
         is_verified: Joi.boolean().optional(),
         slug: Joi.string(),
 
-        permissionIds: Joi.array().items(Joi.number().integer()).required(),
+        // permissionIds: Joi.array().items(Joi.number().integer()).required(),
     }).unknown(false)
 }
-
 
 export default userSchema;

@@ -8,10 +8,10 @@ const userRoute = express.Router();
 
 userRoute
 
-    .post("/", validate(userSchema.createUser), userController.createUser)
+    .post("/", validate(userSchema.createUser), uploadImageAvatar, userController.createUser)
     .get("/:id", userController.getUserById)
     .get("/", userController.getAllUser)
-    .put("/:id", validate(userSchema.updateUser), uploadImageAvatar, userController.updateUser)
+    .put("/:id", uploadImageAvatar, validate(userSchema.updateUser), userController.updateUser)
     .put('/permissions/:id', userController.updateExtraPermissions)
     .delete("/:id", userController.deleteUserById)
 

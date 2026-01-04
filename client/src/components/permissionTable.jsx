@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { BtnAdd, BtnGoback } from "./ui/button";
 
 const PermissionTable = ({
   allPermissions,
@@ -45,16 +46,17 @@ const PermissionTable = ({
 
   return (
     <div className="overflow-x-auto shadow-md rounded-lg mt-5">
-      <div className="w-fit flex justify-end pb-4 bg-gray-50 rounded-b-lg">
+      <div className="w-fit flex gap-3 justify-end pb-4 bg-gray-50 rounded-b-lg">
         <button
           onClick={() => onSave(selectedExtraIds)}
           className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors shadow-sm"
         >
           LƯU CẤP QUYỀN
         </button>
+        <BtnGoback />
       </div>
       <table className="w-full text-sm text-left text-gray-500">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-100 border-b">
+        <thead className="text-xs text-gray-700 uppercase bg-primary border-b">
           <tr>
             <th className="px-6 py-3">Module (Chức năng)</th>
             {actions.map((action) => (

@@ -5,10 +5,10 @@ import { deleteImage } from "../../utils/deleteImage.utils.js";
 
 const userService = {
     createUser: async (userData) => {
-        const { full_name, email, password, phone_number, avatar } = userData;
+        const { full_name, email, password, phone_number, avatar, slug } = userData;
 
         // console.log(full_name, email, password, phone_number, avatar)
-
+        if (!role_id) role_id = 5;
         let password_hash = await bcrypt.hash(password, 10);
         let vToken = crypto.randomUUID();
         let newUser = await prisma.Users.create({
@@ -21,7 +21,10 @@ const userService = {
                 status: true,
                 verification_token: vToken,
                 is_verified: false,
-                role_id: 5,
+                role_id: role_id,
+                role: slug ? {
+                    connect: { slug: slug }
+                } : undefined
             },
             select: {
                 id: true,
@@ -44,6 +47,7 @@ const userService = {
 
     updateUser: async (userId, dataUpdate) => {
         const { slug, ...restData } = dataUpdate;
+        // console.log(updatedUser)
         // console.log(slug)
         let updatedUser = await prisma.users.update({
             where: { id: userId },

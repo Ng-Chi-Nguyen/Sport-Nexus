@@ -12,9 +12,9 @@ import CustomCheckbox from "@/components/ui/ckeckbox";
 import Select from "@/components/ui/select";
 import { BtnGoback, BtnSubmit } from "@/components/ui/button";
 // utils
-import { formatToGmt7 } from "@/utils/formatToGmt7";
 // api
 import userApi from "@/api/management/userApi";
+import { toast } from "sonner";
 
 const breadcrumbData = [
   {
@@ -77,16 +77,17 @@ const EditUserPage = () => {
   const [phone, setPhone] = useState(user.phone_number);
   const [isVerified, setIsVerified] = useState(user.is_verified);
   const [status, setStatus] = useState(user.status);
-  const [roleName, setRoleName] = useState(user.role.slug);
   const [avatar, setAvatar] = useState(user.avatar);
   const [selectedRole, setSelectedRole] = useState(user.role.slug);
   // ---------------
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = new FormData();
-    if (avatar instanceof File) data.append("avatar", avatar);
 
+    // 1. Dùng FormData để tạo ra dữ liệu 'binary' (giống Postman)
+    const data = new FormData();
+
+    // 2. Append các trường văn bản
     data.append("full_name", name);
     data.append("email", email);
     data.append("phone_number", phone);
@@ -94,17 +95,34 @@ const EditUserPage = () => {
     data.append("is_verified", isVerified);
     data.append("slug", selectedRole);
 
+    // 3. QUAN TRỌNG: Chỉ append nếu là File thật sự
+    if (avatar instanceof File) {
+      // Khi gửi thế này, Multer ở BE sẽ bắt được và tạo ra cái <Buffer ...> bạn cần
+      data.append("avatar", avatar);
+    }
+
+    // --- ĐOẠN LOG KIỂM TRA ---
+    // console.log("=== KIỂM TRA DỮ LIỆU GỬI ĐI ===");
     // for (let [key, value] of data.entries()) {
     //   console.log(`${key}:`, value);
-    //   // Nếu là file, bạn sẽ thấy: avatar: File { name: "congnhan4.jpg", ... }
     // }
-    const response = await userApi.update(user.id, data);
+    // console.log("===============================");
 
-    if (response.success) {
-      navigate(-1);
+    try {
+      // 4. Gọi API - Phải truyền nguyên cục 'data' (FormData)
+      // Và phải đảm bảo headers là 'multipart/form-data'
+      const response = await userApi.update(user.id, data);
+      if (response.success) {
+        toast.success("Cập nhật thành công!");
+        navigate(-1);
+      }
+    } catch (error) {
+      console.log("Lỗi trả về:", error.response?.data);
+      // Nếu Joi vẫn báo 'must be a string', xem giải thích bên dưới
+      toast.error(error.response?.data?.errors?.[0]);
     }
   };
-  console.log(selectedRole);
+  // console.log(selectedRole);
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
@@ -124,20 +142,6 @@ const EditUserPage = () => {
           <div className="w-1/3">
             <div className="flex flex-col pl-3">
               <p className="font-bold">Thông tin cơ bản</p>
-              <div className="">
-                <span className="text-[12px] text-gray-500">Ngày tạo:</span>{" "}
-                <span className="text-primary">
-                  {formatToGmt7(user.created_at)}
-                </span>
-              </div>
-              <div className="">
-                <span className="text-[12px] text-gray-500">
-                  Ngày cập nhật gần nhất:
-                </span>{" "}
-                <span className="text-green-500">
-                  {formatToGmt7(user.updated_at)}
-                </span>
-              </div>
             </div>
             <div className="flex flex-col flex-col-reverse m-3">
               <FloatingInput

@@ -1,9 +1,16 @@
 import axiosClient from "../axiosClient";
 
 const userApi = {
+    create: (data) => {
+        const url = '/management/user';
+        return axiosClient.post(url, data);
+    },
     update: (userId, data) => {
-        const url = `/management/user/${userId}`;
-        return axiosClient.put(url, data);
+        return axiosClient.put(`/management/user/${userId}`, data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        });
     },
     updatePermission: (userId, data) => {
         console.log(userId)
