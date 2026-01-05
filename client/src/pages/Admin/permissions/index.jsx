@@ -208,6 +208,7 @@ const PermissionPagePage = () => {
                           name="Sửa"
                         />
                         <BtnDelete
+                          name="Xóa"
                           onClick={() => openConfirm(permission.slug)}
                         />
                       </div>

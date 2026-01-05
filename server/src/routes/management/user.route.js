@@ -3,8 +3,7 @@ import userController from '../../controllers/management/user.controller.js';
 import userSchema from '../../validators/management/user.validator.js';
 import { validate } from '../../middlewares/validation.middleware.js';
 import { uploadImageAvatar } from '../../middlewares/fileUpload.middleware.js';
-import { verifyToken } from '../../middlewares/verifyToken.middlware.js';
-import { checkPermission } from '../../middlewares/auth.middleware.js';
+import { verifyToken, checkPermission } from '../../middlewares/verifyToken.middlware.js';
 
 const userRoute = express.Router();
 

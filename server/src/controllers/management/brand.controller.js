@@ -5,7 +5,7 @@ const brandController = {
     createBrand: async (req, res) => {
         let brandData = req.body;
         let file = req.file;
-
+        // console.log(brandData)
         try {
 
             if (file) {
@@ -84,9 +84,7 @@ const brandController = {
         let file = req.file;
 
         try {
-
             const currentBrand = await brandService.getBrandById(brandId);
-
             if (file) {
                 let logo_url = await uploadImage.uploadLogoBrand(file.buffer, brandId)
                 dataUpdate.logo = logo_url;

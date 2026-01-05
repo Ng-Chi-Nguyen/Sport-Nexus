@@ -2,11 +2,14 @@ import express from "express";
 import { validate } from "../../middlewares/validation.middleware.js";
 import authSchema from "../../validators/auth/auth.validator.js";
 import authController from "../../controllers/auth/auth.controller.js";
+import userController from "../../controllers/management/user.controller.js";
+import userSchema from "../../validators/management/user.validator.js";
 
 const authRoute = express.Router();
 
 authRoute
 
+    .post("/register", validate(userSchema.createUser), userController.createUser)
     .post("/login", validate(authSchema.login), authController.login)
     .post("/logout/:id", authController.logout)
     .post("/refresh-token", authController.refreshToken)

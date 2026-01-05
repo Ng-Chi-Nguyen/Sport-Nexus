@@ -215,7 +215,10 @@ const UserPage = () => {
                                 route={`/management/users/edit/${user.id}`}
                                 name="Sửa"
                               />
-                              <BtnDelete onClick={() => openConfirm(user.id)} />
+                              <BtnDelete
+                                name="Xóa"
+                                onClick={() => openConfirm(user.id)}
+                              />
                               <BtnAdd
                                 route={`/management/users/add-role/${user.id}`}
                                 name="Quyền"

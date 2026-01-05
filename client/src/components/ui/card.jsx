@@ -1,4 +1,5 @@
 import { Earth } from "lucide-react";
+import { BtnDelete, BtnEdit } from "@/components/ui/button";
 
 const CardBrand = ({ data }) => {
   const { logo, name, origin } = data || {};

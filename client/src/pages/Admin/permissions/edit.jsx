@@ -5,7 +5,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { InputFrom } from "@/components/ui/input";
 import Label from "@/components/ui/label";
-import Select from "@/components/ui/select";
+import { Select } from "@/components/ui/select";
 import { BtnSubmit, BtnGoback } from "@/components/ui/button";
 // api
 import permissionApi from "@/api/management/permissionApi";

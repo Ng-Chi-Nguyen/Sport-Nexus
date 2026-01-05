@@ -91,7 +91,7 @@ const BtnEdit = (props) => {
 
 const BtnDelete = (props) => {
   // Bóc tách thêm onClick và className từ props
-  const { onClick, className } = props;
+  const { onClick, className, name } = props;
 
   return (
     <button
@@ -124,7 +124,7 @@ const BtnDelete = (props) => {
       </div>
 
       <span className="text-[14px] font-black uppercase tracking-wider">
-        Xóa
+        {name}
       </span>
     </button>
   );

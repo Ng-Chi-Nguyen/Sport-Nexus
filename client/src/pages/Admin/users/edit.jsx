@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { InputFile, FloatingInput } from "@/components/ui/input";
 import CustomCheckbox from "@/components/ui/ckeckbox";
-import Select from "@/components/ui/select";
+import { Select } from "@/components/ui/select";
 import { BtnGoback, BtnSubmit } from "@/components/ui/button";
 // api
 import userApi from "@/api/management/userApi";

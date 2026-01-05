@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { FloatingInput, InputFile } from "@/components/ui/input";
 import { CountrySelect } from "@/components/ui/select";
-import brandApi from "@/api/management/brands";
+import brandApi from "@/api/management/brandApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 

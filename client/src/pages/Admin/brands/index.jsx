@@ -3,7 +3,7 @@ import { BtnAdd } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
 import { CardBrand } from "@/components/ui/card";
 import { LayoutDashboard } from "lucide-react";
-import { useLoaderData, useSearchParams } from "react-router-dom";
+import { Link, useLoaderData, useSearchParams } from "react-router-dom";
 import Pagination from "@/components/ui/pagination";
 import { useMemo } from "react";
 
@@ -26,9 +26,9 @@ const BrandPage = () => {
   const responses = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const { brands, pagination } = responses?.data || {};
-  console.log("1. Toàn bộ Response:", responses);
-  console.log("2. Danh sách Brands:", brands);
-  console.log("3. Phân trang:", pagination);
+  // console.log("1. Toàn bộ Response:", responses);
+  // console.log("2. Danh sách Brands:", brands);
+  // console.log("3. Phân trang:", pagination);
 
   const paginationInfo = pagination || {
     totalPages: 1,
@@ -63,9 +63,12 @@ const BrandPage = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-4">
           {allBrands && brands.length > 0 ? (
             allBrands.map((brand, index) => (
-              <div key={brand._id || index}>
+              <Link
+                to={`/management/brands/edit/${brand.id}`}
+                key={brand._id || index}
+              >
                 <CardBrand data={brand} />
-              </div>
+              </Link>
             ))
           ) : (
             <p className="text-gray-500 italic">

@@ -12,8 +12,8 @@ export const verifyToken = async (req, res, next) => {
 
         const secret = process.env.JWT_ACCESS_SECRET;
         const decoded = jwt.verify(token, secret);
-        console.log(secret)
-        console.log(decoded)
+        // console.log(secret)
+        // console.log(decoded)
 
         // 3. Truy vấn User dựa trên Schema của bạn
         const user = await prisma.Users.findUnique({
@@ -24,7 +24,7 @@ export const verifyToken = async (req, res, next) => {
             }
         });
 
-        console.log(user)
+        // console.log(user)
 
         if (!user) {
             return res.status(404).json({ message: "Tài khoản không tồn tại" });
@@ -57,29 +57,13 @@ export const checkPermission = (requiredSlug) => {
         const userPermissionSlugs = req.user.permissionSlugs || [];
 
         // Log để bạn soi khi test User 43
-        console.log(`>>> [AUTH] Yêu cầu: ${requiredSlug} | User có: [${userPermissionSlugs}]`);
+        // console.log(`>>> [AUTH] Yêu cầu: ${requiredSlug} | User có: [${userPermissionSlugs}]`);
 
         if (!userPermissionSlugs.includes(requiredSlug)) {
             return res.status(403).json({
-                message: `Bạn không có quyền thực hiện hành động này (${requiredSlug})`
+                message: `Bạn không có quyền (${requiredSlug})`
             });
         }
         next();
     };
-};
-
-const handleGenerateAndSendNewCode = async (email) => {
-    const newCode = Math.floor(100000 + Math.random() * 900000); // Tạo mã 6 số
-    const expiry = Date.now() + 5 * 60 * 1000; // Hết hạn sau 5 phút
-
-    // Cập nhật vào Database (Ví dụ dùng Mongoose/Sequelize)
-    await User.updateOne({ email }, {
-        verificationCode: newCode,
-        codeExpiredAt: expiry
-    });
-
-    // Gọi hàm gửi mail của bạn
-    await sendEmail(email, "Mã xác thực mới", `Mã của bạn là: ${newCode}`);
-
-    return newCode;
 };

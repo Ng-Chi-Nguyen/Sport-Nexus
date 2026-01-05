@@ -7,9 +7,9 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { FloatingInputPassword, FloatingInput } from "@/components/ui/input";
 import { InputFile } from "@/components/ui/input";
 import { BtnGoback, BtnSubmit } from "@/components/ui/button";
-import Select from "@/components/ui/select";
 // api
 import userApi from "@/api/management/userApi";
+import { Select } from "@/components/ui/select";
 
 const breadcrumbData = [
   {

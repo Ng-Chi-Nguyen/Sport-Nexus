@@ -1,4 +1,5 @@
 import prisma from "../../db/prisma.js";
+import { deleteImage } from "../../utils/deleteImage.utils.js";
 import { uploadImage } from "../image/image.service.js";
 
 const brandService = {
@@ -50,7 +51,9 @@ const brandService = {
         };
     },
 
-    updateBrand: async (brandId, dataUpdate) => {
+    updateBrand: async (brandId, dataUpdate, currentBrand) => {
+        console.log(brandId)
+        console.log(dataUpdate)
         if (currentBrand.logo) {
             await deleteImage(brandId, "brands", "logo");
         }

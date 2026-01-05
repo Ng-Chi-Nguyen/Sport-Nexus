@@ -34,12 +34,16 @@ const RegisterForm = () => {
       email: email,
       password: password,
       phone_number: phone,
+      slug: "customer",
     };
+
+    console.log(formData);
     try {
       const response = await authApi.create(formData);
-      // console.log(response);
-      if (response.success) {
-        ShowToast("success", response.message);
+      console.log(response);
+      setName;
+      if (response.data.success) {
+        ShowToast("success", response.data.message);
         navigate("/auth/login");
       }
     } catch (error) {
