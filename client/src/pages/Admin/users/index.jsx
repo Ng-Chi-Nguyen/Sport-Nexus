@@ -52,7 +52,6 @@ const UserPage = () => {
   const usersData = responses?.data?.data || {};
 
   // console.log(responses);
-  // 2. Lấy pagination thực tế (bây giờ sẽ là 2)
   const paginationInfo = responses?.data?.pagination || {
     totalPages: 1,
     currentPage: 1,

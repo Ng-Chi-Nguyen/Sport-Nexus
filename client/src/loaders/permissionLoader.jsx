@@ -39,4 +39,4 @@ const LoaderPermissions = {
   },
 };
 
-export { LoaderPermissions };
+export default LoaderPermissions;

@@ -55,8 +55,9 @@ const brandController = {
     },
 
     getAllBrands: async (req, res) => {
+        const page = parseInt(req.query.page) || 1;
         try {
-            let list_brands = await brandService.getAllBrands();
+            let list_brands = await brandService.getAllBrands(page);
 
             if (!list_brands || list_brands.length === 0) {
                 return res.status(404).json({

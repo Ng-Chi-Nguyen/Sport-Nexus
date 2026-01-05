@@ -1,7 +1,8 @@
 import { lazy } from "react";
 // Loader
-import { LoaderPermissions } from "@/loaders/permissionLoader";
+import LoaderPermissions from "@/loaders/permissionLoader";
 import LoaderUser from "@/loaders/userLoader";
+import LoaderBrand from "@/loaders/brandLoader";
 
 // Lazy load các trang để giảm dung lượng file ban đầu
 // User
@@ -49,7 +50,7 @@ export const adminRoutes = {
       element: <UserPage />,
       loader: async ({ request }) => {
         const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1; // Trích xuất ?page= từ URL
+        const page = url.searchParams.get("page") || 1;
         return LoaderUser.getAllUsers(page);
       },
     },
@@ -80,7 +81,15 @@ export const adminRoutes = {
     { path: "products", element: <ProductPage /> },
     { path: "orders", element: <OrderPage /> },
     // Brands
-    { path: "brands", element: <BrandPage /> },
+    {
+      path: "brands",
+      element: <BrandPage />,
+      loader: async ({ request }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get("page") || 1;
+        return LoaderBrand.getAllBrands(page);
+      },
+    },
     { path: "brands/create", element: <CreateBrandPage /> },
     // End Brands
     { path: "carts", element: <CartPage /> },
