@@ -9,7 +9,7 @@ const userService = {
         const roleExists = await prisma.Roles.findUnique({
             where: { slug: slug }
         });
-        console.log(roleExists)
+        // console.log(roleExists)
         // console.log(full_name, email, password, phone_number, avatar)
         let password_hash = await bcrypt.hash(password, 10);
         let vToken = crypto.randomUUID();

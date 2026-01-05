@@ -63,15 +63,25 @@ const CreateUserPage = () => {
     formData.append("password", password);
     formData.append("slug", selectedRole);
 
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-      // Nếu là file, bạn sẽ thấy: avatar: File { name: "congnhan4.jpg", ... }
-    }
-    const response = await userApi.create(formData);
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}:`, value);
+    // // Nếu là file, bạn sẽ thấy: avatar: File { name: "congnhan4.jpg", ... }
+    // }
+    try {
+      const response = await userApi.create(formData);
 
-    if (response.success) {
-      toast.success("Thêm người dùng thành công!");
-      navigate(-1);
+      if (response.success) {
+        toast.success("Thêm người dùng thành công!");
+        navigate(-1);
+      }
+    } catch (error) {
+      const errorMessage =
+        error.message ||
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0] ||
+        "Đã có lỗi xảy ra!";
+
+      toast.error(errorMessage);
     }
   };
   return (
