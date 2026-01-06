@@ -35,7 +35,7 @@ const LoginForm = () => {
     // console.log(formData);
     try {
       const response = await authApi.login(formData);
-      console.log(response);
+      // console.log(response);
       if (response.data.success) {
         const { accessToken, user } = response.data.data;
         localStorage.setItem("accessToken", accessToken);

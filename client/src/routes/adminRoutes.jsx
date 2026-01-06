@@ -3,6 +3,7 @@ import { lazy } from "react";
 import LoaderPermissions from "@/loaders/permissionLoader";
 import LoaderUser from "@/loaders/userLoader";
 import LoaderBrand from "@/loaders/brandLoader";
+import LoaderSupplier from "@/loaders/supplierLoader";
 
 // Lazy load các trang để giảm dung lượng file ban đầu
 // User
@@ -129,9 +130,21 @@ export const adminRoutes = {
     // End permissions
     { path: "stocks", element: <StockPage /> },
     // suppliers
-    { path: "suppliers", element: <SupplierPage /> },
+    {
+      path: "suppliers",
+      element: <SupplierPage />,
+      loader: async ({ request }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get("page") || 1; // Trích xuất ?page= từ URL
+        return LoaderSupplier.getAllSupplier(page);
+      },
+    },
     { path: "suppliers/create", element: <CreateSupplierPage /> },
-    { path: "suppliers/edit", element: <EditSupplierPage /> },
+    {
+      path: "suppliers/edit/:supplierId",
+      element: <EditSupplierPage />,
+      loader: LoaderSupplier.getSupplierById,
+    },
     // End suppliers
     { path: "logs", element: <LogPage /> },
     { path: "addresses", element: <AddressPage /> },

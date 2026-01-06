@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 // components
@@ -9,6 +9,7 @@ import { Select } from "@/components/ui/select";
 import { BtnSubmit, BtnGoback } from "@/components/ui/button";
 // api
 import permissionApi from "@/api/management/permissionApi";
+import { MODULE_LABELS, ACTION_OPTIONS } from "@/constants/permission";
 
 const breadcrumbData = [
   {
@@ -36,30 +37,8 @@ const CreatePermissionPage = () => {
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const [permissionName, setPermissionName] = useState("");
-  // -----------
-
-  const moduleLabels = {
-    users: "👤 Quản lý Người dùng",
-    roles: "🔑 Vai trò & Phân quyền",
-    permissions: "🛡️ Danh mục Quyền hạn",
-    products: "📦 Sản phẩm",
-    categories: "📂 Danh mục Sản phẩm",
-    brands: "🏷️ Thương hiệu",
-    orders: "🛒 Đơn hàng",
-    coupons: "🎟️ Mã giảm giá",
-    suppliers: "🏭 Nhà cung cấp",
-    purchaseorders: "📝 Đơn nhập hàng",
-    stockmovements: "📉 Biến động kho",
-    reviews: "⭐ Đánh giá khách hàng",
-    systemlogs: "📋 Nhật ký hệ thống",
-  };
-
-  const actionOptions = [
-    { slug: "create", name: "✨ Thêm mới (Create)" },
-    { slug: "read", name: "👁️ Xem dữ liệu (Read)" },
-    { slug: "update", name: "📝 Chỉnh sửa (Update)" },
-    { slug: "delete", name: "🗑️ Xóa dữ liệu (Delete)" },
-  ];
+  // state select chọn bảng
+  // ----------
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Ngăn trang web tải lại
@@ -77,6 +56,14 @@ const CreatePermissionPage = () => {
       navigate(-1);
     }
   };
+
+  // Chuyển thành arr để phù hợp với component Select
+  const moduleOptions = useMemo(() => {
+    return Object.entries(MODULE_LABELS).map(([key, value]) => ({
+      slug: key,
+      name: value,
+    }));
+  }, []);
 
   return (
     <>
@@ -100,32 +87,22 @@ const CreatePermissionPage = () => {
                 <Label name="Tên quyền" notNull={true} />
               </div>
               <div className="relative w-fit group flex flex-col flex-col-reverse">
-                {/* Nhãn nằm đè lên border */}
-                <label className="absolute top-0 left-2 bg-white px-1 z-[110] text-[12px] font-bold text-[#323232] transition-colors group-focus-within:text-[#4facf3]">
-                  Áp dụng cho bảng <span className="text-red-500">*</span>
-                </label>
-
                 <div className="w-full">
                   <Select
-                    options={moduleLabels}
+                    label="Chọn chức vụ"
+                    options={moduleOptions}
                     value={selectedRole}
                     onChange={(val) => setSelectedRole(val)}
-                    placeholder="Chọn chức vụ..."
                   />
                 </div>
               </div>
               <div className="relative w-fit group flex flex-col flex-col-reverse">
-                {/* Nhãn nằm đè lên border */}
-                <label className="absolute top-0 left-2 bg-white px-1 z-[110] text-[12px] font-bold text-[#323232] transition-colors group-focus-within:text-[#4facf3]">
-                  Áp dụng cho bảng <span className="text-red-500">*</span>
-                </label>
-
                 <div className="w-full">
                   <Select
-                    options={actionOptions}
+                    label="Áp dụng cho bảng"
+                    options={ACTION_OPTIONS}
                     value={selectedAction}
                     onChange={(val) => setSelectedAction(val)}
-                    placeholder="Chọn chức vụ..."
                   />
                 </div>
               </div>

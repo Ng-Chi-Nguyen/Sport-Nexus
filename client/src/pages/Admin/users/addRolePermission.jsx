@@ -4,6 +4,7 @@ import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import PermissionTable from "@/components/permissionTable";
+// api
 import userApi from "@/api/management/userApi";
 
 const breadcrumbData = [
@@ -34,7 +35,7 @@ const AddRolePermissionPage = () => {
   const userPerms = userData?.permissions || [];
   const rolePerms = userData?.roles?.[0]?.permissions || [];
   //   console.log(userData);
-  //   console.log(permissionsData);
+  // console.log(permissionsData);
   //   console.log(rolePerms);
 
   const handleSavePermissions = async (selectedIds) => {

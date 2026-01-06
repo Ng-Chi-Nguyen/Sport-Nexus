@@ -34,10 +34,27 @@ const supplierService = {
         return supplier;
     },
 
-    getAllSuppliers: async () => {
-        let supplier = await prisma.Suppliers.findMany()
+    getAllSuppliers: async (page) => {
+        const limit = 6;
+        const currentPage = Math.max(1, page);
+        const skip = (currentPage - 1) * limit;
 
-        return supplier;
+        const [supplier, totalItems] = await Promise.all([
+            prisma.Suppliers.findMany({
+                take: limit,
+                skip: skip
+            }),
+            prisma.Suppliers.count()
+        ])
+
+        return {
+            supplier, pagination: {
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+                currentPage: currentPage,
+                itemsPerPage: limit
+            }
+        };
     },
 
     updateSuplier: async (supplierId, dataUpdate) => {

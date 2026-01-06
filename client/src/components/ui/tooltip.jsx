@@ -8,7 +8,7 @@ const Tooltip = ({ content }) => {
         type="button"
         className="text-[#4facf3] p-1 hover:scale-110 transition-transform"
       >
-        <Info size={14} />
+        <Info size={14} color="#FFF" />
       </button>
 
       {/* Box nội dung Tooltip - Được mở rộng chiều rộng để chứa danh sách */}
@@ -17,7 +17,7 @@ const Tooltip = ({ content }) => {
                       invisible opacity-0 group-hover:visible group-hover:opacity-100
                       transition-all duration-300
                       w-[380px] p-3 text-[10px] font-mono
-                      bg-[#1a1a1a] border-2 border-[#323232] rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                      bg-[#1a1a1a] rounded-md"
       >
         {content}
         {/* Mũi tên chỉ lên icon */}

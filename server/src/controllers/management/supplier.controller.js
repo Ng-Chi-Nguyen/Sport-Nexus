@@ -58,8 +58,9 @@ const supplierController = {
     },
 
     getAllSupplier: async (req, res) => {
+        let page = parseInt(req.query.params || 1);
         try {
-            let list_suppliers = await supplierService.getAllSuppliers()
+            let list_suppliers = await supplierService.getAllSuppliers(page)
 
             if (!list_suppliers || list_suppliers.length === 0) {
                 return res.status(404).json({

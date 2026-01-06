@@ -167,11 +167,35 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
   );
 };
 
-const AddressSelector = ({ onAddressChange }) => {
+const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
 
-  // 1. Lấy danh sách Tỉnh/Thành
+  // 1. Dò tìm và tự động gán Mã (Code) từ Tên (Name)
+  useEffect(() => {
+    if (initialProvince) {
+      const foundProvince = addressData.find(
+        (p) => p.FullName === initialProvince
+      );
+      if (foundProvince) {
+        setSelectedProvince(foundProvince.Code);
+
+        // Nếu có mã tỉnh, tiếp tục tìm mã xã
+        if (initialWard) {
+          let allWards = foundProvince.Districts
+            ? foundProvince.Districts.flatMap((d) => d.Wards || [])
+            : foundProvince.Wards || [];
+
+          const foundWard = allWards.find((w) => w.FullName === initialWard);
+          if (foundWard) {
+            setSelectedWard(foundWard.Code);
+          }
+        }
+      }
+    }
+  }, [initialProvince, initialWard]); // Chạy lại khi props từ trang Edit truyền vào
+
+  // 2. Lấy danh sách Tỉnh/Thành cho Select
   const provinceOptions = useMemo(() => {
     return addressData.map((p) => ({
       slug: p.Code,
@@ -179,38 +203,30 @@ const AddressSelector = ({ onAddressChange }) => {
     }));
   }, []);
 
-  // 2. Lấy trực tiếp danh sách Phường/Xã từ Tỉnh đã chọn
+  // 3. Lấy danh sách Phường/Xã dựa trên Tỉnh đã chọn
   const wardOptions = useMemo(() => {
     const province = addressData.find((p) => p.Code === selectedProvince);
     if (!province) return [];
 
-    // Nếu JSON của bạn có Districts, ta sẽ gộp tất cả Wards của các Districts lại
-    if (province.Districts) {
-      return province.Districts.flatMap((d) => d.Wards || []).map((w) => ({
-        slug: w.Code,
-        name: w.FullName,
-      }));
-    }
+    const allWards = province.Districts
+      ? province.Districts.flatMap((d) => d.Wards || [])
+      : province.Wards || [];
 
-    // Nếu JSON phẳng (như mẫu Cao Bằng bạn gửi), lấy trực tiếp từ Wards
-    return (province.Wards || []).map((w) => ({
+    return allWards.map((w) => ({
       slug: w.Code,
       name: w.FullName,
     }));
   }, [selectedProvince]);
 
-  // 3. Gửi dữ liệu lên cha
+  // 4. Gửi dữ liệu ngược lại cho cha
   useEffect(() => {
     const provinceObj = addressData.find((p) => p.Code === selectedProvince);
-    let allWards = [];
-    if (provinceObj?.Districts) {
-      allWards = provinceObj.Districts.flatMap((d) => d.Wards || []);
-    } else {
-      allWards = provinceObj?.Wards || [];
-    }
+    let allWards = provinceObj?.Districts
+      ? provinceObj.Districts.flatMap((d) => d.Wards || [])
+      : provinceObj?.Wards || [];
     const wardObj = allWards.find((w) => w.Code === selectedWard);
 
-    if (onAddressChange) {
+    if (onAddressChange && selectedProvince) {
       onAddressChange({
         province: provinceObj?.FullName || "",
         ward: wardObj?.FullName || "",
@@ -222,23 +238,20 @@ const AddressSelector = ({ onAddressChange }) => {
 
   return (
     <div className="flex gap-4">
-      {/* CHỌN TỈNH */}
       <Select
         label="Tỉnh / Thành phố"
         options={provinceOptions}
-        value={selectedProvince}
+        value={selectedProvince} // Select sẽ khớp 'slug' (Code) để hiện 'name'
         onChange={(val) => {
           setSelectedProvince(val);
-          setSelectedWard(""); // Reset xã khi đổi tỉnh
+          setSelectedWard("");
         }}
       />
 
-      {/* CHỌN XÃ: Chỉ hiện khi đã chọn Tỉnh */}
       {selectedProvince && (
         <div className="animate-in fade-in slide-in-from-top-2 duration-300">
           <Select
             label="Phường / Xã"
-            placeholder="Tìm kiếm phường hoặc xã..."
             options={wardOptions}
             value={selectedWard}
             onChange={(val) => setSelectedWard(val)}
@@ -248,5 +261,4 @@ const AddressSelector = ({ onAddressChange }) => {
     </div>
   );
 };
-
 export { Select, CountrySelect, AddressSelector };

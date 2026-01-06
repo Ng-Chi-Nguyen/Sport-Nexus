@@ -33,8 +33,9 @@ const supplierSchema = {
                 'string.empty': 'Phường/Xã không được để trống.',
             }),
             // 3. Địa chỉ cụ thể
-            detail: Joi.string().allow('', null).messages({
+            detail: Joi.string().max(120).allow('', null).messages({
                 'string.base': 'Địa chỉ chi tiết phải là chuỗi văn bản.',
+                'string.max': 'Địa chỉ chi rtết không được vượt quá {#limit} ký tự.',
             }),
         }).required().messages({
             'any.required': 'Thông tin vị trí là bắt buộc.',
@@ -55,7 +56,21 @@ const supplierSchema = {
         }),
         phone: Joi.string().length(10),
         name: Joi.string(),
-        address: Joi.string(),
+        location_data: Joi.object({
+            // 1. Tỉnh/Thành phố
+            province: Joi.string().messages({
+                'string.empty': 'Tỉnh/Thành phố không được để trống.',
+            }),
+            // 2. Phường/Xã (Mô hình 2 cấp bạn đang dùng)
+            ward: Joi.string().messages({
+                'string.empty': 'Phường/Xã không được để trống.',
+            }),
+            // 3. Địa chỉ cụ thể
+            detail: Joi.string().max(120).allow('', null).messages({
+                'string.base': 'Địa chỉ chi tiết phải là chuỗi văn bản.',
+                'string.max': 'Địa chỉ chi rtết không được vượt quá {#limit} ký tự.',
+            }),
+        }),
         logo_url: Joi.string().base64({ paddingRequired: true })
     }).unknown(false)
 }

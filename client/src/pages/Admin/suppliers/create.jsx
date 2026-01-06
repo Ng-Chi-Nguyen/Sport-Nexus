@@ -1,14 +1,15 @@
 import { useCallback, useState } from "react";
 import { LayoutDashboard } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { FloatingInput } from "@/components/ui/input";
 import { InputFile } from "@/components/ui/input";
 import { AddressSelector } from "@/components/ui/select";
 import { BtnGoback, BtnSubmit } from "@/components/ui/button";
+// api
 import supplierdApi from "@/api/management/supplierApi";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -22,6 +23,7 @@ const CreateSupplierPage = () => {
   // state form
   const [logo, setLogo] = useState(null);
   const [name, setName] = useState("");
+  const [contactPerson, setContactPerson] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   // state address
@@ -51,7 +53,7 @@ const CreateSupplierPage = () => {
       fromData.append("logo_url", logo);
     }
 
-    fromData.append("contact_person", name);
+    fromData.append("contact_person", contactPerson);
     fromData.append("email", email);
     fromData.append("phone", phone);
     fromData.append("name", name);
@@ -77,7 +79,7 @@ const CreateSupplierPage = () => {
         navigate(-1);
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
       const errorMessage =
         error.message ||
         error.response?.data?.message ||
@@ -119,10 +121,19 @@ const CreateSupplierPage = () => {
                 <div className="w-full md:w-[48%]">
                   <FloatingInput
                     id="name"
-                    label="Tên người liên hệ"
+                    label="Tên nhà cung cấp"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <div className="w-full md:w-[48%]">
+                  <FloatingInput
+                    id="contact_person"
+                    label="Tên người đại diện"
+                    required
+                    value={contactPerson}
+                    onChange={(e) => setContactPerson(e.target.value)}
                   />
                 </div>
                 <div className="w-full md:w-[48%]">

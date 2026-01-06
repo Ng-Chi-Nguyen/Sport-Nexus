@@ -157,10 +157,10 @@ const CreateUserPage = () => {
 
                   <div className="flex gap-3 justify-center">
                     <div className="w-fit group flex flex-col flex-col-reverse">
-                      <BtnSubmit name={"Thêm"} />
+                      <BtnGoback />
                     </div>
                     <div className="w-fit group flex flex-col flex-col-reverse">
-                      <BtnGoback />
+                      <BtnSubmit name={"Thêm"} />
                     </div>
                   </div>
                 </div>

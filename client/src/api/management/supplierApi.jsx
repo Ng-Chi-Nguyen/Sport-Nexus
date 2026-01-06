@@ -9,6 +9,7 @@ const supplierdApi = {
       },
     });
   },
+
   update: (brandId, data) => {
     const url = `/management/brand/${brandId}`;
     return axiosClient.put(url, data, {

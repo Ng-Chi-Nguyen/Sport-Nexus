@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 // components
@@ -9,6 +9,7 @@ import { Select } from "@/components/ui/select";
 import { BtnSubmit, BtnGoback } from "@/components/ui/button";
 // api
 import permissionApi from "@/api/management/permissionApi";
+import { MODULE_LABELS, ACTION_OPTIONS } from "@/constants/permission";
 
 const breadcrumbData = [
   {
@@ -29,29 +30,6 @@ const breadcrumbData = [
   },
 ];
 
-const moduleLabels = {
-  users: "👤 Quản lý Người dùng",
-  roles: "🔑 Vai trò & Phân quyền",
-  permissions: "🛡️ Danh mục Quyền hạn",
-  products: "📦 Sản phẩm",
-  categories: "📂 Danh mục Sản phẩm",
-  brands: "🏷️ Thương hiệu",
-  orders: "🛒 Đơn hàng",
-  coupons: "🎟️ Mã giảm giá",
-  suppliers: "🏭 Nhà cung cấp",
-  purchaseorders: "📝 Đơn nhập hàng",
-  stockmovements: "📉 Biến động kho",
-  reviews: "⭐ Đánh giá khách hàng",
-  systemlogs: "📋 Nhật ký hệ thống",
-};
-
-const actionOptions = [
-  { slug: "create", name: "✨ Thêm mới (Create)" },
-  { slug: "read", name: "👁️ Xem dữ liệu (Read)" },
-  { slug: "update", name: "📝 Chỉnh sửa (Update)" },
-  { slug: "delete", name: "🗑️ Xóa dữ liệu (Delete)" },
-];
-
 const CreatePermissionPage = () => {
   const navigate = useNavigate();
   const permissionData = useLoaderData();
@@ -61,7 +39,7 @@ const CreatePermissionPage = () => {
   const [selectedAction, setSelectedAction] = useState(permissionData.action);
   const [permissionName, setPermissionName] = useState(permissionData.name);
   // -----------
-  console.log(permissionData);
+  // console.log(permissionData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,6 +59,14 @@ const CreatePermissionPage = () => {
   };
 
   //   console.log(permissionData);
+
+  // Chuyển thành arr để phù hợp với component Select
+  const moduleOptions = useMemo(() => {
+    return Object.entries(MODULE_LABELS).map(([key, value]) => ({
+      slug: key,
+      name: value,
+    }));
+  }, []);
 
   return (
     <>
@@ -111,7 +97,7 @@ const CreatePermissionPage = () => {
 
                 <div className="w-full">
                   <Select
-                    options={moduleLabels}
+                    options={moduleOptions}
                     value={selectedRole}
                     onChange={(val) => setSelectedRole(val)}
                     placeholder="Chọn chức vụ..."
@@ -126,7 +112,7 @@ const CreatePermissionPage = () => {
 
                 <div className="w-full">
                   <Select
-                    options={actionOptions}
+                    options={ACTION_OPTIONS}
                     value={selectedAction}
                     onChange={(val) => setSelectedAction(val)}
                     placeholder="Chọn chức vụ..."
@@ -137,10 +123,10 @@ const CreatePermissionPage = () => {
           </div>
           <div className="flex gap-3 justify-end mt-2">
             <div className="w-fit group flex flex-col flex-col-reverse">
-              <BtnSubmit name={"Sửa"} />
+              <BtnGoback />
             </div>
             <div className="w-fit group flex flex-col flex-col-reverse">
-              <BtnGoback />
+              <BtnSubmit name={"Sửa"} />
             </div>
           </div>
         </form>

@@ -52,8 +52,8 @@ const brandService = {
     },
 
     updateBrand: async (brandId, dataUpdate, currentBrand) => {
-        console.log(brandId)
-        console.log(dataUpdate)
+        // console.log(brandId)
+        // console.log(dataUpdate)
         if (currentBrand.logo) {
             await deleteImage(brandId, "brands", "logo");
         }

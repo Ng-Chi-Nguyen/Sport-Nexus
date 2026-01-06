@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { BtnAdd, BtnGoback } from "./ui/button";
+import { useState, useEffect } from "react";
+import { BtnGoback } from "./ui/button";
 
 const PermissionTable = ({
   allPermissions,
@@ -17,7 +17,7 @@ const PermissionTable = ({
     : allPermissions || {};
 
   const [selectedExtraIds, setSelectedExtraIds] = useState([]);
-
+  // console.log(groupedPermissions);
   useEffect(() => {
     if (userPermissions) {
       setSelectedExtraIds(userPermissions.map((p) => p.id));
