@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import countryData from "@/assets/data/countries.json";
+import addressData from "@/assets/data/addressVN_afterUpdate.json";
 
 const Select = ({
   options,
@@ -166,4 +167,86 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
   );
 };
 
-export { Select, CountrySelect };
+const AddressSelector = ({ onAddressChange }) => {
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedWard, setSelectedWard] = useState("");
+
+  // 1. Lấy danh sách Tỉnh/Thành
+  const provinceOptions = useMemo(() => {
+    return addressData.map((p) => ({
+      slug: p.Code,
+      name: p.FullName,
+    }));
+  }, []);
+
+  // 2. Lấy trực tiếp danh sách Phường/Xã từ Tỉnh đã chọn
+  const wardOptions = useMemo(() => {
+    const province = addressData.find((p) => p.Code === selectedProvince);
+    if (!province) return [];
+
+    // Nếu JSON của bạn có Districts, ta sẽ gộp tất cả Wards của các Districts lại
+    if (province.Districts) {
+      return province.Districts.flatMap((d) => d.Wards || []).map((w) => ({
+        slug: w.Code,
+        name: w.FullName,
+      }));
+    }
+
+    // Nếu JSON phẳng (như mẫu Cao Bằng bạn gửi), lấy trực tiếp từ Wards
+    return (province.Wards || []).map((w) => ({
+      slug: w.Code,
+      name: w.FullName,
+    }));
+  }, [selectedProvince]);
+
+  // 3. Gửi dữ liệu lên cha
+  useEffect(() => {
+    const provinceObj = addressData.find((p) => p.Code === selectedProvince);
+    let allWards = [];
+    if (provinceObj?.Districts) {
+      allWards = provinceObj.Districts.flatMap((d) => d.Wards || []);
+    } else {
+      allWards = provinceObj?.Wards || [];
+    }
+    const wardObj = allWards.find((w) => w.Code === selectedWard);
+
+    if (onAddressChange) {
+      onAddressChange({
+        province: provinceObj?.FullName || "",
+        ward: wardObj?.FullName || "",
+        provinceCode: selectedProvince,
+        wardCode: selectedWard,
+      });
+    }
+  }, [selectedProvince, selectedWard, onAddressChange]);
+
+  return (
+    <div className="flex gap-4">
+      {/* CHỌN TỈNH */}
+      <Select
+        label="Tỉnh / Thành phố"
+        options={provinceOptions}
+        value={selectedProvince}
+        onChange={(val) => {
+          setSelectedProvince(val);
+          setSelectedWard(""); // Reset xã khi đổi tỉnh
+        }}
+      />
+
+      {/* CHỌN XÃ: Chỉ hiện khi đã chọn Tỉnh */}
+      {selectedProvince && (
+        <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+          <Select
+            label="Phường / Xã"
+            placeholder="Tìm kiếm phường hoặc xã..."
+            options={wardOptions}
+            value={selectedWard}
+            onChange={(val) => setSelectedWard(val)}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export { Select, CountrySelect, AddressSelector };

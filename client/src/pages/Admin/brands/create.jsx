@@ -59,7 +59,7 @@ const CreateBrandPage = () => {
     try {
       const response = await brandApi.create(fromData);
       if (response.success) {
-        toast.success("Thêm thương hiệu thành công!");
+        toast.success(response.message);
         navigate(-1);
       }
     } catch (error) {

@@ -14,26 +14,21 @@ const breadcrumbData = [
   },
   {
     title: "Nhà cung cấp",
-    route: "#",
+    route: "/management/brand",
+  },
+  {
+    title: "Chỉnh sữa nhà cung cấp",
+    route: "",
   },
 ];
 
-const SupplierPage = () => {
+const EditSupplierPage = () => {
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
-      <div className="flex items-center gap-4">
-        <div className="flex-1 relative group">
-          <SearchTable placeholder="Tìm kiếm quyền hạn..." />
-        </div>
-        <BtnAdd
-          route={"/management/suppliers/create"}
-          className="w-[30%]"
-          name="Thêm thương hiệu"
-        />
-      </div>
+      <div className="flex items-center gap-4">Edit page</div>
     </>
   );
 };
 
-export default SupplierPage;
+export default EditSupplierPage;

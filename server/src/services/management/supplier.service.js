@@ -2,14 +2,14 @@ import prisma from "../../db/prisma.js";
 
 const supplierService = {
     createSuplier: async (supplierData) => {
-        let { contact_person, email, phone, name, address, logo_url } = supplierData;
+        let { contact_person, email, phone, name, location_data, logo_url } = supplierData;
         let newSuplier = await prisma.Suppliers.create({
             data: {
                 contact_person: contact_person,
                 email: email,
                 phone: phone,
                 name: name,
-                address: address,
+                location_data: location_data,
                 logo_url: logo_url
             },
             select: {
@@ -18,7 +18,7 @@ const supplierService = {
                 email: true,
                 phone: true,
                 name: true,
-                address: true,
+                location_data: true,
                 logo_url: true
             }
         })

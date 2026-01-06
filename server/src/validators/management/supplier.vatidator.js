@@ -21,8 +21,23 @@ const supplierSchema = {
         name: Joi.string().required().messages({
             'any.required': 'Tên nhà cung cấp không được để trống',
         }),
-        address: Joi.string().required().messages({
-            'any.required': 'Địa chỉ kho không được để trống',
+        location_data: Joi.object({
+            // 1. Tỉnh/Thành phố
+            province: Joi.string().required().messages({
+                'any.required': 'Vui lòng chọn Tỉnh/Thành phố.',
+                'string.empty': 'Tỉnh/Thành phố không được để trống.',
+            }),
+            // 2. Phường/Xã (Mô hình 2 cấp bạn đang dùng)
+            ward: Joi.string().required().messages({
+                'any.required': 'Vui lòng chọn Phường/Xã.',
+                'string.empty': 'Phường/Xã không được để trống.',
+            }),
+            // 3. Địa chỉ cụ thể
+            detail: Joi.string().allow('', null).messages({
+                'string.base': 'Địa chỉ chi tiết phải là chuỗi văn bản.',
+            }),
+        }).required().messages({
+            'any.required': 'Thông tin vị trí là bắt buộc.',
         }),
         logo_url: Joi.string().base64({ paddingRequired: true }).default(null)
     }).unknown(false),

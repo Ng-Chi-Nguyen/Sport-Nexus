@@ -91,7 +91,7 @@ model Suppliers {
     email          String?
     phone          String?
     name           String
-    address        String?          @db.Text
+    location_data  Json
     logo_url       String?
     Products       Products[]
     PurchaseOrders PurchaseOrders[]

@@ -28,7 +28,11 @@ const PurchaseOrderItemPage = lazy(() =>
 );
 const PurchaseOrderPage = lazy(() => import("@/pages/Admin/purchaseorders"));
 const StockPage = lazy(() => import("@/pages/Admin/stockmovements"));
+// Supplier
 const SupplierPage = lazy(() => import("@/pages/Admin/suppliers"));
+const CreateSupplierPage = lazy(() => import("@/pages/Admin/suppliers/create"));
+const EditSupplierPage = lazy(() => import("@/pages/Admin/suppliers/edit"));
+// End Supplier
 const LogPage = lazy(() => import("@/pages/Admin/systemlogs"));
 const AddressPage = lazy(() => import("@/pages/Admin/useraddresses"));
 // Role
@@ -103,7 +107,7 @@ export const adminRoutes = {
     { path: "coupons", element: <CouponPage /> },
     { path: "purchase-item", element: <PurchaseOrderItemPage /> },
     { path: "purchase", element: <PurchaseOrderPage /> },
-
+    // permissions
     {
       path: "permissions",
       element: <PermissionPage />,
@@ -122,9 +126,13 @@ export const adminRoutes = {
       element: <EditPermissionPage />,
       loader: LoaderPermissions.getBySlug,
     },
-
+    // End permissions
     { path: "stocks", element: <StockPage /> },
+    // suppliers
     { path: "suppliers", element: <SupplierPage /> },
+    { path: "suppliers/create", element: <CreateSupplierPage /> },
+    { path: "suppliers/edit", element: <EditSupplierPage /> },
+    // End suppliers
     { path: "logs", element: <LogPage /> },
     { path: "addresses", element: <AddressPage /> },
     { path: "categories", element: <Category /> },

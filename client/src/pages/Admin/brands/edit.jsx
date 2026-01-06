@@ -1,14 +1,15 @@
-import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { BtnGoback, BtnSubmit } from "@/components/ui/button";
-import { FloatingInput, InputFile } from "@/components/ui/input";
-import { CountrySelect } from "@/components/ui/select";
-import brandApi from "@/api/management/brandApi";
-import { LayoutDashboard } from "lucide-react";
 import { useState } from "react";
+import { LayoutDashboard } from "lucide-react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { BtnDelete } from "@/components/ui/button";
+// components
+import Breadcrumbs from "@/components/ui/breadcrumbs";
+import { BtnGoback, BtnSubmit, BtnDelete } from "@/components/ui/button";
+import { FloatingInput, InputFile } from "@/components/ui/input";
+import { CountrySelect } from "@/components/ui/select";
 import { ConfirmDelete } from "@/components/ui/confirm";
+// api
+import brandApi from "@/api/management/brandApi";
 
 const breadcrumbData = [
   {
@@ -46,6 +47,12 @@ const EditBrandPage = () => {
     e.preventDefault();
 
     const fromData = new FormData();
+
+    if (logo instanceof File) {
+      // Khi gửi thế này, Multer ở BE sẽ bắt được và tạo ra cái <Buffer ...> bạn cần
+      fromData.append("logo", logo);
+    }
+
     fromData.append("name", name);
     fromData.append("origin", selectedOrigin);
     if (logo instanceof File) {

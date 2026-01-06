@@ -204,10 +204,10 @@ const EditUserPage = () => {
 
                 <div className="flex gap-3 justify-center">
                   <div className="w-fit group flex flex-col flex-col-reverse">
-                    <BtnSubmit name={"Sửa"} />
+                    <BtnGoback />
                   </div>
                   <div className="w-fit group flex flex-col flex-col-reverse">
-                    <BtnGoback />
+                    <BtnSubmit name={"Sửa"} />
                   </div>
                 </div>
               </div>
@@ -215,31 +215,6 @@ const EditUserPage = () => {
           </div>
         </div>
       </form>
-      {/* <h2 className="my-4">Chỉnh sữa & cấp quyền</h2>
-      <div className="flex gap-4">
-        <div className="relative w-fit group flex flex-col flex-col-reverse">
-          <div className="w-full">
-            <Select
-              label="Áp dụng cho bảng"
-              options={moduleLabels}
-              value={selectedRole}
-              onChange={(val) => setSelectedRole(val)}
-              placeholder="Chọn chức vụ..."
-            />
-          </div>
-        </div>
-        <div className="relative w-fit group flex flex-col flex-col-reverse">
-          <div className="w-full">
-            <Select
-              label="Hành động"
-              options={actionOptions}
-              value={selectedAction}
-              onChange={(val) => setSelectedAction(val)}
-              placeholder="Chọn chức vụ..."
-            />
-          </div>
-        </div>
-      </div> */}
     </>
   );
 };
