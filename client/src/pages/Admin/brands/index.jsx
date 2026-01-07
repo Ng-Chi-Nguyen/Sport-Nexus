@@ -1,11 +1,12 @@
+import { useMemo } from "react";
+import { LayoutDashboard } from "lucide-react";
+import { Link, useLoaderData, useSearchParams } from "react-router-dom";
+// components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
 import { CardBrand } from "@/components/ui/card";
-import { LayoutDashboard } from "lucide-react";
-import { Link, useLoaderData, useSearchParams } from "react-router-dom";
 import Pagination from "@/components/ui/pagination";
-import { useMemo } from "react";
 
 const breadcrumbData = [
   {

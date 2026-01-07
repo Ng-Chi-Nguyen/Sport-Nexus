@@ -5,6 +5,7 @@ import {
   useRevalidator,
   useSearchParams,
 } from "react-router-dom";
+import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnDelete, BtnEdit, BtnAdd } from "@/components/ui/button";
@@ -79,11 +80,24 @@ const PermissionPagePage = () => {
 
   const handleDelete = async () => {
     try {
-      await permissionApi.delete(deleteTarget); // Gọi API xóa
+      const response = await permissionApi.delete(deleteTarget);
+      if (response.success) {
+        revalidator.revalidate(); // Cập nhật UI
+        toast.success(response.message);
+        setIsConfirmOpen(false); // Đóng modal
+      }
       revalidator.revalidate(); // Cập nhật UI
       setIsConfirmOpen(false); // Đóng modal
     } catch (error) {
-      console.error("Lỗi xóa:", error);
+      console.log("Cấu trúc error nhận được:", error);
+      setIsConfirmOpen(false);
+      const errorMessage =
+        error.message ||
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0] ||
+        "Đã có lỗi xảy ra!";
+
+      toast.error(errorMessage);
     }
   };
 

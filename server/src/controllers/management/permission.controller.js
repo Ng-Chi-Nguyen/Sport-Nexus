@@ -3,6 +3,7 @@ import permissionService from "../../services/management/permission.service.js";
 const permissionController = {
     createRole: async (req, res) => {
         let dataRole = req.body;
+        console.log(dataRole)
         try {
             let newRole = await permissionService.createRole(dataRole);
             return res.status(201).json({

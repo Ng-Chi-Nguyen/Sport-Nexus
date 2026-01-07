@@ -81,7 +81,7 @@ const supplierService = {
     },
 
     deleteSupplier: async (supplierId) => {
-        console.log(supplierId)
+        // console.log(supplierId)
         await deleteImage(supplierId, "suppliers", "logo_url");
         await prisma.Suppliers.delete({
             where: {

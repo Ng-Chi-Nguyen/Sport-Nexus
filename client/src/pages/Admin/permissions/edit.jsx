@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { useLoaderData, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { InputFrom } from "@/components/ui/input";
@@ -9,6 +10,7 @@ import { Select } from "@/components/ui/select";
 import { BtnSubmit, BtnGoback } from "@/components/ui/button";
 // api
 import permissionApi from "@/api/management/permissionApi";
+// constants
 import { MODULE_LABELS, ACTION_OPTIONS } from "@/constants/permission";
 
 const breadcrumbData = [
@@ -51,10 +53,25 @@ const CreatePermissionPage = () => {
       action: selectedAction,
     };
 
-    const response = await permissionApi.update(permissionData.slug, formData);
+    try {
+      const response = await permissionApi.update(
+        permissionData.slug,
+        formData
+      );
+      console.log(response);
+      if (response.success) {
+        toast.success(response.message);
+        navigate(-1);
+      }
+    } catch (error) {
+      console.error(error.message);
+      const errorMessage =
+        error.message ||
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0] ||
+        "Đã có lỗi xảy ra!";
 
-    if (response.success) {
-      navigate(-1);
+      toast.error(errorMessage);
     }
   };
 

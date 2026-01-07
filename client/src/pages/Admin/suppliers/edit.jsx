@@ -1,12 +1,14 @@
+import { useCallback, useState } from "react";
+import { LayoutDashboard } from "lucide-react";
+import { useLoaderData, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+// components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnGoback, BtnSubmit } from "@/components/ui/button";
 import { FloatingInput, InputFile } from "@/components/ui/input";
 import { AddressSelector } from "@/components/ui/select";
+// api
 import supplierdApi from "@/api/management/supplierApi";
-import { LayoutDashboard } from "lucide-react";
-import { useCallback, useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 const breadcrumbData = [
   {
@@ -76,11 +78,11 @@ const EditSupplierPage = () => {
     fromData.append("location_data", JSON.stringify(locationObj));
 
     // --- ĐOẠN LOG KIỂM TRA ---
-    console.log("=== KIỂM TRA DỮ LIỆU GỬI ĐI ===");
-    for (let [key, value] of fromData.entries()) {
-      console.log(`${key}:`, value);
-    }
-    console.log("===============================");
+    // console.log("=== KIỂM TRA DỮ LIỆU GỬI ĐI ===");
+    // for (let [key, value] of fromData.entries()) {
+    //   console.log(`${key}:`, value);
+    // }
+    // console.log("===============================");
 
     try {
       let response = await supplierdApi.update(supplier.id, fromData);

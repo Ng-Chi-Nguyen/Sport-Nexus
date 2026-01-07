@@ -1,13 +1,15 @@
+import { useState } from "react";
 import { LayoutDashboard, Menu, X } from "lucide-react";
-import { useLoaderData, useNavigate, useRevalidator } from "react-router-dom"; // Thêm useNavigate nếu cần
+import { useLoaderData, useRevalidator } from "react-router-dom";
+import { toast } from "sonner";
+// components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnDelete, BtnEdit } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
-import { useState } from "react";
 import Badge from "@/components/ui/badge";
 import { ConfirmDelete } from "@/components/ui/confirm";
+// api
 import supplierdApi from "@/api/management/supplierApi";
-import { toast } from "sonner";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },

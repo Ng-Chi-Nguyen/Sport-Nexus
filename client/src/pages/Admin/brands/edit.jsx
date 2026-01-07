@@ -55,10 +55,6 @@ const EditBrandPage = () => {
 
     fromData.append("name", name);
     fromData.append("origin", selectedOrigin);
-    if (logo instanceof File) {
-      // Khi gửi thế này, Multer ở BE sẽ bắt được và tạo ra cái <Buffer ...> bạn cần
-      fromData.append("logo", logo);
-    }
 
     try {
       const response = await brandApi.update(brand.id, fromData);

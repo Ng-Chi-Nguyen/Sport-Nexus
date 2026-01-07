@@ -3,6 +3,7 @@ import { createAutoSlug } from "../../utils/slug.utils.js";
 
 const permissionService = {
     createRole: async (dataRole) => {
+        console.log(dataRole)
         let { name, module, action } = dataRole;
         let slug = await createAutoSlug(name, "Permissions")
         let newRole = await prisma.Permissions.create({
