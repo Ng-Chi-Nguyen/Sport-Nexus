@@ -1,4 +1,5 @@
 import prisma from "../../db/prisma.js";
+import { deleteImage } from "../../utils/deleteImage.utils.js";
 
 const supplierService = {
     createSuplier: async (supplierData) => {
@@ -58,8 +59,10 @@ const supplierService = {
     },
 
     updateSuplier: async (supplierId, dataUpdate) => {
-
-        await deleteImage(supplierId, "supplieres", "logo_url");
+        // console.log(dataUpdate.logo_url)
+        if (dataUpdate.logo_url)
+            await deleteImage(supplierId, "suppliers", "logo_url");
+        // console.log("OK")
         let updateData = await prisma.Suppliers.update({
             where: { id: supplierId },
             data: dataUpdate,
@@ -69,7 +72,7 @@ const supplierService = {
                 email: true,
                 phone: true,
                 name: true,
-                address: true,
+                location_data: true,
                 logo_url: true
             }
         })
@@ -78,8 +81,8 @@ const supplierService = {
     },
 
     deleteSupplier: async (supplierId) => {
-
-        await deleteImage(supplierId, "supplieres", "logo_url");
+        console.log(supplierId)
+        await deleteImage(supplierId, "suppliers", "logo_url");
         await prisma.Suppliers.delete({
             where: {
                 id: supplierId,

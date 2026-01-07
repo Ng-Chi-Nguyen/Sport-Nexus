@@ -10,7 +10,6 @@ const LoaderSupplier = {
 
   getSupplierById: ({ params }) => {
     const { supplierId } = params;
-    // console.log(brandId);
     const url = `management/supplier/${supplierId}`;
     const response = axiosClient.get(url);
     return response;

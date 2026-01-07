@@ -1,10 +1,13 @@
 import { LayoutDashboard, Menu, X } from "lucide-react";
-import { useLoaderData, useNavigate } from "react-router-dom"; // Thêm useNavigate nếu cần
+import { useLoaderData, useNavigate, useRevalidator } from "react-router-dom"; // Thêm useNavigate nếu cần
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnDelete, BtnEdit } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
 import { useState } from "react";
 import Badge from "@/components/ui/badge";
+import { ConfirmDelete } from "@/components/ui/confirm";
+import supplierdApi from "@/api/management/supplierApi";
+import { toast } from "sonner";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -14,11 +17,45 @@ const breadcrumbData = [
 
 const SupplierPage = () => {
   const response = useLoaderData();
+  const revalidator = useRevalidator();
+
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [openMenuId, setOpenMenuId] = useState(null);
   const suppliers = response?.data?.supplier || [];
 
   const toggleMenu = (id) => {
     setOpenMenuId(openMenuId === id ? null : id);
+  };
+
+  const openConfirm = (supplierId) => {
+    setDeleteTarget(supplierId);
+    setIsConfirmOpen(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await supplierdApi.delete(deleteTarget); // Gọi API xóa
+      if (response.success) {
+        revalidator.revalidate(); // Cập nhật UI
+        toast.success(response.message);
+        setIsConfirmOpen(false); // Đóng modal
+      }
+    } catch (error) {
+      // 1. Log để kiểm tra cấu trúc lỗi thực tế trong Console
+      console.log("Cấu trúc error nhận được:", error);
+      setIsConfirmOpen(false);
+      // 2. Lấy thông báo lỗi linh hoạt
+      // Nếu có Interceptor: dùng error.message
+      // Nếu không có Interceptor: dùng error.response?.data?.message
+      const errorMessage =
+        error.message ||
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0] ||
+        "Đã có lỗi xảy ra!";
+
+      toast.error(errorMessage);
+    }
   };
 
   // 1. Hàm hỗ trợ định dạng địa chỉ từ JSON
@@ -129,7 +166,7 @@ const SupplierPage = () => {
                           />
                           <BtnDelete
                             name="Xóa"
-                            onClick={() => console.log("Xóa", supplier.id)}
+                            onClick={() => openConfirm(supplier.id)}
                           />
                           <div className="absolute top-1/2 -right-[9px] -translate-y-1/2 w-4 h-4 bg-white border-r-2 border-t-2 border-[#323232] rotate-45 z-[-1]"></div>
                         </div>
@@ -166,6 +203,13 @@ const SupplierPage = () => {
             )}
           </tbody>
         </table>
+        <ConfirmDelete
+          isOpen={isConfirmOpen}
+          title="Xóa nhà cung cấp"
+          message={`Bạn đang thực hiện xóa nhà cung cấp".`}
+          onConfirm={handleDelete}
+          onCancel={() => setIsConfirmOpen(false)}
+        />
       </div>
     </>
   );

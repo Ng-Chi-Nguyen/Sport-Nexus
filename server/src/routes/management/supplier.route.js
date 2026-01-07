@@ -12,7 +12,7 @@ supplierRoute
     .post("/", verifyToken, checkPermission("them-nha-cung-cap"), validate(supplierSchema.createSupplier), uploadImageLogoSupplier, supplierController.createSupplier)
     .get("/:id", supplierController.getSupplierById)
     .get("/", supplierController.getAllSupplier)
-    .put("/:id", verifyToken, checkPermission("sua-nha-cung-cag"), validate(supplierSchema.updateSupplier), uploadImageLogoSupplier, supplierController.updateSuplier)
-    .delete("/:id", verifyToken, checkPermission("xoa-nha-cung-ca"), supplierController.deleteSupplier)
+    .put("/:id", verifyToken, checkPermission("sua-nha-cung-cap"), validate(supplierSchema.updateSupplier), uploadImageLogoSupplier, supplierController.updateSuplier)
+    .delete("/:id", verifyToken, checkPermission("xoa-nha-cung-cap"), supplierController.deleteSupplier)
 
 export default supplierRoute;

@@ -85,10 +85,10 @@ const supplierController = {
         let supplierId = parseInt(req.params.id);
         let dataUpdate = req.body;
         let file = req.file;
-
+        // console.log(file)
         try {
 
-            const currentSupplier = await brandService.getSupplierById(supplierId);
+            const currentSupplier = await supplierService.getSupplierById(supplierId);
             if (!currentSupplier) {
                 return res.status(404).json({
                     message: "Không tìm thấy nhà cung cấp để cập nhật."
@@ -125,10 +125,10 @@ const supplierController = {
 
     deleteSupplier: async (req, res) => {
         let supplierId = parseInt(req.params.id);
-
+        // console.log(supplierId)
         try {
 
-            const currentSupplier = await brandService.getSupplierById(supplierId);
+            const currentSupplier = await supplierService.getSupplierById(supplierId);
             if (!currentSupplier) {
                 return res.status(404).json({
                     message: "Không tìm thấy nhà cung cấp để xóa."
@@ -143,7 +143,7 @@ const supplierController = {
             });
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: "Lỗi server nội bộ trong quá trình xóa nhà cung.",
                 error: error.message,
             });
         }

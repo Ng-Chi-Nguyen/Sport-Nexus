@@ -10,8 +10,10 @@ const supplierdApi = {
     });
   },
 
-  update: (brandId, data) => {
-    const url = `/management/brand/${brandId}`;
+  update: (supplierId, data) => {
+    // console.log(supplierId);
+    // console.log(data);
+    const url = `/management/supplier/${supplierId}`;
     return axiosClient.put(url, data, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -19,8 +21,8 @@ const supplierdApi = {
     });
   },
 
-  delete: (brandId) => {
-    const url = `/management/brand/${brandId}`;
+  delete: (supplierId) => {
+    const url = `/management/supplier/${supplierId}`;
     return axiosClient.delete(url);
   },
 };
