@@ -1,4 +1,4 @@
-import axiosClient from "../axiosClient";
+import axiosClient from "@/lib/axiosClient";
 
 const permissionApi = {
   create: (data) => {

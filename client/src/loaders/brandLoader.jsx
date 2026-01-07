@@ -1,4 +1,4 @@
-import axiosClient from "@/api/axiosClient";
+import axiosClient from "@/lib/axiosClient";
 
 const LoaderBrand = {
   getAllBrands: (page = 1) => {

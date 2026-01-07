@@ -1,5 +1,5 @@
 import axios from "axios";
-import axiosClient from "../axiosClient";
+import axiosClient from "../../lib/axiosClient";
 const api_prefix_v1 = import.meta.env.VITE_API_URL;
 const authApi = {
   create: (data) => {

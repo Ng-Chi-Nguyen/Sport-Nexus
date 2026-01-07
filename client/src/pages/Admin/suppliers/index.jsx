@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { LayoutDashboard, Menu, X } from "lucide-react";
-import { useLoaderData, useRevalidator } from "react-router-dom";
+import {
+  useLoaderData,
+  useRevalidator,
+  useSearchParams,
+} from "react-router-dom";
 import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
@@ -10,6 +14,7 @@ import Badge from "@/components/ui/badge";
 import { ConfirmDelete } from "@/components/ui/confirm";
 // api
 import supplierdApi from "@/api/management/supplierApi";
+import Pagination from "@/components/ui/pagination";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -20,11 +25,17 @@ const breadcrumbData = [
 const SupplierPage = () => {
   const response = useLoaderData();
   const revalidator = useRevalidator();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [openMenuId, setOpenMenuId] = useState(null);
   const suppliers = response?.data?.supplier || [];
+  const pagination = response?.data?.pagination || [];
+
+  const handlePageChange = (newPage) => {
+    setSearchParams({ page: newPage });
+  };
 
   const toggleMenu = (id) => {
     setOpenMenuId(openMenuId === id ? null : id);
@@ -211,6 +222,11 @@ const SupplierPage = () => {
           message={`Bạn đang thực hiện xóa nhà cung cấp".`}
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmOpen(false)}
+        />
+        <Pagination
+          totalPages={pagination.totalPages}
+          currentPage={pagination.currentPage}
+          onPageChange={handlePageChange}
         />
       </div>
     </>

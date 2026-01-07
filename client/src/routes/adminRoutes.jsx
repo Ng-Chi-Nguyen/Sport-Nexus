@@ -4,6 +4,9 @@ import LoaderPermissions from "@/loaders/permissionLoader";
 import LoaderUser from "@/loaders/userLoader";
 import LoaderBrand from "@/loaders/brandLoader";
 import LoaderSupplier from "@/loaders/supplierLoader";
+import LoaderCategory from "@/loaders/categoryLoader";
+// lib
+import { queryClient } from "@/lib/react-query";
 
 // Lazy load các trang để giảm dung lượng file ban đầu
 // User
@@ -42,8 +45,13 @@ const CreatePermissionPage = lazy(() =>
   import("@/pages/Admin/permissions/create")
 );
 const EditPermissionPage = lazy(() => import("@/pages/Admin/permissions/edit"));
-
+// Category
 const Category = lazy(() => import("@/pages/Admin/categories"));
+const CreateCategoryPage = lazy(() =>
+  import("@/pages/Admin/categories/create")
+);
+const EditCategoryPage = lazy(() => import("@/pages/Admin/categories/edit"));
+
 const Review = lazy(() => import("@/pages/Admin/reviews"));
 const Variant = lazy(() => import("@/pages/Admin/productVariant"));
 
@@ -58,7 +66,12 @@ export const adminRoutes = {
       loader: async ({ request }) => {
         const url = new URL(request.url);
         const page = url.searchParams.get("page") || 1;
-        return LoaderUser.getAllUsers(page);
+        return await queryClient.fetchQuery({
+          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
+          queryKey: ["categories", page],
+          queryFn: () => LoaderUser.getAllUsers(page),
+          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
+        });
       },
     },
     {
@@ -148,7 +161,30 @@ export const adminRoutes = {
     // End suppliers
     { path: "logs", element: <LogPage /> },
     { path: "addresses", element: <AddressPage /> },
-    { path: "categories", element: <Category /> },
+    // categories
+    {
+      path: "categories",
+      element: <Category />,
+      loader: async ({ request }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get("page") || 1; // Trích xuất ?page= từ URL
+        // Sử dụng fetchQuery để quản lý bộ nhớ đệm
+        return await queryClient.fetchQuery({
+          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
+          queryKey: ["categories", page],
+          queryFn: () => LoaderCategory.getAllCategories(page),
+          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
+        });
+      },
+    },
+    { path: "categories/create", element: <CreateCategoryPage /> },
+    {
+      path: "categories/edit/:catrgoryId",
+      element: <EditCategoryPage />,
+      loader: LoaderCategory.getCategoryById,
+    },
+    // End categories
+    { path: "categories/create", element: <Category /> },
     { path: "reviews", element: <Review /> },
     { path: "product-variants", element: <Variant /> },
   ],

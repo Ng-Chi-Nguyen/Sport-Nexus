@@ -1,11 +1,14 @@
 // import { StrictMode } from 'react'
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App.jsx";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes/index.jsx";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/lib/react-query";
 
 createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} fallbackElement={<LoadingSpinner />} />
+  <QueryClientProvider client={queryClient}>
+    <RouterProvider router={router} fallbackElement={<LoadingSpinner />} />
+  </QueryClientProvider>
 );

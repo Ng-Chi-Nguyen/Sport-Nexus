@@ -1,16 +1,18 @@
 import axiosClient from "@/lib/axiosClient";
 
-const brandApi = {
+const categoryApi = {
   create: (data) => {
-    const url = "/management/brand";
+    const url = "/management/category";
     return axiosClient.post(url, data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
   },
-  update: (brandId, data) => {
-    const url = `/management/brand/${brandId}`;
+
+  update: (categoryId, data) => {
+    // console.log(categoryId);
+    const url = `/management/category/${categoryId}`;
     return axiosClient.put(url, data, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -18,10 +20,11 @@ const brandApi = {
     });
   },
 
-  delete: (brandId) => {
-    const url = `/management/brand/${brandId}`;
+  delete: (categoryId) => {
+    // console.log(categoryId);
+    const url = `/management/category/${categoryId}`;
     return axiosClient.delete(url);
   },
 };
 
-export default brandApi;
+export default categoryApi;

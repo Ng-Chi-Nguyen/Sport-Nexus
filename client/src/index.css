@@ -27,6 +27,10 @@
     .btn-neo-danger {
         @apply btn-neo bg-[#ff5252] text-white;
     }
+
+    .table-retro {
+        @apply border-2 border-[#323232] shadow-[4px_4px_0px_0px_#323232];
+    }
 }
 
 /* 1. Reset vùng chứa */

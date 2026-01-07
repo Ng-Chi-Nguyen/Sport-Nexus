@@ -42,23 +42,23 @@ const CreateBrandPage = () => {
     // console.log(logo);
     // console.log(name);
 
-    const fromData = new FormData();
-    fromData.append("name", name);
-    fromData.append("origin", selectedOrigin);
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("origin", selectedOrigin);
     if (logo instanceof File) {
       // Khi gửi thế này, Multer ở BE sẽ bắt được và tạo ra cái <Buffer ...> bạn cần
-      fromData.append("logo", logo);
+      formData.append("logo", logo);
     }
 
     // --- ĐOẠN LOG KIỂM TRA ---
     // console.log("=== KIỂM TRA DỮ LIỆU GỬI ĐI ===");
-    // for (let [key, value] of fromData.entries()) {
+    // for (let [key, value] of formData.entries()) {
     //   console.log(`${key}:`, value);
     // }
     // console.log("===============================");
 
     try {
-      const response = await brandApi.create(fromData);
+      const response = await brandApi.create(formData);
       if (response.success) {
         toast.success(response.message);
         navigate(-1);

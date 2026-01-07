@@ -5,7 +5,7 @@ const categoryController = {
     createCategory: async (req, res) => {
         let dataCategory = req.body;
         let file = req.file;
-
+        console.log(file)
         try {
 
             if (file) {
@@ -55,8 +55,10 @@ const categoryController = {
     },
 
     getAllCategory: async (req, res) => {
+        const page = parseInt(req.query.page || 1)
+        // console.log(page)
         try {
-            let list_categories = await categoryService.getAllCategory();
+            let list_categories = await categoryService.getAllCategory(page);
 
             if (!list_categories || list_categories.length === 0) {
                 return res.status(404).json({
@@ -81,6 +83,8 @@ const categoryController = {
         let categoryId = parseInt(req.params.id);
         let dataUpdate = req.body;
         let file = req.file;
+        // console.log(dataUpdate)
+        // console.log(file)
         try {
             let currentCategory = await categoryService.getCategoryById(categoryId)
             if (!currentCategory) {
