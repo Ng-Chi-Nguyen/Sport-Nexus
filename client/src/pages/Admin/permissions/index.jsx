@@ -18,6 +18,7 @@ import { ConfirmDelete } from "@/components/ui/confirm";
 import { PERMISSION_TRANSLATIONS } from "@/constants/permission";
 // api
 import permissionApi from "@/api/management/permissionApi";
+import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
   {
@@ -82,6 +83,7 @@ const PermissionPagePage = () => {
     try {
       const response = await permissionApi.delete(deleteTarget);
       if (response.success) {
+        await queryClient.invalidateQueries({ queryKey: ["permissions"] });
         revalidator.revalidate(); // Cập nhật UI
         toast.success(response.message);
         setIsConfirmOpen(false); // Đóng modal

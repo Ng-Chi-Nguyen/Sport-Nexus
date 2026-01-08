@@ -1,13 +1,17 @@
+import { useState } from "react";
+import { LayoutDashboard } from "lucide-react";
+import { useLoaderData, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+// components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnGoback, BtnSubmit } from "@/components/ui/button";
 import { FloatingInput, InputFile } from "@/components/ui/input";
 import CustomCheckbox from "@/components/ui/ckeckbox";
-import { LayoutDashboard } from "lucide-react";
-import { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+// api
 import categoryApi from "@/api/management/categoryApi";
+// lib
 import { queryClient } from "@/lib/react-query";
+
 const breadcrumbData = [
   {
     title: <LayoutDashboard size={20} />,

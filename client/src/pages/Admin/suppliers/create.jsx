@@ -10,6 +10,8 @@ import { AddressSelector } from "@/components/ui/select";
 import { BtnGoback, BtnSubmit } from "@/components/ui/button";
 // api
 import supplierdApi from "@/api/management/supplierApi";
+// lib
+import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -75,6 +77,7 @@ const CreateSupplierPage = () => {
       let response = await supplierdApi.create(fromData);
 
       if (response.success) {
+        await queryClient.invalidateQueries({ queryKey: ["suppliers"] });
         toast.success(response.message);
         navigate(-1);
       }

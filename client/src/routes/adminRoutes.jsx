@@ -68,7 +68,7 @@ export const adminRoutes = {
         const page = url.searchParams.get("page") || 1;
         return await queryClient.fetchQuery({
           // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
-          queryKey: ["categories", page],
+          queryKey: ["users", page],
           queryFn: () => LoaderUser.getAllUsers(page),
           // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
         });
@@ -107,7 +107,12 @@ export const adminRoutes = {
       loader: async ({ request }) => {
         const url = new URL(request.url);
         const page = url.searchParams.get("page") || 1;
-        return LoaderBrand.getAllBrands(page);
+        return await queryClient.fetchQuery({
+          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
+          queryKey: ["brands", page],
+          queryFn: () => LoaderBrand.getAllBrands(page),
+          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
+        });
       },
     },
     { path: "brands/create", element: <CreateBrandPage /> },
@@ -127,8 +132,13 @@ export const adminRoutes = {
       element: <PermissionPage />,
       loader: async ({ request }) => {
         const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1; // Trích xuất ?page= từ URL
-        return LoaderPermissions.getGroups(page);
+        const page = url.searchParams.get("page") || 1;
+        return await queryClient.fetchQuery({
+          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
+          queryKey: ["permissions", page],
+          queryFn: () => LoaderPermissions.getGroups(page),
+          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
+        });
       },
     },
     {
@@ -148,8 +158,13 @@ export const adminRoutes = {
       element: <SupplierPage />,
       loader: async ({ request }) => {
         const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1; // Trích xuất ?page= từ URL
-        return LoaderSupplier.getAllSupplier(page);
+        const page = url.searchParams.get("page") || 1;
+        return await queryClient.fetchQuery({
+          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
+          queryKey: ["permissions", page],
+          queryFn: () => LoaderSupplier.getAllSupplier(page),
+          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
+        });
       },
     },
     { path: "suppliers/create", element: <CreateSupplierPage /> },

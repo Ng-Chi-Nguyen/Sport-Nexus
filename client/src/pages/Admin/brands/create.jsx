@@ -9,6 +9,7 @@ import { FloatingInput, InputFile } from "@/components/ui/input";
 import { CountrySelect } from "@/components/ui/select";
 // api
 import brandApi from "@/api/management/brandApi";
+import { queryClient } from "lib/react-query";
 
 const breadcrumbData = [
   {
@@ -60,6 +61,7 @@ const CreateBrandPage = () => {
     try {
       const response = await brandApi.create(formData);
       if (response.success) {
+        await queryClient.invalidateQueries({ queryKey: ["brands"] });
         toast.success(response.message);
         navigate(-1);
       }

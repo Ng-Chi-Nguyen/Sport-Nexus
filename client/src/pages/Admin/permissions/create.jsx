@@ -12,6 +12,8 @@ import { BtnSubmit, BtnGoback } from "@/components/ui/button";
 import permissionApi from "@/api/management/permissionApi";
 // constants
 import { MODULE_LABELS, ACTION_OPTIONS } from "@/constants/permission";
+// lib
+import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
   {
@@ -54,8 +56,9 @@ const CreatePermissionPage = () => {
 
     try {
       const response = await permissionApi.create(formData);
-      console.log(response);
+      // console.log(response);
       if (response.success) {
+        await queryClient.invalidateQueries({ queryKey: ["permissions"] });
         toast.success(response.message);
         navigate(-1);
       }

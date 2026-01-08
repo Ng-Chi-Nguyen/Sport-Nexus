@@ -1,20 +1,22 @@
-import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { BtnAdd } from "@/components/ui/button";
-import { SearchTable } from "@/components/ui/search";
-import Badge from "@/components/ui/badge";
+import { useState } from "react";
 import { LayoutDashboard } from "lucide-react";
 import {
   useLoaderData,
   useRevalidator,
   useSearchParams,
 } from "react-router-dom";
+import { toast } from "sonner";
+// components
+import Breadcrumbs from "@/components/ui/breadcrumbs";
+import { BtnAdd } from "@/components/ui/button";
+import { SearchTable } from "@/components/ui/search";
+import Badge from "@/components/ui/badge";
 import { BtnDelete, BtnEdit } from "@/components/ui/button";
 import { ConfirmDelete } from "@/components/ui/confirm";
-import { useMemo, useState } from "react";
 import categoryApi from "@/api/management/categoryApi";
-import { toast } from "sonner";
-import { queryClient } from "@/lib/react-query";
 import Pagination from "@/components/ui/pagination";
+// lib
+import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
   {

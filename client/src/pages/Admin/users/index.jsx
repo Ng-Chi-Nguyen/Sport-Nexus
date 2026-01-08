@@ -23,6 +23,10 @@ import { BtnDelete, BtnEdit } from "@/components/ui/button";
 import Badge from "@/components/ui/badge";
 // api
 import userApi from "@/api/management/userApi";
+// utils
+import { formatToGmt7 } from "@/utils/formatToGmt7";
+// lib
+import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
   {
@@ -80,9 +84,12 @@ const UserPage = () => {
 
   const handleDelete = async () => {
     try {
-      await userApi.delete(deleteTarget); // Gọi API xóa
-      revalidator.revalidate(); // Cập nhật UI
-      setIsConfirmOpen(false); // Đóng modal
+      const response = await userApi.delete(deleteTarget); // Gọi API xóa
+      if (response.success) {
+        await queryClient.invalidateQueries({ queryKey: ["users"] });
+        revalidator.revalidate(); // Cập nhật UI
+        setIsConfirmOpen(false); // Đóng modal
+      }
     } catch (error) {
       // 1. Log để kiểm tra cấu trúc lỗi thực tế trong Console
       console.log("Cấu trúc error nhận được:", error);
@@ -129,13 +136,10 @@ const UserPage = () => {
               <thead className="text-sm uppercase bg-primary border-b-2 text-[#fff] border-[#323232]">
                 <tr>
                   <th scope="col" className="px-6 py-4 font-black text-center">
-                    Tên
+                    Người dùng
                   </th>
                   <th scope="col" className="px-6 py-4 font-black text-center">
-                    Email
-                  </th>
-                  <th scope="col" className="px-6 py-4 font-black text-center">
-                    Số điện thoại
+                    Liên hệ
                   </th>
                   <th scope="col" className="px-6 py-4 font-black text-center">
                     Xác thực
@@ -158,16 +162,32 @@ const UserPage = () => {
                       key={user.id || index}
                       className="border-b border-gray-200 hover:bg-blue-200 cursor-pointer transition-colors duration-200"
                     >
-                      <td className="px-6 py-4 font-bold text-[#323232] whitespace-nowrap">
-                        {user.full_name}
+                      <td className="flex items-center px-6 py-4 font-bold text-[#323232] whitespace-nowrap">
+                        <div className="w-12 h-12 border border-gray-200 rounded overflow-hidden bg-gray-50">
+                          <img
+                            src={
+                              user.avatar ||
+                              "https://placehold.co/200x200/png?text=No+Logo"
+                            }
+                            alt={user.name}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <div className="ml-2">
+                          <p>{user.full_name}</p>
+                          <p className="text-[12px] text-gray-500">
+                            Ngày tạo:
+                            {formatToGmt7(user.created_at)}
+                          </p>
+                        </div>
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <span className=" px-3 py-1 rounded text-[14px] font-bold">
-                          {user.email}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <Badge color="pink">{user.phone_number}</Badge>
+                        <div className="flex flex-col gap-1">
+                          <span className="text-xs text-start text-gray-500">
+                            {user.email}
+                          </span>
+                          <Badge color="pink">{user.phone_number}</Badge>
+                        </div>
                       </td>
                       <td className="px-6 py-4 text-center">
                         {user.is_verified ? (

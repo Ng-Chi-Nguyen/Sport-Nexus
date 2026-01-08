@@ -9,6 +9,8 @@ import { FloatingInput, InputFile } from "@/components/ui/input";
 import { AddressSelector } from "@/components/ui/select";
 // api
 import supplierdApi from "@/api/management/supplierApi";
+// lib
+import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
   {
@@ -86,8 +88,9 @@ const EditSupplierPage = () => {
 
     try {
       let response = await supplierdApi.update(supplier.id, fromData);
-      console.log(response);
+      // console.log(response);
       if (response.success) {
+        await queryClient.invalidateQueries({ queryKey: ["suppliers"] });
         toast.success(response.message);
         navigate(-1);
       }

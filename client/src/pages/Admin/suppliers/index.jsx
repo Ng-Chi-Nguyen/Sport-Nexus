@@ -15,6 +15,8 @@ import { ConfirmDelete } from "@/components/ui/confirm";
 // api
 import supplierdApi from "@/api/management/supplierApi";
 import Pagination from "@/components/ui/pagination";
+//lib
+import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -50,6 +52,7 @@ const SupplierPage = () => {
     try {
       const response = await supplierdApi.delete(deleteTarget); // Gọi API xóa
       if (response.success) {
+        await queryClient.invalidateQueries({ queryKey: ["suppliers"] });
         revalidator.revalidate(); // Cập nhật UI
         toast.success(response.message);
         setIsConfirmOpen(false); // Đóng modal
@@ -141,7 +144,7 @@ const SupplierPage = () => {
                   </td>
                   <td className="px-6 py-4 text-center">
                     <div className="flex flex-col gap-1">
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-start text-gray-500">
                         {supplier.email}
                       </span>
                       <Badge color="pink">{supplier.phone}</Badge>

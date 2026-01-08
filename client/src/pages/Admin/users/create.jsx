@@ -10,6 +10,8 @@ import { BtnGoback, BtnSubmit } from "@/components/ui/button";
 // api
 import userApi from "@/api/management/userApi";
 import { Select } from "@/components/ui/select";
+// lib
+import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
   {
@@ -71,7 +73,8 @@ const CreateUserPage = () => {
       const response = await userApi.create(formData);
 
       if (response.success) {
-        toast.success("Thêm người dùng thành công!");
+        await queryClient.invalidateQueries({ queryKey: ["users"] });
+        toast.success(response.message);
         navigate(-1);
       }
     } catch (error) {

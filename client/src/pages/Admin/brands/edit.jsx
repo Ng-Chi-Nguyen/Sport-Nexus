@@ -10,6 +10,7 @@ import { CountrySelect } from "@/components/ui/select";
 import { ConfirmDelete } from "@/components/ui/confirm";
 // api
 import brandApi from "@/api/management/brandApi";
+import { queryClient } from "lib/react-query";
 
 const breadcrumbData = [
   {
@@ -59,6 +60,7 @@ const EditBrandPage = () => {
     try {
       const response = await brandApi.update(brand.id, fromData);
       if (response.success) {
+        await queryClient.invalidateQueries({ queryKey: ["brands"] });
         toast.success(response.message);
         navigate(-1);
       }
@@ -84,6 +86,7 @@ const EditBrandPage = () => {
       //   revalidator.revalidate(); // Cập nhật UI
       if (response.success) {
         setIsConfirmOpen(false); // Đóng modal
+        await queryClient.invalidateQueries({ queryKey: ["brands"] });
         toast.success(response.message);
         navigate(-1);
       } else {
