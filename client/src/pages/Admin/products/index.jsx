@@ -3,6 +3,7 @@ import { BtnAdd } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
 import { LayoutDashboard } from "lucide-react";
 import { useState } from "react";
+import { useLoaderData } from "react-router-dom";
 
 const breadcrumbData = [
   {
@@ -20,6 +21,8 @@ const breadcrumbData = [
 ];
 
 const ProductPage = () => {
+  const response = useLoaderData();
+  console.log(response);
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />

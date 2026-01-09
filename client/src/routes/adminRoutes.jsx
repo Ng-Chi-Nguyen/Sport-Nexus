@@ -5,12 +5,9 @@ import LoaderUser from "@/loaders/userLoader";
 import LoaderBrand from "@/loaders/brandLoader";
 import LoaderSupplier from "@/loaders/supplierLoader";
 import LoaderCategory from "@/loaders/categoryLoader";
+import LoaderProduct from "@/loaders/product";
 // lib
 import { queryClient } from "@/lib/react-query";
-// api
-import brandApi from "@/api/management/brandApi";
-import supplierdApi from "@/api/management/supplierApi";
-import categoryApi from "@/api/management/categoryApi";
 
 // Lazy load các trang để giảm dung lượng file ban đầu
 // User
@@ -110,6 +107,16 @@ export const adminRoutes = {
     {
       path: "products",
       element: <ProductPage />,
+      loader: async ({ request }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get("page") || 1;
+        return await queryClient.fetchQuery({
+          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
+          queryKey: ["products", page],
+          queryFn: () => LoaderProduct.getAllProducst(page),
+          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
+        });
+      },
     },
     {
       path: "products/create",

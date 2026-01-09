@@ -79,9 +79,51 @@ const productService = {
         return product;
     },
 
-    getAllProduct: async () => {
-        let list_products = await prisma.Products.findMany()
-        return list_products;
+    getAllProduct: async (page) => {
+        // console.log(page)
+        const limit = 6;
+        const currentPage = Math.max(1, page);
+        const skip = (currentPage - 1) * limit;
+        // console.log(skip)
+        let [list_products, totalItems] = await Promise.all([
+            prisma.Products.findMany({
+                take: limit,
+                skip: skip,
+                select: {
+                    name: true,
+                    base_price: true,
+                    description: true,
+                    thumbnail: true,
+                    is_active: true,
+                    is_active: true,
+                    slug: true,
+                    category: {
+                        select: {
+                            name: true,
+                        }
+                    },
+                    brand: {
+                        select: {
+                            name: true,
+                        }
+                    },
+                    supplier: {
+                        select: {
+                            name: true,
+                        }
+                    },
+                }
+            }),
+            prisma.Products.count()
+        ])
+        return {
+            list_products, pagination: {
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+                currentPage: currentPage,
+                itemsPerPage: limit
+            }
+        };
     },
 
     updateProduct: async (productId, dataUPdate) => {

@@ -63,7 +63,10 @@ const AddRolePermissionPage = () => {
             Cấp quyền cho:{" "}
             <span className="text-primary">{userData?.full_name}</span>
           </h2>
-          <p className="ml-1 text-[12px] text-gray-400"> ({userData.email})</p>
+          <p className="ml-1 text-[12px] text-gray-400">
+            {" "}
+            ({userData.email} / {userData?.role?.name})
+          </p>
         </div>
 
         {/* Truyền đúng biến đã bóc tách */}

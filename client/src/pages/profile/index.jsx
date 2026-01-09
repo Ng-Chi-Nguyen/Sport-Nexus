@@ -191,7 +191,6 @@ const ProfilePage = () => {
         </div>
         <div className="relative z-1 w-[70%] border border-[#ddd] overflow-hidden">
           <div className="absolute w-[300px] h-[300px] bg-primary rotate-[45deg] -left-[215px] -top-[50px] z-0 rounded-[30px] shadow-[5px_5px_10px_rgba(0,0,0,0.08)]"></div>
-          <div className="absolute w-[300px] h-[300px] bg-primary rotate-[45deg] -right-[100px] bottom-[40px] z-0 rounded-[30px] shadow-[5px_5px_10px_rgba(0,0,0,0.08)]"></div>
           <div className="z-10 p-4">
             <Outlet />
           </div>

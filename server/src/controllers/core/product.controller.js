@@ -132,8 +132,9 @@ const productController = {
     },
 
     getAllProduct: async (req, res) => {
+        const page = parseInt(req.query.page || 1)
         try {
-            let list_products = await productService.getAllProduct();
+            let list_products = await productService.getAllProduct(page);
             if (!list_products || list_products.length === 0) {
                 return res.status(404).json({
                     success: false,
