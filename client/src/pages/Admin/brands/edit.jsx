@@ -4,13 +4,14 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { BtnGoback, BtnSubmit, BtnDelete } from "@/components/ui/button";
+import { BtnDelete, Submit_GoBack } from "@/components/ui/button";
 import { FloatingInput, InputFile } from "@/components/ui/input";
 import { CountrySelect } from "@/components/ui/select";
 import { ConfirmDelete } from "@/components/ui/confirm";
 // api
 import brandApi from "@/api/management/brandApi";
-import { queryClient } from "lib/react-query";
+// lib
+import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
   {
@@ -26,7 +27,7 @@ const breadcrumbData = [
     route: "management/brands",
   },
   {
-    title: "Sữa thương hiệu",
+    title: "Chỉnh sữa thương hiệu",
     route: "",
   },
 ];
@@ -113,18 +114,18 @@ const EditBrandPage = () => {
     <div>
       <Breadcrumbs data={breadcrumbData} />
       <h2>Chỉnh sữa thương hiệu</h2>
-      <form
-        onSubmit={handleSubmit}
-        className="flex border border-gray-200 rounded-[10px] w-fit p-4 gap-3"
-      >
-        <div className="flex my-2 w-fit p-3 justify-center">
+      <form onSubmit={handleSubmit} className="flex w-fit p-4 gap-3">
+        <div className="border border-blue-200 p-3 rounded-[5px]">
           <InputFile
             label="Logo thương hiệu"
             value={logo}
             onChange={(file) => setLogo(file)}
           />
         </div>
-        <div className="flex flex-col w-fit mt-5">
+        <div className="border border-blue-200 p-3 rounded-[5px]">
+          <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+            <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin thương hiệu
+          </h3>
           <div className="flex flex-col flex-col-reverse m-3">
             <FloatingInput
               id="name"
@@ -134,7 +135,7 @@ const EditBrandPage = () => {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="flex flex-col flex-col-reverse m-3">
+          <div className="flex flex-col flex-col-reverse m-3 mb-10">
             <CountrySelect
               value={selectedOrigin}
               onChange={(val) => setSelectedOrigin(val)}
@@ -142,9 +143,10 @@ const EditBrandPage = () => {
             />
           </div>
           <div className="flex items-center gap-5 ml-3 mt-4">
-            <BtnGoback />
-            <BtnSubmit name="Cập nhật" />
-            <BtnDelete onClick={() => openConfirm(brand.name)} />
+            <Submit_GoBack />
+            <div className="p-3 bg-red-200">
+              <BtnDelete onClick={() => openConfirm(brand.name)} />
+            </div>
           </div>
         </div>
       </form>

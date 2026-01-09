@@ -15,6 +15,13 @@ const LoaderCategory = {
     const response = axiosClient.get(url);
     return response;
   },
+
+  getCategoriesDropdown: () => {
+    // console.log(page);
+    const url = `management/category/all`;
+    const response = axiosClient.get(url);
+    return response;
+  },
 };
 
 export default LoaderCategory;

@@ -14,6 +14,13 @@ const LoaderSupplier = {
     const response = axiosClient.get(url);
     return response;
   },
+
+  getSuppliersDropdown: () => {
+    // console.log(page);
+    const url = `management/supplier/all`;
+    const response = axiosClient.get(url);
+    return response;
+  },
 };
 
 export default LoaderSupplier;

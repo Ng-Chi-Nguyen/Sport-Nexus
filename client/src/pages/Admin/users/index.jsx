@@ -27,6 +27,8 @@ import userApi from "@/api/management/userApi";
 import { formatToGmt7 } from "@/utils/formatToGmt7";
 // lib
 import { queryClient } from "@/lib/react-query";
+// image
+import avatarDefault from "@/assets/images/avatar-default.jpg";
 
 const breadcrumbData = [
   {
@@ -131,8 +133,8 @@ const UserPage = () => {
         <div className="p-2">
           <h3 className="mb-2">Danh sách người dùng</h3>
 
-          <div className="relative bg-white border-2 border-[#323232] shadow-[4px_4px_0px_0px_#323232] rounded-[5px]">
-            <table className="w-full text-sm text-left text-[#323232]">
+          <div className="relative bg-white">
+            <table className="w-full text-sm text-left text-[#323232] table-retro">
               <thead className="text-sm uppercase bg-primary border-b-2 text-[#fff] border-[#323232]">
                 <tr>
                   <th scope="col" className="px-6 py-4 font-black text-center">
@@ -165,10 +167,7 @@ const UserPage = () => {
                       <td className="flex items-center px-6 py-4 font-bold text-[#323232] whitespace-nowrap">
                         <div className="w-12 h-12 border border-gray-200 rounded overflow-hidden bg-gray-50">
                           <img
-                            src={
-                              user.avatar ||
-                              "https://placehold.co/200x200/png?text=No+Logo"
-                            }
+                            src={user.avatar || avatarDefault}
                             alt={user.name}
                             className="w-full h-full object-contain"
                           />

@@ -27,7 +27,7 @@ const Select = ({
 
   return (
     <div
-      className={`relative w-full min-w-[320px] cursor-pointer text-[#323232] font-medium transition-all ${
+      className={`relative w-fit min-w-[320px] cursor-pointer text-[#323232] font-medium transition-all ${
         /* Khi mở, cả cụm bao gồm cả nhãn sẽ nhảy lên z-9999 */
         isOpen ? "z-[9999]" : "z-10"
       }`}
@@ -37,7 +37,7 @@ const Select = ({
       {/* NHÃN (LABEL) - Đưa vào trong để không bao giờ bị mất */}
       {label && (
         <label
-          className={`absolute -top-2 left-3 bg-white px-1 font-bold text-[12px] transition-all duration-300 z-[120] ${
+          className={`absolute -top-2 left- bg-white px-1 font-bold text-[12px] transition-all duration-300 z-[120] ${
             isOpen ? "text-[#4facf3]" : "text-[#323232]"
           }`}
         >
@@ -79,6 +79,77 @@ const Select = ({
             }}
             className={`rounded-[4px] p-[10px] text-[14px] transition-colors duration-200 w-full cursor-pointer whitespace-nowrap hover:bg-[#4facf3] hover:text-white ${
               value === option.slug
+                ? "text-white font-bold bg-[#4facf3]"
+                : "text-[#323232]"
+            }`}
+          >
+            {option.name}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const SelectPro = ({ options = [], label, value, onChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Tìm option đang được chọn để hiển thị tên ra ngoài
+  const selectedOption = options?.find((opt) => opt.id === value);
+
+  return (
+    <div
+      className="relative border border-blue-500 h-[40px] rounded-[5px]"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      <label
+        className={`absolute -top-2 left-3 bg-white px-1 font-bold text-[12px] transition-all duration-300 z-[101] ${
+          isOpen ? "text-[#4facf3]" : "text-[#323232]"
+        }`}
+      >
+        {label} <span className="text-red-500">*</span>
+      </label>
+
+      <div
+        className={`relative bg-white p-[10px] rounded-[5px] z-[100] text-[15px] flex items-center justify-between h-full transition-all duration-300 cursor-pointer ${
+          isOpen ? "border-[#4facf3]" : "border-[#323232]"
+        }`}
+      >
+        {/* HIỂN THỊ GIÁ TRỊ ĐÃ CHỌN Ở ĐÂY */}
+        <span
+          className={
+            selectedOption ? "text-[#323232] pt-2" : "text-gray-400 py-2"
+          }
+        >
+          {selectedOption ? selectedOption.name : "Chọn..."}
+        </span>
+
+        <ChevronDown
+          size={15}
+          className={`absolute right-2 top-3 transition-transform duration-300 ${
+            isOpen ? "rotate-180 text-[#4facf3]" : "rotate-0 text-[#323232]"
+          }`}
+        />
+      </div>
+
+      {/* Danh sách options */}
+      <div
+        className={`flex flex-col border border-gray-300 rounded-[5px] p-[5px] bg-white absolute left-0 w-full transition-all duration-300 z-[110] max-h-[300px] custom-scrollbar ${
+          isOpen
+            ? "opacity-100 top-[calc(100%+2px)] visible"
+            : "opacity-0 top-[calc(100%-10px)] invisible pointer-events-none"
+        }`}
+      >
+        {options.map((option) => (
+          <div
+            key={option.id}
+            onClick={() => {
+              if (onChange) onChange(option.id);
+              setIsOpen(false);
+            }}
+            className={`rounded-[4px] p-[10px] text-[14px] transition-colors duration-200 w-full cursor-pointer whitespace-nowrap hover:bg-[#4facf3] hover:text-white ${
+              value === option.id
                 ? "text-white font-bold bg-[#4facf3]"
                 : "text-[#323232]"
             }`}
@@ -261,4 +332,5 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
     </div>
   );
 };
-export { Select, CountrySelect, AddressSelector };
+
+export { Select, CountrySelect, AddressSelector, SelectPro };

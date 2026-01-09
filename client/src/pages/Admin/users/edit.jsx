@@ -5,13 +5,14 @@ import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { InputFile, FloatingInput } from "@/components/ui/input";
-import CustomCheckbox from "@/components/ui/ckeckbox";
+import { CustomCheckbox } from "@/components/ui/ckeckbox";
 import { Select } from "@/components/ui/select";
-import { BtnGoback, BtnSubmit } from "@/components/ui/button";
 // api
 import userApi from "@/api/management/userApi";
 // lib
 import { queryClient } from "@/lib/react-query";
+import { Submit_GoBack } from "@/components/ui/button";
+import { AnimatedCheckbox } from "@/components/ui/ckeckbox";
 
 const breadcrumbData = [
   {
@@ -106,91 +107,95 @@ const EditUserPage = () => {
     }
   };
   // console.log(selectedRole);
+
+  const handleStatusChange = (checkedValue) => {
+    setStatus(checkedValue);
+    // console.log(isActive);
+  };
+
+  const handleVerifiedChange = (checkedValue) => {
+    setIsVerified(checkedValue);
+    // console.log(isActive);
+  };
+
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
       <h2>Chỉnh sữa người dùng</h2>
-      <form
-        onSubmit={handleSubmit}
-        className="border border-gray-200 rounded-[10px]"
-      >
-        <div className="flex my-2">
-          <div className="flex my-2 w-1/4 p-3 justify-center">
-            <InputFile
-              label="Ảnh đại diện"
-              value={avatar} // Dùng avatar
-              onChange={(file) => setAvatar(file)} // Cập nhật vào avatar
+      <form onSubmit={handleSubmit} className="flex my-2 gap-3">
+        <div className="border border-gray-200 p-3 rounded-[5px]">
+          <InputFile
+            label="Ảnh đại diện"
+            value={avatar} // Dùng avatar
+            onChange={(file) => setAvatar(file)} // Cập nhật vào avatar
+          />
+        </div>
+        <div className="w-1/3 border border-gray-200 p-3 rounded-[5px]">
+          <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+            <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin cơ bản
+          </h3>
+          <div className="flex flex-col flex-col-reverse m-3">
+            <FloatingInput
+              id="full_name"
+              label="Họ tên"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="w-1/3">
-            <div className="flex flex-col pl-3">
-              <p className="font-bold">Thông tin cơ bản</p>
-            </div>
-            <div className="flex flex-col flex-col-reverse m-3">
-              <FloatingInput
-                id="full_name"
-                label="Họ tên"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+          <div className="flex flex-col flex-col-reverse m-3">
+            <FloatingInput
+              id="email"
+              label="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col flex-col-reverse m-3">
+            <FloatingInput
+              id="phone_number"
+              label="Số điện thoại"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="w-1/3 border border-gray-200 rounded-[10px] p-3">
+          <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+            <span className="w-2 h-4 bg-[#4facf3]"></span>Thông tin trạng thái &
+            loại tài khoản
+          </h3>
+          <div className="flex">
+            <div className="border border-gray-200 p-2 m-2 w-1/2 rounded-[5px]">
+              <AnimatedCheckbox
+                id="is_verified_checkbox"
+                label={isVerified ? "Đã xác thực" : "Chưa xác thực"}
+                checked={isVerified}
+                onChange={(e) => handleVerifiedChange(e.target.checked)}
               />
             </div>
-            <div className="flex flex-col flex-col-reverse m-3">
-              <FloatingInput
-                id="email"
-                label="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col flex-col-reverse m-3">
-              <FloatingInput
-                id="phone_number"
-                label="Số điện thoại"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+            <div className="border border-gray-200 p-2 w-1/2 m-2 rounded-[5px] flex items-center">
+              <AnimatedCheckbox
+                id="is_active_checkbox"
+                label={status ? "Đang hoạt động" : "Đã khóa"}
+                checked={status}
+                onChange={(e) => handleStatusChange(e.target.checked)}
               />
             </div>
           </div>
-          <div className="w-1/3">
-            <p className="font-bold">Thông tin trạng thái & loại tài khoản</p>
-            <div className="flex">
-              <div className="flex flex-col flex-col-reverse m-3 w-2/5">
-                <CustomCheckbox
-                  label={isVerified ? "Đã xác thực" : "Chưa xác thực"}
-                  checked={isVerified} // Sử dụng checked để điều khiển trạng thái
-                  onChange={(e) => setIsVerified(e.target.checked)}
-                />
-              </div>
-              <div className="flex flex-col flex-col-reverse m-3">
-                <CustomCheckbox
-                  label={status ? "Đang hoạt động" : "Đã khóa"}
-                  checked={status} // Sử dụng checked để điều khiển trạng thái
-                  onChange={(e) => setStatus(e.target.checked)}
-                />
-              </div>
-            </div>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-8 mt-2">
-                <Select
-                  label="Loại tài khoản"
-                  options={roleOptions}
-                  value={selectedRole}
-                  onChange={(val) => setSelectedRole(val)}
-                  placeholder="Chọn chức vụ..."
-                />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-8 mt-2">
+              <Select
+                label="Loại tài khoản"
+                options={roleOptions}
+                value={selectedRole}
+                onChange={(val) => setSelectedRole(val)}
+                placeholder="Chọn chức vụ..."
+              />
 
-                <div className="flex gap-3 justify-center">
-                  <div className="w-fit group flex flex-col flex-col-reverse">
-                    <BtnGoback />
-                  </div>
-                  <div className="w-fit group flex flex-col flex-col-reverse">
-                    <BtnSubmit name={"Sửa"} />
-                  </div>
-                </div>
-              </div>
+              <Submit_GoBack />
             </div>
           </div>
         </div>

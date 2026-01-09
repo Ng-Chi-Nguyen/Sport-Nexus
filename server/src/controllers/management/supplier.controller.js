@@ -58,7 +58,8 @@ const supplierController = {
     },
 
     getAllSupplier: async (req, res) => {
-        let page = parseInt(req.query.params || 1);
+        let page = parseInt(req.query.page || 1);
+        // console.log(page)
         try {
             let list_suppliers = await supplierService.getAllSuppliers(page)
 
@@ -78,6 +79,29 @@ const supplierController = {
                 message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
                 error: error.message,
             });
+        }
+    },
+
+    getSuppliersDropdown: async (req, res) => {
+        try {
+            let list_suppliers = await supplierService.getSuppliersDropdown();
+
+            if (!list_suppliers || list_suppliers.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy nhà cung cấp."
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: list_suppliers
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                error: error.message,
+            })
         }
     },
 

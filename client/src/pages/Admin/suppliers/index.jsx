@@ -107,9 +107,9 @@ const SupplierPage = () => {
           name="Thêm nhà cung cấp"
         />
       </div>
-
-      <div className="relative mt-4 bg-white border-2 border-[#323232] shadow-[4px_4px_0px_0px_#323232] rounded-[5px]">
-        <table className="w-full text-sm text-left text-[#323232]">
+      <h2 className="my-4">Danh sách nhà cung cấp</h2>
+      <div className="relative bg-white">
+        <table className="w-full text-sm text-left text-[#323232] table-retro">
           <thead className="text-sm uppercase bg-primary border-b-2 text-[#fff] border-[#323232]">
             <tr>
               <th className="px-6 py-4 font-black text-center">Logo</th>
@@ -145,9 +145,9 @@ const SupplierPage = () => {
                   <td className="px-6 py-4 text-center">
                     <div className="flex flex-col gap-1">
                       <span className="text-xs text-start text-gray-500">
-                        {supplier.email}
+                        <Badge color="green">{supplier.email}</Badge>
                       </span>
-                      <Badge color="pink">{supplier.phone}</Badge>
+                      <Badge color="blue">{supplier.phone}</Badge>
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center font-medium">

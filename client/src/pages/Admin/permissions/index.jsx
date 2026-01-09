@@ -123,7 +123,7 @@ const PermissionPagePage = () => {
       <div className="p-2">
         <h3 className="mb-2">Danh sách quyền</h3>
 
-        <div className="relative bg-white border-2 border-[#323232] shadow-[4px_4px_0px_0px_#323232] rounded-[5px]">
+        <div className="relative bg-white table-retro">
           <table className="w-full text-sm text-left text-[#323232]">
             <thead className="text-sm uppercase bg-primary border-b-2 border-[#323232]">
               <tr>

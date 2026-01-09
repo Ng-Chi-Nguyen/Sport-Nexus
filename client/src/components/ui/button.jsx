@@ -7,12 +7,10 @@ const BtnAdd = ({ name, route }) => {
       to={route}
       className="
         inline-flex items-center justify-center gap-2
-        py-2.5 px-6 w-fit
+        py-2 px-6 w-fit
         bg-[#4facf3] text-white 
         font-bold text-[16px]
-        border-2 border-[#1a1a1a]
-        rounded-[8px]
-        shadow-[4px_4px_0px_0px_#1a1a1a]
+        table-retro
         active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
         cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 transition-all duration-150 group
       "
@@ -31,7 +29,10 @@ const BtnSubmit = (props) => {
   const { name } = props;
   return (
     <>
-      <button className="mb-[5px] cursor-pointer font-bold overflow-hidden relative z-100 border-2 border-[#323232] bg-white group px-8 py-2 shadow-[4px_4px_0px_0px_#4facf3] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-150">
+      <button
+        className="cursor-pointer font-bold overflow-hidden relative z-100 border-2 border-primary bg-white group px-8 py-2 
+      active:translate-x-[2px] active:translate-y-[2px] transition-all duration-150"
+      >
         {/* Chữ hiển thị */}
         <span className="relative z-10 text-[#4facf3] group-hover:text-white text-xl duration-500 uppercase">
           {name}
@@ -56,9 +57,9 @@ const BtnGoback = () => {
       <button
         onClick={handleGoBack}
         type="button"
-        className="bg-white text-center w-[150px] h-[50px] relative text-black text-xl font-semibold border-2 border-blue-500 group"
+        className="bg-white text-center w-[150px] h-[47px] relative text-black text-xl font-semibold border-2 border-blue-500 group"
       >
-        <div className="bg-[#4facf3] h-[48px] w-1/3 grid place-items-center absolute left-0 top-0 group-hover:w-full z-10 duration-500 transition-all">
+        <div className="bg-[#4facf3] h-[44px] w-1/3 grid place-items-center absolute left-0 top-0 group-hover:w-full z-10 duration-500 transition-all">
           <ArrowLeft
             size={25}
             color="#FFF"
@@ -130,4 +131,13 @@ const BtnDelete = (props) => {
   );
 };
 
-export { BtnAdd, BtnSubmit, BtnGoback, BtnEdit, BtnDelete };
+const Submit_GoBack = () => {
+  return (
+    <div className="flex items-start gap-2 bg-blue-200 py-2 px-5">
+      <BtnGoback />
+      <BtnSubmit name={"Thêm"} />
+    </div>
+  );
+};
+
+export { BtnAdd, BtnSubmit, BtnGoback, BtnEdit, BtnDelete, Submit_GoBack };

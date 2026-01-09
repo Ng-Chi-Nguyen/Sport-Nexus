@@ -7,6 +7,10 @@ import LoaderSupplier from "@/loaders/supplierLoader";
 import LoaderCategory from "@/loaders/categoryLoader";
 // lib
 import { queryClient } from "@/lib/react-query";
+// api
+import brandApi from "@/api/management/brandApi";
+import supplierdApi from "@/api/management/supplierApi";
+import categoryApi from "@/api/management/categoryApi";
 
 // Lazy load các trang để giảm dung lượng file ban đầu
 // User
@@ -18,7 +22,10 @@ const AddRolePermissionPage = lazy(() =>
 );
 
 const Dashboard = lazy(() => import("@/pages/Admin/Dashboard/dashboard"));
+// product
 const ProductPage = lazy(() => import("@/pages/Admin/products"));
+const CreateProductPage = lazy(() => import("@/pages/Admin/products/create"));
+const EditProductPage = lazy(() => import("@/pages/Admin/products/edit"));
 // Brands
 const BrandPage = lazy(() => import("@/pages/Admin/brands"));
 const CreateBrandPage = lazy(() => import("@/pages/Admin/brands/create"));
@@ -98,7 +105,35 @@ export const adminRoutes = {
         return { user, allPermissions };
       },
     },
-    { path: "products", element: <ProductPage /> },
+
+    // products
+    {
+      path: "products",
+      element: <ProductPage />,
+    },
+    {
+      path: "products/create",
+      element: <CreateProductPage />,
+      loader: async () => {
+        const [brands, suppliers, categories] = await Promise.all([
+          queryClient.fetchQuery({
+            queryKey: ["brands"],
+            queryFn: () => LoaderBrand.getBrandsDropdown(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["suppliers"],
+            queryFn: () => LoaderSupplier.getSuppliersDropdown(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["categories"],
+            queryFn: () => LoaderCategory.getCategoriesDropdown(),
+          }),
+        ]);
+        return { brands, suppliers, categories };
+      },
+    },
+    { path: "products/edit", element: <EditProductPage /> },
+
     { path: "orders", element: <OrderPage /> },
     // Brands
     {
@@ -161,7 +196,7 @@ export const adminRoutes = {
         const page = url.searchParams.get("page") || 1;
         return await queryClient.fetchQuery({
           // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
-          queryKey: ["permissions", page],
+          queryKey: ["suppliers", page],
           queryFn: () => LoaderSupplier.getAllSupplier(page),
           // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
         });
@@ -199,7 +234,7 @@ export const adminRoutes = {
       loader: LoaderCategory.getCategoryById,
     },
     // End categories
-    { path: "categories/create", element: <Category /> },
+
     { path: "reviews", element: <Review /> },
     { path: "product-variants", element: <Variant /> },
   ],

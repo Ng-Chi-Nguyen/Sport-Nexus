@@ -10,6 +10,7 @@ export const queryClient = new QueryClient({
     },
   },
 });
+
 // Tạo Provider để bọc ứng dụng (Nên dùng .jsx cho đoạn này)
 export const SportNexusProvider = ({ children }) => {
   return (

@@ -10,6 +10,7 @@ const categoryRoute = express.Router();
 categoryRoute
 
     .post("/", verifyToken, checkPermission("them-danh-muc"), validate(categorySchema.createCategory), uploadImageCategory, categoryController.createCategory)
+    .get("/all", categoryController.getCategoriesDropdown)
     .get("/:id", categoryController.getCategoryById)
     .get("/", categoryController.getAllCategory)
     .put("/:id", verifyToken, checkPermission("sua-danh-muc"), validate(categorySchema.updateCategory), uploadImageCategory, categoryController.updateCategory)

@@ -5,7 +5,7 @@ const categoryController = {
     createCategory: async (req, res) => {
         let dataCategory = req.body;
         let file = req.file;
-        console.log(file)
+        // console.log(file)
         try {
 
             if (file) {
@@ -74,6 +74,29 @@ const categoryController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
+                error: error.message,
+            })
+        }
+    },
+
+    getCategoriesDropdown: async (req, res) => {
+        try {
+            let list_categories = await categoryService.getCategoriesDropdown();
+
+            if (!list_categories || list_categories.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy nhà cung cấp."
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: list_categories
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
                 error: error.message,
             })
         }

@@ -31,6 +31,7 @@ const brandController = {
     },
 
     getBrandById: async (req, res) => {
+        // console.log("Đã đi vô đây")
         let brandId = parseInt(req.params.id);
         try {
             let brand = await brandService.getBrandById(brandId);
@@ -55,9 +56,34 @@ const brandController = {
     },
 
     getAllBrands: async (req, res) => {
+        // console.log("Đã đi vô đây 2")
         const page = parseInt(req.query.page) || 1;
         try {
             let list_brands = await brandService.getAllBrands(page);
+
+            if (!list_brands || list_brands.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: list_brands
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                error: error.message,
+            })
+        }
+    },
+
+    getBrandsDropdown: async (req, res) => {
+        // console.log("Đã đi vô đây 3")
+        try {
+            let list_brands = await brandService.getBrandsDropdown();
 
             if (!list_brands || list_brands.length === 0) {
                 return res.status(404).json({

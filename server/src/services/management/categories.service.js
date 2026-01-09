@@ -60,6 +60,18 @@ const categoryService = {
         };
     },
 
+    getCategoriesDropdown: async () => {
+        let categories = await prisma.Categories.findMany({
+            select: {
+                id: true,
+                name: true,
+
+            }
+        }
+        );
+        return categories;
+    },
+
     updateCategory: async (categoryId, dataUpdate) => {
         // console.log(dataUpdate.image)
         if (dataUpdate.image)

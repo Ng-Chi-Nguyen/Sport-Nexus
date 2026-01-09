@@ -4,13 +4,13 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { BtnGoback, BtnSubmit } from "@/components/ui/button";
 import { FloatingInput, InputFile } from "@/components/ui/input";
 import { AddressSelector } from "@/components/ui/select";
 // api
 import supplierdApi from "@/api/management/supplierApi";
 // lib
 import { queryClient } from "@/lib/react-query";
+import { Submit_GoBack } from "@/components/ui/button";
 
 const breadcrumbData = [
   {
@@ -111,22 +111,13 @@ const EditSupplierPage = () => {
       <Breadcrumbs data={breadcrumbData} />
       <h2>Chỉnh sữa nhà cung cấp</h2>
       <div className="flex items-start gap-4">
-        <form
-          onSubmit={handleSubmit}
-          className="flex border border-gray-200 rounded-[10px] w-fit p-4 gap-3"
-        >
-          <div className="flex flex-col items-center w-full md:w-1/4">
-            <InputFile
-              label="Logo nhà cung cấp"
-              value={logo}
-              onChange={(file) => setLogo(file)}
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="flex w-fit p-4 gap-3">
           <div className="flex-1 flex flex-col gap-6">
-            <div>
-              <p className="font-bold text-[#323232] mb-4 border-b border-gray-100 pb-2">
-                Thông tin người liên hệ mua hàng
-              </p>
+            <div className="border border-gray-200 p-3 rounded-[5px]">
+              <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+                <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin người
+                liên hệ mua hàng phẩm
+              </h3>
               <div className="flex flex-wrap gap-4">
                 <div className="w-full md:w-[48%]">
                   <FloatingInput
@@ -166,10 +157,11 @@ const EditSupplierPage = () => {
                 </div>
               </div>
             </div>
-            <div className="bg-gray-50 p-4 rounded-md border border-dashed border-gray-300">
-              <p className="font-bold text-[#323232] mb-4">
-                Địa chỉ kho/văn phòng nhà cung cấp
-              </p>
+            <div className="border border-gray-200 p-3 rounded-[5px]">
+              <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+                <span className="w-2 h-4 bg-[#4facf3]"></span> Địa chỉ kho/văn
+                phòng nhà cung cấp
+              </h3>
               <AddressSelector
                 onAddressChange={handleAddressChange}
                 initialProvince={province}
@@ -190,9 +182,15 @@ const EditSupplierPage = () => {
                 />
               </div>
             </div>
-            <div className="flex gap-5 ml-3 mt-4">
-              <BtnGoback />
-              <BtnSubmit name="Sữa" />
+          </div>
+          <div className="border border-gray-200 p-3 rounded-[5px]">
+            <InputFile
+              label="Logo nhà cung cấp"
+              value={logo}
+              onChange={(file) => setLogo(file)}
+            />
+            <div className="mt-[75px]">
+              <Submit_GoBack />
             </div>
           </div>
         </form>

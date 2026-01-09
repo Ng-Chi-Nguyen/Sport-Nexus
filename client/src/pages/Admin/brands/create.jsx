@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { BtnSubmit, BtnGoback } from "@/components/ui/button";
 import { FloatingInput, InputFile } from "@/components/ui/input";
 import { CountrySelect } from "@/components/ui/select";
 // api
 import brandApi from "@/api/management/brandApi";
-import { queryClient } from "lib/react-query";
+// lib
+import { queryClient } from "@/lib/react-query";
+import { Submit_GoBack } from "@/components/ui/button";
 
 const breadcrumbData = [
   {
@@ -79,43 +80,38 @@ const CreateBrandPage = () => {
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
-      <div className="">
-        <h2>Thêm thương hiệu</h2>
-        <form
-          onSubmit={handleSubmit}
-          className="flex border border-gray-200 rounded-[10px] w-fit p-4 gap-3"
-        >
-          <div className="flex my-2 w-fit p-3 justify-center">
-            <InputFile
-              label="Logo thương hiệu"
-              value={logo}
-              onChange={(file) => setLogo(file)}
+      <h2>Thêm mới thương hiệu</h2>
+      <form onSubmit={handleSubmit} className="flex w-fit p-4 gap-3">
+        <div className="border border-blue-200 p-3 rounded-[5px]">
+          <InputFile
+            label="Logo thương hiệu"
+            value={logo}
+            onChange={(file) => setLogo(file)}
+          />
+        </div>
+        <div className="border border-blue-200 p-3 rounded-[5px]">
+          <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+            <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin thương hiệu
+          </h3>
+          <div className="flex flex-col flex-col-reverse m-3">
+            <FloatingInput
+              id="name"
+              label="Tên thương hiệu"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="flex flex-col w-fit mt-5">
-            <div className="flex flex-col flex-col-reverse m-3">
-              <FloatingInput
-                id="name"
-                label="Tên thương hiệu"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col flex-col-reverse m-3">
-              <CountrySelect
-                value={selectedOrigin}
-                onChange={(val) => setSelectedOrigin(val)}
-                label="Xuất xứ"
-              />
-            </div>
-            <div className="flex gap-5 ml-3 mt-4">
-              <BtnGoback />
-              <BtnSubmit name="Thêm" />
-            </div>
+          <div className="flex flex-col flex-col-reverse m-3 mb-10">
+            <CountrySelect
+              value={selectedOrigin}
+              onChange={(val) => setSelectedOrigin(val)}
+              label="Xuất xứ"
+            />
           </div>
-        </form>
-      </div>
+          <Submit_GoBack />
+        </div>
+      </form>
     </>
   );
 };

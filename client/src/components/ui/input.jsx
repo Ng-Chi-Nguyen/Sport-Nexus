@@ -72,18 +72,18 @@ const InputFile = ({ label, value, onChange }) => {
     }
   };
 
-  const handleRemove = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onChange(null); // Xóa ảnh ở state cha
-  };
+  // const handleRemove = (e) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   onChange(null); // Xóa ảnh ở state cha
+  // };
 
   return (
     <div className="flex flex-col gap-2 w-full">
       {label && (
-        <label className="text-sm font-black uppercase text-[#323232]">
-          {label}
-        </label>
+        <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+          <span className="w-2 h-4 bg-[#4facf3]"></span> {label}
+        </h3>
       )}
 
       <label
@@ -113,13 +113,13 @@ const InputFile = ({ label, value, onChange }) => {
             </div>
 
             {/* Nút Xóa */}
-            <button
+            {/* <button
               type="button"
               onClick={handleRemove}
               className="absolute top-2 right-4 p-1 bg-red-500 text-white rounded-full border-2 border-[#323232] hover:scale-110 transition-transform z-30 shadow-[2px_2px_0px_0px_#323232]"
             >
               <X size={16} />
-            </button>
+            </button> */}
           </>
         ) : (
           <div className="flex flex-col items-center justify-center text-gray-400">

@@ -51,6 +51,18 @@ const brandService = {
         };
     },
 
+    getBrandsDropdown: async () => {
+        let brands = await prisma.Brands.findMany({
+            select: {
+                id: true,
+                name: true,
+                origin: true
+
+            }
+        });
+        return brands;
+    },
+
     updateBrand: async (brandId, dataUpdate, currentBrand) => {
         // console.log(brandId)
         // console.log(dataUpdate)

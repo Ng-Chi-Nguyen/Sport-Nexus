@@ -48,6 +48,9 @@ const userService = {
 
     updateUser: async (userId, dataUpdate) => {
         const { slug, ...restData } = dataUpdate;
+
+        if (dataUpdate.avatar)
+            await deleteImage(userId, "users", "avatar");
         // console.log(updatedUser)
         // console.log(slug)
         let updatedUser = await prisma.users.update({

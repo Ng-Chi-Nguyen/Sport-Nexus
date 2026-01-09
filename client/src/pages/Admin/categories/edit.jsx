@@ -6,11 +6,13 @@ import { toast } from "sonner";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnGoback, BtnSubmit } from "@/components/ui/button";
 import { FloatingInput, InputFile } from "@/components/ui/input";
-import CustomCheckbox from "@/components/ui/ckeckbox";
+import { CustomCheckbox } from "@/components/ui/ckeckbox";
 // api
 import categoryApi from "@/api/management/categoryApi";
 // lib
 import { queryClient } from "@/lib/react-query";
+import { AnimatedCheckbox } from "@/components/ui/ckeckbox";
+import { Submit_GoBack } from "@/components/ui/button";
 
 const breadcrumbData = [
   {
@@ -74,20 +76,30 @@ const EditCategoryPage = () => {
     }
   };
 
+  const handleStatusChange = (checkedValue) => {
+    setIsActive(checkedValue);
+    // console.log(isActive);
+  };
+
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
-      <h2>Chỉnh sữa</h2>
+      <h2>Chỉnh sữa loại hàng</h2>
       <form
         onSubmit={handleSubmit}
-        className="flex items-center border border-gray-200 rounded-[10px] w-fit p-4 gap-3"
+        className="flex items-start border border-gray-200 rounded-[10px] w-fit p-4 gap-3 mt-2"
       >
-        <InputFile
-          label="Ảnh đại diện"
-          value={image}
-          onChange={(file) => setImage(file)}
-        />
-        <div className="flex flex-col gap-3 w-[500px]">
+        <div className="border border-gray-200 rounded-[5px] p-3">
+          <InputFile
+            label="Ảnh đại diện"
+            value={image}
+            onChange={(file) => setImage(file)}
+          />
+        </div>
+        <div className="flex flex-col gap-3 border border-gray-200 rounded-[5px] p-3">
+          <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+            <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin danh mục
+          </h3>
           <FloatingInput
             id="name"
             label="Tên danh mục"
@@ -95,15 +107,15 @@ const EditCategoryPage = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <CustomCheckbox
-            label={isActive ? "Ẩn danh mục" : "Hiện danh mục"}
-            checked={isActive}
-            onChange={(e) => setIsActive(e.target.checked)}
-          />
-          <div className="flex gap-5 ml-3 mt-4">
-            <BtnGoback />
-            <BtnSubmit name="Sữa" />
+          <div className="border border-blue-200 w-[80%] p-2 m-2 rounded-[5px]">
+            <AnimatedCheckbox
+              id="isActive"
+              label={isActive ? "Hiện danh mục" : "Ẩn danh mục"}
+              checked={isActive}
+              onChange={(e) => handleStatusChange(e.target.checked)}
+            />
           </div>
+          <Submit_GoBack />
         </div>
       </form>
     </>

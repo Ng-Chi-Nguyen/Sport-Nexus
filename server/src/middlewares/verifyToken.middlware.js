@@ -31,9 +31,9 @@ export const verifyToken = async (req, res, next) => {
         }
 
         // 4. Trích xuất mảng SLUG (Sử dụng trực tiếp trường slug từ model Permissions)
-        const userPermissionSlugs = user.permissions.map(p => p.slug);
+        const userPermissionSlugs = user.permissions.map(p => p.slug); // CHuyển Obj -> Arr string ["them-nguoi-dung", "xem-bao-cao"]
 
-        // 5. Gán dữ liệu vào req.user để dùng cho checkPermission
+        //  Gán dữ liệu vào req.user để dùng cho checkPermission
         req.user = {
             ...user,
             permissionSlugs: userPermissionSlugs

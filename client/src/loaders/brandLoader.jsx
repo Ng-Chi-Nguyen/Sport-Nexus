@@ -15,6 +15,14 @@ const LoaderBrand = {
     const response = axiosClient.get(url);
     return response;
   },
+
+  getBrandsDropdown: () => {
+    // console.log(page);
+    const url = `management/brand/all`;
+    const response = axiosClient.get(url);
+    // console.log(response);
+    return response;
+  },
 };
 
 export default LoaderBrand;

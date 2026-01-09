@@ -129,7 +129,7 @@ const CategoryPage = () => {
                         "https://placehold.co/200x200/png?text=No+Logo"
                       }
                       alt={category.name}
-                      className="w-[50px] h-auto object-contain"
+                      className="w-[50px] h-auto object-contain m-auto"
                     />
                   </td>
                   <td className="px-6 py-4 text-center">
