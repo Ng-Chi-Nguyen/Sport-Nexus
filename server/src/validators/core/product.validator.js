@@ -7,6 +7,7 @@ const productSchema = {
             'string.max': 'Tên sản phẩm không được vượt quá {#limit} ký tự.',
         }).required(),
         base_price: Joi.number().required(),
+        is_active: Joi.boolean(),
         description: Joi.string(),
         thumbnail: Joi.string().base64({ paddingRequired: true }),
         category_id: Joi.number().required(),
@@ -24,6 +25,7 @@ const productSchema = {
         category_id: Joi.number(),
         supplier_id: Joi.number(),
         brand_id: Joi.number(),
+        is_active: Joi.boolean(),
     }).unknown(false),
 }
 

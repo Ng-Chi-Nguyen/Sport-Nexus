@@ -5,15 +5,17 @@ import { uploadImage } from "../image/image.service.js";
 
 const productService = {
     createProduct: async (productData) => {
-        let { name, base_price, description, thumbnail, category_id, supplier_id, brand_id, fileBuffer } = productData;
+        let { name, base_price, description, is_active, thumbnail, category_id, supplier_id, brand_id, fileBuffer } = productData;
         let slug = await createAutoSlug(name, "Products");
-        console.log(productData)
+        const isActive = JSON.parse(is_active)
+        // console.log(productData)
         let newProduct = await prisma.Products.create({
             data: {
                 name: name,
                 base_price: base_price,
                 description: description,
                 thumbnail: thumbnail,
+                is_active: isActive,
                 category: { connect: { id: category_id } },
                 supplier: { connect: { id: supplier_id } },
                 brand: { connect: { id: brand_id } },

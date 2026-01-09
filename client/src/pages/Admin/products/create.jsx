@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   PlusCircle,
@@ -13,8 +13,10 @@ import { InputFile } from "@/components/ui/input";
 import { FloatingInput } from "@/components/ui/input";
 import { AnimatedCheckbox } from "@/components/ui/ckeckbox";
 import { FloatingTextarea } from "@/components/ui/textarea";
-import { BtnGoback, BtnSubmit } from "@/components/ui/button";
 import { Submit_GoBack } from "@/components/ui/button";
+import { toast } from "sonner";
+import productdApi from "@/api/core/productApi";
+import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -24,6 +26,7 @@ const breadcrumbData = [
 
 const CreateProductPage = () => {
   const { brands, suppliers, categories } = useLoaderData();
+  const navigate = useNavigate();
   // state form
   const [selectBrand, setSelectBrand] = useState("");
   const [selectSupplier, setSelectSupplier] = useState("");
@@ -32,6 +35,7 @@ const CreateProductPage = () => {
   const [thumbnail, setThumbnail] = useState(null);
   const [basePrice, setbBasePrice] = useState("");
   const [isActive, setIsActive] = useState(true);
+  const [description, setDescription] = useState("");
 
   // console.log(brands);
   const brandsOptions = useMemo(
@@ -65,9 +69,45 @@ const CreateProductPage = () => {
 
   // console.log(suppliersOptions);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Dữ liệu sẵn sàng gửi đi:", formData);
+    const formData = new FormData();
+
+    if (thumbnail instanceof File) {
+      // Khi gửi thế này, Multer ở BE sẽ bắt được và tạo ra cái <Buffer ...> bạn cần
+      formData.append("thumbnail", thumbnail);
+    }
+    formData.append("name", name);
+    formData.append("base_price", basePrice);
+    formData.append("is_active", isActive);
+    formData.append("brand_id", selectBrand);
+    formData.append("supplier_id", selectSupplier);
+    formData.append("category_id", selectCategory);
+    formData.append("description", description);
+
+    // --- ĐOẠN LOG KIỂM TRA ---
+    // console.log("=== KIỂM TRA DỮ LIỆU GỬI ĐI ===");
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}:`, value);
+    // }
+    // console.log("===============================");
+
+    try {
+      const response = await productdApi.create(formData);
+      if (response.success) {
+        await queryClient.invalidateQueries({ queryKey: ["products"] });
+        toast.success(response.message);
+        navigate(-1);
+      }
+    } catch (error) {
+      const errorMessage =
+        error.message ||
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0] ||
+        "Đã có lỗi xảy ra!";
+
+      toast.error(errorMessage);
+    }
   };
 
   const handleBrandChange = (brandId) => {
@@ -94,7 +134,7 @@ const CreateProductPage = () => {
     <div className="">
       <Breadcrumbs data={breadcrumbData} />
       <h2>Thêm mới sản phẩm</h2>
-      <form className="flex gap-3 mt-2">
+      <form onSubmit={handleSubmit} className="flex gap-3 mt-2">
         <div className="w-1/2 flex flex-col gap-3">
           <div className="border border-gray-200 rounded-[5px] p-3">
             <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
@@ -140,7 +180,7 @@ const CreateProductPage = () => {
           <div className="flex gap-2">
             <FloatingInput
               id="name"
-              label="Tên danh mục"
+              label="Tên sản phẩm"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -157,7 +197,14 @@ const CreateProductPage = () => {
             </div>
           </div>
           <div className="mt-2">
-            <FloatingTextarea />
+            <FloatingTextarea
+              id="product_desc"
+              label="Mô tả sản phẩm"
+              placeholder="Nhập mô tả chi tiết..."
+              value={description} // Truyền giá trị từ state vào
+              onChange={(e) => setDescription(e.target.value)} // Cập nhật state khi gõ
+              required={true}
+            />
           </div>
           <div className="flex items-center justify-between">
             <div className="border border-blue-200 w-[40%] p-2 m-2 rounded-[5px]">

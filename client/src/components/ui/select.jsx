@@ -99,7 +99,7 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
 
   return (
     <div
-      className="relative border border-blue-500 h-[40px] rounded-[5px]"
+      className="relative border border-gray-500 h-[40px] rounded-[5px]"
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
