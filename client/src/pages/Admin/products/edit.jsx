@@ -223,7 +223,7 @@ const CreateProductPage = () => {
                 onChange={(e) => handleStatusChange(e.target.checked)}
               />
             </div>
-            <Submit_GoBack />
+            <Submit_GoBack name="Sữa" />
           </div>
         </div>
       </form>

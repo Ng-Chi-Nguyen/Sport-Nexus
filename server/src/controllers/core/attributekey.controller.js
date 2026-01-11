@@ -43,8 +43,10 @@ const attributeKeyController = {
     },
 
     getAllAttributeKey: async (req, res) => {
+        const page = parseInt(req.query.page || 1)
+        // console.log(page)
         try {
-            let attributeKeys = await attributeKeyService.getAllAttributeKey();
+            let attributeKeys = await attributeKeyService.getAllAttributeKey(page);
 
             if (!attributeKeys || attributeKeys.length === 0) {
                 return res.status(404).json({
@@ -72,7 +74,8 @@ const attributeKeyController = {
             let attributeKey = await attributeKeyService.updateAttributeKey(atttrId, dataUpdate);
             return res.status(200).json({
                 success: true,
-                data: attributeKey
+                data: attributeKey,
+                message: "Cập nhật thuộc tính thành công"
             })
         } catch (error) {
             if (error.code === 'P2025')

@@ -20,9 +20,26 @@ const attributeKeyService = {
         return attribute;
     },
 
-    getAllAttributeKey: async () => {
-        let attribute = await prisma.AttributeKeys.findMany()
-        return attribute;
+    getAllAttributeKey: async (page) => {
+        const limit = 6;
+        const currentPage = Math.max(1, page);
+        const skip = (currentPage - 1) * limit;
+
+        let [attribute, totalItems] = await Promise.all([
+            prisma.AttributeKeys.findMany({
+                take: limit,
+                skip: skip,
+            }),
+            prisma.AttributeKeys.count()
+        ])
+        return {
+            attribute, pagination: {
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+                currentPage: currentPage,
+                itemsPerPage: limit
+            }
+        };
     },
 
     updateAttributeKey: async (attrId, dataUpdate) => {

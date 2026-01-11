@@ -6,6 +6,7 @@ import LoaderBrand from "@/loaders/brandLoader";
 import LoaderSupplier from "@/loaders/supplierLoader";
 import LoaderCategory from "@/loaders/categoryLoader";
 import LoaderProduct from "@/loaders/productLoader";
+import LoaderAttr from "@/loaders/attributeKey";
 // lib
 import { queryClient } from "@/lib/react-query";
 
@@ -58,6 +59,14 @@ const EditCategoryPage = lazy(() => import("@/pages/Admin/categories/edit"));
 
 const Review = lazy(() => import("@/pages/Admin/reviews"));
 const Variant = lazy(() => import("@/pages/Admin/productVariant"));
+const EditVariant = lazy(() => import("@/pages/Admin/productVariant/edit"));
+const CreateVariant = lazy(() => import("@/pages/Admin/productVariant/create"));
+
+const AttributeKey = lazy(() => import("@/pages/Admin/attributeKey"));
+const CreateAttributeKey = lazy(() =>
+  import("@/pages/Admin/attributeKey/create")
+);
+const EditAttributeKey = lazy(() => import("@/pages/Admin/attributeKey/edit"));
 
 export const adminRoutes = {
   path: "management", // Tiền tố chung
@@ -270,5 +279,36 @@ export const adminRoutes = {
 
     { path: "reviews", element: <Review /> },
     { path: "product-variants", element: <Variant /> },
+    { path: "product-variants/edit/:variantId", element: <EditVariant /> },
+    { path: "product-variants/create", element: <CreateVariant /> },
+
+    {
+      path: "attribute-key",
+      element: <AttributeKey />,
+      loader: async ({ request }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get("page") || 1;
+        return await queryClient.fetchQuery({
+          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
+          queryKey: ["attribute-keys", page],
+          queryFn: () => LoaderAttr.getAllAttrs(page),
+          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
+        });
+      },
+    },
+    { path: "attribute-key/create", element: <CreateAttributeKey /> },
+    {
+      path: "attribute-key/edit/:attrId",
+      element: <EditAttributeKey />,
+      loader: async ({ params }) => {
+        const { attrId } = params;
+        return await queryClient.fetchQuery({
+          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
+          queryKey: ["attribute-keys", attrId],
+          queryFn: () => LoaderAttr.getAttrById(attrId),
+          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
+        });
+      },
+    },
   ],
 };

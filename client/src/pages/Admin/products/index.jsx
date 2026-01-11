@@ -93,7 +93,7 @@ const ProductPage = () => {
     currentPage: 1,
   };
 
-  console.log(products);
+  // console.log(products);
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
