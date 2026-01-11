@@ -140,7 +140,7 @@ model ProductImages {
     url        String   @db.Text
     is_primary Boolean  @default(false)
     product_id Int
-    product    Products @relation(fields: [product_id], references: [id])
+    product    Products @relation(fields: [product_id], references: [id], onDelete: Cascade)
 
     @@map("productimages")
 }

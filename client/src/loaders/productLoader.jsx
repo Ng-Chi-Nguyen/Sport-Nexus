@@ -8,11 +8,9 @@ const LoaderProduct = {
     return response;
   },
 
-  getProductsById: ({ params }) => {
-    const { productId } = params;
+  getProductById: (productId) => {
     const url = `core/product/${productId}`;
-    const response = axiosClient.get(url);
-    return response;
+    return axiosClient.get(url);
   },
 };
 

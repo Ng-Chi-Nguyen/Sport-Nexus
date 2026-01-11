@@ -11,10 +11,17 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
-import { useLoaderData, useSearchParams } from "react-router-dom";
+import {
+  useLoaderData,
+  useRevalidator,
+  useSearchParams,
+} from "react-router-dom";
 import Badge from "@/components/ui/badge";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import Pagination from "@/components/ui/pagination";
+import productdApi from "@/api/core/productApi";
+import { toast } from "sonner";
+import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
   {
@@ -34,38 +41,47 @@ const breadcrumbData = [
 const ProductPage = () => {
   const responses = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
+  const revalidator = useRevalidator();
 
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState({
+    id: "",
+    name: "",
+  });
   const [openMenuId, setOpenMenuId] = useState(null);
   const products = responses.data.list_products;
 
-  const openConfirm = (productId) => {
-    setDeleteTarget(productId);
+  const openConfirm = (productId, name) => {
+    // console.log(productId);
+    // console.log(name);
+    setDeleteTarget({
+      id: productId,
+      name: name,
+    });
     setIsConfirmOpen(true);
   };
 
   const handleDelete = async () => {
-    // try {
-    //   const response = await permissionApi.delete(deleteTarget);
-    //   if (response.success) {
-    //     await queryClient.invalidateQueries({ queryKey: ["permissions"] });
-    //     revalidator.revalidate(); // Cập nhật UI
-    //     toast.success(response.message);
-    //     setIsConfirmOpen(false); // Đóng modal
-    //   }
-    //   revalidator.revalidate(); // Cập nhật UI
-    //   setIsConfirmOpen(false); // Đóng modal
-    // } catch (error) {
-    //   console.log("Cấu trúc error nhận được:", error);
-    //   setIsConfirmOpen(false);
-    //   const errorMessage =
-    //     error.message ||
-    //     error.response?.data?.message ||
-    //     error.response?.data?.errors?.[0] ||
-    //     "Đã có lỗi xảy ra!";
-    //   toast.error(errorMessage);
-    // }
+    try {
+      const response = await productdApi.delete(deleteTarget.id);
+      if (response.success) {
+        await queryClient.invalidateQueries({ queryKey: ["products"] });
+        revalidator.revalidate(); // Cập nhật UI
+        toast.success(response.message);
+        setIsConfirmOpen(false); // Đóng modal
+      }
+      revalidator.revalidate(); // Cập nhật UI
+      setIsConfirmOpen(false); // Đóng modal
+    } catch (error) {
+      console.log("Cấu trúc error nhận được:", error);
+      setIsConfirmOpen(false);
+      const errorMessage =
+        error.message ||
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0] ||
+        "Đã có lỗi xảy ra!";
+      toast.error(errorMessage);
+    }
   };
 
   const handlePageChange = (newPage) => {
@@ -77,7 +93,7 @@ const ProductPage = () => {
     currentPage: 1,
   };
 
-  console.log(responses);
+  console.log(products);
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
@@ -170,12 +186,12 @@ const ProductPage = () => {
                   <td className="">
                     <div className="flex gap-3 justify-center">
                       <BtnEdit
-                        route={`/management/product/edit/${product.id}`}
+                        route={`/management/products/edit/${product.id}`}
                         name="Sửa"
                       />
                       <BtnDelete
                         name="Xóa"
-                        onClick={() => openConfirm(product.id)}
+                        onClick={() => openConfirm(product.id, product.name)}
                       />
                     </div>
                   </td>
@@ -203,7 +219,7 @@ const ProductPage = () => {
         <ConfirmDelete
           isOpen={isConfirmOpen}
           title="Xóa sản phẩm"
-          message={`Bạn đang thực hiện xóa sản phẩm "${deleteTarget}".`}
+          message={`Bạn đang thực hiện xóa sản phẩm "${deleteTarget.name}".`}
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmOpen(false)}
         />

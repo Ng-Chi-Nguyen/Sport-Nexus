@@ -90,6 +90,7 @@ const productService = {
                 take: limit,
                 skip: skip,
                 select: {
+                    id: true,
                     name: true,
                     base_price: true,
                     description: true,
@@ -126,21 +127,40 @@ const productService = {
         };
     },
 
-    updateProduct: async (productId, dataUPdate) => {
-        await deleteImage(productId, "Products", "thumbnail");
-        if (dataUPdate.name) {
-            let slug = await createAutoSlug(dataUPdate.name, "Products");
-            dataUPdate.slug = slug;
+    updateProduct: async (productId, dataUpdate) => {
+        // console.log(dataUpdate)
+        if (dataUpdate.thumbnail)
+            await deleteImage(productId, "Products", "thumbnail");
+        if (dataUpdate.name) {
+            let slug = await createAutoSlug(dataUpdate.name, "Products");
+            dataUpdate.slug = slug;
         }
+
+        if (dataUpdate.is_active !== undefined) {
+            dataUpdate.is_active = dataUpdate.is_active === "true" || dataUpdate.is_active === true;
+        }
+
+        if (dataUpdate.supplier_id) {
+            dataUpdate.supplier_id = parseInt(dataUpdate.supplier_id);
+        }
+        if (dataUpdate.category_id) {
+            dataUpdate.category_id = parseInt(dataUpdate.category_id);
+        }
+        if (dataUpdate.brand_id) {
+            dataUpdate.brand_id = parseInt(dataUpdate.brand_id);
+        }
+
+        // console.log(dataUpdate)
+
         let updateProduct = await prisma.Products.update({
             where: { id: productId },
-            data: dataUPdate
+            data: dataUpdate
         })
         return updateProduct
     },
 
     deleteProduct: async (productId) => {
-        await deleteImage(productId, "Products", "thumbnail");
+        // await deleteImage(productId, "Products", "thumbnail");
         await prisma.Products.delete({ where: { id: productId } })
     }
 }

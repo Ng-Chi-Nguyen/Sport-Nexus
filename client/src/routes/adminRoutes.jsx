@@ -5,7 +5,7 @@ import LoaderUser from "@/loaders/userLoader";
 import LoaderBrand from "@/loaders/brandLoader";
 import LoaderSupplier from "@/loaders/supplierLoader";
 import LoaderCategory from "@/loaders/categoryLoader";
-import LoaderProduct from "@/loaders/product";
+import LoaderProduct from "@/loaders/productLoader";
 // lib
 import { queryClient } from "@/lib/react-query";
 
@@ -124,22 +124,48 @@ export const adminRoutes = {
       loader: async () => {
         const [brands, suppliers, categories] = await Promise.all([
           queryClient.fetchQuery({
-            queryKey: ["brands"],
+            queryKey: ["brands-select"],
             queryFn: () => LoaderBrand.getBrandsDropdown(),
           }),
           queryClient.fetchQuery({
-            queryKey: ["suppliers"],
+            queryKey: ["suppliers-select"],
             queryFn: () => LoaderSupplier.getSuppliersDropdown(),
           }),
           queryClient.fetchQuery({
-            queryKey: ["categories"],
+            queryKey: ["categories-select"],
             queryFn: () => LoaderCategory.getCategoriesDropdown(),
           }),
         ]);
         return { brands, suppliers, categories };
       },
     },
-    { path: "products/edit", element: <EditProductPage /> },
+    {
+      path: "products/edit/:productId",
+      element: <EditProductPage />,
+      loader: async ({ params }) => {
+        const { productId } = params;
+        // console.log(productId);
+        const [brands, suppliers, categories, product] = await Promise.all([
+          queryClient.fetchQuery({
+            queryKey: ["brands-select"],
+            queryFn: () => LoaderBrand.getBrandsDropdown(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["suppliers-select"],
+            queryFn: () => LoaderSupplier.getSuppliersDropdown(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["categories-select"],
+            queryFn: () => LoaderCategory.getCategoriesDropdown(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["product", productId],
+            queryFn: () => LoaderProduct.getProductById(productId),
+          }),
+        ]);
+        return { brands, suppliers, categories, product };
+      },
+    },
 
     { path: "orders", element: <OrderPage /> },
     // Brands

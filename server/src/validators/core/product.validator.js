@@ -26,7 +26,7 @@ const productSchema = {
         supplier_id: Joi.number(),
         brand_id: Joi.number(),
         is_active: Joi.boolean(),
-    }).unknown(false),
+    }).min(1).unknown(false),
 }
 
 export default productSchema;

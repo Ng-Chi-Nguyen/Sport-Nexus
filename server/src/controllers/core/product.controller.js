@@ -157,7 +157,7 @@ const productController = {
         let dataUpdate = req.body;
         let productId = parseInt(req.params.id);
         let file = req.file;
-
+        // console.log(file)
         try {
             if (file) {
                 let thumbnail_url = await uploadImage.uploadThumbnail(file.buffer, productId)
@@ -182,8 +182,9 @@ const productController = {
     },
 
     deleteProduct: async (req, res) => {
+        let productId = parseInt(req.params.id);
+        // console.log(productId)
         try {
-            let productId = parseInt(req.params.id);
             await productService.deleteProduct(productId);
 
             return res.status(200).json({

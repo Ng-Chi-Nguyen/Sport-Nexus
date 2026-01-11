@@ -93,10 +93,10 @@ const Select = ({
 
 const SelectPro = ({ options = [], label, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-
+  // console.log(value);
   // Tìm option đang được chọn để hiển thị tên ra ngoài
   const selectedOption = options?.find((opt) => opt.id === value);
-
+  // console.log(selectedOption);
   return (
     <div
       className="relative border border-gray-500 h-[40px] rounded-[5px]"

@@ -38,7 +38,7 @@ const breadcrumbData = [
 const CreatePermissionPage = () => {
   const navigate = useNavigate();
   const permissionData = useLoaderData();
-
+  // console.log(permissionData);
   // Dữ liệu gữi đi
   const [selectedRole, setSelectedRole] = useState(permissionData.module);
   const [selectedAction, setSelectedAction] = useState(permissionData.action);
