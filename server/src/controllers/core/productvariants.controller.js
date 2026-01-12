@@ -34,7 +34,7 @@ const productVariantController = {
             if (!variant || variant.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                    message: "Không tìm thấy sản phẩm."
                 });
             }
             return res.status(200).json({

@@ -94,7 +94,7 @@ const CreateCategoryPage = () => {
           />
         </div>
         <div className="flex flex-col gap-3 border border-gray-200 rounded-[5px] p-3">
-          <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+          <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
             <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin danh mục
           </h3>
           <FloatingInput

@@ -153,6 +153,30 @@ const productController = {
         }
     },
 
+    getAllProductsDropdown: async (req, res) => {
+        // console.log("Đã đi vô đây 3")
+        try {
+            let list_products = await productService.getAllProductsDropdown();
+
+            if (!list_products || list_products.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: list_products
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                error: error.message,
+            })
+        }
+    },
+
     updateProduct: async (req, res) => {
         let dataUpdate = req.body;
         let productId = parseInt(req.params.id);

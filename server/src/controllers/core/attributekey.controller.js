@@ -67,6 +67,29 @@ const attributeKeyController = {
         }
     },
 
+    getAllAttributesDropdown: async (req, res) => {
+        try {
+            let list_attributesKeys = await attributeKeyService.getAllAttributesDropdown();
+
+            if (!list_attributesKeys || list_attributesKeys.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: list_attributesKeys
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                error: error.message,
+            })
+        }
+    },
+
     updateAttributeKeyBy: async (req, res) => {
         let atttrId = parseInt(req.params.id);
         let dataUpdate = req.body;

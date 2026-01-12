@@ -9,6 +9,7 @@ import LoaderProduct from "@/loaders/productLoader";
 import LoaderAttr from "@/loaders/attributeKey";
 // lib
 import { queryClient } from "@/lib/react-query";
+import attributeKeyApi from "@/api/core/attributrKeyApi";
 
 // Lazy load các trang để giảm dung lượng file ban đầu
 // User
@@ -280,8 +281,24 @@ export const adminRoutes = {
     { path: "reviews", element: <Review /> },
     { path: "product-variants", element: <Variant /> },
     { path: "product-variants/edit/:variantId", element: <EditVariant /> },
-    { path: "product-variants/create", element: <CreateVariant /> },
-
+    {
+      path: "product-variants/create",
+      element: <CreateVariant />,
+      loader: async () => {
+        const [attributeKeys, products] = await Promise.all([
+          queryClient.fetchQuery({
+            queryKey: ["attribute-key-all"],
+            queryFn: () => LoaderAttr.getAllAttributesDropdown(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["products-dropdown"],
+            queryFn: () => LoaderProduct.getProductsDropdown(),
+          }),
+        ]);
+        return { attributeKeys, products };
+      },
+    },
+    // attribute key
     {
       path: "attribute-key",
       element: <AttributeKey />,
@@ -310,5 +327,6 @@ export const adminRoutes = {
         });
       },
     },
+    // End attribute key
   ],
 };

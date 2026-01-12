@@ -46,7 +46,7 @@ const CreateAttributeKey = () => {
     try {
       const response = await attributeKeyApi.create(formData);
       if (response.success) {
-        await queryClient.invalidateQueries({ queryKey: ["attribute-key"] });
+        await queryClient.invalidateQueries({ queryKey: ["attribute-keys"] });
         toast.success(response.message);
         navigate(-1);
       }
@@ -68,7 +68,7 @@ const CreateAttributeKey = () => {
         onSubmit={handleSubmit}
         className="flex flex-col gap-2 w-fit border border-gray-200 p-3 rounded-[5px]"
       >
-        <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+        <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
           <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin tuộc tính
         </h3>
         <div className="flex gap-2">

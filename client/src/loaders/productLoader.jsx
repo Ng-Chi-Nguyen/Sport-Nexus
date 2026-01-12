@@ -12,6 +12,12 @@ const LoaderProduct = {
     const url = `core/product/${productId}`;
     return axiosClient.get(url);
   },
+
+  getProductsDropdown: () => {
+    const url = `core/product/all`;
+    const response = axiosClient.get(url);
+    return response;
+  },
 };
 
 export default LoaderProduct;

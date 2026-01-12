@@ -7,8 +7,6 @@ const attributeKeyApi = {
   },
 
   update: (attrId, data) => {
-    // console.log(supplierId);
-    // console.log(data);
     const url = `/core/variant-attribute-key/${attrId}`;
     return axiosClient.put(url, data);
   },

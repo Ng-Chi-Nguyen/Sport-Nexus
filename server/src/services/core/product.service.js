@@ -127,6 +127,17 @@ const productService = {
         };
     },
 
+    getAllProductsDropdown: async () => {
+        let products = await prisma.Products.findMany({
+            select: {
+                id: true,
+                name: true,
+
+            }
+        });
+        return products;
+    },
+
     updateProduct: async (productId, dataUpdate) => {
         // console.log(dataUpdate)
         if (dataUpdate.thumbnail)

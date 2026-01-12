@@ -42,6 +42,11 @@ const attributeKeyService = {
         };
     },
 
+    getAllAttributesDropdown: async () => {
+        let attrs = await prisma.AttributeKeys.findMany();
+        return attrs;
+    },
+
     updateAttributeKey: async (attrId, dataUpdate) => {
         let attribute = await prisma.AttributeKeys.update({
             where: { id: attrId },

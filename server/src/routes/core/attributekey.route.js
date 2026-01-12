@@ -8,6 +8,7 @@ const attriButeKeyRoute = express.Router();
 attriButeKeyRoute
 
     .post("/", validate(attributeKeySchema.createAttributeKey), attributeKeyController.createAttributeKey)
+    .get("/all", attributeKeyController.getAllAttributesDropdown)
     .get("/:id", attributeKeyController.getAttributeKeyById)
     .get("/", attributeKeyController.getAllAttributeKey)
     .put("/:id", validate(attributeKeySchema.updateAttributeKey), attributeKeyController.updateAttributeKeyBy)

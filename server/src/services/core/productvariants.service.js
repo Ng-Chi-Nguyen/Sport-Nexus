@@ -59,7 +59,13 @@ const productVariantService = {
                             }
                         }
                     }
-                }
+                },
+                // product: {
+                //     select: {
+                //         id: true,
+                //         name: true,
+                //     }
+                // }
             }
         })
         return productVariant;

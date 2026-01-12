@@ -14,6 +14,12 @@ const LoaderAttr = {
     const response = axiosClient.get(url);
     return response;
   },
+
+  getAllAttributesDropdown: () => {
+    const url = `core/variant-attribute-key/all`;
+    const response = axiosClient.get(url);
+    return response;
+  },
 };
 
 export default LoaderAttr;

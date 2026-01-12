@@ -123,7 +123,7 @@ const EditBrandPage = () => {
           />
         </div>
         <div className="border border-blue-200 p-3 rounded-[5px]">
-          <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+          <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
             <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin thương hiệu
           </h3>
           <div className="flex flex-col flex-col-reverse m-3">

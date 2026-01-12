@@ -114,7 +114,7 @@ const EditSupplierPage = () => {
         <form onSubmit={handleSubmit} className="flex w-fit p-4 gap-3">
           <div className="flex-1 flex flex-col gap-6">
             <div className="border border-gray-200 p-3 rounded-[5px]">
-              <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+              <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
                 <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin người
                 liên hệ mua hàng phẩm
               </h3>
@@ -158,7 +158,7 @@ const EditSupplierPage = () => {
               </div>
             </div>
             <div className="border border-gray-200 p-3 rounded-[5px]">
-              <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+              <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
                 <span className="w-2 h-4 bg-[#4facf3]"></span> Địa chỉ kho/văn
                 phòng nhà cung cấp
               </h3>

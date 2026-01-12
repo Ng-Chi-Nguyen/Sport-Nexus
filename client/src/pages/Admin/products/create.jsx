@@ -137,7 +137,7 @@ const CreateProductPage = () => {
       <form onSubmit={handleSubmit} className="flex gap-3 mt-2">
         <div className="w-1/2 flex flex-col gap-3">
           <div className="border border-gray-200 rounded-[5px] p-3">
-            <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+            <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
               <span className="w-2 h-4 bg-[#4facf3]"></span> Phân loại hệ thống
             </h3>
             <div className="flex gap-2 mb-2">
@@ -174,7 +174,7 @@ const CreateProductPage = () => {
           </div>
         </div>
         <div className="border border-gray-200 w-2/3 p-3 rounded-[5px]">
-          <h3 className="font-black text-xs uppercase border-b-2 border-[#323232] pb-2 mb-4 flex items-center gap-2">
+          <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
             <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin sản phẩm
           </h3>
           <div className="flex gap-2">

@@ -10,6 +10,7 @@ const productRoute = express.Router();
 productRoute
 
     .post("/", verifyToken, checkPermission("them-san-pham"), validate(productSchema.createProduct), uploadThubnailProduct, productController.createProduct)
+    .get("/all", productController.getAllProductsDropdown)
     .get("/:id", productController.getProductById)
     .get("/brand/:id", productController.getProductByBrandId)
     .get("/category/:id", productController.getProductByCategoryId)
