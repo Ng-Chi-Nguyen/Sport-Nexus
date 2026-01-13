@@ -91,6 +91,41 @@ const productVariantService = {
         return productVariants;
     },
 
+    getAllProductVariants: async (page) => {
+        const limit = 6;
+        const currentPage = Math.max(1, page);
+        const skip = (currentPage - 1) * limit;
+        const [variants, totalItems] = await Promise.all([
+            prisma.ProductVariants.findMany({
+                take: limit,
+                skip: skip,
+                include: {
+                    product: {
+                        select: {
+                            name: true,
+                            base_price: true,
+                            thumbnail: true
+                        }
+                    },
+                    VariableAttributes: {
+                        include: {
+                            attributeKey: true
+                        }
+                    }
+                }
+            }),
+            prisma.ProductVariants.count()
+        ])
+        return {
+            variants, pagination: {
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+                currentPage: currentPage,
+                itemsPerPage: limit
+            }
+        };
+    },
+
     updateProductVariant: async (variantId, dataUpdate) => {
         const { attributes, ...variantData } = dataUpdate;
         return await prisma.$transaction(async (tx) => {

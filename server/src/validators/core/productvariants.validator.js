@@ -28,16 +28,25 @@ const productVariantSchema = {
     }).unknown(false),
     updateProductVariant: Joi.object({
         stock: Joi.number().min(1).messages({
-            'string.min': 'Tồn kho phải có ít nhất {#limit}.',
+            'number.min': 'Số lượng tồn kho phải có ít nhất {#limit}.', // Đã sửa key
+            'number.base': 'Số lượng tồn kho phải là con số.',
+            'any.required': 'Vui lòng nhập số lượng tồn kho.'
         }),
+
         price: Joi.number().min(1).messages({
-            'string.min': 'Tồn kho phải có ít nhất {#limit}.',
+            'number.min': 'Giá bán phải có ít nhất {#limit}.', // Đã sửa nội dung & key
+            'number.base': 'Giá bán phải là con số.',
+            'any.required': 'Vui lòng nhập giá bán.'
         }),
-        // product_id: Joi.number(),
-        attributes: Joi.array().items(Joi.object({
-            attribute_key_id: Joi.number().min(1),
-            value: Joi.string(),
-        })).min(1).messages({
+
+        product_id: Joi.number(),
+
+        attributes: Joi.array().items(
+            Joi.object({
+                attribute_key_id: Joi.number().min(1),
+                value: Joi.string(),
+            })
+        ).min(1).messages({
             'array.min': 'Biến thể phải có ít nhất một thuộc tính.',
             'any.required': 'Trường thuộc tính là bắt buộc.'
         })

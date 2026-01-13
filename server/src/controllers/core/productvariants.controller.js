@@ -71,6 +71,28 @@ const productVariantController = {
         }
     },
 
+    getAllProductVariants: async (req, res) => {
+        const page = parseInt(req.query.page || 1)
+        try {
+            let variants = await productVariantService.getAllProductVariants(page);
+            if (!variants || variants.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy sản phẩm."
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                data: variants
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
+    },
+
     updateProductVariant: async (req, res) => {
         let variantId = parseInt(req.params.id);
         let dataUpdate = req.body;

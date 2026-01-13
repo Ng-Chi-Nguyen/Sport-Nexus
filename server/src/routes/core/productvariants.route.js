@@ -10,6 +10,7 @@ productVariantRoute
     .post("/", validate(productVariantSchema.createProductVariant), productVariantController.createProductVariant)
     .get("/:id", productVariantController.getProductVariantById)
     .get("/product/:id", productVariantController.getProductVariantByProductId)
+    .get("/", productVariantController.getAllProductVariants)
     .put("/:id", validate(productVariantSchema.updateProductVariant), productVariantController.updateProductVariant)
     .delete("/:id", productVariantController.deleteProductVariant)
 

@@ -9,7 +9,7 @@ import LoaderProduct from "@/loaders/productLoader";
 import LoaderAttr from "@/loaders/attributeKey";
 // lib
 import { queryClient } from "@/lib/react-query";
-import attributeKeyApi from "@/api/core/attributrKeyApi";
+import LoaderProductVariant from "@/loaders/productVariantLoader";
 
 // Lazy load các trang để giảm dung lượng file ban đầu
 // User
@@ -279,8 +279,43 @@ export const adminRoutes = {
     // End categories
 
     { path: "reviews", element: <Review /> },
-    { path: "product-variants", element: <Variant /> },
-    { path: "product-variants/edit/:variantId", element: <EditVariant /> },
+    {
+      path: "product-variants",
+      element: <Variant />,
+      loader: async ({ request }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get("page") || 1;
+        return await queryClient.fetchQuery({
+          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
+          queryKey: ["product-variants", page],
+          queryFn: () => LoaderProductVariant.getAllProducstVariants(page),
+          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
+        });
+      },
+    },
+    {
+      path: "product-variants/edit/:variantId",
+      element: <EditVariant />,
+      loader: async ({ params }) => {
+        const { variantId } = params;
+        const [attributeKeys, products, product_variant] = await Promise.all([
+          queryClient.fetchQuery({
+            queryKey: ["attribute-key-all"],
+            queryFn: () => LoaderAttr.getAllAttributesDropdown(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["products-dropdown"],
+            queryFn: () => LoaderProduct.getProductsDropdown(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["product-variant", [variantId]],
+            queryFn: () =>
+              LoaderProductVariant.getProductVariantById(variantId),
+          }),
+        ]);
+        return { attributeKeys, products, product_variant };
+      },
+    },
     {
       path: "product-variants/create",
       element: <CreateVariant />,
