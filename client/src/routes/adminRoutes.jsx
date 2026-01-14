@@ -37,6 +37,12 @@ const PurchaseOrderItemPage = lazy(() =>
   import("@/pages/Admin/purchaseorderitems")
 );
 const PurchaseOrderPage = lazy(() => import("@/pages/Admin/purchaseorders"));
+const EditPurchaseOrderPage = lazy(() =>
+  import("@/pages/Admin/purchaseorders/edit")
+);
+const CreatePurchaseOrderPage = lazy(() =>
+  import("@/pages/Admin/purchaseorders/create")
+);
 const StockPage = lazy(() => import("@/pages/Admin/stockmovements"));
 // Supplier
 const SupplierPage = lazy(() => import("@/pages/Admin/suppliers"));
@@ -203,7 +209,26 @@ export const adminRoutes = {
     { path: "carts", element: <CartPage /> },
     { path: "coupons", element: <CouponPage /> },
     { path: "purchase-item", element: <PurchaseOrderItemPage /> },
+    // purchase
     { path: "purchase", element: <PurchaseOrderPage /> },
+    { path: "purchase/edit/:purchaseId", element: <EditPurchaseOrderPage /> },
+    {
+      path: "purchase/create",
+      element: <CreatePurchaseOrderPage />,
+      loader: async () => {
+        const [suppliers, productVariants] = await Promise.all([
+          queryClient.fetchQuery({
+            queryKey: ["suppliers-select"],
+            queryFn: () => LoaderSupplier.getSuppliersDropdown(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["variants-select"],
+            queryFn: () => LoaderProductVariant.getProductVariantsDropdown(),
+          }),
+        ]);
+        return { suppliers, productVariants };
+      },
+    },
     // permissions
     {
       path: "permissions",
@@ -279,6 +304,7 @@ export const adminRoutes = {
     // End categories
 
     { path: "reviews", element: <Review /> },
+    // product-variants
     {
       path: "product-variants",
       element: <Variant />,
@@ -333,6 +359,7 @@ export const adminRoutes = {
         return { attributeKeys, products };
       },
     },
+    // end product-variants
     // attribute key
     {
       path: "attribute-key",

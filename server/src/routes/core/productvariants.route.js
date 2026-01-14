@@ -8,6 +8,7 @@ const productVariantRoute = express.Router();
 productVariantRoute
 
     .post("/", validate(productVariantSchema.createProductVariant), productVariantController.createProductVariant)
+    .get("/all", productVariantController.getProductVariantsDropdown)
     .get("/:id", productVariantController.getProductVariantById)
     .get("/product/:id", productVariantController.getProductVariantByProductId)
     .get("/", productVariantController.getAllProductVariants)

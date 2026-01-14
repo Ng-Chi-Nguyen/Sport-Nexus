@@ -126,6 +126,29 @@ const productVariantService = {
         };
     },
 
+    getProductVariantsDropdown: async () => {
+        return await prisma.productVariants.findMany({
+            select: {
+                id: true,
+                product: {
+                    select: {
+                        name: true
+                    }
+                },
+                VariableAttributes: {
+                    select: {
+                        value: true,
+                        attributeKey: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    },
+
     updateProductVariant: async (variantId, dataUpdate) => {
         const { attributes, ...variantData } = dataUpdate;
         return await prisma.$transaction(async (tx) => {

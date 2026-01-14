@@ -93,6 +93,29 @@ const productVariantController = {
         }
     },
 
+    getProductVariantsDropdown: async (req, res) => {
+        // console.log("Đã đi vô đây 3")
+        try {
+            let variants = await productVariantService.getProductVariantsDropdown();
+            if (!variants || variants.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: variants
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                error: error.message,
+            })
+        }
+    },
+
     updateProductVariant: async (req, res) => {
         let variantId = parseInt(req.params.id);
         let dataUpdate = req.body;

@@ -118,7 +118,6 @@ const variantVariant = () => {
                   key={variant.id || index}
                   className="border-b border-gray-200 hover:bg-[#4facf310] transition-colors duration-200"
                 >
-                  {/* CỘT 1: THÔNG TIN SẢN PHẨM */}
                   <td className="p-4 font-bold text-[#323232]">
                     <div className="flex items-center">
                       <div className="w-[60px] h-[60px] border border-gray-200 rounded overflow-hidden bg-gray-50 flex-shrink-0">
@@ -147,10 +146,8 @@ const variantVariant = () => {
                     </div>
                   </td>
 
-                  {/* CỘT 2: THÔNG TIN PHÂN LOẠI (HIỂN THỊ SIZE, TRỌNG LƯỢNG...) */}
                   <td className="px-6 py-4">
                     <div className="flex flex-col gap-2 items-center justify-center">
-                      {/* Hiển thị các thuộc tính như Size: XL, Trọng lượng: 4U */}
                       {variant.VariableAttributes &&
                       variant.VariableAttributes.length > 0 ? (
                         variant.VariableAttributes.map((attr) => (
@@ -174,11 +171,8 @@ const variantVariant = () => {
                         </span>
                       )}
 
-                      {/* Giá bán riêng của biến thể này */}
                       <div className="mt-1">
-                        <span className="text-xs text-gray-500">
-                          Giá biến thể:{" "}
-                        </span>
+                        <span className="text-xs text-gray-500">Giá bán: </span>
                         <span className="text-sm font-black text-blue-600">
                           {Number(variant.price).toLocaleString()}đ
                         </span>
@@ -186,7 +180,6 @@ const variantVariant = () => {
                     </div>
                   </td>
 
-                  {/* CỘT 3: TRẠNG THÁI & KHO */}
                   <td className="text-center px-6 py-4">
                     <div className="flex flex-col items-center gap-2">
                       {variant.stock > 0 ? (
@@ -205,7 +198,6 @@ const variantVariant = () => {
                     </div>
                   </td>
 
-                  {/* CỘT 4: HÀNH ĐỘNG */}
                   <td className="px-6 py-4 text-center">
                     <div className="flex gap-2 justify-center">
                       <BtnEdit
@@ -243,7 +235,7 @@ const variantVariant = () => {
         </div>
         <ConfirmDelete
           isOpen={isConfirmOpen}
-          title="Xóa sản phẩm"
+          title="Xóa biến thể sản phẩm"
           message={`Bạn đang thực hiện xóa biến thể sản phẩm "${deleteTarget.name}".`}
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmOpen(false)}

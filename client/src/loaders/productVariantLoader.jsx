@@ -19,6 +19,12 @@ const LoaderProductVariant = {
     const response = axiosClient.get(url);
     return response;
   },
+
+  getProductVariantsDropdown: () => {
+    const url = `core/product-variant/all`;
+    const response = axiosClient.get(url);
+    return response;
+  },
 };
 
 export default LoaderProductVariant;
