@@ -98,8 +98,9 @@ const purchaseOrderController = {
     },
 
     getAllPurchaseOrder: async (req, res) => {
+        let page = parseInt(req.query.page || 1)
         try {
-            let purchaseOrders = await purchaseOrderService.getAllPurchaseOrder();
+            let purchaseOrders = await purchaseOrderService.getAllPurchaseOrder(page);
             if (!purchaseOrders || purchaseOrders.length === 0) {
                 return res.status(404).json({
                     success: false,

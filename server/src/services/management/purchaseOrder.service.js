@@ -68,13 +68,28 @@ const purchaseOrderService = {
         return purchaseOrders;
     },
 
-    getAllPurchaseOrder: async () => {
-        let purchaseOrders = await prisma.PurchaseOrders.findMany({
-            include: {
-                PurchaseOrderItems: true
+    getAllPurchaseOrder: async (page) => {
+        const limit = 6;
+        let currentPage = Math.max(1, page);
+        let skip = (currentPage - 1) * limit;
+        let [purchaseOrders, totalItems] = await Promise.all([
+            prisma.PurchaseOrders.findMany({
+                take: limit,
+                skip: skip,
+                include: {
+                    PurchaseOrderItems: true
+                }
+            }),
+            prisma.PurchaseOrders.count()
+        ])
+        return {
+            purchaseOrders, pagination: {
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+                currentPage: currentPage,
+                itemsPerPage: limit
             }
-        })
-        return purchaseOrders;
+        };
     },
 
     deletePurchaseOrder: async (purchaseOrderId) => {

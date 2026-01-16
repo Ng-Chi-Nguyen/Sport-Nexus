@@ -16,6 +16,8 @@ const purchaseOrderSchema = {
             'number.min': 'Tổng chi phí không được âm'
         }),
 
+        status: Joi.string().valid('PENDING', 'RECEIVED', 'PARTIALLY_RECEIVED', 'CANCELLED').default('PENDING'),
+
         // 2. Danh sách mặt hàng (Purchase Order Items)
         items: Joi.array().items(
             Joi.object({

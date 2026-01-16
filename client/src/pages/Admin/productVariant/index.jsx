@@ -34,8 +34,8 @@ const variantVariant = () => {
   });
 
   const variants = responses.data.variants;
-  console.log(responses);
-  console.log(variants);
+  // console.log(responses);
+  // console.log(variants);
 
   const handlePageChange = (newPage) => {
     setSearchParams({ page: newPage });
