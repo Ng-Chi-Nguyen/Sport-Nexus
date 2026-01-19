@@ -24,27 +24,30 @@ const purchaseOrderService = {
     },
 
     updatePurchaseOrder: async (purschaseOrderId, dataUpdate) => {
-        let { supplier_id, expected_delivery_date, total_cost, items } = dataUpdate;
-        // console.log(dataUpdate)
+        // Thêm giá trị mặc định [] cho items để tránh lỗi .map()
+        let { supplier_id, expected_delivery_date, total_cost, items = [], status } = dataUpdate;
+
         let updatePurchaseOrder = await prisma.PurchaseOrders.update({
-            where: { id: purschaseOrderId },
+            where: { id: Number(purschaseOrderId) }, // Đảm bảo ID là kiểu Number
             data: {
                 supplier_id: supplier_id,
                 expected_delivery_date: expected_delivery_date,
                 total_cost: total_cost,
-                PurchaseOrderItems: {
-                    deleteMany: {},
+                status: status,
+                // Chỉ thực hiện cập nhật items nếu mảng items có dữ liệu
+                PurchaseOrderItems: items.length > 0 ? {
+                    deleteMany: {}, // Xóa toàn bộ item cũ để đồng bộ lại
                     create: items.map((item) => ({
-                        product_variant: { connect: { id: item.product_variant_id } },
-                        quantity: item.quantity,
+                        product_variant_id: item.product_variant_id, // Sử dụng trực tiếp ID nếu DB yêu cầu
+                        quantity: Number(item.quantity),
                         unit_cost_price: item.unit_cost_price
                     }))
-                }
+                } : undefined
             },
             include: {
                 PurchaseOrderItems: true,
             }
-        })
+        });
         return updatePurchaseOrder;
     },
 

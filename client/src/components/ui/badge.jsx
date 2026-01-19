@@ -9,6 +9,12 @@ const Badge = ({ children, color = "gray" }) => {
     indigo: "bg-indigo-400/10 text-indigo-400 inset-ring-indigo-400/30 w-fit",
     purple: "bg-purple-400/10 text-purple-400 inset-ring-purple-400/30 w-fit",
     pink: "bg-pink-400/10 text-pink-400 inset-ring-pink-400/20 w-fit",
+
+    success: "bg-emerald-400/10 text-emerald-500 inset-ring-emerald-400/20",
+    warning: "bg-amber-400/10 text-amber-600 inset-ring-amber-400/20",
+    error: "bg-rose-400/10 text-rose-500 inset-ring-rose-400/20",
+    info: "bg-sky-400/10 text-sky-500 inset-ring-sky-400/20",
+
     // Thêm màu chủ đạo cho Sport Nexus
     nexus: "bg-[#4facf3]/10 text-[#4facf3] inset-ring-[#4facf3]/30 w-fit",
   };

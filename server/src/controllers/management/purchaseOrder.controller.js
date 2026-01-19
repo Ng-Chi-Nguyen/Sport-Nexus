@@ -26,6 +26,7 @@ const purchaseOrderController = {
     updatePurchaseOrder: async (req, res) => {
         let dataUpdate = req.body;
         let purchaseOrderId = parseInt(req.params.id);
+        // console.log(dataUpdate)
         try {
             let updatePurchaseOrder = await purchaseOrderService.updatePurchaseOrder(purchaseOrderId, dataUpdate)
             return res.status(200).json({

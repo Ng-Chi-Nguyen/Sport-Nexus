@@ -2,7 +2,11 @@ import { BtnAdd } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { LayoutDashboard } from "lucide-react";
-import { useLoaderData, useSearchParams } from "react-router-dom";
+import {
+  useLoaderData,
+  useRevalidator,
+  useSearchParams,
+} from "react-router-dom";
 import {
   formatDate,
   formatCurrency,
@@ -11,6 +15,11 @@ import {
 import { BtnDelete, BtnEdit } from "@/components/ui/button";
 import Badge from "@/components/ui/badge";
 import Pagination from "@/components/ui/pagination";
+import { useState } from "react";
+import { toast } from "sonner";
+import { ConfirmDelete } from "@/components/ui/confirm";
+import purchaseOrderdApi from "@/api/management/purchaseOrderApi";
+import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -36,6 +45,12 @@ const getStatusDetails = (status) => {
 const PurchaseOrderPage = () => {
   const responses = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
+  const revalidator = useRevalidator();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState({
+    id: "",
+    name: "",
+  });
   console.log(responses);
   const purchases = responses.data.purchaseOrders;
   console.log(purchases);
@@ -47,6 +62,41 @@ const PurchaseOrderPage = () => {
   const paginationInfo = responses?.data?.pagination || {
     totalPages: 1,
     currentPage: 1,
+  };
+
+  const openConfirm = (purchaseId) => {
+    // console.log(productId);
+    // console.log(name);
+    setDeleteTarget({
+      id: purchaseId,
+      // name: name,
+    });
+    setIsConfirmOpen(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await purchaseOrderdApi.delete(deleteTarget.id);
+      if (response.success) {
+        await queryClient.invalidateQueries({
+          queryKey: ["purchase-order"],
+        });
+        revalidator.revalidate(); // Cập nhật UI
+        toast.success(response.message);
+        setIsConfirmOpen(false); // Đóng modal
+      }
+      revalidator.revalidate(); // Cập nhật UI
+      setIsConfirmOpen(false); // Đóng modal
+    } catch (error) {
+      console.log("Cấu trúc error nhận được:", error);
+      setIsConfirmOpen(false);
+      const errorMessage =
+        error.message ||
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0] ||
+        "Đã có lỗi xảy ra!";
+      toast.error(errorMessage);
+    }
   };
 
   return (
@@ -116,14 +166,12 @@ const PurchaseOrderPage = () => {
                   <td className="px-6 py-4 text-center">
                     <div className="flex gap-2 justify-center">
                       <BtnEdit
-                        route={`/management/product-variants/edit/${purchase.id}`}
+                        route={`/management/purchase/edit/${purchase.id}`}
                         name="Sửa"
                       />
                       <BtnDelete
                         name="Xóa"
-                        // onClick={() =>
-                        //   openConfirm(purchase.id, purchase.product.name)
-                        // }
+                        onClick={() => openConfirm(purchase.id)}
                       />
                     </div>
                   </td>
@@ -135,7 +183,7 @@ const PurchaseOrderPage = () => {
                   colSpan="4"
                   className="px-6 py-10 text-center text-gray-400 italic"
                 >
-                  Không có biến thể nào được tìm thấy.
+                  Không có món hàng nào được tìm thấy.
                 </td>
               </tr>
             )}
@@ -148,13 +196,13 @@ const PurchaseOrderPage = () => {
             onPageChange={handlePageChange}
           />
         </div>
-        {/* <ConfirmDelete
+        <ConfirmDelete
           isOpen={isConfirmOpen}
-          title="Xóa biến thể sản phẩm"
-          message={`Bạn đang thực hiện xóa biến thể sản phẩm "${deleteTarget.name}".`}
+          title="Xóa đơn hàng"
+          message={`Bạn đang thực hiện xóa món hàng".`}
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmOpen(false)}
-        /> */}
+        />
       </div>
     </>
   );

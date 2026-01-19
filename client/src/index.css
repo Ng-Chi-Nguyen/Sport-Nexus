@@ -42,12 +42,12 @@
 
   .table-retro thead th {
     /* Ép chữ màu trắng trực tiếp vào thẻ th và thêm định dạng cao cấp */
-    @apply px-6 py-4 text-left text-[11px] font-bold text-white uppercase tracking-[0.15em];
+    @apply text-left text-[11px] font-bold text-white uppercase tracking-[0.15em] text-center;
   }
 
   .table-retro td {
     /* Padding rộng tạo khoảng thở và đường kẻ hàng mờ */
-    @apply px-6 py-4 text-sm text-slate-600 border-b border-slate-100 transition-colors;
+    @apply text-sm text-slate-600 border-b border-slate-100 transition-colors;
   }
 
   .table-retro tbody tr:hover td {

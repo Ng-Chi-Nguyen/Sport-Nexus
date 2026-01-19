@@ -218,12 +218,37 @@ export const adminRoutes = {
         const url = new URL(request.url);
         const page = url.searchParams.get("page") || 1;
         return await queryClient.fetchQuery({
-          queryKey: ["purchases", page],
+          queryKey: ["purchase-order", page],
           queryFn: () => LoaderPurchase.getAllPurchases(page),
         });
       },
     },
-    { path: "purchase/edit/:purchaseId", element: <EditPurchaseOrderPage /> },
+    {
+      path: "purchase/edit/:purchaseId",
+      element: <EditPurchaseOrderPage />,
+      loader: async ({ params }) => {
+        const { purchaseId } = params;
+
+        // Sửa 'products' thành 'productVariants' ở đây
+        const [suppliers, productVariants, purchase] = await Promise.all([
+          queryClient.fetchQuery({
+            queryKey: ["suppliers-select"],
+            queryFn: () => LoaderSupplier.getSuppliersDropdown(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["variants-select"],
+            queryFn: () => LoaderProductVariant.getProductVariantsDropdown(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["purchase-order", [purchaseId]],
+            queryFn: () => LoaderPurchase.getPurchaseById(purchaseId),
+          }),
+        ]);
+
+        // Bây giờ productVariants đã tồn tại để return
+        return { suppliers, productVariants, purchase };
+      },
+    },
     {
       path: "purchase/create",
       element: <CreatePurchaseOrderPage />,
