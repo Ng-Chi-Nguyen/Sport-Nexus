@@ -77,13 +77,11 @@ const BrandPage = () => {
             </p>
           )}
         </div>
-        <div className="py-4 border-t-2 border-[#323232] bg-[#f8f9fa]">
-          <Pagination
-            totalPages={paginationInfo.totalPages}
-            currentPage={paginationInfo.currentPage}
-            onPageChange={handlePageChange}
-          />
-        </div>
+        <Pagination
+          totalPages={paginationInfo.totalPages}
+          currentPage={paginationInfo.currentPage}
+          onPageChange={handlePageChange}
+        />
       </div>
     </>
   );

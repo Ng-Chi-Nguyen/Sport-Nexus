@@ -142,7 +142,7 @@ const PermissionPagePage = () => {
                           </p>
                           <div className="grid grid-cols-2 gap-x-4 gap-y-1">
                             {Object.entries(
-                              PERMISSION_TRANSLATIONS.modules
+                              PERMISSION_TRANSLATIONS.modules,
                             ).map(([key, value]) => (
                               <div
                                 key={key}
@@ -170,7 +170,7 @@ const PermissionPagePage = () => {
                           </p>
                           <div className="grid grid-cols-1 gap-y-1">
                             {Object.entries(
-                              PERMISSION_TRANSLATIONS.actions
+                              PERMISSION_TRANSLATIONS.actions,
                             ).map(([key, value]) => (
                               <div
                                 key={key}
@@ -245,13 +245,11 @@ const PermissionPagePage = () => {
           </table>
         </div>
         {/* HIỂN THỊ PHÂN TRANG */}
-        <div className="py-4 border-t-2 border-[#323232] bg-[#f8f9fa]">
-          <Pagination
-            totalPages={paginationInfo.totalPages}
-            currentPage={paginationInfo.currentPage}
-            onPageChange={handlePageChange}
-          />
-        </div>
+        <Pagination
+          totalPages={paginationInfo.totalPages}
+          currentPage={paginationInfo.currentPage}
+          onPageChange={handlePageChange}
+        />
         <ConfirmDelete
           isOpen={isConfirmOpen}
           title="Xóa quyền hạn"

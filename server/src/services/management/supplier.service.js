@@ -36,7 +36,7 @@ const supplierService = {
     },
 
     getAllSuppliers: async (page) => {
-        const limit = 6;
+        const limit = 5;
         // console.log(page)
         const currentPage = Math.max(1, page);
         // console.log(currentPage)

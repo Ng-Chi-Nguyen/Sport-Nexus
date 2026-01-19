@@ -7,6 +7,7 @@ import LoaderSupplier from "@/loaders/supplierLoader";
 import LoaderCategory from "@/loaders/categoryLoader";
 import LoaderProduct from "@/loaders/productLoader";
 import LoaderAttr from "@/loaders/attributeKey";
+import LoaderPurchase from "@/loaders/purchaseOrder";
 // lib
 import { queryClient } from "@/lib/react-query";
 import LoaderProductVariant from "@/loaders/productVariantLoader";
@@ -16,8 +17,8 @@ import LoaderProductVariant from "@/loaders/productVariantLoader";
 const UserPage = lazy(() => import("@/pages/Admin/users"));
 const CreateUserPage = lazy(() => import("@/pages/Admin/users/create"));
 const EditUserPage = lazy(() => import("@/pages/Admin/users/edit"));
-const AddRolePermissionPage = lazy(() =>
-  import("@/pages/Admin/users/addRolePermission")
+const AddRolePermissionPage = lazy(
+  () => import("@/pages/Admin/users/addRolePermission"),
 );
 
 const Dashboard = lazy(() => import("@/pages/Admin/Dashboard/dashboard"));
@@ -33,15 +34,15 @@ const EditBrandPage = lazy(() => import("@/pages/Admin/brands/edit"));
 const CartPage = lazy(() => import("@/pages/Admin/Carts"));
 const CouponPage = lazy(() => import("@/pages/Admin/coupons"));
 const OrderPage = lazy(() => import("@/pages/Admin/orders"));
-const PurchaseOrderItemPage = lazy(() =>
-  import("@/pages/Admin/purchaseorderitems")
+const PurchaseOrderItemPage = lazy(
+  () => import("@/pages/Admin/purchaseorderitems"),
 );
 const PurchaseOrderPage = lazy(() => import("@/pages/Admin/purchaseorders"));
-const EditPurchaseOrderPage = lazy(() =>
-  import("@/pages/Admin/purchaseorders/edit")
+const EditPurchaseOrderPage = lazy(
+  () => import("@/pages/Admin/purchaseorders/edit"),
 );
-const CreatePurchaseOrderPage = lazy(() =>
-  import("@/pages/Admin/purchaseorders/create")
+const CreatePurchaseOrderPage = lazy(
+  () => import("@/pages/Admin/purchaseorders/create"),
 );
 const StockPage = lazy(() => import("@/pages/Admin/stockmovements"));
 // Supplier
@@ -53,14 +54,14 @@ const LogPage = lazy(() => import("@/pages/Admin/systemlogs"));
 const AddressPage = lazy(() => import("@/pages/Admin/useraddresses"));
 // Role
 const PermissionPage = lazy(() => import("@/pages/Admin/permissions"));
-const CreatePermissionPage = lazy(() =>
-  import("@/pages/Admin/permissions/create")
+const CreatePermissionPage = lazy(
+  () => import("@/pages/Admin/permissions/create"),
 );
 const EditPermissionPage = lazy(() => import("@/pages/Admin/permissions/edit"));
 // Category
 const Category = lazy(() => import("@/pages/Admin/categories"));
-const CreateCategoryPage = lazy(() =>
-  import("@/pages/Admin/categories/create")
+const CreateCategoryPage = lazy(
+  () => import("@/pages/Admin/categories/create"),
 );
 const EditCategoryPage = lazy(() => import("@/pages/Admin/categories/edit"));
 
@@ -70,8 +71,8 @@ const EditVariant = lazy(() => import("@/pages/Admin/productVariant/edit"));
 const CreateVariant = lazy(() => import("@/pages/Admin/productVariant/create"));
 
 const AttributeKey = lazy(() => import("@/pages/Admin/attributeKey"));
-const CreateAttributeKey = lazy(() =>
-  import("@/pages/Admin/attributeKey/create")
+const CreateAttributeKey = lazy(
+  () => import("@/pages/Admin/attributeKey/create"),
 );
 const EditAttributeKey = lazy(() => import("@/pages/Admin/attributeKey/edit"));
 
@@ -182,7 +183,7 @@ export const adminRoutes = {
         return { brands, suppliers, categories, product };
       },
     },
-
+    // orders
     { path: "orders", element: <OrderPage /> },
     // Brands
     {
@@ -210,7 +211,18 @@ export const adminRoutes = {
     { path: "coupons", element: <CouponPage /> },
     { path: "purchase-item", element: <PurchaseOrderItemPage /> },
     // purchase
-    { path: "purchase", element: <PurchaseOrderPage /> },
+    {
+      path: "purchase",
+      element: <PurchaseOrderPage />,
+      loader: async ({ request }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get("page") || 1;
+        return await queryClient.fetchQuery({
+          queryKey: ["purchases", page],
+          queryFn: () => LoaderPurchase.getAllPurchases(page),
+        });
+      },
+    },
     { path: "purchase/edit/:purchaseId", element: <EditPurchaseOrderPage /> },
     {
       path: "purchase/create",

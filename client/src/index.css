@@ -1,80 +1,102 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,800;1,800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,800;1,800&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-    body {
-        /* Sử dụng font Inter mặc định, chữ mượt trên mọi màn hình */
-        @apply font-sans text-slate-900 antialiased bg-white;
-    }
+  body {
+    /* Sử dụng font Inter mặc định, chữ mượt trên mọi màn hình */
+    @apply font-sans text-slate-900 antialiased bg-white;
+  }
 
-    /* Định nghĩa tiêu đề kiểu thể thao: Chữ in hoa và hơi nghiêng */
-    h1,
-    h2,
-    h3 {
-        @apply font-display uppercase italic tracking-tighter;
-    }
+  /* Định nghĩa tiêu đề kiểu thể thao: Chữ in hoa và hơi nghiêng */
+  h1,
+  h2,
+  h3 {
+    @apply font-display uppercase italic tracking-tighter;
+  }
 }
 
 @layer components {
-    .btn-neo {
-        @apply p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all flex items-center justify-center;
-    }
+  .btn-neo {
+    @apply p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all flex items-center justify-center;
+  }
 
-    /* Bạn có thể tạo thêm phiên bản màu đỏ cho nút Logout */
-    .btn-neo-danger {
-        @apply btn-neo bg-[#ff5252] text-white;
-    }
+  /* Bạn có thể tạo thêm phiên bản màu đỏ cho nút Logout */
+  .btn-neo-danger {
+    @apply btn-neo bg-[#ff5252] text-white;
+  }
 
-    .table-retro {
+  /* .table-retro {
         @apply border-2 border-[#323232] shadow-[4px_4px_0px_0px_#323232] rounded-[5px];
-    }
+    } */
+  /* Trong file CSS của bạn */
+  .table-retro {
+    @apply w-full border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm border-separate border-spacing-0;
+  }
+
+  .table-retro thead {
+    @apply bg-primary; /* Màu nền chính của bạn */
+  }
+
+  .table-retro thead th {
+    /* Ép chữ màu trắng trực tiếp vào thẻ th và thêm định dạng cao cấp */
+    @apply px-6 py-4 text-left text-[11px] font-bold text-white uppercase tracking-[0.15em];
+  }
+
+  .table-retro td {
+    /* Padding rộng tạo khoảng thở và đường kẻ hàng mờ */
+    @apply px-6 py-4 text-sm text-slate-600 border-b border-slate-100 transition-colors;
+  }
+
+  .table-retro tbody tr:hover td {
+    @apply bg-slate-50/50; /* Hiệu ứng hover tinh tế */
+  }
 }
 
 /* 1. Reset vùng chứa */
 .custom-scrollbar {
-    overflow-y: auto !important;
-    /* Ngăn nội dung bị nhảy khi thanh cuộn hiện/ẩn */
-    scrollbar-gutter: stable;
+  overflow-y: auto !important;
+  /* Ngăn nội dung bị nhảy khi thanh cuộn hiện/ẩn */
+  scrollbar-gutter: stable;
 }
 
 /* 2. Cấu hình thanh cuộn mỏng (Chrome, Edge, Safari) */
 .custom-scrollbar::-webkit-scrollbar {
-    width: 4px !important;
-    /* Độ mỏng như đường kẻ bạn muốn */
+  width: 4px !important;
+  /* Độ mỏng như đường kẻ bạn muốn */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent !important;
-    /* Luôn trong suốt nền */
+  background: transparent !important;
+  /* Luôn trong suốt nền */
 }
 
 /* 3. Tay cầm (Thumb) - MẶC ĐỊNH LÀ ẨN */
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: transparent !important;
-    border-radius: 20px !important;
+  background-color: transparent !important;
+  border-radius: 20px !important;
 }
 
 /* 4. CHÌA KHÓA: Chỉ hiện màu xanh khi RÊ CHUỘT VÀO SIDEBAR */
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
-    background-color: #4facf3 !important;
+  background-color: #4facf3 !important;
 }
 
 /* 5. Khi di chuột TRỰC TIẾP vào thanh cuộn thì đậm hơn tí */
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: #3b95d1 !important;
+  background-color: #3b95d1 !important;
 }
 
 /* 6. Hỗ trợ Firefox (Dành cho 5% người dùng còn lại) */
 @supports (scrollbar-width: thin) {
-    .custom-scrollbar {
-        scrollbar-width: thin !important;
-        scrollbar-color: transparent transparent !important;
-    }
+  .custom-scrollbar {
+    scrollbar-width: thin !important;
+    scrollbar-color: transparent transparent !important;
+  }
 
-    .custom-scrollbar:hover {
-        scrollbar-color: #4facf3 transparent !important;
-    }
+  .custom-scrollbar:hover {
+    scrollbar-color: #4facf3 transparent !important;
+  }
 }

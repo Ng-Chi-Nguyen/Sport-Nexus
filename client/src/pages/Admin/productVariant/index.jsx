@@ -87,7 +87,7 @@ const variantVariant = () => {
           <SearchTable placeholder="Tìm kiếm chi tiết sản phẩm..." />
         </div>
         <BtnAdd
-          route={"/management/variant-variants/create"}
+          route={"/management/product-variants/create"}
           className="w-[30%]"
           name="Thêm biến thể SP"
         />
@@ -137,7 +137,7 @@ const variantVariant = () => {
                           </span>
                           <span className="text-[12px] font-bold text-red-500">
                             {Number(
-                              variant.product.base_price
+                              variant.product.base_price,
                             ).toLocaleString()}
                             đ
                           </span>

@@ -24,7 +24,7 @@ import Badge from "@/components/ui/badge";
 // api
 import userApi from "@/api/management/userApi";
 // utils
-import { formatToGmt7 } from "@/utils/formatToGmt7";
+import { formatFullDateTime } from "@/utils/formatters";
 // lib
 import { queryClient } from "@/lib/react-query";
 // image
@@ -176,7 +176,7 @@ const UserPage = () => {
                           <p>{user.full_name}</p>
                           <p className="text-[12px] text-gray-500">
                             Ngày tạo:
-                            {formatToGmt7(user.created_at)}
+                            {formatFullDateTime(user.created_at)}
                           </p>
                         </div>
                       </td>
@@ -280,14 +280,11 @@ const UserPage = () => {
               </tbody>
             </table>
           </div>
-          {/* HIỂN THỊ PHÂN TRANG */}
-          <div className="py-4 border-t-2 border-[#323232] bg-[#f8f9fa]">
-            <Pagination
-              totalPages={paginationInfo.totalPages}
-              currentPage={paginationInfo.currentPage}
-              onPageChange={handlePageChange}
-            />
-          </div>
+          <Pagination
+            totalPages={paginationInfo.totalPages}
+            currentPage={paginationInfo.currentPage}
+            onPageChange={handlePageChange}
+          />
           <ConfirmDelete
             isOpen={isConfirmOpen}
             title="Xóa người dùng"
