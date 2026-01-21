@@ -33,6 +33,8 @@ const EditBrandPage = lazy(() => import("@/pages/Admin/brands/edit"));
 
 const CartPage = lazy(() => import("@/pages/Admin/Carts"));
 const CouponPage = lazy(() => import("@/pages/Admin/coupons"));
+const CreateCouponPage = lazy(() => import("@/pages/Admin/coupons/create"));
+const EditCouponPage = lazy(() => import("@/pages/Admin/coupons/edit"));
 const OrderPage = lazy(() => import("@/pages/Admin/orders"));
 const PurchaseOrderItemPage = lazy(
   () => import("@/pages/Admin/purchaseorderitems"),
@@ -208,7 +210,11 @@ export const adminRoutes = {
     },
     // End Brands
     { path: "carts", element: <CartPage /> },
+    // coupons
     { path: "coupons", element: <CouponPage /> },
+    { path: "coupons/create", element: <CreateCouponPage /> },
+    { path: "coupons/edit/:id", element: <EditCouponPage /> },
+    // end coupons
     { path: "purchase-item", element: <PurchaseOrderItemPage /> },
     // purchase
     {

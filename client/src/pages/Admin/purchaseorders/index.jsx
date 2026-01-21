@@ -117,6 +117,7 @@ const PurchaseOrderPage = () => {
         <table className="w-full text-sm text-left text-[#323232] table-retro">
           <thead className="text-sm uppercase bg-primary border-b-2 text-[#fff] border-[#323232]">
             <tr>
+              <th>Mã nhập hàng</th>
               <th scope="col" className="px-6 py-4 font-black text-center">
                 Ngày đặt hàng
               </th>
@@ -144,6 +145,11 @@ const PurchaseOrderPage = () => {
                   key={purchase.id || index}
                   className="border-b border-gray-200 hover:bg-[#4facf310] transition-colors duration-200"
                 >
+                  <td className="text-center font-bold">
+                    <p className="text-blue-700 text-[18px]">
+                      #PO-{purchase.id}
+                    </p>
+                  </td>
                   <td className="p-4 font-bold text-[#323232] text-center">
                     {formatFullDateTime(purchase.order_date)}
                   </td>

@@ -174,8 +174,8 @@ const CreatePurchaseOrder = () => {
         </div>
 
         {/* CỘT PHẢI: CHI TIẾT MÓN HÀNG (75%) */}
-        <div className="flex-1 border border-slate-200 p-6 rounded-xl bg-white shadow-sm">
-          <div className="flex items-center justify-between mb-6">
+        <div className="flex-1 border border-slate-200 p-5 rounded-xl bg-white shadow-sm">
+          <div className="flex items-start justify-between mb-6">
             <h3 className="font-black text-[11px] uppercase border-b-2 border-blue-500 pb-2 flex items-center gap-2">
               <span className="w-2 h-4 bg-blue-500"></span> Danh sách món hàng
               nhập về
