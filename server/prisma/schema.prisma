@@ -186,23 +186,28 @@ model VariableAttributes {
     @@map("variableattributes")
 }
 
+enum DiscountType {
+    CASH
+    PERCENTAGE
+}
+
 // Coupons Done
 model Coupons {
-    id              Int      @id @default(autoincrement())
-    code            String   @unique
+    id              Int          @id @default(autoincrement())
+    code            String       @unique
     discount_value  Int
-    discount_type   String
+    discount_type   DiscountType @default(CASH)
     max_discount    Int
     min_order_value Int
     start_date      DateTime
     end_date        DateTime
     usage_limit     Int
-    usage_count     Int      @default(0)
+    usage_count     Int          @default(0)
     is_active       Boolean
     Orders          Orders[]
     Users           Users[]
-    created_at      DateTime @default(now())
-    updated_at      DateTime @updatedAt
+    created_at      DateTime     @default(now())
+    updated_at      DateTime     @updatedAt
 
     @@map("coupons")
 }

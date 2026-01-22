@@ -45,9 +45,25 @@ const couponService = {
         return coupon;
     },
 
-    getAllCoupon: async () => {
-        let list_coupons = await prisma.coupons.findMany()
-        return list_coupons;
+    getAllCoupon: async (page) => {
+        const limit = 6;
+        const currentPage = Math.max(1, page);
+        const skip = (currentPage - 1) * limit;
+        let [list_coupons, totalItems] = await Promise.all([
+            prisma.coupons.findMany({
+                take: limit,
+                skip: skip,
+            }),
+            prisma.coupons.count()
+        ])
+        return {
+            list_coupons, pagination: {
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+                currentPage: currentPage,
+                itemsPerPage: limit
+            }
+        };
     },
 
     updateCoupon: async (couponId, dataUpdate) => {

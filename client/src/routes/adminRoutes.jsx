@@ -8,9 +8,10 @@ import LoaderCategory from "@/loaders/categoryLoader";
 import LoaderProduct from "@/loaders/productLoader";
 import LoaderAttr from "@/loaders/attributeKey";
 import LoaderPurchase from "@/loaders/purchaseOrder";
+import LoaderProductVariant from "@/loaders/productVariantLoader";
+import LoaderCoupon from "@/loaders/couponLoadet";
 // lib
 import { queryClient } from "@/lib/react-query";
-import LoaderProductVariant from "@/loaders/productVariantLoader";
 
 // Lazy load các trang để giảm dung lượng file ban đầu
 // User
@@ -211,7 +212,18 @@ export const adminRoutes = {
     // End Brands
     { path: "carts", element: <CartPage /> },
     // coupons
-    { path: "coupons", element: <CouponPage /> },
+    {
+      path: "coupons",
+      element: <CouponPage />,
+      loader: async ({ request }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get("page") || 1;
+        return await queryClient.fetchQuery({
+          queryKey: ["coupons", page],
+          queryFn: () => LoaderCoupon.getAllCoupons(page),
+        });
+      },
+    },
     { path: "coupons/create", element: <CreateCouponPage /> },
     { path: "coupons/edit/:id", element: <EditCouponPage /> },
     // end coupons

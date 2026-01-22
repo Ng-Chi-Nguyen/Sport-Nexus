@@ -17,9 +17,9 @@ const couponSchema = {
                 'any.required': 'Giá trị giảm không được để trống.',
             }).required(),
 
-        discount_type: Joi.string().valid('cash', 'percentage')
+        discount_type: Joi.string().valid('CASH', 'PERCENTAGE')
             .messages({
-                'any.only': 'Loại giảm giá phải là "cash" hoặc "percentage".',
+                'any.only': 'Loại giảm giá phải là "CASH" hoặc "PERCENTAGE".',
                 'any.required': 'Loại giảm giá không được để trống.',
             }).required(),
         usage_limit: Joi.number().integer().min(1).required()

@@ -132,9 +132,11 @@ const BtnDelete = (props) => {
 };
 
 const Submit_GoBack = (props) => {
-  const { name } = props;
+  const { name, justify = "start" } = props;
   return (
-    <div className="flex items-start gap-2 bg-blue-200 py-2 px-5">
+    <div
+      className={`flex items-start gap-2 bg-blue-200 py-2 px-5 justify-${justify}`}
+    >
       <BtnGoback />
       <BtnSubmit name={name || "Thêm"} />
     </div>
