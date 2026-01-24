@@ -79,6 +79,7 @@ const couponController = {
     updateCoupon: async (req, res) => {
         let dataUpdate = req.body;
         let couponId = parseInt(req.params.id);
+        console.log(dataUpdate)
         try {
             let updateData = await couponService.updateCoupon(couponId, dataUpdate)
             return res.status(200).json({

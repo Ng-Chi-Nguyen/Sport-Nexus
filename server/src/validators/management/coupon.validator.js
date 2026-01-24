@@ -62,8 +62,8 @@ const couponSchema = {
             'number.min': 'Giá trị giảm phải lớn hơn 0.',
         }),
 
-        discount_type: Joi.string().valid('cash', 'percentage').messages({
-            'any.only': 'Loại giảm giá phải là "cash" hoặc "percentage".',
+        discount_type: Joi.string().valid('CASH', 'PERCENTAGE').messages({
+            'any.only': 'Loại giảm giá phải là "CASH" hoặc "PERCENTAGE".',
         }),
         usage_limit: Joi.number().integer().min(1).messages({
             'number.base': 'Giới hạn sử dụng phải là số nguyên.',

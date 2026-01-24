@@ -7,10 +7,9 @@ const LoaderCoupon = {
     return axiosClient.get(url);
   },
 
-  getCouponById: ({ params }) => {
-    const { catrgoryId } = params;
+  getCouponById: (couponId) => {
     // console.log(catrgoryId);
-    const url = `management/coupon/${catrgoryId}`;
+    const url = `management/coupon/${couponId}`;
     return axiosClient.get(url);
   },
 };

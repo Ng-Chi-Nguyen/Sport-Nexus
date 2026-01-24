@@ -225,7 +225,19 @@ export const adminRoutes = {
       },
     },
     { path: "coupons/create", element: <CreateCouponPage /> },
-    { path: "coupons/edit/:id", element: <EditCouponPage /> },
+    {
+      path: "coupons/edit/:couponId",
+      element: <EditCouponPage />,
+      loader: async ({ params }) => {
+        const { couponId } = params;
+        return await queryClient.fetchQuery({
+          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
+          queryKey: ["coupon", couponId],
+          queryFn: () => LoaderCoupon.getCouponById(couponId),
+          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
+        });
+      },
+    },
     // end coupons
     { path: "purchase-item", element: <PurchaseOrderItemPage /> },
     // purchase
