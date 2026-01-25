@@ -8,15 +8,16 @@ import { Footer } from "@/components/footer";
 function App() {
   const location = useLocation();
 
-  // Kiểm tra nếu đường dẫn bắt đầu bằng "/management" hoặc "/dashboard"
+  // Kiểm tra nếu đường dẫn bắt đầu bằng "/management"
   // Bạn có thể thêm các đường dẫn khác vào mảng này
-  const managementPaths = ["/management", "/dashboard", "/admin"];
+  const managementPaths = ["/management"];
   const isManagementView = managementPaths.some((path) =>
-    location.pathname.startsWith(path)
+    location.pathname.startsWith(path),
   );
   return (
     <div className="h-screen overflow-hidden flex flex-col">
       <Toaster position="top-right" richColors />
+
       <Header className="h-[65px] shrink-0" />
 
       <main className="flex-1 overflow-hidden">

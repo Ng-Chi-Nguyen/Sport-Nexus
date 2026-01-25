@@ -31,12 +31,15 @@ const EditProductPage = lazy(() => import("@/pages/Admin/products/edit"));
 const BrandPage = lazy(() => import("@/pages/Admin/brands"));
 const CreateBrandPage = lazy(() => import("@/pages/Admin/brands/create"));
 const EditBrandPage = lazy(() => import("@/pages/Admin/brands/edit"));
-
 const CartPage = lazy(() => import("@/pages/Admin/Carts"));
+// Coupon
 const CouponPage = lazy(() => import("@/pages/Admin/coupons"));
 const CreateCouponPage = lazy(() => import("@/pages/Admin/coupons/create"));
 const EditCouponPage = lazy(() => import("@/pages/Admin/coupons/edit"));
 const OrderPage = lazy(() => import("@/pages/Admin/orders"));
+const EditOrderPage = lazy(() => import("@/pages/Admin/orders/edit"));
+const CreateOrderPage = lazy(() => import("@/pages/Admin/orders/create"));
+// PurchaseOrder
 const PurchaseOrderItemPage = lazy(
   () => import("@/pages/Admin/purchaseorderitems"),
 );
@@ -47,7 +50,12 @@ const EditPurchaseOrderPage = lazy(
 const CreatePurchaseOrderPage = lazy(
   () => import("@/pages/Admin/purchaseorders/create"),
 );
+// Stock
 const StockPage = lazy(() => import("@/pages/Admin/stockmovements"));
+const EditStockPage = lazy(() => import("@/pages/Admin/stockmovements/edit"));
+const CreateStockPage = lazy(
+  () => import("@/pages/Admin/stockmovements/create"),
+);
 // Supplier
 const SupplierPage = lazy(() => import("@/pages/Admin/suppliers"));
 const CreateSupplierPage = lazy(() => import("@/pages/Admin/suppliers/create"));
@@ -107,7 +115,6 @@ export const adminRoutes = {
       element: <EditUserPage />,
       loader: LoaderUser.getUserById,
     },
-    // End User
     {
       path: "users/add-role/:userId",
       element: <AddRolePermissionPage />,
@@ -122,7 +129,7 @@ export const adminRoutes = {
         return { user, allPermissions };
       },
     },
-
+    // End User
     // products
     {
       path: "products",
@@ -186,8 +193,11 @@ export const adminRoutes = {
         return { brands, suppliers, categories, product };
       },
     },
+    // end products
     // orders
     { path: "orders", element: <OrderPage /> },
+    { path: "orders/edit/orderId", element: <EditOrderPage /> },
+    { path: "orders/create", element: <CreateOrderPage /> },
     // Brands
     {
       path: "brands",
@@ -296,6 +306,7 @@ export const adminRoutes = {
         return { suppliers, productVariants };
       },
     },
+    // end purchase
     // permissions
     {
       path: "permissions",
@@ -321,7 +332,10 @@ export const adminRoutes = {
       loader: LoaderPermissions.getBySlug,
     },
     // End permissions
+    // stock
     { path: "stocks", element: <StockPage /> },
+    { path: "stocks/edit/:stockId", element: <EditStockPage /> },
+    { path: "stocks/create", element: <CreateStockPage /> },
     // suppliers
     {
       path: "suppliers",

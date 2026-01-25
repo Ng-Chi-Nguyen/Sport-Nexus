@@ -91,7 +91,7 @@ const CouponPage = () => {
           name="Thêm khuyến mãi"
         />
       </div>
-
+      <h2>Danh sách mã giảm giá</h2>
       <div className="relative bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table className="w-full text-sm text-left table-retro text-[#323232]">
           <thead className="text-xs uppercase bg-slate-50 border-b-2 border-slate-200">
