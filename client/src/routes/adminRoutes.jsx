@@ -197,7 +197,19 @@ export const adminRoutes = {
     // orders
     { path: "orders", element: <OrderPage /> },
     { path: "orders/edit/orderId", element: <EditOrderPage /> },
-    { path: "orders/create", element: <CreateOrderPage /> },
+    {
+      path: "orders/create",
+      element: <CreateOrderPage />,
+      loader: async () => {
+        const [productVariants] = await Promise.all([
+          queryClient.fetchQuery({
+            queryKey: ["variants-select"],
+            queryFn: () => LoaderProductVariant.getProductVariantsDropdown(),
+          }),
+        ]);
+        return { productVariants };
+      },
+    },
     // Brands
     {
       path: "brands",
