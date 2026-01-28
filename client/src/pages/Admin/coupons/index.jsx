@@ -113,8 +113,13 @@ const CouponPage = () => {
                   {/* Mã Code */}
                   <td className="px-6 py-4 text-center font-bold text-blue-600">
                     <Badge color={coupon.is_active ? "blue" : "red"}>
-                      {coupon.code} {coupon.is_active ? "" : ""}
-                    </Badge>
+                      Code: {coupon.code}
+                    </Badge>{" "}
+                    {coupon.is_active ? (
+                      ""
+                    ) : (
+                      <Badge color="red">Đã hết hạn</Badge>
+                    )}
                     <div className="flex items-center justify-center gap-1">
                       <div className="font-bold text-[12px]">
                         {coupon.discount_type === "CASH"

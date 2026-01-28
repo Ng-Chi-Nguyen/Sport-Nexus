@@ -120,6 +120,28 @@ const couponController = {
                 error: error.message
             });
         }
+    },
+
+    checkCoupon: async (req, res) => {
+        const { amount, code } = req.body;
+        try {
+            const newAmount = await couponService.checkCoupon(amount, code)
+            return res.json({
+                success: true,
+                data: newAmount
+            })
+        } catch (error) {
+            if (error.code === 'P2025') {
+                return res.status(404).json({ message: "Không tìm thấy mã giảm giá để xóa." });
+            }
+
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server nội bộ",
+                error: error.message
+            });
+        }
+
     }
 }
 

@@ -46,6 +46,7 @@ const CreateCouponPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const dataToSend = {
       code: code,
       discount_value: Number(discountValue),
@@ -98,7 +99,7 @@ const CreateCouponPage = () => {
                 onChange={(e) => setDiscountValue(e.target.value)}
               />
               <FloatingInput
-                label="Giảm tối đa"
+                label="Đơn hàng tối đa"
                 type="number"
                 value={maxDiscount}
                 onChange={(e) => setMaxDiscount(e.target.value)}

@@ -47,6 +47,7 @@ const EditCouponPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const dataToSend = {
       code: code,
       discount_value: Number(discountValue),
@@ -58,11 +59,15 @@ const EditCouponPage = () => {
       start_date: startDate,
       is_active: isActive,
     };
-    console.log(dataToSend);
+    // console.log(dataToSend);
     try {
       const response = await couponApi.update(couponOld.id, dataToSend);
+      console.log(response.data);
       if (response.success) {
-        await queryClient.invalidateQueries({ queryKey: ["coupons"] });
+        await Promise.all([
+          queryClient.setQueryData(["coupon", couponOld.id], response.data),
+          queryClient.resetQueries({ queryKey: ["coupons"] }),
+        ]);
         toast.success(response.message);
         navigate(-1);
       }

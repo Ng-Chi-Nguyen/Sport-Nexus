@@ -78,6 +78,41 @@ const couponService = {
         await prisma.coupons.delete({
             where: { id: couponId }
         })
+    },
+
+    checkCoupon: async (amount, code) => {
+        const coupon = await prisma.coupons.findUnique({
+            where: { code: code }
+        })
+
+        // console.log(coupon)
+
+        if (!coupon) {
+            return { message: "Mã giảm giá không tồn tại" }
+        };
+
+        if (!coupon.is_active) {
+            return { message: "Mã giảm giá đã hết hiệu lực" }
+        };
+
+        if (amount < coupon.min_order_value) {
+            return { message: `Đơn hàng giá tối thiểu là ${coupon.min_order_value}đ mới có hiệu lực` }
+        }
+
+        let newAmount = 0;
+
+        if (coupon.discount_type === "CASH") {
+            newAmount = amount - coupon.discount_value
+        }
+
+        if (coupon.discount_type === "PERCENTAGE") {
+            newAmount = amount * (coupon.discount_value / 100)
+            if (newAmount > coupon.max_discount) {
+                newAmount = coupon.max_discount;
+            }
+        }
+
+        return newAmount;
     }
 }
 
