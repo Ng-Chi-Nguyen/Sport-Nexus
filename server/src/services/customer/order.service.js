@@ -4,7 +4,11 @@ const orderService = {
     createOrder: async (orderData) => {
         let { total_amount, status, shipping_address, payment_method,
             payment_status, discount_amount, final_amount, coupon_code, user_email, items } = orderData;
+
         // console.log(orderData)
+        const existingUser = await prisma.Users.findUnique({
+            where: { email: user_email }
+        });
         let newOrder = await prisma.Orders.create({
             data: {
                 total_amount: total_amount,
@@ -17,7 +21,9 @@ const orderService = {
                 coupon: coupon_code
                     ? { connect: { code: coupon_code } }
                     : undefined,
-                user: { connect: { email: user_email } },
+                user: existingUser
+                    ? { connect: { email: user_email } }
+                    : undefined,
                 OrderItems: {
                     create: items.map(item => ({
                         product_variant_id: item.product_variant_id,
@@ -68,13 +74,29 @@ const orderService = {
         return orders;
     },
 
-    getAllOrder: async () => {
-        let orders = await prisma.Orders.findMany({
-            include: {
-                OrderItems: true
+    getAllOrders: async (page) => {
+        // console.log(page)
+        const limit = 5;
+        const currentPage = Math.max(1, page);
+        const skip = (currentPage - 1) * limit;
+        const [orders, totalItems] = await Promise.all([
+            prisma.Orders.findMany({
+                take: limit,
+                skip: skip,
+                include: {
+                    OrderItems: true
+                }
+            }),
+            prisma.Orders.count()
+        ])
+        return {
+            orders, pagination: {
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+                currentPage: currentPage,
+                itemsPerPage: limit
             }
-        })
-        return orders;
+        }
     },
 
     updateOrder: async (orderId, dataUpdate, items) => {

@@ -128,7 +128,8 @@ const couponController = {
             const newAmount = await couponService.checkCoupon(amount, code)
             return res.json({
                 success: true,
-                data: newAmount
+                data: newAmount,
+                message: "Thêm mã giảm giá thành công"
             })
         } catch (error) {
             if (error.code === 'P2025') {

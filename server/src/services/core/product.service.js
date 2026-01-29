@@ -8,7 +8,7 @@ const productService = {
         let { name, base_price, description, is_active, thumbnail, category_id, supplier_id, brand_id, fileBuffer } = productData;
         let slug = await createAutoSlug(name, "Products");
         const isActive = JSON.parse(is_active)
-        console.log(isActive)
+        // console.log(isActive)
 
         let newProduct = await prisma.Products.create({
             data: {

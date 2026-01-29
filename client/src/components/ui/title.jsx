@@ -23,6 +23,31 @@ const TitleManagement = (props) => {
       text: "text-red-600",
       bgSpan: "bg-red-500",
     },
+    violet: {
+      border: "border-violet-500",
+      text: "text-violet-600",
+      bgSpan: "bg-violet-500",
+    },
+    amber: {
+      border: "border-amber-500",
+      text: "text-amber-600",
+      bgSpan: "bg-amber-500",
+    },
+    cyan: {
+      border: "border-cyan-500",
+      text: "text-cyan-600",
+      bgSpan: "bg-cyan-500",
+    },
+    pink: {
+      border: "border-pink-500",
+      text: "text-pink-600",
+      bgSpan: "bg-pink-500",
+    },
+    slate: {
+      border: "border-slate-500",
+      text: "text-slate-600",
+      bgSpan: "bg-slate-500",
+    },
   };
 
   const styles = colorMap[color] || colorMap.blue;

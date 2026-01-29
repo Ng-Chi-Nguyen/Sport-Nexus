@@ -19,7 +19,7 @@ const orderSchema = {
 
         payment_status: Joi.string().valid('Pending', 'Paid', 'Failed', 'Refunded').default('Pending'),
 
-        discount_amount: Joi.number().precision(2).min(0).default(0),
+        discount_amount: Joi.number().precision(2).default(0),
         final_amount: Joi.number().precision(2).min(0).required(),
 
         coupon_code: Joi.string().allow(null).default(null),

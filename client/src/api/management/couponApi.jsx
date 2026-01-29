@@ -19,6 +19,11 @@ const couponApi = {
     const url = `/management/coupon/${couponId}`;
     return axiosClient.delete(url);
   },
+
+  check: (data) => {
+    const url = `/management/coupon/check`;
+    return axiosClient.post(url, data);
+  },
 };
 
 export default couponApi;

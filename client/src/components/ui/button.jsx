@@ -1,4 +1,4 @@
-import { ArrowLeft, Pencil, Plus, Trash, Trash2 } from "lucide-react";
+import { ArrowLeft, Edit, Pencil, Plus, Trash, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 const BtnAdd = ({ name, route }) => {
@@ -143,4 +143,32 @@ const Submit_GoBack = (props) => {
   );
 };
 
-export { BtnAdd, BtnSubmit, BtnGoback, BtnEdit, BtnDelete, Submit_GoBack };
+const BtnActions = ({ route, id, onDelete }) => {
+  return (
+    <div className="flex justify-center items-center gap-2">
+      <Link
+        to={route}
+        className="p-2 hover:bg-white rounded-lg text-slate-400 hover:text-orange-500 border border-transparent hover:border-slate-200 transition-all"
+      >
+        <Edit size={16} />
+      </Link>
+
+      <button
+        onClick={() => onDelete(id)}
+        className="p-2 hover:bg-white rounded-lg text-slate-400 hover:text-red-500 border border-transparent hover:border-slate-200 transition-all"
+      >
+        <Trash2 size={16} />
+      </button>
+    </div>
+  );
+};
+
+export {
+  BtnAdd,
+  BtnSubmit,
+  BtnGoback,
+  BtnEdit,
+  BtnDelete,
+  Submit_GoBack,
+  BtnActions,
+};

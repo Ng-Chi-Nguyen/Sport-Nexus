@@ -10,6 +10,7 @@ import LoaderAttr from "@/loaders/attributeKey";
 import LoaderPurchase from "@/loaders/purchaseOrder";
 import LoaderProductVariant from "@/loaders/productVariantLoader";
 import LoaderCoupon from "@/loaders/couponLoadet";
+import LoaderOrder from "@/loaders/customer/orderLoader";
 // lib
 import { queryClient } from "@/lib/react-query";
 
@@ -195,8 +196,21 @@ export const adminRoutes = {
     },
     // end products
     // orders
-    { path: "orders", element: <OrderPage /> },
-    { path: "orders/edit/orderId", element: <EditOrderPage /> },
+    {
+      path: "orders",
+      element: <OrderPage />,
+      loader: async ({ request }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get("page") || 1;
+        return await queryClient.fetchQuery({
+          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
+          queryKey: ["orders", page],
+          queryFn: () => LoaderOrder.getAllOrders(page),
+          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
+        });
+      },
+    },
+    { path: "orders/edit/:orderId", element: <EditOrderPage /> },
     {
       path: "orders/create",
       element: <CreateOrderPage />,

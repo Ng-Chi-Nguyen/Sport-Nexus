@@ -99,7 +99,7 @@ const CreateCouponPage = () => {
                 onChange={(e) => setDiscountValue(e.target.value)}
               />
               <FloatingInput
-                label="Đơn hàng tối đa"
+                label="Giảm tối đa"
                 type="number"
                 value={maxDiscount}
                 onChange={(e) => setMaxDiscount(e.target.value)}

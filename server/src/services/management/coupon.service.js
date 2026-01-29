@@ -112,7 +112,11 @@ const couponService = {
             }
         }
 
-        return newAmount;
+        return {
+            oldAmount: amount,
+            discount: amount - newAmount,
+            newAmount: newAmount
+        };
     }
 }
 

@@ -3,6 +3,7 @@ import orderService from "../../services/customer/order.service.js";
 const orderController = {
     createOrder: async (req, res) => {
         let orderData = req.body;
+        // console.log(orderData)
         try {
             let newOrder = await orderService.createOrder(orderData);
             return res.status(201).json({
@@ -95,9 +96,10 @@ const orderController = {
         }
     },
 
-    getAllOrder: async (req, res) => {
+    getAllOrders: async (req, res) => {
+        const page = parseInt(req.query.page || 1)
         try {
-            let orders = await orderService.getAllOrder();
+            let orders = await orderService.getAllOrders(page);
             if (!orders || orders.length === 0) {
                 return res.status(404).json({
                     success: false,
