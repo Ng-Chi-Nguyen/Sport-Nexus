@@ -23,7 +23,7 @@ const orderSchema = {
         final_amount: Joi.number().precision(2).min(0).required(),
 
         coupon_code: Joi.string().allow(null).default(null),
-        user_email: Joi.string().required(),
+        user_email: Joi.string().allow(null).default(null),
         items: Joi.array().items(
             Joi.object({
                 product_variant_id: Joi.number().integer().required().messages({
@@ -59,7 +59,7 @@ const orderSchema = {
         final_amount: Joi.number().precision(2).min(0),
 
         coupon_code: Joi.string().allow(null).default(null),
-        user_email: Joi.string(),
+        user_email: Joi.string().allow(null),
         items: Joi.array().items(
             Joi.object({
                 product_variant_id: Joi.number().integer().messages({

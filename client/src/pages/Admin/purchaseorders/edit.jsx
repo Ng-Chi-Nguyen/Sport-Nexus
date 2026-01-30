@@ -113,8 +113,12 @@ const EditPurchaseOrder = () => {
     try {
       const res = await purchaseOrderApi.update(purchaseId, dataToSend);
       if (res.success) {
+        // await Promise.all([
+        //   queryClient.setQueryData(["coupon", couponOld.id], response.data),
+        //   queryClient.resetQueries({ queryKey: ["purchase-order"] }),
+        // ]);
         await queryClient.invalidateQueries({ queryKey: ["purchase-order"] });
-        toast.success("Cập nhật đơn hàng thành công!");
+        toast.success(res.message);
         navigate("/management/purchase");
       }
     } catch (error) {

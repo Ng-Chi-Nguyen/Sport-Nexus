@@ -107,7 +107,7 @@ const EditOrderPage = () => {
       final_amount: Number(finalAmountToSend),
       shipping_address: address,
       coupon_code: code || null,
-      user_email: email,
+      user_email: email || null,
       payment_method: method,
       payment_status: paymentStatus,
       items: items.map((item) => ({
@@ -121,7 +121,10 @@ const EditOrderPage = () => {
       // Giả sử API update của bạn là orderApi.update(id, data)
       const res = await orderApi.update(orderData.id, dataToSend);
       if (res.success) {
-        await queryClient.invalidateQueries({ queryKey: ["orders"] });
+        await Promise.all([
+          queryClient.setQueryData(["order", orderData.id], response.data),
+          queryClient.resetQueries({ queryKey: ["orders"] }),
+        ]);
         toast.success(res.message);
         navigate("/management/orders");
       }

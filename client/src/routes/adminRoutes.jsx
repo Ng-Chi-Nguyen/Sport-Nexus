@@ -223,8 +223,10 @@ export const adminRoutes = {
           queryClient.fetchQuery({
             queryKey: ["order", orderId],
             queryFn: () => LoaderOrder.getOrderById(orderId),
+            staleTime: 0,
           }),
         ]);
+
         return { productVariants, order };
       },
     },

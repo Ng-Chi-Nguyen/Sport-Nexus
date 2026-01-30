@@ -33,10 +33,10 @@ const CreateProductPage = () => {
   // state form
   const [selectBrand, setSelectBrand] = useState(product.data.brand_id);
   const [selectSupplier, setSelectSupplier] = useState(
-    product.data.supplier_id
+    product.data.supplier_id,
   );
   const [selectCategory, setSelectCategory] = useState(
-    product.data.category_id
+    product.data.category_id,
   );
   const [name, setName] = useState(product.data.name);
   const [thumbnail, setThumbnail] = useState(product.data.thumbnail);
@@ -52,7 +52,7 @@ const CreateProductPage = () => {
         id: brand.id,
         name: brand.name,
       })),
-    [brands.data]
+    [brands.data],
   );
 
   // console.log(categories.data);
@@ -63,7 +63,7 @@ const CreateProductPage = () => {
         id: supplier.id,
         name: supplier.name,
       })),
-    [brands.data]
+    [brands.data],
   );
 
   const categoriesOptions = useMemo(
@@ -72,7 +72,7 @@ const CreateProductPage = () => {
         id: category.id,
         name: category.name,
       })),
-    [categories.data]
+    [categories.data],
   );
 
   // console.log(suppliersOptions);
@@ -100,7 +100,7 @@ const CreateProductPage = () => {
     console.log("===============================");
     try {
       const response = await productdApi.update(product.data.id, formData);
-      console.log(response);
+      // console.log(response);
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["products"] });
         toast.success(response.message);

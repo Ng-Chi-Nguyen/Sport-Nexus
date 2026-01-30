@@ -122,7 +122,7 @@ const orderController = {
     updateOrder: async (req, res) => {
         const { items, ...dataUpdate } = req.body;
         let orderId = parseInt(req.params.id);
-        console.log(orderId)
+        // console.log(orderId)
         try {
             if (!items || !Array.isArray(items) || items.length === 0) {
                 return res.status(400).json({
