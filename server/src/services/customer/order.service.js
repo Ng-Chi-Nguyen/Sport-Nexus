@@ -5,10 +5,6 @@ const orderService = {
         let { total_amount, status, shipping_address, payment_method,
             payment_status, discount_amount, final_amount, coupon_code, user_email, items } = orderData;
 
-        // console.log(orderData)
-        const existingUser = await prisma.Users.findUnique({
-            where: { email: user_email }
-        });
         let newOrder = await prisma.Orders.create({
             data: {
                 total_amount: total_amount,
@@ -21,9 +17,8 @@ const orderService = {
                 coupon: coupon_code
                     ? { connect: { code: coupon_code } }
                     : undefined,
-                user: existingUser
-                    ? { connect: { email: user_email } }
-                    : undefined,
+                user_email: dataUpdate.user_email || null,
+
                 OrderItems: {
                     create: items.map(item => ({
                         product_variant_id: item.product_variant_id,
@@ -100,39 +95,42 @@ const orderService = {
     },
 
     updateOrder: async (orderId, dataUpdate, items) => {
-        // 1. Xóa các items cũ
-        await prisma.OrderItems.deleteMany({
-            where: {
-                order_id: orderId
-            }
-        });
+        // 1. Ép kiểu dữ liệu để tránh lỗi DB
+        const total = Number(dataUpdate.total_amount);
+        const final = Number(dataUpdate.final_amount);
+        const discount = Number(dataUpdate.discount_amount) || 0;
 
-        // 2. Cập nhật Order và tạo lại items mới
-        let updateOrder = await prisma.Orders.update({
-            where: { id: orderId },
+        // 2. Dùng Nested Write để xóa/tạo item trong 1 lệnh duy nhất
+        return await prisma.orders.update({
+            where: { id: Number(orderId) },
             data: {
                 shipping_address: dataUpdate.shipping_address,
                 status: dataUpdate.status,
-                total_amount: dataUpdate.total_amount,
-                final_amount: dataUpdate.final_amount,
-                payment_status: dataUpdate.payment_status || "Pending",
-                discount_amount: dataUpdate.discount_amount || 0,
+                total_amount: total,
+                final_amount: final,
+                payment_status: dataUpdate.payment_status,
+                payment_method: dataUpdate.payment_method,
+                discount_amount: discount,
+                user_email: dataUpdate.user_email || null,
 
-                // Khối này nằm TRONG data là đúng
+                coupon: dataUpdate.coupon_code
+                    ? { connect: { code: dataUpdate.coupon_code } }
+                    : { disconnect: true },
+
+                // Tự động xóa sạch item cũ và nạp item mới
                 OrderItems: {
+                    deleteMany: {},
                     create: items.map(item => ({
-                        product_variant_id: Number(item.product_variant_id), // Ép kiểu Number để chắc chắn
+                        product_variant_id: Number(item.product_variant_id),
                         quantity: Number(item.quantity),
-                        price_at_purchase: item.price_at_purchase
+                        price_at_purchase: Number(item.price_at_purchase)
                     }))
                 }
-            }, // Kết thúc khối data tại đây
+            },
             include: {
                 OrderItems: true
             }
         });
-
-        return updateOrder;
     },
 
     deleteOrder: async (orderId) => {

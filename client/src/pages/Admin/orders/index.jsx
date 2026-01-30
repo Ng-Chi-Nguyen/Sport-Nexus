@@ -45,7 +45,7 @@ const OrderPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const orders = responses?.data?.orders || []; // Truy xuất đúng cấu trúc data
 
-  console.log(orders);
+  // console.log(orders);
 
   const handlePageChange = (newPage) => {
     setSearchParams({ page: newPage });

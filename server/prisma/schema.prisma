@@ -249,9 +249,10 @@ model Orders {
     coupon_code      String?
     coupon           Coupons?      @relation(fields: [coupon_code], references: [code], onDelete: Cascade)
     user_email       String?
-    user             Users?        @relation(fields: [user_email], references: [email], onDelete: Cascade)
     OrderItems       OrderItems[]
     Reviews          Reviews[]
+    Users            Users?        @relation(fields: [usersId], references: [id])
+    usersId          Int?
 
     @@map("orders")
 }

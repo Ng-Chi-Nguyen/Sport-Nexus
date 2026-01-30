@@ -210,7 +210,24 @@ export const adminRoutes = {
         });
       },
     },
-    { path: "orders/edit/:orderId", element: <EditOrderPage /> },
+    {
+      path: "orders/edit/:orderId",
+      element: <EditOrderPage />,
+      loader: async ({ params }) => {
+        const { orderId } = params;
+        const [productVariants, order] = await Promise.all([
+          queryClient.fetchQuery({
+            queryKey: ["variants-select"],
+            queryFn: () => LoaderProductVariant.getProductVariantsDropdown(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["order", orderId],
+            queryFn: () => LoaderOrder.getOrderById(orderId),
+          }),
+        ]);
+        return { productVariants, order };
+      },
+    },
     {
       path: "orders/create",
       element: <CreateOrderPage />,
