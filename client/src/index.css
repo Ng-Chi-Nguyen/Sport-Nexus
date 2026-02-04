@@ -42,7 +42,7 @@
 
   .table-retro thead th {
     /* Ép chữ màu trắng trực tiếp vào thẻ th và thêm định dạng cao cấp */
-    @apply text-left text-[11px] font-bold text-white uppercase tracking-[0.15em] text-center;
+    @apply text-[11px] font-bold text-white uppercase tracking-[0.15em] text-center;
   }
 
   .table-retro td {

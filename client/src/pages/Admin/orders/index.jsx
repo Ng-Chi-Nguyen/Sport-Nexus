@@ -70,12 +70,12 @@ const OrderPage = () => {
         />
       </div>
       <h2 className="py-2">Danh sách đơn hàng</h2>
-      <table className="w-full text-sm text-left table-retro text-[#323232]">
-        <thead className="text-xs uppercase bg-slate-50 border-b-2 border-slate-200">
+      <table className="table-retro">
+        <thead>
           <tr>
-            <th className="p-4">Khách hàng</th>
+            <th className="p-4 !text-left">Thông tin khách hàng</th>
             <th className="p-4">Tiền</th>
-            <th className="p-4">Đơn hàng</th>
+            <th className="p-4">Thông tin đơn hàng</th>
             <th className="p-4">Thao tác</th>
           </tr>
         </thead>

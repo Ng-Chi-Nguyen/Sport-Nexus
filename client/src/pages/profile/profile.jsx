@@ -1,7 +1,6 @@
 import { Calendar1, Mail, PenLine, Smartphone } from "lucide-react";
-import { formatToGmt7 } from "@/utils/formatToGmt7";
 import { BtnEdit } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { formatDate } from "@/utils/formatters";
 
 const Profile = () => {
   const userStr = localStorage.getItem("user");
@@ -37,7 +36,7 @@ const Profile = () => {
           </div>
           <div className="ml-2">
             <p className="font-bold text-gray-600 text-[14px]">Ngày tạo</p>
-            <p className="text-[14px">{formatToGmt7(user.created_at)}</p>
+            <p className="text-[14px">{formatDate(user.created_at)}</p>
           </div>
         </div>
         <div className="flex items-center my-2">
@@ -48,7 +47,7 @@ const Profile = () => {
             <p className="font-bold text-gray-600 text-[14px]">
               Ngày cập nhật gần nhất
             </p>
-            <p className="text-[14px]">{formatToGmt7(user.updated_at)}</p>
+            <p className="text-[14px]">{formatDate(user.updated_at)}</p>
           </div>
         </div>
       </div>

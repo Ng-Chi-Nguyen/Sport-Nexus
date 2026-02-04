@@ -13,7 +13,7 @@ import Logo from "./logo";
 
 const Footer = () => {
   return (
-    <footer className="bg-white border-t-4 border-[#323232] pt-8 pb-6 px-4 md:px-16 lg:px-24">
+    <footer className="bg-white border-t-4 border-[#323232] pt-3 pb-2 px-4 md:px-16 lg:px-24">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
         {/* Cột 1: Giới thiệu Sport Nexus */}
         <div className="space-y-4">
@@ -54,10 +54,10 @@ const Footer = () => {
 
         {/* Cột 2: Điều hướng nhanh */}
         <div>
-          <h3 className="font-black uppercase text-[#323232] mb-6">
+          <h3 className="font-black uppercase text-[#323232] mb-2">
             Liên kết nhanh
           </h3>
-          <ul className="space-y-3 text-sm font-bold text-gray-500 uppercase tracking-tighter">
+          <ul className="space-y-1 text-sm font-bold text-gray-500 uppercase tracking-tighter">
             <li>
               <Link to="/" className="hover:text-[#4facf3] transition-colors">
                 Trang chủ
@@ -92,8 +92,8 @@ const Footer = () => {
 
         {/* Cột 3: Chính sách */}
         <div>
-          <h3 className="font-black uppercase text-[#323232] mb-6">Hỗ trợ</h3>
-          <ul className="space-y-3 text-sm font-bold text-gray-500 uppercase tracking-tighter">
+          <h3 className="font-black uppercase text-[#323232] mb-2">Hỗ trợ</h3>
+          <ul className="space-y-1 text-sm font-bold text-gray-500 uppercase tracking-tighter">
             <li>
               <a href="#" className="hover:text-[#4facf3] transition-colors">
                 Chính sách bảo mật
@@ -114,8 +114,8 @@ const Footer = () => {
 
         {/* Cột 4: Liên hệ */}
         <div>
-          <h3 className="font-black uppercase text-[#323232] mb-6">Liên hệ</h3>
-          <ul className="space-y-4 text-sm font-medium text-gray-500">
+          <h3 className="font-black uppercase text-[#323232] mb-2">Liên hệ</h3>
+          <ul className="space-y-1 text-sm font-medium text-gray-500">
             <li className="flex items-start gap-3">
               <MapPin size={18} className="text-[#4facf3] shrink-0" />
               <span>Đường 3/2 , Phường Ninh Kiều, Cần Thơ</span>

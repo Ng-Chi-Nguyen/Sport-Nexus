@@ -76,7 +76,7 @@ const ProfilePage = () => {
     // Nếu là trang con, thêm cả "Hồ sơ cá nhân" và trang hiện tại
     breadcrumbsData.push(
       { title: "Tài khoản", route: "/profile" },
-      { title: breadcrumbNameMap[currentPath], route: "" }
+      { title: breadcrumbNameMap[currentPath], route: "" },
     );
   }
 
@@ -99,7 +99,7 @@ const ProfilePage = () => {
       <Breadcrumbs data={breadcrumbsData} />
       <div className="flex">
         <div className="relative z-1 overflow-hidden w-[30%] p-3 bg-white border border-[#ddd] mr-5">
-          <div className="absolute w-[300px] h-[300px] bg-primary rotate-[45deg] -right-[100px] -top-[50px] z-0 rounded-[30px] shadow-[5px_5px_10px_rgba(0,0,0,0.08)]"></div>
+          {/* <div className="absolute w-[300px] h-[300px] bg-primary rotate-[45deg] -right-[100px] -top-[50px] z-0 rounded-[30px] shadow-[5px_5px_10px_rgba(0,0,0,0.08)]"></div> */}
           <div className="relative z-10">
             <div className="border-b border-solid border-gray-400 pb-3 z-10">
               <div className="border-4 border-primary w-[150px] overflow-hidden h-auto rounded-[50%] mx-auto">
@@ -108,14 +108,28 @@ const ProfilePage = () => {
                   alt="avatar"
                 />
               </div>
-              <p className="text-center mt-1 text-[22px] uppercase font-black">
-                {user.full_name}
-              </p>
+              <div className="flex items-center gap-2 justify-center text-center mt-1 text-[22px] uppercase font-black">
+                <div className="">{user.full_name}</div>
+                <div
+                  className=""
+                  title={user.is_verified ? "Đã xác thực" : "Chưa xác thực"}
+                >
+                  {user.is_verified ? (
+                    <span>
+                      <CircleCheck color="#5793fb" size={17} />
+                    </span>
+                  ) : (
+                    <span>
+                      <ShieldOff color="#ee2b2b" size={17} />
+                    </span>
+                  )}
+                </div>
+              </div>
               <div className="bg-[#4facf3] text-center border-2 border-[#323232] text-[#FFF] uppercase w-[60%] font-black italic mx-auto py-[2px] px-2 mt-3 text-[14px]">
                 {user.role.name}
               </div>
             </div>
-            <div className="bg-blue-100 border-2 border-b-[#4facf3]">
+            {/* <div className="bg-blue-100 border-2 border-b-[#4facf3]">
               <div className="flex ml-7 mr-3">
                 <p className="font-bold">Trạng thái: </p>
                 <span className="ml-2 text-blue-600 font-bold">
@@ -151,8 +165,8 @@ const ProfilePage = () => {
                   )}
                 </span>
               </div>
-            </div>
-            <div className="">
+            </div> */}
+            <div className="custom-scrollbar">
               <ul className="px-[30px] pt-[10px]">
                 {menuProfile.map((item, index) => (
                   <li key={index}>
@@ -190,7 +204,7 @@ const ProfilePage = () => {
           </div>
         </div>
         <div className="relative z-1 w-[70%] border border-[#ddd] overflow-hidden">
-          <div className="absolute w-[300px] h-[300px] bg-primary rotate-[45deg] -left-[215px] -top-[50px] z-0 rounded-[30px] shadow-[5px_5px_10px_rgba(0,0,0,0.08)]"></div>
+          {/* <div className="absolute w-[300px] h-[300px] bg-primary rotate-[45deg] -left-[215px] -top-[50px] z-0 rounded-[30px] shadow-[5px_5px_10px_rgba(0,0,0,0.08)]"></div> */}
           <div className="z-10 p-4">
             <Outlet />
           </div>
