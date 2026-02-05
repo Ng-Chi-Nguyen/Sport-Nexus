@@ -14,6 +14,11 @@ const LoaderOrder = {
     const response = axiosClient.get(url);
     return response;
   },
+
+  getOrderDropdowns: () => {
+    const url = `customer/order/all-dropdown`;
+    return axiosClient.get(url);
+  },
 };
 
 export default LoaderOrder;

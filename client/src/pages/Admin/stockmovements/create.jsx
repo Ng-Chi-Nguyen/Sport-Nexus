@@ -1,9 +1,7 @@
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { Submit_GoBack } from "@/components/ui/button";
-import { FloatingInput } from "@/components/ui/input";
-import { TitleManagement } from "@/components/ui/title";
 import { LayoutDashboard } from "lucide-react";
 import FormStock from "./components/form";
+import { useLoaderData } from "react-router-dom";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -13,12 +11,12 @@ const breadcrumbData = [
 ];
 
 const CreateStockPage = () => {
-  const handleSubmit = () => {};
+  const { orders, productVariants } = useLoaderData();
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
       <h2>Thêm tồn kho</h2>
-      <FormStock />
+      <FormStock orders={orders.data} variants={productVariants.data} />
     </>
   );
 };

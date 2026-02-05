@@ -96,6 +96,31 @@ const orderController = {
         }
     },
 
+    getOrderDropdown: async (req, res) => {
+        // console.log("Đã đi vô đây 3")
+        try {
+            let list_orders = await orderService.getOrderDropdown();
+
+            if (!list_orders || list_orders.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy thường hiệu."
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: list_orders
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                error: error.message,
+            })
+        }
+    },
+
+
     getAllOrders: async (req, res) => {
         const page = parseInt(req.query.page || 1)
         try {

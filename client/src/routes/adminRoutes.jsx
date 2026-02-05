@@ -379,7 +379,23 @@ export const adminRoutes = {
     // stock
     { path: "stocks", element: <StockPage /> },
     { path: "stocks/edit/:stockId", element: <EditStockPage /> },
-    { path: "stocks/create", element: <CreateStockPage /> },
+    {
+      path: "stocks/create",
+      element: <CreateStockPage />,
+      loader: async () => {
+        const [orders, productVariants] = await Promise.all([
+          queryClient.fetchQuery({
+            queryKey: ["orders-select"],
+            queryFn: () => LoaderOrder.getOrderDropdowns(),
+          }),
+          queryClient.fetchQuery({
+            queryKey: ["variants-select"],
+            queryFn: () => LoaderProductVariant.getProductVariantsDropdown(),
+          }),
+        ]);
+        return { orders, productVariants };
+      },
+    },
     // suppliers
     {
       path: "suppliers",

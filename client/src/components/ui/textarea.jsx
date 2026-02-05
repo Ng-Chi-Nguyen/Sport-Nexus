@@ -1,11 +1,12 @@
-export const FloatingTextarea = ({
+const FloatingTextarea = ({
   id,
   label,
   value,
   onChange,
   required,
   rows = 3,
-  placeholder,
+  isLocked = false,
+  ...props
 }) => {
   return (
     <div className="relative w-full border border-gray-200">
@@ -15,9 +16,10 @@ export const FloatingTextarea = ({
         required={required}
         value={value}
         onChange={onChange}
+        readOnly={isLocked}
         className="block px-2.5 pb-2.5 pt-4 w-full text-sm min-h-[250px] max-h-[500px] text-[#323232] bg-transparent 
         rounded-[5px] appearance-none focus:outline-none focus:ring-0 focus:border-[#4facf3] peer"
-        placeholder={placeholder}
+        {...props}
       />
       <label
         htmlFor={id}
@@ -31,3 +33,5 @@ export const FloatingTextarea = ({
     </div>
   );
 };
+
+export default FloatingTextarea;

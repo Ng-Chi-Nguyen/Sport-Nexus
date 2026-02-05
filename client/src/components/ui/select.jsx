@@ -246,7 +246,7 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
   useEffect(() => {
     if (initialProvince) {
       const foundProvince = addressData.find(
-        (p) => p.FullName === initialProvince
+        (p) => p.FullName === initialProvince,
       );
       if (foundProvince) {
         setSelectedProvince(foundProvince.Code);

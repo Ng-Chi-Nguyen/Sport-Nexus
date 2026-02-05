@@ -35,6 +35,23 @@ const orderService = {
         return newOrder;
     },
 
+    getOrderDropdown: async () => {
+        let orders = await prisma.Orders.findMany({
+            where: {
+                status: "Processing",
+            },
+            select: {
+                id: true,
+                user_email: true,
+                final_amount: true
+            },
+            orderBy: {
+                created_at: 'desc' // Đơn mới nhất hiện lên đầu
+            }
+        });
+        return orders;
+    },
+
     getOrderById: async (orderId) => {
         let order = await prisma.Orders.findUnique({
             where: { id: orderId },

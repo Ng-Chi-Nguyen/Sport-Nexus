@@ -8,6 +8,7 @@ const orderRoute = express.Router();
 orderRoute
 
     .post("/", validate(orderSchema.createOrder), orderController.createOrder)
+    .get("/all-dropdown", orderController.getOrderDropdown)
     .get("/:id", orderController.getOrderById)
     .get("/email/:email", orderController.getOrderByEmail)
     .get("/code/:code", orderController.getOrderByCode)
