@@ -56,7 +56,19 @@ const orderService = {
         let order = await prisma.Orders.findUnique({
             where: { id: orderId },
             include: {
-                OrderItems: true
+                OrderItems: {
+                    include: {
+                        product_variant: {
+                            include: {
+                                product: {
+                                    select: {
+                                        name: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         })
 
