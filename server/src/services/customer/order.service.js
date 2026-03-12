@@ -43,7 +43,7 @@ const orderService = {
             select: {
                 id: true,
                 user_email: true,
-                final_amount: true
+                final_amount: true,
             },
             orderBy: {
                 created_at: 'desc' // Đơn mới nhất hiện lên đầu

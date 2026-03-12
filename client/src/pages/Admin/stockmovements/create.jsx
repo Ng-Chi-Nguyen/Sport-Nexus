@@ -11,12 +11,17 @@ const breadcrumbData = [
 ];
 
 const CreateStockPage = () => {
-  const { orders, productVariants } = useLoaderData();
+  const { orders, productVariants, purchases } = useLoaderData();
+  // console.log(purchases);
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
       <h2>Thêm tồn kho</h2>
-      <FormStock orders={orders.data} variants={productVariants.data} />
+      <FormStock
+        orders={orders.data}
+        variants={productVariants.data}
+        purchases={purchases.data}
+      />
     </>
   );
 };
