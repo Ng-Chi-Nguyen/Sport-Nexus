@@ -71,6 +71,48 @@ const purchaseOrderService = {
         return purchaseOrders;
     },
 
+    getPurchaseOrderItemById: async (purchaseOrderId) => {
+        return await prisma.purchaseOrderItems.findMany({
+            where: {
+                purchase_order_id: Number(purchaseOrderId)
+            },
+            include: {
+                product_variant: {
+                    include: {
+                        product: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    },
+
+    getPurchaseOrderDropdown: async () => {
+        let purchaseOrders = await prisma.PurchaseOrders.findMany({
+            where: {
+                status: {
+                    in: ["PENDING", "PARTIALLY_RECEIVED"]
+                },
+            },
+            select: {
+                id: true,
+                order_date: true,
+                total_cost: true,
+                expected_delivery_date: true,
+                status: true,
+                supplier: {
+                    select: {
+                        name: true
+                    }
+                }
+            }
+        });
+        return purchaseOrders;
+    },
+
     getAllPurchaseOrder: async (page) => {
         const limit = 6;
         let currentPage = Math.max(1, page);

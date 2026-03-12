@@ -7,9 +7,11 @@ const purchaseOrderRoute = express.Router()
 purchaseOrderRoute
 
     .post("/", validate(purchaseOrderSchema.createPurchaseOrder), purchaseOrderController.createPurchaseOrder)
+    .get("/all-dropdown", purchaseOrderController.getPurchaseOrderDropdown)
     .put("/:id", validate(purchaseOrderSchema.updatePurchaseOrder), purchaseOrderController.updatePurchaseOrder)
     .get("/:id", purchaseOrderController.getPurchaseOrderById)
     .get("/supplier/:id", purchaseOrderController.getPurchaseOrderBySupplierId)
+    .get("/:id/items/", purchaseOrderController.getPurchaseOrderItemById)
     .get("/", purchaseOrderController.getAllPurchaseOrder)
     .delete("/:id", purchaseOrderController.deletePurchaseOrder)
 

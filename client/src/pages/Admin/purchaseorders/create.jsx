@@ -118,7 +118,6 @@ const CreatePurchaseOrder = () => {
       </h2>
 
       <form onSubmit={handleSubmit} className="flex gap-4">
-        {/* CỘT TRÁI: THÔNG TIN CẤU HÌNH (25%) */}
         <div className="flex flex-col w-1/4 gap-4">
           <div className="border border-slate-200 p-5 rounded-xl bg-white shadow-sm">
             <h3 className="font-black text-[11px] uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">

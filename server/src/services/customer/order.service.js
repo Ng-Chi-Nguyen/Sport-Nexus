@@ -43,7 +43,7 @@ const orderService = {
             select: {
                 id: true,
                 user_email: true,
-                final_amount: true
+                final_amount: true,
             },
             orderBy: {
                 created_at: 'desc' // Đơn mới nhất hiện lên đầu
@@ -56,7 +56,19 @@ const orderService = {
         let order = await prisma.Orders.findUnique({
             where: { id: orderId },
             include: {
-                OrderItems: true
+                OrderItems: {
+                    include: {
+                        product_variant: {
+                            include: {
+                                product: {
+                                    select: {
+                                        name: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         })
 

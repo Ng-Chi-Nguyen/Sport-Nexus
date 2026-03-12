@@ -72,6 +72,32 @@ const purchaseOrderController = {
         }
     },
 
+    getPurchaseOrderItemById: async (req, res) => {
+        let purchaseOrderId = parseInt(req.params.id);
+        try {
+            let purchaseOrderItems = await purchaseOrderService.getPurchaseOrderItemById(purchaseOrderId)
+            if (!purchaseOrderItems || purchaseOrderItems.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy đơn nhập hàng."
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                data: purchaseOrderItems
+            });
+        } catch (error) {
+            if (error.code === 'P2025') {
+                return res.status(404).json({ success: false, message: "Không tìm thấy (Sản phẩm - Nhà cung cấp bạn gữi)." });
+            }
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server nội bộ.",
+                error: error.message
+            })
+        }
+    },
+
     getPurchaseOrderBySupplierId: async (req, res) => {
         let supplierId = parseInt(req.params.id);
         try {
@@ -94,6 +120,29 @@ const purchaseOrderController = {
                 success: false,
                 message: "Lỗi server nội bộ.",
                 error: error.message
+            })
+        }
+    },
+
+    getPurchaseOrderDropdown: async (req, res) => {
+        try {
+            let purchaseOrders = await purchaseOrderService.getPurchaseOrderDropdown();
+
+            if (!purchaseOrders || purchaseOrders.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy nhập hàng."
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: purchaseOrders
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                error: error.message,
             })
         }
     },
