@@ -1,6 +1,11 @@
 import axiosClient from "@/lib/axiosClient";
 
 const purchaseOrderdApi = {
+  getItems: (purchaseId) => {
+    const url = `/management/purchase-order/${purchaseId}/items`; // Khớp với route /:id/items
+    return axiosClient.get(url);
+  },
+
   create: (data) => {
     const url = "/management/purchase-order";
     return axiosClient.post(url, data);

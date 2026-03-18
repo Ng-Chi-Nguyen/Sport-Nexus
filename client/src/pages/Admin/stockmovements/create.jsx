@@ -11,12 +11,24 @@ const breadcrumbData = [
 ];
 
 const CreateStockPage = () => {
-  const { orders, productVariants } = useLoaderData();
+  // 1. Destructuring với giá trị mặc định để tránh crash
+  const {
+    orders = { data: [] },
+    productVariants = { data: [] },
+    purchases = { data: [] },
+  } = useLoaderData() || {};
+
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
-      <h2>Thêm tồn kho</h2>
-      <FormStock orders={orders.data} variants={productVariants.data} />
+      <h2 className="text-xl font-bold my-4 uppercase italic text-slate-800">
+        Thêm tồn kho
+      </h2>
+      <FormStock
+        orders={orders.data}
+        variants={productVariants.data}
+        purchases={purchases.data || purchases}
+      />
     </>
   );
 };

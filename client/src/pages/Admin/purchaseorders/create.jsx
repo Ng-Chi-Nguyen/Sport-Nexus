@@ -118,7 +118,6 @@ const CreatePurchaseOrder = () => {
       </h2>
 
       <form onSubmit={handleSubmit} className="flex gap-4">
-        {/* CỘT TRÁI: THÔNG TIN CẤU HÌNH (25%) */}
         <div className="flex flex-col w-1/4 gap-4">
           <div className="border border-slate-200 p-5 rounded-xl bg-white shadow-sm">
             <h3 className="font-black text-[11px] uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
@@ -173,7 +172,6 @@ const CreatePurchaseOrder = () => {
           <Submit_GoBack />
         </div>
 
-        {/* CỘT PHẢI: CHI TIẾT MÓN HÀNG (75%) */}
         <div className="flex-1 border border-slate-200 p-5 rounded-xl bg-white shadow-sm">
           <div className="flex items-start justify-between mb-6">
             <h3 className="font-black text-[11px] uppercase border-b-2 border-blue-500 pb-2 flex items-center gap-2">
@@ -189,13 +187,11 @@ const CreatePurchaseOrder = () => {
             </button>
           </div>
 
-          {/* Danh sách items có Scrollbar - Thêm pb-40 để tạo khoảng trống cho hàng cuối */}
           <div className="flex flex-col gap-4 max-h-[610px] overflow-y-auto pr-2 pb-40 custom-scrollbar">
             {items.map((item, index) => (
               <div
                 key={item.id}
                 className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg border border-slate-100 hover:border-blue-200 transition-all group relative"
-                // FIX: Hàng trên có z-index cao hơn hàng dưới
                 style={{ zIndex: items.length - index }}
               >
                 <div className="w-2/4">

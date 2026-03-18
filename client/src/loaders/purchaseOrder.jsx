@@ -13,7 +13,7 @@ const LoaderPurchase = {
   },
 
   getPurchasesDropdown: () => {
-    const url = `management/purchase-order/all`;
+    const url = `management/purchase-order/dropdown`;
     return axiosClient.get(url);
   },
 };

@@ -98,6 +98,32 @@ const purchaseOrderController = {
         }
     },
 
+    getPurchaseOrderItemById: async (req, res) => {
+        let supplierId = parseInt(req.params.id);
+        try {
+            let purchaseOrders = await purchaseOrderService.getPurchaseOrderItemById(supplierId)
+            if (!purchaseOrders || purchaseOrders.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Không tìm thấy đơn nhập hàng."
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                data: purchaseOrders
+            });
+        } catch (error) {
+            if (error.code === 'P2025') {
+                return res.status(404).json({ success: false, message: "Không tìm thấy (Sản phẩm - Nhà cung cấp bạn gữi)." });
+            }
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server nội bộ.",
+                error: error.message
+            })
+        }
+    },
+
     getAllPurchaseOrder: async (req, res) => {
         let page = parseInt(req.query.page || 1)
         try {
@@ -121,6 +147,22 @@ const purchaseOrderController = {
                 message: "Lỗi server nội bộ.",
                 error: error.message
             })
+        }
+    },
+
+    getPurchasesDropdown: async (req, res) => {
+        try {
+            const purchaseOrders = await purchaseOrderService.getPurchaseOrderDropdown();
+            return res.status(200).json({
+                success: true,
+                data: purchaseOrders,
+            });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Không thể lấy danh sách đơn mua hàng tham chiếu.",
+                error: error.message,
+            });
         }
     },
 

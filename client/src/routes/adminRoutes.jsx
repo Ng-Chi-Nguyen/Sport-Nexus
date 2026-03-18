@@ -383,7 +383,7 @@ export const adminRoutes = {
       path: "stocks/create",
       element: <CreateStockPage />,
       loader: async () => {
-        const [orders, productVariants] = await Promise.all([
+        const [orders, variants, purchases] = await Promise.all([
           queryClient.fetchQuery({
             queryKey: ["orders-select"],
             queryFn: () => LoaderOrder.getOrderDropdowns(),
@@ -392,8 +392,13 @@ export const adminRoutes = {
             queryKey: ["variants-select"],
             queryFn: () => LoaderProductVariant.getProductVariantsDropdown(),
           }),
+          queryClient.fetchQuery({
+            queryKey: ["purchase-orders-select"],
+            queryFn: () => LoaderPurchase.getPurchasesDropdown(),
+          }),
         ]);
-        return { orders, productVariants };
+
+        return { orders, variants, purchases };
       },
     },
     // suppliers

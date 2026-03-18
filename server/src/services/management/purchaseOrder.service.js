@@ -61,6 +61,25 @@ const purchaseOrderService = {
         return purchaseOrder;
     },
 
+    getPurchaseOrderItemById: async (purchaseOrderId) => {
+        return await prisma.purchaseOrderItems.findMany({
+            where: {
+                purchase_order_id: Number(purchaseOrderId)
+            },
+            include: {
+                product_variant: {
+                    include: {
+                        product: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    },
+
     getPurchaseOrderBySupplierId: async (supplierId) => {
         let purchaseOrders = await prisma.PurchaseOrders.findMany({
             where: { supplier_id: supplierId },
@@ -93,6 +112,34 @@ const purchaseOrderService = {
                 itemsPerPage: limit
             }
         };
+    },
+
+    getPurchaseOrderDropdown: async () => {
+        try {
+            return await prisma.purchaseOrders.findMany({
+                where: {
+                    status: {
+                        in: ["PENDING", "PARTIALLY_RECEIVED"],
+                    },
+                },
+                select: {
+                    id: true,
+                    status: true,
+                    order_date: true,
+                    expected_delivery_date: true,
+                    supplier: {
+                        select: {
+                            name: true,
+                        },
+                    },
+                },
+                orderBy: {
+                    id: "desc",
+                },
+            });
+        } catch (error) {
+            throw new Error("Lỗi khi truy vấn danh sách đơn mua hàng: " + error.message);
+        }
     },
 
     deletePurchaseOrder: async (purchaseOrderId) => {
