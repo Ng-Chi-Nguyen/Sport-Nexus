@@ -27,7 +27,7 @@
 
 Khai báo trong file env local (tạo từ `.env.example`):
 
-- `VITE_API_URL`: URL backend API
+- `VITE_API_URL`: URL backend API; nên trỏ tới base path `/api/v1/` của server
 - `VITE_APP_NAME`: tên ứng dụng hiển thị ở frontend
 
 ## Scripts

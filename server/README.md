@@ -13,7 +13,8 @@
   - `core`
   - `auth`
   - `web`
-  - `email`
+- `email`
+- API prefix runtime: `/api/v1/`
 - ORM và schema: Prisma (`prisma/schema.prisma` là source of truth)
 - Auth: JWT access token + refresh token
 - Storage: Supabase Storage
@@ -49,6 +50,12 @@ Chạy trong thư mục root repo:
 
 - `npm run dev --prefix server` — chạy backend với nodemon
 - `npm test --prefix server` — script placeholder, chưa phải test suite thực tế
+
+## Onboarding database
+
+- Repo hiện chưa cung cấp migration, seed, hoặc script bootstrap DB hoàn chỉnh trong `server/prisma/` hay `package.json`.
+- `prisma/schema.prisma` là nguồn chuẩn để hiểu model runtime, nhưng việc dựng database local sạch có thể cần schema/dữ liệu hoặc quy trình nội bộ nằm ngoài repo.
+- Khi cấu hình frontend, hãy đảm bảo `VITE_API_URL` phía client trỏ đúng backend base path `/api/v1/`.
 
 ## Lưu ý verification
 

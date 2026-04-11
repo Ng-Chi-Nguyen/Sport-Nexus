@@ -10,6 +10,7 @@ SportNexus là dự án web thương mại điện tử cho lĩnh vực thể th
 
 Luồng tổng quát:
 1. Frontend gửi request đến backend qua `VITE_API_URL`.
+   - API backend hiện được mount dưới prefix `/api/v1/`, nên `VITE_API_URL` nên trỏ đúng base path này.
 2. Backend xác thực JWT, xử lý nghiệp vụ (catalog, cart, orders, inventory...).
 3. Backend đọc/ghi MySQL qua Prisma và tích hợp dịch vụ ngoài (Supabase Storage, mail).
 
