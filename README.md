@@ -47,8 +47,8 @@ cp server/.env.example server/.env
 ```
 
 Biến quan trọng:
-- Frontend (`client/.env`): `VITE_API_URL`, `VITE_APP_NAME`
-- Backend (`server/.env`): nhóm DB, `APP_PORT`, Supabase, JWT, email SMTP
+- Frontend (file env local của client, tạo từ `client/.env.example`): `VITE_API_URL`, `VITE_APP_NAME`
+- Backend (file env local của server, tạo từ `server/.env.example`): nhóm DB, `APP_PORT`, Supabase, JWT, email SMTP
 
 Lưu ý: backend đang dùng thêm `JWT_REFRESH_SECRET` trong code, nhưng biến này chưa có trong `server/.env.example`.
 

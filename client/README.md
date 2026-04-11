@@ -25,7 +25,7 @@
 
 ## Biến môi trường
 
-Khai báo trong `client/.env` (tham chiếu `client/.env.example`):
+Khai báo trong file env local (tạo từ `.env.example`):
 
 - `VITE_API_URL`: URL backend API
 - `VITE_APP_NAME`: tên ứng dụng hiển thị ở frontend
