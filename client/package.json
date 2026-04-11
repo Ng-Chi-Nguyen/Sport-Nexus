@@ -22,6 +22,7 @@
     "react-hook-form": "^7.69.0",
     "react-router-dom": "^7.10.1",
     "sonner": "^2.0.7",
+    "sportnexus": "file:..",
     "tailwind-merge": "^3.4.0",
     "zod": "^4.2.1"
   },
