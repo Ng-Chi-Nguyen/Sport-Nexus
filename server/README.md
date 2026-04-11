@@ -21,7 +21,7 @@
 
 ## Biến môi trường
 
-Khai báo trong `server/.env` (tham chiếu `server/.env.example`):
+Khai báo trong file env local (tạo từ `.env.example`):
 
 - Database:
   - `DATABASE_URL`
@@ -53,4 +53,4 @@ Chạy trong thư mục root repo:
 ## Lưu ý verification
 
 - Backend hiện chưa có test tự động đáng tin cậy.
-- Khi thay đổi schema, luôn xem `server/prisma/schema.prisma` là nguồn chính xác nhất.
+- Khi thay đổi schema, luôn xem `prisma/schema.prisma` là nguồn chính xác nhất.
