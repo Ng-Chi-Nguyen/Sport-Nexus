@@ -20,7 +20,7 @@ const StockPage = () => {
         <BtnAdd
           route={"/management/stocks/create"}
           className="w-[30%]"
-          name="Thêm tồn kho"
+          name="Biến động kho"
         />
       </div>
       <h2 className="my-4">Danh sách tồn kho</h2>

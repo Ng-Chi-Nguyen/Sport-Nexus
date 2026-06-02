@@ -8,11 +8,14 @@ import { TitleManagement } from "@/components/ui/title";
 import { formatDate } from "@/utils/formatters";
 import { toast } from "sonner";
 import purchaseOrderdApi from "@/api/management/purchaseOrderApi";
+import { getRemainingQuantity, resolveSelectedQuantity } from "./form.utils";
+import stockMovementApi from "@/api/management/stockMovementApi";
 
 const FormStock = (props) => {
   const { orders, variants, purchases } = props;
 
   const [orderItems, setOrderItems] = useState([]);
+  const [selectedQuantities, setSelectedQuantities] = useState({});
   const [isLoadingItems, setIsLoadingItems] = useState(false);
   const [formData, setFormData] = useState({
     type: "IN",
@@ -29,6 +32,7 @@ const FormStock = (props) => {
       // 1. Dừng nếu chưa có ID đơn hàng
       if (!formData.order) {
         setOrderItems([]);
+        setSelectedQuantities({});
         return;
       }
 
@@ -43,7 +47,15 @@ const FormStock = (props) => {
         }
 
         if (response && response.success) {
-          setOrderItems(response.data || []);
+          const items = response.data || [];
+          const initialSelectedQuantities = items.reduce((acc, item) => {
+            const remaining = getRemainingQuantity(item);
+            acc[item.id] = remaining;
+            return acc;
+          }, {});
+
+          setOrderItems(items);
+          setSelectedQuantities(initialSelectedQuantities);
         }
       } catch (error) {
         toast.error(
@@ -59,7 +71,7 @@ const FormStock = (props) => {
     // dependency array đầy đủ
   }, [formData.order, formData.type]);
 
-  console.log(orderItems);
+  // console.log(orderItems);
 
   const orderOptions_Purchase = useMemo(() => {
     return purchases.map((purchase) => {
@@ -115,11 +127,58 @@ const FormStock = (props) => {
   const handleReasonChange = (value) => {
     setFormData((prev) => ({ ...prev, reason: value }));
   };
+
+  const handleSelectedQuantityChange = (itemId, value, max) => {
+    setSelectedQuantities((prev) => ({
+      ...prev,
+      [itemId]: resolveSelectedQuantity(value, max),
+    }));
+  };
   // console.log(orders);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    // 1. Kiểm tra nếu là đơn Nhập/Xuất mà chưa chọn đơn hàng
+    if (formData.type !== "ADJUSTMENT" && !formData.order) {
+      toast.error("Vui lòng chọn đơn hàng tham chiếu!");
+      return;
+    }
+
+    // 2. Gom danh sách sản phẩm và số lượng tương ứng từ cột bên phải
+    const formattedItems = orderItems
+      .map((item) => {
+        const inputQty =
+          selectedQuantities[item.id] ?? getRemainingQuantity(item);
+        return {
+          product_variant_id: item.product_variant?.id || item.variant_id,
+          quantity: Number(inputQty),
+        };
+      })
+      .filter((item) => item.quantity > 0); // Chỉ lấy sản phẩm có số lượng nhập lớn hơn 0
+
+    // 3. Tạo Object chứa toàn bộ dữ liệu cuối cùng để Log
+    const finalPayload = {
+      type: formData.type,
+      order_id: formData.type === "ADJUSTMENT" ? null : formData.order,
+      reason: formData.reason,
+      items: formData.type === "ADJUSTMENT" ? [] : formattedItems,
+    };
+
+    // 4. Chỉ thực hiện Log ra Console đúng yêu cầu của bạn
+    console.log("=== DỮ LIỆU ĐÃ ĐƯỢC GOM ===");
+    console.log(finalPayload);
+    try {
+      // Gọi API truyền đúng Object finalPayload chứa mảng items lên Server
+      const response = await stockMovementApi.create(finalPayload);
+
+      if (response && response.success) {
+        toast.success("Cập nhật tồn kho thành công!");
+        // Có thể làm mới form hoặc chuyển trang tại đây
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Gửi dữ liệu thất bại!");
+    }
   };
 
   return (
@@ -186,7 +245,7 @@ const FormStock = (props) => {
                   </div>
                 ) : orderItems.length > 0 ? (
                   orderItems.map((item) => {
-                    const rem = item.quantity - (item.quantity_received || 0);
+                    const rem = getRemainingQuantity(item);
                     return (
                       <div
                         key={item.id}
@@ -201,6 +260,22 @@ const FormStock = (props) => {
                           </p>
                         </div>
                         <div className="flex items-center gap-4 text-right">
+                          <div className="w-[90px]">
+                            <FloatingInput
+                              label="Số nhập"
+                              type="number"
+                              min={1}
+                              max={rem}
+                              value={selectedQuantities[item.id] ?? rem}
+                              onChange={(e) =>
+                                handleSelectedQuantityChange(
+                                  item.id,
+                                  e.target.value,
+                                  rem,
+                                )
+                              }
+                            />
+                          </div>
                           <div>
                             <p className="text-xs font-medium">
                               Nhập về: {item.quantity}
@@ -209,19 +284,6 @@ const FormStock = (props) => {
                               Cần: {rem}
                             </p>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setFormData((prev) => ({
-                                ...prev,
-                                variant_id: item.product_variant_id,
-                                quantity: rem,
-                              }))
-                            }
-                            className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
-                          >
-                            Chọn
-                          </button>
                         </div>
                       </div>
                     );

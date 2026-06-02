@@ -3,6 +3,7 @@ import stockMovementService from "../../services/management/stockMovement.servic
 const stockMovementController = {
     createStockMovement: async (req, res) => {
         let dataStockMovement = req.body;
+        // console.log(dataStockMovement)
         try {
             let newStockMovement = await stockMovementService.createStockMovement(dataStockMovement);
             return res.status(201).json({

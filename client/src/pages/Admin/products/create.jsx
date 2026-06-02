@@ -12,7 +12,7 @@ import { SelectPro } from "@/components/ui/select";
 import { InputFile } from "@/components/ui/input";
 import { FloatingInput } from "@/components/ui/input";
 import { AnimatedCheckbox } from "@/components/ui/ckeckbox";
-import { FloatingTextarea } from "@/components/ui/textarea";
+import FloatingTextarea from "@/components/ui/textarea";
 import { Submit_GoBack } from "@/components/ui/button";
 import { toast } from "sonner";
 import productdApi from "@/api/core/productApi";
@@ -44,7 +44,7 @@ const CreateProductPage = () => {
         id: brand.id,
         name: brand.name,
       })),
-    [brands.data]
+    [brands.data],
   );
 
   // console.log(categories.data);
@@ -55,7 +55,7 @@ const CreateProductPage = () => {
         id: supplier.id,
         name: supplier.name,
       })),
-    [brands.data]
+    [brands.data],
   );
 
   const categoriesOptions = useMemo(
@@ -64,7 +64,7 @@ const CreateProductPage = () => {
         id: category.id,
         name: category.name,
       })),
-    [categories.data]
+    [categories.data],
   );
 
   // console.log(suppliersOptions);

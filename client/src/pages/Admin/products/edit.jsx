@@ -12,7 +12,7 @@ import { SelectPro } from "@/components/ui/select";
 import { InputFile } from "@/components/ui/input";
 import { FloatingInput } from "@/components/ui/input";
 import { AnimatedCheckbox } from "@/components/ui/ckeckbox";
-import { FloatingTextarea } from "@/components/ui/textarea";
+import FloatingTextarea from "@/components/ui/textarea";
 import { Submit_GoBack } from "@/components/ui/button";
 import { toast } from "sonner";
 import productdApi from "@/api/core/productApi";
