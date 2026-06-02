@@ -20,6 +20,31 @@ const orderController = {
         }
     },
 
+    getOrderItems: async (req, res) => {
+        let orderId = parseInt(req.params.id);
+        try {
+            let items = await orderService.getOrderItemsById(orderId);
+
+            if (!items || items.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Đơn hàng này không có sản phẩm."
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: items
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server nội bộ.",
+                error: error.message
+            })
+        }
+    },
+
     getOrderById: async (req, res) => {
         let orderId = parseInt(req.params.id)
         try {

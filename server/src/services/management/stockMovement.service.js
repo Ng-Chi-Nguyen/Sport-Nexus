@@ -74,6 +74,14 @@ const stockMovementService = {
                 });
                 createdMovements.push(movement);
             }
+
+            if (order_id) {
+                await tx.Orders.update({
+                    where: { id: order_id },
+                    data: { status: "Shipping" }
+                });
+            }
+
             return createdMovements;
         });
     },

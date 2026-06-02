@@ -4,7 +4,7 @@ const orderService = {
     createOrder: async (orderData) => {
         let { total_amount, status, shipping_address, payment_method,
             payment_status, discount_amount, final_amount, coupon_code, user_email, items } = orderData;
-
+        console.log(orderData)
         let newOrder = await prisma.Orders.create({
             data: {
                 total_amount: total_amount,
@@ -17,7 +17,7 @@ const orderService = {
                 coupon: coupon_code
                     ? { connect: { code: coupon_code } }
                     : undefined,
-                user_email: dataUpdate.user_email || null,
+                user_email: user_email || null,
 
                 OrderItems: {
                     create: items.map(item => ({
@@ -50,6 +50,19 @@ const orderService = {
             }
         });
         return orders;
+    },
+
+    getOrderItemsById: async (orderId) => {
+        return await prisma.OrderItems.findMany({
+            where: { order_id: Number(orderId) },
+            include: {
+                product_variant: {
+                    include: {
+                        product: { select: { name: true } }
+                    }
+                }
+            }
+        });
     },
 
     getOrderById: async (orderId) => {
@@ -95,6 +108,9 @@ const orderService = {
             prisma.Orders.findMany({
                 take: limit,
                 skip: skip,
+                orderBy: {
+                    id: 'desc'
+                },
                 include: {
                     OrderItems: true
                 }

@@ -18,6 +18,11 @@ const CreateStockPage = () => {
     purchases = { data: [] },
   } = useLoaderData() || {};
 
+  console.log("=== DỮ LIỆU TỪ LOADER ===");
+  console.log("Orders:", orders);
+  console.log("Product Variants:", productVariants);
+  console.log("Purchases:", purchases);
+
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />

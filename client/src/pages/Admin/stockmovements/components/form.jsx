@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import purchaseOrderdApi from "@/api/management/purchaseOrderApi";
 import { getRemainingQuantity, resolveSelectedQuantity } from "./form.utils";
 import stockMovementApi from "@/api/management/stockMovementApi";
+import orderApi from "@/api/customer/orderApi";
 import { queryClient } from "@/lib/react-query";
 import { useNavigate } from "react-router-dom";
 
@@ -172,7 +173,10 @@ const FormStock = (props) => {
     console.log("=== DỮ LIỆU ĐÃ ĐƯỢC GOM ===");
     console.log(finalPayload);
     try {
-      const response = await stockMovementApi.import(finalPayload);
+      const response =
+        formData.type === "OUT"
+          ? await stockMovementApi.export(finalPayload)
+          : await stockMovementApi.import(finalPayload);
       console.log(response);
       if (response && response.success) {
         await Promise.all([
