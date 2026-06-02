@@ -1,70 +1,81 @@
 import prisma from "../../db/prisma.js";
 
 const stockMovementService = {
-    createStockMovement: async (dataStockMovement) => {
+    import: async (dataStockMovement) => {
         const { type, order_id, reason, items } = dataStockMovement;
-        console.log("Service nhận dữ liệu mảng: ", dataStockMovement);
+        return await prisma.$transaction(async (tx) => {
+            const createdMovements = [];
+            for (const item of items) {
+                const { product_variant_id, quantity } = item;
+                await tx.productVariants.update({
+                    where: { id: product_variant_id },
+                    data: { stock: { increment: quantity } }
+                });
+                const movement = await tx.StockMovements.create({
+                    data: {
+                        variant: { connect: { id: product_variant_id } },
+                        type: "IN",
+                        quantity_change: quantity,
+                        reason: reason || `Nhập hàng theo đơn #${order_id}`,
+                        reference_id: order_id
+                    }
+                });
+                createdMovements.push(movement);
+            }
 
-        // 1. Nếu là đơn ADJUSTMENT và không truyền sản phẩm nào
-        if (type === "ADJUSTMENT" && (!items || items.length === 0)) {
-            return await prisma.StockMovements.create({
-                data: {
-                    type: type,
-                    quantity_change: 0,
-                    reason: reason || "Điều chỉnh kho thủ công",
-                    reference_id: null
-                }
-            });
-        }
+            if (order_id) {
+                await tx.purchaseOrders.update({
+                    where: { id: order_id },
+                    data: { status: "RECEIVED" }
+                });
+            }
 
-        // 2. Nếu có danh sách items (Đơn IN hoặc OUT)
-        // Sử dụng $transaction để bọc tất cả các câu lệnh cập nhật kho và lưu lịch sử
-        const result = await prisma.$transaction(async (tx) => {
+            return createdMovements;
+        });
+    },
+
+    export: async (dataStockMovement) => {
+        const { order_id, reason, items } = dataStockMovement;
+
+        return await prisma.$transaction(async (tx) => {
             const createdMovements = [];
 
             for (const item of items) {
                 const { product_variant_id, quantity } = item;
 
+                // Kiểm tra xem hàng trong kho có đủ để xuất không
                 const variant = await tx.productVariants.findUnique({
                     where: { id: product_variant_id }
                 });
 
                 if (!variant) {
-                    throw new Error(`Biến thể sản phẩm với ID ${product_variant_id} không tồn tại!`);
+                    throw new Error(`Sản phẩm mã ID ${product_variant_id} không tồn tại!`);
                 }
 
-                const change = type === "IN" ? quantity : -quantity;
-                const newStock = variant.stock + change;
-
-                if (type === "OUT" && newStock < 0) {
-                    throw new Error(`Sản phẩm với ID ${product_variant_id} không đủ số lượng để xuất kho! (Hiện có: ${variant.stock})`);
+                if (variant.stock < quantity) {
+                    throw new Error(`Sản phẩm "${variant.id}" không đủ số lượng để xuất! (Hiện có: ${variant.stock}, Cần xuất: ${quantity})`);
                 }
 
-
-                await tx.ProductVariants.update({
+                // Trừ bớt số lượng trong kho
+                await tx.productVariants.update({
                     where: { id: product_variant_id },
-                    data: {
-                        stock: type === "IN" ? { increment: quantity } : { decrement: quantity }
-                    }
+                    data: { stock: { decrement: quantity } }
                 });
 
+                // Lưu lịch sử biến động (Lưu số âm cho đơn xuất)
                 const movement = await tx.StockMovements.create({
                     data: {
                         variant: { connect: { id: product_variant_id } },
-                        type: type,
-                        quantity_change: change,
-                        reason: null,
+                        type: "OUT",
+                        quantity_change: -quantity,
+                        reason: reason || `Xuất kho tự động theo đơn #${order_id}`,
                         reference_id: order_id
                     }
                 });
-
                 createdMovements.push(movement);
             }
-
             return createdMovements;
         });
-
-        return result;
     },
 
     getStockMovementById: async (stockId) => {

@@ -1,18 +1,38 @@
 import stockMovementService from "../../services/management/stockMovement.service.js";
 
 const stockMovementController = {
-    createStockMovement: async (req, res) => {
+    import: async (req, res) => {
         let dataStockMovement = req.body;
         // console.log(dataStockMovement)
         try {
-            let newStockMovement = await stockMovementService.createStockMovement(dataStockMovement);
+            let newStockMovement = await stockMovementService.import(dataStockMovement);
             return res.status(201).json({
+                success: true,
                 message: "Tồn kho đã được thêm",
                 data: newStockMovement
             });
         } catch (error) {
             return res.status(500).json({
                 message: "Lỗi server nội bộ.",
+                error: error.message,
+            });
+        }
+    },
+
+    export: async (req, res) => {
+        let dataStockMovement = req.body;
+        try {
+            let newStockMovement = await stockMovementService.export(dataStockMovement);
+            return res.status(201).json({
+                success: true,
+                message: "Hàng trong kho đã được xuất",
+                data: newStockMovement
+            });
+        } catch (error) {
+            const statusCode = error.message.includes("không đủ") ? 400 : 500;
+            return res.status(statusCode).json({
+                success: false,
+                message: "Lỗi xử lý xuất kho.",
                 error: error.message,
             });
         }

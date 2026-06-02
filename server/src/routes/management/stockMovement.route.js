@@ -7,7 +7,7 @@ const stockMovementRoute = express.Router();
 
 stockMovementRoute
 
-    .post("/", validate(stockMovementSchema.createStockMovement), stockMovementController.createStockMovement)
+    .post("/import", validate(stockMovementSchema.createStockMovement), stockMovementController.import)
     .put("/:id", validate(stockMovementSchema.updateStockMovement), stockMovementController.updateStockMovement)
     .get("/:id", stockMovementController.getStockMovementById)
     .get("/variant/:id", stockMovementController.getStockMovementByvarianId)

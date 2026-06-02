@@ -10,8 +10,11 @@ import { toast } from "sonner";
 import purchaseOrderdApi from "@/api/management/purchaseOrderApi";
 import { getRemainingQuantity, resolveSelectedQuantity } from "./form.utils";
 import stockMovementApi from "@/api/management/stockMovementApi";
+import { queryClient } from "@/lib/react-query";
+import { useNavigate } from "react-router-dom";
 
 const FormStock = (props) => {
+  const navigate = useNavigate();
   const { orders, variants, purchases } = props;
 
   const [orderItems, setOrderItems] = useState([]);
@@ -169,12 +172,22 @@ const FormStock = (props) => {
     console.log("=== DỮ LIỆU ĐÃ ĐƯỢC GOM ===");
     console.log(finalPayload);
     try {
-      // Gọi API truyền đúng Object finalPayload chứa mảng items lên Server
-      const response = await stockMovementApi.create(finalPayload);
-
+      const response = await stockMovementApi.import(finalPayload);
+      console.log(response);
       if (response && response.success) {
-        toast.success("Cập nhật tồn kho thành công!");
-        // Có thể làm mới form hoặc chuyển trang tại đây
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ["orders-select"] }),
+          queryClient.invalidateQueries({ queryKey: ["variants-select"] }),
+          queryClient.invalidateQueries({
+            queryKey: ["purchase-orders-select"],
+          }),
+          // queryClient.invalidateQueries({ queryKey: ["stocks"] }),
+        ]);
+
+        toast.success(response.message || "Cập nhật kho thành công!");
+
+        // 3. Chuyển hướng về trang quản lý kho hàng
+        navigate("/management/stocks");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Gửi dữ liệu thất bại!");
