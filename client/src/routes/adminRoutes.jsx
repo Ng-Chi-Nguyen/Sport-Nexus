@@ -13,6 +13,7 @@ import LoaderCoupon from "@/loaders/couponLoadet";
 import LoaderOrder from "@/loaders/customer/orderLoader";
 // lib
 import { queryClient } from "@/lib/react-query";
+import LoaderStock from "@/loaders/management/stockMovement";
 
 // Lazy load các trang để giảm dung lượng file ban đầu
 // User
@@ -377,7 +378,19 @@ export const adminRoutes = {
     },
     // End permissions
     // stock
-    { path: "stocks", element: <StockPage /> },
+    {
+      path: "stocks",
+      element: <StockPage />,
+      loader: async ({ request }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get("page") || 1;
+        return await queryClient.fetchQuery({
+          queryKey: ["stocks", page],
+          queryFn: () => LoaderStock.getAllStocks(page),
+          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
+        });
+      },
+    },
     { path: "stocks/edit/:stockId", element: <EditStockPage /> },
     {
       path: "stocks/create",

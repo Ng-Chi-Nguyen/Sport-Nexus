@@ -86,8 +86,9 @@ const stockMovementController = {
     },
 
     getAllStockMovement: async (req, res) => {
+        const page = parseInt(req.params.page || 1)
         try {
-            let stockMovements = await stockMovementService.getAllStockMovement();
+            let stockMovements = await stockMovementService.getAllStockMovement(page);
             if (!stockMovements || stockMovements.length === 0) {
                 return res.status(409).json({
                     success: false,

@@ -100,9 +100,34 @@ const stockMovementService = {
         return stocks;
     },
 
-    getAllStockMovement: async () => {
-        let stocks = await prisma.StockMovements.findMany();
-        return stocks;
+    getAllStockMovement: async (page) => {
+        const limit = 6;
+        const currentPage = Math.max(1, page);
+        const skip = (currentPage - 1) * limit;
+        let [list_stocks, totalItems] = await Promise.all([
+            prisma.productVariants.findMany({
+                take: limit,
+                skip: skip,
+                include: {
+                    product: true,
+                    VariableAttributes: {
+                        include: {
+                            attributeKey: true
+                        }
+                    }
+                }
+            }),
+
+            prisma.productVariants.count()
+        ])
+        return {
+            list_stocks, pagination: {
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+                currentPage: currentPage,
+                itemsPerPage: limit
+            }
+        };
     },
 
     updateStockMovement: async (stockId, dataStockMovement) => {
