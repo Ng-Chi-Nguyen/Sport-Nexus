@@ -24,19 +24,30 @@ export const PERMISSION_TRANSLATIONS = {
 };
 
 export const MODULE_LABELS = {
+  // Hệ thống & Tài khoản
   users: "👤 Quản lý Người dùng",
   roles: "🔑 Vai trò & Phân quyền",
   permissions: "🛡️ Danh mục Quyền hạn",
-  products: "📦 Sản phẩm",
+  useraddresses: "📍 Địa chỉ Khách hàng",
+  systemlogs: "📋 Nhật ký hệ thống",
+
+  // Hàng hóa & Thuộc tính
+  products: "📦 Quản lý Sản phẩm",
   categories: "📂 Danh mục Sản phẩm",
   brands: "🏷️ Thương hiệu",
-  orders: "🛒 Đơn hàng",
+  attributekeys: "⚙️ Thuộc tính Sản phẩm",
+  productimages: "🖼️ Thư viện Hình ảnh",
+
+  // Kinh doanh & Vận hành
+  orders: "🛒 Đơn bán hàng",
   coupons: "🎟️ Mã giảm giá",
+  reviews: "⭐ Đánh giá khách hàng",
+  carts: "🛍️ Giỏ hàng khách hàng",
+
+  // Kho hàng & Nhập kho
   suppliers: "🏭 Nhà cung cấp",
   purchaseorders: "📝 Đơn nhập hàng",
   stockmovements: "📉 Biến động kho",
-  reviews: "⭐ Đánh giá khách hàng",
-  systemlogs: "📋 Nhật ký hệ thống",
 };
 
 export const ACTION_OPTIONS = [
