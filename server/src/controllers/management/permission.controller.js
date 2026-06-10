@@ -3,7 +3,7 @@ import permissionService from "../../services/management/permission.service.js";
 const permissionController = {
     createRole: async (req, res) => {
         let dataRole = req.body;
-        console.log(dataRole)
+        // console.log(dataRole)
         try {
             let newRole = await permissionService.createRole(dataRole);
             return res.status(201).json({
@@ -143,10 +143,8 @@ const permissionController = {
     },
 
     getAllRoleGroups: async (req, res) => {
+        const page = parseInt(req.query.page) || 1;
         try {
-            // 1. Phải lấy từ req.query vì Frontend gửi qua URL (?page=1)
-            // Thêm parseInt và kiểm tra nếu không phải số thì mặc định là 1
-            const page = parseInt(req.query.page) || 1;
 
             const result = await permissionService.getAllRoleGroups(page);
 

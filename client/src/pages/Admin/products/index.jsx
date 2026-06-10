@@ -108,11 +108,11 @@ const ProductPage = () => {
         />
       </div>
       <h2 className="mt-4">Danh sách sản phẩm</h2>
-      <div className="relative bg-white mt-2">
-        <table className="w-full text-sm text-left text-[#323232] table-retro">
+      <div className="table-retro mt-2">
+        <table className="w-full text-sm text-left text-[#323232]">
           <thead className="text-sm uppercase bg-primary border-b-2 text-[#fff] border-[#323232]">
             <tr>
-              <th scope="col" className="px-6 py-4 font-black text-start">
+              <th scope="col" className="px-6 py-4 font-black !text-start">
                 Thông tin sản phẩm
               </th>
               <th scope="col" className="px-6 py-4 font-black text-center">
@@ -131,18 +131,19 @@ const ProductPage = () => {
               products.map((product, index) => (
                 <tr
                   key={product.id || index}
-                  className="border-b border-gray-200 hover:bg-[#4facf310] transition-colors duration-200"
+                  className="hover:bg-[#4facf310] transition-colors duration-200"
                 >
-                  <td className="flex items-center p-2 font-bold text-[#323232] whitespace-nowrap">
-                    <div className="w-[60px] h-[60px] border border-gray-200 rounded overflow-hidden bg-gray-50">
+                  <td className="flex items-center p-2 font-bold text-[#323232]">
+                    <div className="w-[60px] h-[60px] rounded overflow-hidden bg-gray-50">
                       <img
                         src={product.thumbnail}
                         alt={product.name}
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <div className="ml-2 flex-1 min-w-0">
-                      <p className="font-black text-sm text-[#323232] truncate">
+                    <div className="ml-2 flex-1 min-w-0 !text-start">
+                      <p className="font-black text-sm text-[#FFF] truncate">
+                        <span className="mr-2">Tên SP: </span>
                         {product.name}
                       </p>
                       <Badge color="blue">
@@ -209,7 +210,7 @@ const ProductPage = () => {
             )}
           </tbody>
         </table>
-        <div className="py-4 border-t-2 border-[#323232] bg-[#f8f9fa]">
+        <div className="border-t-2 border-[#323232] bg-[#f8f9fa]">
           <Pagination
             totalPages={paginationInfo.totalPages}
             currentPage={paginationInfo.currentPage}

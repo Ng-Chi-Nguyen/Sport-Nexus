@@ -22,31 +22,36 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-end gap-3 mt-2 mb-2 mr-5 font-black">
-      {/* Nút Quay lại */}
+    <div className="flex items-center justify-end gap-2 mt-4 mb-2 font-medium">
+      {/* NÚT QUAY LẠI - THEME TỐI */}
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="flex items-center justify-center p-2 border-2 border-[#323232] bg-white shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        className="flex items-center justify-center w-9 h-9 rounded-lg border border-slate-800/80 
+                   bg-[#111827] text-slate-400 hover:bg-[#161F32] hover:text-slate-200
+                   disabled:opacity-20 disabled:hover:bg-[#111827] disabled:hover:text-slate-400 
+                   disabled:cursor-not-allowed transition-all duration-150"
       >
-        <ChevronLeft size={20} strokeWidth={3} />
+        <ChevronLeft size={16} strokeWidth={2} />
       </button>
 
-      {/* Danh sách các trang */}
-      <div className="flex gap-2">
+      {/* DANH SÁCH CÁC SỐ TRANG */}
+      <div className="flex gap-1.5">
         {getPageNumbers().map((page, index) => (
           <React.Fragment key={index}>
             {page === "..." ? (
-              <span className="px-2 self-end text-[#323232]">...</span>
+              <span className="w-9 h-9 flex items-center justify-center text-slate-600 font-mono">
+                ...
+              </span>
             ) : (
               <button
                 onClick={() => onPageChange(page)}
                 className={`
-                  w-10 h-10 border-2 border-[#323232] transition-all
+                  w-9 h-9 rounded-lg text-xs font-semibold tracking-wide border transition-all duration-150
                   ${
                     currentPage === page
-                      ? "bg-[#4facf3] text-white shadow-none translate-x-[3px] translate-y-[3px]"
-                      : "bg-white text-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:bg-gray-50 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+                      ? "bg-sky-500/10 text-sky-400 border-sky-500/30 shadow-[0_0_12px_rgba(14,165,233,0.15)] font-bold"
+                      : "bg-[#111827] text-slate-400 border-slate-800/80 hover:bg-[#161F32] hover:text-slate-200"
                   }
                 `}
               >
@@ -57,13 +62,16 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
         ))}
       </div>
 
-      {/* Nút Tiếp theo */}
+      {/* NÚT TIẾP THEO - THEME TỐI */}
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="flex items-center justify-center p-2 border-2 border-[#323232] bg-white shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        className="flex items-center justify-center w-9 h-9 rounded-lg border border-slate-800/80 
+                   bg-[#111827] text-slate-400 hover:bg-[#161F32] hover:text-slate-200
+                   disabled:opacity-20 disabled:hover:bg-[#111827] disabled:hover:text-slate-400 
+                   disabled:cursor-not-allowed transition-all duration-150"
       >
-        <ChevronRight size={20} strokeWidth={3} />
+        <ChevronRight size={16} strokeWidth={2} />
       </button>
     </div>
   );

@@ -3,7 +3,7 @@ import axiosClient from "@/lib/axiosClient";
 const LoaderPermissions = {
   getGroups: async (page = 1) => {
     const response = await axiosClient.get(
-      `/management/permission/groups?page=${page}`
+      `/management/permission/groups?page=${page}`,
     );
     // console.log(response);
     return response; // Trả về cấu trúc { data, pagination }
@@ -12,7 +12,7 @@ const LoaderPermissions = {
     const { slug } = params;
     try {
       const response = await axiosClient.get(
-        `/management/permission/slug/${slug}`
+        `/management/permission/slug/${slug}`,
       );
       //   console.log(response);
       if (response.success) {
@@ -25,9 +25,11 @@ const LoaderPermissions = {
     }
   },
 
-  getAllPermissions: async () => {
+  getAllPermissions: async (page) => {
     try {
-      const response = await axiosClient.get("/management/permission");
+      const response = await axiosClient.get(
+        `/management/permission?page=${page}`,
+      );
       if (response.success) {
         return response;
       }

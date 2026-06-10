@@ -1,50 +1,66 @@
 import { Earth } from "lucide-react";
-import { BtnDelete, BtnEdit } from "@/components/ui/button";
 
 const CardBrand = ({ data }) => {
   const { logo, name, origin } = data || {};
 
-  // Ảnh hiển thị mặc định nếu thương hiệu chưa có logo
-  const placeholderImage = "https://placehold.co/200x200/png?text=No+Logo";
+  const placeholderImage =
+    "https://placehold.co/200x200/0d121f/94a3b8?text=No+Logo";
 
   return (
     <div
-      className="group flex flex-col h-full bg-white border-2 border-[#323232] rounded-[10px] p-4 shadow-[4px_4px_0px_0px_#323232] 
-    hover:shadow-[4px_4px_0px_0px_#4facf3] hover:border-[#4facf3] transition-all duration-300 cursor-pointer"
+      className="group flex items-center bg-[#111827]/60 border border-slate-900 rounded-xl p-4 gap-4
+                 shadow-xl hover:border-sky-500/40 hover:bg-[#161F32]/80
+                 hover:shadow-[0_0_20px_rgba(79,172,243,0.12)] 
+                 transition-all duration-300 cursor-pointer w-full"
     >
-      <div className="h-[140px] w-full flex items-center justify-center bg-gray-50 rounded-[8px] border border-gray-100 mb-4 overflow-hidden relative group-hover:border-[#4facf3]/20 transition-colors">
+      {/* 1. KHUNG LOGO TRÒN PHONG CÁCH MỚI (Nhìn cực kỳ Hi-Tech) */}
+      <div
+        className="w-16 h-16 rounded-full flex items-center justify-center bg-[#0D121F] 
+                  border border-slate-800/80 overflow-hidden relative flex-shrink-0 
+                  transition-colors duration-300 group-hover:border-sky-500/30 p-1.5 shadow-inner"
+      >
         <img
           src={logo || placeholderImage}
           alt={name || "Brand Logo"}
-          className="w-fit object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+          className="max-h-[85%] max-w-[85%] object-contain transition-transform duration-300 group-hover:scale-105 mix-blend-screen"
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = placeholderImage;
           }}
         />
       </div>
-      <div className="flex flex-col flex-grow items-center text-center">
-        <div className="flex flex-col flex-grow items-center text-center w-full overflow-hidden">
-          {/* Tên thương hiệu - Thêm w-full và truncate */}
-          <h3
-            className="text-sm font-bold text-[#323232] mb-1 w-full truncate px-1 group-hover:text-[#4facf3]"
-            title={name}
-          >
-            {name || "Tên thương hiệu"}
-          </h3>
 
-          {/* Xuất xứ - Thêm max-w-full để không bị lòi ra ngoài */}
+      {/* 2. KHỐI THÔNG TIN NẰM BÊN PHẢI (Xếp ngang hàng với Logo) */}
+      <div className="min-w-0 flex-1 space-y-1.5">
+        {/* Tên thương hiệu - Căn lề trái tinh tế */}
+        <h3
+          className="text-sm font-semibold text-slate-200 truncate w-full group-hover:text-sky-400 transition-colors duration-200 tracking-wide"
+          title={name}
+        >
+          {name || "Tên thương hiệu"}
+        </h3>
+
+        {/* Cụm Xuất xứ & Tag Quản lý phụ trợ (Mô phỏng như ảnh mẫu) */}
+        <div className="flex flex-wrap items-center gap-2">
           {origin ? (
-            <div className="inline-flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded-full text-[10px] font-medium text-[#4facf3] max-w-full">
-              {/* Thêm shrink-0 để icon không bị bẹp khi chữ quá dài */}
-              <Earth size={11} className="shrink-0" />
+            <div className="inline-flex items-center gap-1 bg-sky-500/10 border border-sky-500/20 px-2 py-0.5 rounded-md text-[10px] font-medium text-sky-400 max-w-full">
+              <Earth
+                size={11}
+                className="shrink-0 text-sky-400"
+                strokeWidth={2}
+              />
               <span className="truncate">{origin}</span>
             </div>
           ) : (
-            <span className="text-[10px] text-gray-400 italic">
+            <span className="text-[10px] text-slate-600 italic">
               Chưa cập nhật
             </span>
           )}
+
+          {/* Bạn có thể giữ các tag mô phỏng này để layout đầy đặn hoặc xóa nếu không cần */}
+          <span className="text-[9px] font-mono text-slate-500 bg-slate-900/40 border border-slate-800/60 px-1.5 py-0.5 rounded">
+            Hệ thống
+          </span>
         </div>
       </div>
     </div>

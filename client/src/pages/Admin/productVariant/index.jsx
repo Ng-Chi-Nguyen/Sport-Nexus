@@ -2,7 +2,7 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
 import Badge from "@/components/ui/badge";
-import { BtnDelete, BtnEdit } from "@/components/ui/button";
+import { BtnActions } from "@/components/ui/button";
 import { LayoutDashboard, PackageCheck, PackageX } from "lucide-react";
 import {
   useLoaderData,
@@ -93,20 +93,20 @@ const variantVariant = () => {
         />
       </div>
       <h2 className="my-3">Danh sách biến thể</h2>
-      <div className="relative bg-white mt-2">
-        <table className="w-full text-sm text-left text-[#323232] table-retro">
-          <thead className="text-sm uppercase bg-primary border-b-2 text-[#fff] border-[#323232]">
+      <div className="table-retro mt-2">
+        <table className="w-full border-separate border-spacing-0">
+          <thead>
             <tr>
-              <th scope="col" className="px-6 py-4 font-black text-start">
+              <th scope="col" className="px-6 py-4 text-start">
                 Thông tin sản phẩm
               </th>
-              <th scope="col" className="px-6 py-4 font-black text-center">
+              <th scope="col" className="px-6 py-4 text-center">
                 Thông tin phân loại
               </th>
-              <th scope="col" className="px-6 py-4 font-black text-center">
+              <th scope="col" className="px-6 py-4 text-center">
                 Trạng thái
               </th>
-              <th scope="col" className="px-6 py-4 font-black text-center">
+              <th scope="col" className="px-6 py-4 text-center">
                 Hành động
               </th>
             </tr>
@@ -114,28 +114,27 @@ const variantVariant = () => {
           <tbody>
             {variants.length > 0 ? (
               variants.map((variant, index) => (
-                <tr
-                  key={variant.id || index}
-                  className="border-b border-gray-200 hover:bg-[#4facf310] transition-colors duration-200"
-                >
-                  <td className="p-4 font-bold text-[#323232]">
+                <tr key={variant.id || index}>
+                  {/* CỘT 1: THÔNG TIN SẢN PHẨM */}
+                  <td className="p-6">
                     <div className="flex items-center">
-                      <div className="w-[60px] h-[60px] border border-gray-200 rounded overflow-hidden bg-gray-50 flex-shrink-0">
+                      {/* Khung ảnh sản phẩm tối giản, đồng điệu */}
+                      <div className="w-[60px] h-[60px] border border-slate-800 rounded-lg overflow-hidden bg-[#111827] flex-shrink-0 p-1">
                         <img
                           src={variant.product.thumbnail}
                           alt={variant.product.name}
-                          className="w-full h-full object-contain"
+                          className="w-full h-full object-contain mix-blend-screen"
                         />
                       </div>
-                      <div className="ml-3 flex-1 min-w-0">
-                        <p className="font-black text-sm text-[#323232] mb-1">
+                      <div className="ml-4 flex-1 min-w-0">
+                        <p className="font-semibold text-sm text-slate-100 mb-1.5 tracking-wide">
                           {variant.product.name}
                         </p>
                         <div className="flex items-center gap-2">
-                          <span className="text-[12px] text-gray-500 italic">
+                          <span className="text-[12px] text-slate-500">
                             Giá gốc:
                           </span>
-                          <span className="text-[12px] font-bold text-red-500">
+                          <span className="text-[12px] font-semibold text-emerald-400">
                             {Number(
                               variant.product.base_price,
                             ).toLocaleString()}
@@ -146,71 +145,67 @@ const variantVariant = () => {
                     </div>
                   </td>
 
-                  <td className="px-6 py-4">
+                  {/* CỘT 2: THÔNG TIN PHÂN LOẠI */}
+                  <td className="px-6 py-6">
                     <div className="flex flex-col gap-2 items-center justify-center">
                       {variant.VariableAttributes &&
                       variant.VariableAttributes.length > 0 ? (
                         variant.VariableAttributes.map((attr) => (
-                          <div
-                            key={attr.id}
-                            className="flex items-center gap-1"
-                          >
-                            <Badge color="purple">
-                              <span className="font-medium">
+                          <div key={attr.id} className="flex items-center">
+                            {/* Tận dụng class .table-badge tối mờ đã tạo trong file CSS */}
+                            <span className="table-badge">
+                              <span className="text-slate-400 mr-1 font-normal">
                                 {attr.attributeKey.name}:
                               </span>
-                              <span className="ml-1 font-black">
+                              <span className="font-semibold">
                                 {attr.value} {attr.attributeKey.unit || ""}
                               </span>
-                            </Badge>
+                            </span>
                           </div>
                         ))
                       ) : (
-                        <span className="text-gray-400 text-xs">
+                        <span className="text-slate-500 text-xs">
                           Không có phân loại
                         </span>
                       )}
 
                       <div className="mt-1">
-                        <span className="text-xs text-gray-500">Giá bán: </span>
-                        <span className="text-sm font-black text-blue-600">
+                        <span className="text-xs text-slate-500">
+                          Giá bán:{" "}
+                        </span>
+                        <span className="text-sm font-semibold text-sky-400">
                           {Number(variant.price).toLocaleString()}đ
                         </span>
                       </div>
                     </div>
                   </td>
 
-                  <td className="text-center px-6 py-4">
-                    <div className="flex flex-col items-center gap-2">
+                  {/* CỘT 3: TRẠNG THÁI TỒN KHO */}
+                  <td className="px-6 py-6 text-center">
+                    <div className="flex flex-col items-center justify-center">
                       {variant.stock > 0 ? (
-                        <Badge color="green">
-                          <PackageCheck />
-                          <span className="ml-2 font-bold">
-                            Sẵn có: {variant.stock}
-                          </span>
-                        </Badge>
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                          <PackageCheck size={14} />
+                          <span>Sẵn có: {variant.stock}</span>
+                        </span>
                       ) : (
-                        <Badge color="red">
-                          <PackageX />
-                          <span className="ml-2">Hết hàng</span>
-                        </Badge>
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                          <PackageX size={14} />
+                          <span>Hết hàng</span>
+                        </span>
                       )}
                     </div>
                   </td>
 
-                  <td className="px-6 py-4 text-center">
-                    <div className="flex gap-2 justify-center">
-                      <BtnEdit
-                        route={`/management/product-variants/edit/${variant.id}`}
-                        name="Sửa"
-                      />
-                      <BtnDelete
-                        name="Xóa"
-                        onClick={() =>
-                          openConfirm(variant.id, variant.product.name)
-                        }
-                      />
-                    </div>
+                  {/* CỘT 4: HÀNH ĐỘNG - Thay cụm Sửa/Xóa to bằng BtnActions */}
+                  <td className="px-6 py-6 text-center">
+                    <BtnActions
+                      route={`/management/product-variants/edit/${variant.id}`}
+                      id={variant.id}
+                      onDelete={() =>
+                        openConfirm(variant.id, variant.product.name)
+                      }
+                    />
                   </td>
                 </tr>
               ))
@@ -218,7 +213,7 @@ const variantVariant = () => {
               <tr>
                 <td
                   colSpan="4"
-                  className="px-6 py-10 text-center text-gray-400 italic"
+                  className="px-6 py-12 text-center text-slate-500 italic"
                 >
                   Không có biến thể nào được tìm thấy.
                 </td>
@@ -226,7 +221,7 @@ const variantVariant = () => {
             )}
           </tbody>
         </table>
-        <div className="py-4 border-t-2 border-[#323232] bg-[#f8f9fa]">
+        <div className="border-t-2 border-[#323232] bg-[#f8f9fa]">
           <Pagination
             totalPages={paginationInfo.totalPages}
             currentPage={paginationInfo.currentPage}

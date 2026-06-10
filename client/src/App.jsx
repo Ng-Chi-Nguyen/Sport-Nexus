@@ -15,12 +15,11 @@ function App() {
     location.pathname.startsWith(path),
   );
   return (
-    <div className="h-screen overflow-hidden flex flex-col">
+    <div className="h-screen flex flex-col">
       <Toaster position="top-right" richColors />
+      {!isManagementView && <Header className="h-[65px] shrink-0" />}
 
-      <Header className="h-[65px] shrink-0" />
-
-      <main className="flex-1 overflow-hidden">
+      <main className="flex-1">
         {!isManagementView ? (
           <div className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8">
             <Outlet />

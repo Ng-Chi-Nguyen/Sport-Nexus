@@ -94,23 +94,23 @@ const CategoryPage = () => {
         />
       </div>
       <h2 className="my-4">Danh sách danh mục</h2>
-      <div className="relative bg-white rounded-[5px]">
+      <div className="table-retro">
         <table className="w-full text-sm text-left table-retro text-[#323232]">
           <thead className="text-sm uppercase bg-primary border-b-2 border-[#323232]">
             <tr>
-              <th scope="col" className="px-6 py-4 font-black text-center">
+              <th scope="col" className="px-6 py-4">
                 Ảnh đại diện
               </th>
-              <th scope="col" className="px-6 py-4 font-black text-center">
+              <th scope="col" className="px-6 py-4">
                 Tên danh mục
               </th>
-              <th scope="col" className="px-6 py-4 font-black text-center">
+              <th scope="col" className="px-6 py-4">
                 Trạng thái
               </th>
-              <th scope="col" className="px-6 py-4 font-black text-center">
+              <th scope="col" className="px-6 py-4">
                 Mã (Slug)
               </th>
-              <th scope="col" className="px-6 py-4 font-black text-center">
+              <th scope="col" className="px-6 py-4">
                 Hành động
               </th>
             </tr>

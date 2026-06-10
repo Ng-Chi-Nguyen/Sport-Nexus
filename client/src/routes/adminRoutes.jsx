@@ -121,10 +121,12 @@ export const adminRoutes = {
       path: "users/add-role/:userId",
       element: <AddRolePermissionPage />,
       loader: async ({ params }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get("page") || 1;
         const [user, allPermissions] = await Promise.all([
           // 2. Phải GỌI hàm () và TRUYỀN { params } vào
           LoaderUser.getUserById({ params }),
-          LoaderPermissions.getAllPermissions(),
+          LoaderPermissions.getAllPermissions(page),
         ]);
 
         // console.log("Dữ liệu user:", user);

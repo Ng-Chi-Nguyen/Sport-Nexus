@@ -113,7 +113,7 @@ const PurchaseOrderPage = () => {
         />
       </div>
       <h2 className="my-3">Danh sách nhập hàng</h2>
-      <div className="relative bg-white mt-2">
+      <div className="table-retro mt-2">
         <table className="w-full text-sm text-left text-[#323232] table-retro">
           <thead className="text-sm uppercase bg-primary border-b-2 text-[#fff] border-[#323232]">
             <tr>
@@ -195,7 +195,7 @@ const PurchaseOrderPage = () => {
             )}
           </tbody>
         </table>
-        <div className="py-4 border-t-2 border-[#323232] bg-[#f8f9fa]">
+        <div className="border-t-2 border-[#323232] bg-[#f8f9fa]">
           <Pagination
             totalPages={paginationInfo.totalPages}
             currentPage={paginationInfo.currentPage}

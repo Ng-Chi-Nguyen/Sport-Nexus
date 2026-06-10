@@ -1,163 +1,158 @@
-import { ArrowLeft, Edit, Pencil, Plus, Trash, Trash2 } from "lucide-react";
+import { ArrowLeft, Edit, Pencil, Plus, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
+// 1. NÚT THÊM MỚI (Thường nằm trên đầu danh sách)
 const BtnAdd = ({ name, route }) => {
   return (
     <Link
       to={route}
       className="
         inline-flex items-center justify-center gap-2
-        py-2 px-6 w-fit
-        bg-[#4facf3] text-white 
-        font-bold text-[16px]
-        table-retro
-        active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
-        cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 transition-all duration-150 group
+        py-2 px-5 w-fit rounded-xl
+        bg-blue-600 hover:bg-blue-500 text-white 
+        font-medium text-[14px] tracking-wide
+        shadow-[0_0_15px_rgba(37,99,235,0.2)]
+        hover:shadow-[0_0_20px_rgba(37,99,235,0.4)]
+        active:scale-95 transition-all duration-150 group
       "
     >
       <Plus
-        size={20}
-        strokeWidth={4}
-        className="group-hover:rotate-90 transition-transform"
+        size={16}
+        strokeWidth={2}
+        className="group-hover:rotate-90 transition-transform duration-200"
       />
-      <span className="">{name || "Thêm mới"}</span>
+      <span>{name || "Thêm mới"}</span>
     </Link>
   );
 };
 
+// 2. NÚT LƯU / SUBMIT FORM
 const BtnSubmit = (props) => {
   const { name } = props;
   return (
-    <>
-      <button
-        className="cursor-pointer font-bold overflow-hidden relative z-100 border-2 border-primary bg-white group px-8 py-2 
-      active:translate-x-[2px] active:translate-y-[2px] transition-all duration-150"
-      >
-        {/* Chữ hiển thị */}
-        <span className="relative z-10 text-[#4facf3] group-hover:text-white text-xl duration-500 uppercase">
-          {name}
-        </span>
-
-        {/* Hiệu ứng nền chạy khi hover */}
-        <span className="absolute w-full h-full bg-[#4facf3] -left-32 top-0 -rotate-45 group-hover:rotate-0 group-hover:left-0 duration-500"></span>
-        <span className="absolute w-full h-full bg-[#4facf3] -right-32 top-0 -rotate-45 group-hover:rotate-0 group-hover:right-0 duration-500"></span>
-      </button>
-    </>
+    <button
+      type="submit"
+      className="cursor-pointer font-medium text-[14px] tracking-wider text-white px-6 py-2.5 rounded-xl
+                 bg-sky-600 hover:bg-sky-500
+                 shadow-[0_0_15px_rgba(14,165,233,0.2)]
+                 hover:shadow-[0_0_20px_rgba(14,165,233,0.4)]
+                 active:scale-95 transition-all duration-150 uppercase"
+    >
+      {name}
+    </button>
   );
 };
 
+// 3. NÚT QUAY LẠI
 const BtnGoback = () => {
-  const navigate = useNavigate(); // Khởi tạo hàm điều hướng
-
-  const handleGoBack = () => {
-    navigate(-1); // Lệnh quay lại trang trước đó trong lịch sử trình duyệt
-  };
+  const navigate = useNavigate();
   return (
-    <>
-      <button
-        onClick={handleGoBack}
-        type="button"
-        className="bg-white text-center w-[150px] h-[47px] relative text-black text-xl font-semibold border-2 border-blue-500 group"
-      >
-        <div className="bg-[#4facf3] h-[44px] w-1/3 grid place-items-center absolute left-0 top-0 group-hover:w-full z-10 duration-500 transition-all">
-          <ArrowLeft
-            size={25}
-            color="#FFF"
-            strokeWidth={2.5} // Làm icon đậm hơn để hợp với phong cách Retro
-          />
-        </div>
-        <p className="translate-x-4 text-[15px]">Quay lại</p>
-      </button>
-    </>
+    <button
+      onClick={() => navigate(-1)}
+      type="button"
+      className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
+                 bg-[#111827] text-slate-400 hover:text-slate-200 
+                 border border-slate-800 hover:border-slate-700
+                 text-[14px] font-medium active:scale-95 transition-all duration-150 group"
+    >
+      <ArrowLeft
+        size={16}
+        strokeWidth={2}
+        className="group-hover:-translate-x-0.5 transition-transform"
+      />
+      <span>Quay lại</span>
+    </button>
   );
 };
 
+// 4. NÚT SỬA (Dạng Badge/Button có text đi kèm)
 const BtnEdit = (props) => {
   let { route, name } = props;
   return (
     <Link
       to={route}
-      className="flex items-center justify-center p-2 bg-[#f39e4f] text-white border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] rounded-[5px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:scale-95 transition-all duration-150 group"
+      className="flex items-center justify-center px-3 py-1.5 bg-amber-500/10 text-amber-400 
+                 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 
+                 active:scale-95 transition-all duration-150 group"
       title="Chỉnh sửa"
     >
-      <Pencil
-        size={18}
-        strokeWidth={2.5}
-        className="group-hover:rotate-12 transition-transform"
-      />
-      <span className="ml-1 text-sm font-bold uppercase">{name}</span>
+      <Pencil size={14} strokeWidth={2} />
+      {name && (
+        <span className="ml-1.5 text-xs font-medium uppercase">{name}</span>
+      )}
     </Link>
   );
 };
 
+// 5. NÚT XÓA (Dạng Badge/Button kèm hiệu ứng mở nắp thùng rác đã tối ưu)
 const BtnDelete = (props) => {
-  // Bóc tách thêm onClick và className từ props
   const { onClick, className, name } = props;
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`group relative flex items-center justify-center py-2 px-4 bg-[#ee1111] text-white 
-        border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] 
-        rounded-[5px] hover:translate-x-[2px] hover:translate-y-[2px] 
-        hover:shadow-none active:translate-x-[3px] 
-        active:translate-y-[3px] active:shadow-none transition-all duration-200 ${className}`}
+      className={`group flex items-center justify-center px-3 py-1.5 bg-rose-500/10 text-rose-400 
+        border border-rose-500/30 rounded-lg hover:bg-rose-500/20 
+        active:scale-95 transition-all duration-150 ${className}`}
       title="Xóa dữ liệu"
     >
-      <div className="relative w-[18px] h-[18px] mr-2">
-        {/* 1. Phần Nắp - Chỉ lấy phần trên cùng */}
+      <div className="relative w-[14px] h-[14px] ${name ? 'mr-1.5' : ''}">
+        {/* Phần Nắp thùng rác */}
         <Trash2
-          size={18}
-          strokeWidth={2.5}
-          className="absolute top-0 left-0 z-10 origin-bottom-left transition-transform duration-300
-           ease-in-out group-hover:-rotate-[35deg] group-hover:-translate-y-0 group-hover:translate-x-1.5"
-          style={{ clipPath: "inset(0 0 65% 0)" }} // Cắt bỏ 65% phía dưới
+          size={14}
+          strokeWidth={2}
+          className="absolute top-0 left-0 z-10 origin-bottom-left transition-transform duration-200
+                     ease-in-out group-hover:-rotate-[30deg] group-hover:-translate-y-[1px] group-hover:translate-x-[2px]"
+          style={{ clipPath: "inset(0 0 65% 0)" }}
         />
-
-        {/* 2. Phần Thân - Cắt bỏ phần nắp phía trên để không bị 2 nắp */}
+        {/* Phần Thân thùng rác */}
         <Trash2
-          size={18}
-          strokeWidth={2.5}
+          size={14}
+          strokeWidth={2}
           className="absolute top-0 left-0 z-0"
-          style={{ clipPath: "inset(35% 0 0 0)" }} // Cắt bỏ 35% phía trên (phần nắp)
+          style={{ clipPath: "inset(35% 0 0 0)" }}
         />
       </div>
 
-      <span className="text-[14px] font-black uppercase tracking-wider">
-        {name}
-      </span>
+      {name && (
+        <span className="text-xs font-medium uppercase ml-1">{name}</span>
+      )}
     </button>
   );
 };
 
+// 6. CỤM NÚT ĐIỀU HƯỚNG CUỐI FORM (Quay lại + Lưu)
 const Submit_GoBack = (props) => {
   const { name, justify = "start" } = props;
   return (
     <div
-      className={`flex items-start gap-2 bg-blue-200 py-2 px-5 justify-${justify}`}
+      className={`flex items-center gap-3 py-4 justify-${justify} border-t border-slate-900/60 mt-6`}
     >
       <BtnGoback />
-      <BtnSubmit name={name || "Thêm"} />
+      <BtnSubmit name={name || "Lưu lại"} />
     </div>
   );
 };
 
+// 7. CỤM ICON THAO TÁC TRONG BẢNG (Sửa/Xóa mini gọn gàng như hình mẫu)
 const BtnActions = ({ route, id, onDelete }) => {
   return (
     <div className="flex justify-center items-center gap-2">
       <Link
         to={route}
-        className="p-2 hover:bg-white rounded-lg text-slate-400 hover:text-orange-500 border border-transparent hover:border-slate-200 transition-all"
+        className="p-2 bg-[#111827] text-slate-400 hover:text-amber-400 border border-slate-800 hover:border-amber-500/30 rounded-lg transition-all duration-150"
+        title="Sửa"
       >
-        <Edit size={16} />
+        <Edit size={14} />
       </Link>
 
       <button
         onClick={() => onDelete(id)}
-        className="p-2 hover:bg-white rounded-lg text-slate-400 hover:text-red-500 border border-transparent hover:border-slate-200 transition-all"
+        className="p-2 bg-[#111827] text-slate-400 hover:text-rose-500 border border-slate-800 hover:border-rose-500/30 rounded-lg transition-all duration-150"
+        title="Xóa"
       >
-        <Trash2 size={16} />
+        <Trash2 size={14} />
       </button>
     </div>
   );

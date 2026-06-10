@@ -19,39 +19,35 @@
 }
 
 @layer components {
-  .btn-neo {
-    @apply p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all flex items-center justify-center;
-  }
-
-  /* Bạn có thể tạo thêm phiên bản màu đỏ cho nút Logout */
-  .btn-neo-danger {
-    @apply btn-neo bg-[#ff5252] text-white;
-  }
-
-  /* .table-retro {
-        @apply border-2 border-[#323232] shadow-[4px_4px_0px_0px_#323232] rounded-[5px];
-    } */
-  /* Trong file CSS của bạn */
+  /* Khung bọc bảng Dark Theme */
   .table-retro {
-    @apply w-full border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm border-separate border-spacing-0;
+    @apply w-full border border-slate-900 rounded-xl overflow-hidden 
+           bg-[#0D121F] shadow-2xl;
   }
 
+  /* Header của bảng */
   .table-retro thead {
-    @apply bg-primary; /* Màu nền chính của bạn */
+    @apply bg-[#161F32] border-b border-slate-900;
   }
 
   .table-retro thead th {
-    /* Ép chữ màu trắng trực tiếp vào thẻ th và thêm định dạng cao cấp */
-    @apply text-[11px] font-bold text-white uppercase tracking-[0.15em] text-center;
+    @apply text-[12px] font-semibold text-slate-400 uppercase tracking-wider 
+           text-left py-4 px-6 border-b border-slate-900 text-center;
   }
 
-  .table-retro td {
-    /* Padding rộng tạo khoảng thở và đường kẻ hàng mờ */
-    @apply text-sm text-slate-600 border-b border-slate-100 transition-colors;
+  /* CSS Quyết định các đường line mỏng chạy xuyên suốt giữa các items */
+  .table-retro tbody tr {
+    @apply transition-colors duration-150;
   }
 
+  .table-retro tbody tr td {
+    @apply !bg-[#0D121F] text-[13px] text-slate-300 py-5 px-6 
+         border-b border-white;
+  }
+
+  /* Hiệu ứng hover highlight nguyên dòng công nghệ */
   .table-retro tbody tr:hover td {
-    @apply bg-slate-50/50; /* Hiệu ứng hover tinh tế */
+    @apply !bg-[#1E293B]/40 text-white !important;
   }
 }
 

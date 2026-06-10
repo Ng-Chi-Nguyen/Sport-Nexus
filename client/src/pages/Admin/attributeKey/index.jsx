@@ -1,7 +1,7 @@
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
-import { BtnDelete, BtnEdit } from "@/components/ui/button";
+import { BtnActions } from "@/components/ui/button";
 import { LayoutDashboard } from "lucide-react"; // Import thêm icon để thao tác
 import {
   useLoaderData,
@@ -102,20 +102,20 @@ const AttributeKey = () => {
         />
       </div>
       <h2>Danh sách thuộc tính</h2>
-      <div className="relative bg-white table-retro">
-        <table className="w-full text-sm text-left text-[#323232]">
-          <thead className="text-sm uppercase bg-primary border-b-2 border-[#323232]">
+      <div className="table-retro">
+        <table className="w-full border-separate border-spacing-0">
+          <thead>
             <tr>
-              <th scope="col" className="px-6 py-4 font-black">
+              <th scope="col" className="px-6 py-4">
                 Tên thuộc tính
               </th>
-              <th scope="col" className="px-6 py-4 font-black text-center">
+              <th scope="col" className="px-6 py-4 text-center">
                 Đơn vị
               </th>
-              <th scope="col" className="px-6 py-4 font-black text-center">
-                Được sữ dụng
+              <th scope="col" className="px-6 py-4 text-center">
+                Được sử dụng
               </th>
-              <th scope="col" className="px-6 py-4 font-black text-center">
+              <th scope="col" className="px-6 py-4 text-center">
                 Hành động
               </th>
             </tr>
@@ -123,40 +123,34 @@ const AttributeKey = () => {
           <tbody>
             {attributes.length > 0 ? (
               attributes.map((attr, index) => (
-                <tr
-                  key={attr.id || index}
-                  className="border-b border-gray-200 hover:bg-[#4facf310] transition-colors duration-200"
-                >
-                  <td className="px-6 py-4 font-bold text-[#323232] whitespace-nowrap">
+                <tr key={attr.id || index}>
+                  <td className="px-6 py-4 font-medium whitespace-nowrap">
                     {attr.name}
                   </td>
-                  <td className="px-6 py-4 text-center font-mono text-gray-400 text-[12px]">
+                  <td className="px-6 py-4 text-center">
+                    {/* Sử dụng class badge tối hệ thống */}
                     <Badge color="blue">{attr.unit || "Không có"}</Badge>
                   </td>
-                  <td className="px-6 py-4 text-center text-[12px]">
+                  <td className="px-6 py-4 text-center text-slate-400">
                     20 sản phẩm
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex gap-3 justify-center">
-                      <BtnEdit
-                        route={`/management/attribute-key/edit/${attr.id}`}
-                        name="Sửa"
-                      />
-                      <BtnDelete
-                        name="Xóa"
-                        onClick={() => openConfirm(attr.id, attr.name)}
-                      />
-                    </div>
+                    {/* Thay cụm nút to bằng cụm icon tinh tế của GlassOS */}
+                    <BtnActions
+                      route={`/management/attribute-key/edit/${attr.id}`}
+                      id={attr.id}
+                      onDelete={() => openConfirm(attr.id, attr.name)}
+                    />
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
                 <td
-                  colSpan="5"
-                  className="px-6 py-3 text-center text-gray-400 italic"
+                  colSpan="4"
+                  className="px-6 py-8 text-center text-slate-500 italic"
                 >
-                  Không có quyền nào
+                  Không có thuộc tính nào
                 </td>
               </tr>
             )}
