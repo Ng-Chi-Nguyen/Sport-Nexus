@@ -1,35 +1,26 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { FloatingInputPassword, FloatingInput } from "@/components/ui/input";
-import { InputFile } from "@/components/ui/input";
+import {
+  FloatingInputPassword,
+  FloatingInput,
+  InputFile,
+} from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Submit_GoBack } from "@/components/ui/button";
 // api
 import userApi from "@/api/management/userApi";
-import { Select } from "@/components/ui/select";
 // lib
 import { queryClient } from "@/lib/react-query";
-import { Submit_GoBack } from "@/components/ui/button";
 
 const breadcrumbData = [
-  {
-    title: <LayoutDashboard size={20} />,
-    route: "",
-  },
-  {
-    title: "Quản lý người dùng & phần quyền",
-    route: "",
-  },
-  {
-    title: "Người dùng",
-    route: "/management/users",
-  },
-  {
-    title: "Thêm khách hàng",
-    route: "#",
-  },
+  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+  { title: "Quản lý người dùng & phân quyền", route: "" },
+  { title: "Người dùng", route: "/management/users" },
+  { title: "Thêm người dùng", route: "#" },
 ];
 
 const roleOptions = [
@@ -43,16 +34,14 @@ const roleOptions = [
 const CreateUserPage = () => {
   const navigate = useNavigate();
 
-  // state from
+  // state form
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [selectedRole, setSelectedRole] = useState("");
-  // --------------------
 
-  // console.log(groupedPermissions);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -65,13 +54,8 @@ const CreateUserPage = () => {
     formData.append("password", password);
     formData.append("slug", selectedRole);
 
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}:`, value);
-    // // Nếu là file, bạn sẽ thấy: avatar: File { name: "congnhan4.jpg", ... }
-    // }
     try {
       const response = await userApi.create(formData);
-
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["users"] });
         toast.success(response.message);
@@ -83,27 +67,37 @@ const CreateUserPage = () => {
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
         "Đã có lỗi xảy ra!";
-
       toast.error(errorMessage);
     }
   };
+
   return (
-    <>
+    <div className="space-y-6">
       <Breadcrumbs data={breadcrumbData} />
-      <h2 className="mb-2">Thêm người dùng</h2>
-      <form onSubmit={handleSubmit} className="flex my-2 gap-3">
-        <div className="border border-gray-200 p-3 rounded-[5px]">
-          <InputFile
-            label="Ảnh đại diện"
-            value={avatar} // Dùng avatar
-            onChange={(file) => setAvatar(file)} // Cập nhật vào avatar
-          />
-        </div>
-        <div className="w-1/3 border border-gray-200 rounded-[10px] p-3">
-          <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
-            <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin cơ bản
+
+      <h2 className="text-xl font-bold text-slate-100 tracking-wide uppercase">
+        Thêm người dùng mới
+      </h2>
+
+      <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
+        {/* KHỐI 1: ẢNH ĐẠI DIỆN (3 CỘT) */}
+        <div className="col-span-12 md:col-span-4 lg:col-span-3 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
+          <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 mb-6 flex items-center gap-2 border-b border-white/5">
+            <span className="w-1.5 h-3.5 rounded-sm bg-sky-500 shadow-[0_0_8px_#0ea5e9]"></span>
+            Ảnh đại diện
           </h3>
-          <div className="flex flex-col flex-col-reverse m-3">
+          <div className="flex items-center justify-center w-full py-2">
+            <InputFile value={avatar} onChange={(file) => setAvatar(file)} />
+          </div>
+        </div>
+
+        {/* KHỐI 2: THÔNG TIN CƠ BẢN (5 CỘT) */}
+        <div className="col-span-12 md:col-span-8 lg:col-span-5 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
+          <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 mb-6 flex items-center gap-2 border-b border-white/5">
+            <span className="w-1.5 h-3.5 rounded-sm bg-violet-500 shadow-[0_0_8px_#8b5cf6]"></span>
+            Thông tin cơ bản
+          </h3>
+          <div className="space-y-5">
             <FloatingInput
               id="full_name"
               label="Họ tên"
@@ -111,17 +105,14 @@ const CreateUserPage = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-          </div>
-          <div className="flex flex-col flex-col-reverse m-3">
             <FloatingInput
               id="email"
-              label="email"
+              label="Email"
+              type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-          </div>
-          <div className="flex flex-col flex-col-reverse m-3">
             <FloatingInput
               id="phone_number"
               label="Số điện thoại"
@@ -129,8 +120,6 @@ const CreateUserPage = () => {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
-          </div>
-          <div className="flex flex-col flex-col-reverse m-3">
             <FloatingInputPassword
               id="Password"
               label="Mật khẩu"
@@ -140,27 +129,31 @@ const CreateUserPage = () => {
             />
           </div>
         </div>
-        <div className="w-1/3 border border-gray-200 rounded-[10px] p-3">
-          <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
-            <span className="w-2 h-4 bg-[#4facf3]"></span>Thông tin trạng thái &
-            loại tài khoản
-          </h3>
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-8 mt-3">
-              <Select
-                label="Loại tài khoản"
-                options={roleOptions}
-                value={selectedRole}
-                onChange={(val) => setSelectedRole(val)}
-                placeholder="Chọn chức vụ..."
-              />
 
+        {/* KHỐI 3: PHÂN QUYỀN TÀI KHOẢN (4 CỘT - ĐÃ FIX relative z-20) */}
+        <div className="col-span-12 md:col-span-12 lg:col-span-4 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-2xl backdrop-blur-md relative z-20 h-fit">
+          <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 mb-6 flex items-center gap-2 border-b border-white/5">
+            <span className="w-1.5 h-3.5 rounded-sm bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
+            Loại tài khoản
+          </h3>
+
+          <div className="space-y-6">
+            <Select
+              label="Loại tài khoản"
+              options={roleOptions}
+              value={selectedRole}
+              onChange={(val) => setSelectedRole(val)}
+              placeholder="Chọn chức vụ..."
+            />
+
+            {/* Thanh nút bấm hành động ngăn cách mượt mà biên đáy */}
+            <div className="border-t border-white/5 pt-5 flex justify-end w-full">
               <Submit_GoBack />
             </div>
           </div>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

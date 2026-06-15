@@ -142,11 +142,18 @@ const EditBrandPage = () => {
               label="Xuất xứ"
             />
           </div>
-          <div className="flex items-center gap-5 ml-3 mt-4">
+          <div className="flex items-center gap-4 ml-3 mt-5 w-full">
             <Submit_GoBack />
-            <div className="p-3 bg-red-200">
-              <BtnDelete onClick={() => openConfirm(brand.name)} />
-            </div>
+            <button
+              type="button"
+              onClick={() => openConfirm(brand.name)}
+              className="h-[44px] px-6 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-xl
+               text-sm font-semibold tracking-wide flex items-center justify-center gap-2
+               hover:bg-rose-600 hover:text-white hover:border-rose-600
+               hover:shadow-[0_0_20px_rgba(244,63,94,0.2)] transition-all duration-200 mt-7"
+            >
+              Xóa thương hiệu
+            </button>
           </div>
         </div>
       </form>

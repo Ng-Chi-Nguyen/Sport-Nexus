@@ -106,10 +106,7 @@ const CouponPage = () => {
           <tbody className="divide-y divide-gray-100">
             {coupons.length > 0 ? (
               coupons.map((coupon) => (
-                <tr
-                  key={coupon.id}
-                  className="hover:bg-blue-50/30 transition-colors duration-200"
-                >
+                <tr key={coupon.id}>
                   {/* Mã Code */}
                   <td className="px-6 py-4 text-center font-bold text-blue-600">
                     <Badge color={coupon.is_active ? "blue" : "red"}>

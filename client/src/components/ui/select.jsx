@@ -3,6 +3,7 @@ import { ChevronDown } from "lucide-react";
 import countryData from "@/assets/data/countries.json";
 import addressData from "@/assets/data/addressVN_afterUpdate.json";
 
+// 1. COMPONENT SELECT TIÊU CHUẨN (Hỗ trợ cấu trúc Object & Array)
 const Select = ({
   options,
   value,
@@ -27,47 +28,50 @@ const Select = ({
 
   return (
     <div
-      className={`relative w-fit min-w-[320px] cursor-pointer text-[#323232] font-medium transition-all ${
-        /* Khi mở, cả cụm bao gồm cả nhãn sẽ nhảy lên z-9999 */
+      className={`relative w-full min-w-[240px] cursor-pointer text-slate-200 font-medium transition-all ${
         isOpen ? "z-[9999]" : "z-10"
       }`}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      {/* NHÃN (LABEL) - Đưa vào trong để không bao giờ bị mất */}
+      {/* NHÃN (LABEL) - Fix lỗi đè cắt nền bằng bg-[#0D121F] */}
       {label && (
         <label
-          className={`absolute -top-2 left- bg-white px-1 font-bold text-[12px] transition-all duration-300 z-[120] ${
-            isOpen ? "text-[#4facf3]" : "text-[#323232]"
+          className={`absolute -top-2 left-3 bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
+            isOpen ? "text-sky-400" : "text-slate-500"
           }`}
         >
-          {label} <span className="text-red-500">*</span>
+          {label} <span className="text-rose-500">*</span>
         </label>
       )}
 
-      {/* TRIGGER */}
+      {/* TRIGGER KHUNG BẤM */}
       <div
-        className={`bg-white p-[10px] rounded-[5px] relative z-[100] text-[15px] flex items-center justify-between border-2 transition-all duration-300 shadow-[4px_4px_0px_0px_#323232] ${
-          isOpen ? "border-[#4facf3]" : "border-[#323232]"
+        className={`bg-[#111827]/40 p-[11px_15px] rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
+          isOpen
+            ? "border-sky-500/50 bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
+            : "border-slate-800"
         }`}
       >
-        <span className="truncate mr-2">
+        <span
+          className={`truncate mr-2 ${selectedOption ? "text-slate-200" : "text-slate-600"}`}
+        >
           {selectedOption ? selectedOption.name : placeholder}
         </span>
         <ChevronDown
-          size={15}
-          className={`transition-transform duration-300 ${
-            isOpen ? "rotate-180 text-[#4facf3]" : "rotate-0 text-[#323232]"
+          size={14}
+          className={`transition-transform duration-200 ${
+            isOpen ? "rotate-180 text-sky-400" : "rotate-0 text-slate-500"
           }`}
         />
       </div>
 
-      {/* DROPDOWN MENU */}
+      {/* DROPDOWN MENU MENU CON TRONG SUỐT GLASS */}
       <div
-        className={`flex flex-col rounded-[5px] p-[5px] bg-white border-2 border-[#323232] shadow-[4px_4px_0px_0px_#4facf3] absolute left-0 w-full transition-all duration-300 z-[110] max-h-[300px] overflow-y-auto custom-scrollbar ${
+        className={`flex flex-col rounded-xl p-1 bg-[#111827]/95 border border-slate-800 shadow-2xl absolute left-0 w-full transition-all duration-200 z-[110] max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+2px)] visible"
-            : "opacity-0 top-[calc(100%-10px)] invisible pointer-events-none"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0"
+            : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1"
         }`}
       >
         {safeOptions.map((option) => (
@@ -77,10 +81,10 @@ const Select = ({
               onChange(option.slug);
               setIsOpen(false);
             }}
-            className={`rounded-[4px] p-[10px] text-[14px] transition-colors duration-200 w-full cursor-pointer whitespace-nowrap hover:bg-[#4facf3] hover:text-white ${
+            className={`rounded-lg p-[8px_12px] text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
               value === option.slug
-                ? "text-white font-bold bg-[#4facf3]"
-                : "text-[#323232]"
+                ? "text-sky-400 font-bold bg-sky-500/10 border border-sky-500/20"
+                : "text-slate-400 hover:bg-[#161F32] hover:text-slate-100"
             }`}
           >
             {option.name}
@@ -91,54 +95,57 @@ const Select = ({
   );
 };
 
+// 2. COMPONENT SELECTPRO CHUYÊN DỤNG (Hỗ trợ cấu trúc object { id, name })
 const SelectPro = ({ options = [], label, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-  // console.log(value);
-  // Tìm option đang được chọn để hiển thị tên ra ngoài
   const selectedOption = options?.find((opt) => opt.id === value);
-  // console.log(selectedOption);
+
   return (
     <div
-      className="relative border border-gray-500 h-[40px] rounded-[5px]"
+      className={`relative w-full h-[42px] cursor-pointer text-slate-200 font-medium transition-all ${
+        isOpen ? "z-[9999]" : "z-10"
+      }`}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      <label
-        className={`absolute -top-2 left-3 bg-white px-1 font-bold text-[12px] transition-all duration-300 z-[101] ${
-          isOpen ? "text-[#4facf3]" : "text-[#323232]"
-        }`}
-      >
-        {label} <span className="text-red-500">*</span>
-      </label>
+      {/* LABEL */}
+      {label && (
+        <label
+          className={`absolute -top-2 left-3 bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
+            isOpen ? "text-sky-400" : "text-slate-500"
+          }`}
+        >
+          {label} <span className="text-rose-500">*</span>
+        </label>
+      )}
 
+      {/* TRIGGER TRIGGER */}
       <div
-        className={`relative bg-white p-[10px] rounded-[5px] z-[100] text-[15px] flex items-center justify-between h-full transition-all duration-300 cursor-pointer ${
-          isOpen ? "border-[#4facf3]" : "border-[#323232]"
+        className={`bg-[#111827]/40 p-[11px_15px] h-full rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
+          isOpen
+            ? "border-sky-500/50 bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
+            : "border-slate-800"
         }`}
       >
-        {/* HIỂN THỊ GIÁ TRỊ ĐÃ CHỌN Ở ĐÂY */}
         <span
-          className={
-            selectedOption ? "text-[#323232] pt-2" : "text-gray-400 py-2"
-          }
+          className={`truncate mr-4 ${selectedOption ? "text-slate-200" : "text-slate-600"}`}
         >
           {selectedOption ? selectedOption.name : "Chọn..."}
         </span>
-
         <ChevronDown
-          size={15}
-          className={`absolute right-2 top-3 transition-transform duration-300 ${
-            isOpen ? "rotate-180 text-[#4facf3]" : "rotate-0 text-[#323232]"
+          size={14}
+          className={`transition-transform duration-200 ${
+            isOpen ? "rotate-180 text-sky-400" : "rotate-0 text-slate-500"
           }`}
         />
       </div>
 
-      {/* Danh sách options */}
+      {/* OPTIONS DROPDOWN */}
       <div
-        className={`flex flex-col border border-gray-300 rounded-[5px] p-[5px] bg-white absolute left-0 w-full transition-all duration-300 z-[110] max-h-[300px] custom-scrollbar ${
+        className={`flex flex-col rounded-xl p-1 bg-[#111827]/95 border border-slate-800 shadow-2xl absolute left-0 w-full transition-all duration-200 z-[110] max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+2px)] visible"
-            : "opacity-0 top-[calc(100%-10px)] invisible pointer-events-none"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0"
+            : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1"
         }`}
       >
         {options.map((option) => (
@@ -148,10 +155,10 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
               if (onChange) onChange(option.id);
               setIsOpen(false);
             }}
-            className={`rounded-[4px] p-[10px] text-[14px] transition-colors duration-200 w-full cursor-pointer whitespace-nowrap hover:bg-[#4facf3] hover:text-white ${
+            className={`rounded-lg p-[8px_12px] text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
               value === option.id
-                ? "text-white font-bold bg-[#4facf3]"
-                : "text-[#323232]"
+                ? "text-sky-400 font-bold bg-sky-500/10 border border-sky-500/20"
+                : "text-slate-400 hover:bg-[#161F32] hover:text-slate-100"
             }`}
           >
             {option.name}
@@ -162,56 +169,58 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
   );
 };
 
+// 3. COMPONENT CHỌN QUỐC GIA (XUẤT XỨ)
 const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Tìm quốc gia đang được chọn để hiển thị tên
   const selectedName = useMemo(() => {
-    // value bây giờ là tên nước (ví dụ: "Việt Nam")
     const found = countryData.find((c) => c.name === value);
     return found ? found.name : "Chọn quốc gia...";
   }, [value]);
 
   return (
     <div
-      className={`relative w-full min-w-[320px] cursor-pointer text-[#323232] font-medium transition-all ${
+      className={`relative w-full min-w-[240px] cursor-pointer text-slate-200 font-medium transition-all ${
         isOpen ? "z-[9999]" : "z-10"
       }`}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      {/* NHÃN (LABEL) */}
       {label && (
         <label
-          className={`absolute -top-2 left-3 bg-white px-1 font-bold text-[12px] transition-all duration-300 z-[120] ${
-            isOpen ? "text-[#4facf3]" : "text-[#323232]"
+          className={`absolute -top-2 left-3 bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
+            isOpen ? "text-sky-400" : "text-slate-500"
           }`}
         >
-          {label} <span className="text-red-500">*</span>
+          {label} <span className="text-rose-500">*</span>
         </label>
       )}
 
-      {/* KHUNG HIỂN THỊ CHÍNH */}
       <div
-        className={`bg-white p-[10px] rounded-[5px] relative z-[100] text-[15px] flex items-center justify-between border-2 transition-all duration-300 shadow-[4px_4px_0px_0px_#323232] ${
-          isOpen ? "border-[#4facf3]" : "border-[#323232]"
+        className={`bg-[#111827]/40 p-[11px_15px] rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
+          isOpen
+            ? "border-sky-500/50 bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
+            : "border-slate-800"
         }`}
       >
-        <span className="truncate mr-2">{selectedName}</span>
+        <span
+          className={`truncate mr-2 ${value ? "text-slate-200" : "text-slate-600"}`}
+        >
+          {selectedName}
+        </span>
         <ChevronDown
-          size={15}
-          className={`transition-transform duration-300 ${
-            isOpen ? "rotate-180 text-[#4facf3]" : "rotate-0 text-[#323232]"
+          size={14}
+          className={`transition-transform duration-200 ${
+            isOpen ? "rotate-180 text-sky-400" : "rotate-0 text-slate-500"
           }`}
         />
       </div>
 
-      {/* DANH SÁCH DROPDOWN */}
       <div
-        className={`flex flex-col rounded-[5px] p-[5px] bg-white border-2 border-[#323232] shadow-[4px_4px_0px_0px_#4facf3] absolute left-0 w-full transition-all duration-300 z-[110] max-h-[300px] overflow-y-auto custom-scrollbar ${
+        className={`flex flex-col rounded-xl p-1 bg-[#111827]/95 border border-slate-800 shadow-2xl absolute left-0 w-full transition-all duration-200 z-[110] max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+2px)] visible"
-            : "opacity-0 top-[calc(100%-10px)] invisible pointer-events-none"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0"
+            : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1"
         }`}
       >
         {countryData.map((country, index) => (
@@ -219,15 +228,12 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
             key={index}
             onClick={() => {
               onChange(country.name);
-
-              // console.log("Đã chọn:", country.name);
-
               setIsOpen(false);
             }}
-            className={`rounded-[4px] p-[10px] text-[14px] transition-colors duration-200 w-full cursor-pointer whitespace-nowrap hover:bg-[#4facf3] hover:text-white ${
-              value === country.code
-                ? "text-white font-bold bg-[#4facf3]"
-                : "text-[#323232]"
+            className={`rounded-lg p-[8px_12px] text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
+              value === country.name
+                ? "text-sky-400 font-bold bg-sky-500/10 border border-sky-500/20"
+                : "text-slate-400 hover:bg-[#161F32] hover:text-slate-100"
             }`}
           >
             {country.name}
@@ -238,11 +244,11 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
   );
 };
 
+// 4. COMPONENT ĐỊA CHỈ VIỆT NAM LIÊN KẾT (TỈNH/THÀNH - PHƯỜNG/XÃ)
 const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
 
-  // 1. Dò tìm và tự động gán Mã (Code) từ Tên (Name)
   useEffect(() => {
     if (initialProvince) {
       const foundProvince = addressData.find(
@@ -251,7 +257,6 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
       if (foundProvince) {
         setSelectedProvince(foundProvince.Code);
 
-        // Nếu có mã tỉnh, tiếp tục tìm mã xã
         if (initialWard) {
           let allWards = foundProvince.Districts
             ? foundProvince.Districts.flatMap((d) => d.Wards || [])
@@ -264,9 +269,8 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
         }
       }
     }
-  }, [initialProvince, initialWard]); // Chạy lại khi props từ trang Edit truyền vào
+  }, [initialProvince, initialWard]);
 
-  // 2. Lấy danh sách Tỉnh/Thành cho Select
   const provinceOptions = useMemo(() => {
     return addressData.map((p) => ({
       slug: p.Code,
@@ -274,7 +278,6 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
     }));
   }, []);
 
-  // 3. Lấy danh sách Phường/Xã dựa trên Tỉnh đã chọn
   const wardOptions = useMemo(() => {
     const province = addressData.find((p) => p.Code === selectedProvince);
     if (!province) return [];
@@ -289,7 +292,6 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
     }));
   }, [selectedProvince]);
 
-  // 4. Gửi dữ liệu ngược lại cho cha
   useEffect(() => {
     const provinceObj = addressData.find((p) => p.Code === selectedProvince);
     let allWards = provinceObj?.Districts
@@ -308,27 +310,30 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
   }, [selectedProvince, selectedWard, onAddressChange]);
 
   return (
-    <div className="flex gap-4">
-      <Select
-        label="Tỉnh / Thành phố"
-        options={provinceOptions}
-        value={selectedProvince} // Select sẽ khớp 'slug' (Code) để hiện 'name'
-        onChange={(val) => {
-          setSelectedProvince(val);
-          setSelectedWard("");
-        }}
-      />
+    <div className="flex gap-4 w-full">
+      <div className="flex-1">
+        <Select
+          label="Tỉnh / Thành phố"
+          options={provinceOptions}
+          value={selectedProvince}
+          onChange={(val) => {
+            setSelectedProvince(val);
+            setSelectedWard("");
+          }}
+        />
+      </div>
 
-      {selectedProvince && (
-        <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-          <Select
-            label="Phường / Xã"
-            options={wardOptions}
-            value={selectedWard}
-            onChange={(val) => setSelectedWard(val)}
-          />
-        </div>
-      )}
+      <div className="flex-1">
+        <Select
+          label="Phường / Xã"
+          options={wardOptions}
+          value={selectedWard}
+          placeholder={
+            selectedProvince ? "Chọn Phường / Xã" : "Vui lòng chọn Tỉnh"
+          }
+          onChange={(val) => setSelectedWard(val)}
+        />
+      </div>
     </div>
   );
 };

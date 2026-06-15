@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { LayoutDashboard, Plus, Trash2 } from "lucide-react";
-import { useLoaderData, useNavigate, useParams } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 // components
 import { FloatingInput } from "@/components/ui/input";
@@ -9,16 +9,15 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { Submit_GoBack } from "@/components/ui/button";
 import { SelectPro } from "@/components/ui/select";
 // utils
-import { formatCurrency } from "@/utils/formatters";
+import { formatCurrency, formatFullDateTime } from "@/utils/formatters";
 // api
 import couponApi from "@/api/management/couponApi";
 import orderApi from "@/api/customer/orderApi";
 // lib
 import { queryClient } from "@/lib/react-query";
-import { formatFullDateTime } from "@/utils/formatters";
 
 const breadcrumbData = [
-  { title: <LayoutDashboard size={20} />, route: "" },
+  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
   { title: "Quản lý kinh doanh", route: "" },
   { title: "Đơn hàng", route: "/management/orders" },
   { title: "Chỉnh sửa đơn hàng", route: "#" },
@@ -52,7 +51,7 @@ const EditOrderPage = () => {
   const [code, setCode] = useState(orderData.coupon_code || "");
   const [status, setStatus] = useState(orderData.status || "Processing");
 
-  // --- LOGIC TÍNH TOÁN & HANDLERS (Giữ nguyên như Create) ---
+  // --- LOGIC TÍNH TOÁN & HANDLERS ---
   const totalAmount = useMemo(() => {
     return items.reduce((acc, item) => {
       return (
@@ -116,9 +115,7 @@ const EditOrderPage = () => {
         price_at_purchase: Number(item.price_at_purchase),
       })),
     };
-    console.log(dataToSend);
     try {
-      // Giả sử API update của bạn là orderApi.update(id, data)
       const res = await orderApi.update(orderData.id, dataToSend);
       if (res.success) {
         await Promise.all([
@@ -135,23 +132,26 @@ const EditOrderPage = () => {
   };
 
   return (
-    <div className="animate-in fade-in duration-500">
+    <div className="animate-in fade-in duration-500 space-y-4">
       <Breadcrumbs data={breadcrumbData} />
-      <div className="flex justify-between items-center my-4">
-        <h2 className="text-xl font-bold">
+
+      {/* KHỐI TIÊU ĐỀ ĐƠN HÀNG TRÊN NỀN TỐI */}
+      <div className="flex justify-between items-center my-2">
+        <h2 className="text-xl font-bold text-slate-100 tracking-wide">
           Chỉnh sửa đơn hàng #{orderData.id}
         </h2>
-        <span className="text-xs text-slate-400 italic">
+        <span className="text-xs text-slate-500 font-mono">
           Ngày tạo: {formatFullDateTime(orderData.created_at)}
         </span>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-4 items-start">
-        {/* CỘT TRÁI: THÔNG TIN CHUNG */}
-        <div className="w-1/4 flex flex-col gap-4">
-          <div className="bg-white p-5 rounded-[5px] border border-gray-200 shadow-sm">
+      <form onSubmit={handleSubmit} className="flex gap-4 items-start w-full">
+        {/* CỘT TRÁI: THÔNG TIN KHÁCH HÀNG & DÒNG TIỀN (30% CHIỀU RỘNG) */}
+        <div className="w-[30%] flex flex-col gap-4">
+          {/* CARD: KHÁCH HÀNG */}
+          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
             <TitleManagement color="cyan">Khách hàng</TitleManagement>
-            <div className="space-y-4">
+            <div className="flex flex-col gap-5 mt-3">
               <FloatingInput
                 label="Email"
                 value={email}
@@ -165,9 +165,10 @@ const EditOrderPage = () => {
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-[5px] border border-gray-200 shadow-sm">
+          {/* CARD: KHUYẾN MÃI */}
+          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
             <TitleManagement color="orange">Khuyến mãi</TitleManagement>
-            <div className="flex gap-2 items-end">
+            <div className="flex gap-3 items-end mt-3">
               <div className="flex-1">
                 <FloatingInput
                   label="Mã coupon"
@@ -178,27 +179,32 @@ const EditOrderPage = () => {
               <button
                 type="button"
                 onClick={handleApplyCoupon}
-                className="h-[46px] px-4 bg-blue-50 text-blue-600 border border-blue-200 rounded-[5px] text-[11px] font-black hover:bg-blue-100 uppercase transition-all"
+                className="h-[46px] px-4 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-lg text-xs font-bold hover:bg-sky-500/20 transition-all uppercase tracking-wider flex-shrink-0"
               >
                 K.tra
               </button>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-[5px] border border-gray-200 shadow-sm">
+          {/* CARD: THANH TOÁN */}
+          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
             <TitleManagement color="emerald">Thanh toán</TitleManagement>
-            <div className="space-y-2 text-sm font-medium">
-              <div className="flex justify-between text-slate-500">
+            <div className="space-y-3 text-sm font-medium mt-4">
+              <div className="flex justify-between text-slate-400">
                 <span>Tạm tính:</span>
-                <span>{formatCurrency(totalAmount)}</span>
+                <span className="font-mono text-slate-300">
+                  {formatCurrency(totalAmount)}
+                </span>
               </div>
-              <div className="flex justify-between text-rose-500">
+              <div className="flex justify-between text-slate-400">
                 <span>Giảm giá:</span>
-                <span>-{formatCurrency(discount)}</span>
+                <span className="font-mono text-rose-400">
+                  -{formatCurrency(discount)}
+                </span>
               </div>
-              <div className="flex justify-between text-blue-600 border-t pt-2 text-lg font-black">
+              <div className="flex justify-between text-emerald-400 border-t border-slate-800/80 pt-3 text-base font-black">
                 <span>Tổng cuối:</span>
-                <span>
+                <span className="font-mono bg-emerald-500/5 px-2.5 py-0.5 rounded-lg border border-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
                   {discount !== 0
                     ? formatCurrency(final)
                     : formatCurrency(totalAmount)}
@@ -206,16 +212,18 @@ const EditOrderPage = () => {
               </div>
             </div>
           </div>
-          <Submit_GoBack name="sữa" />
+
+          <Submit_GoBack name="Sửa đơn" />
         </div>
 
-        {/* CỘT PHẢI: CHI TIẾT SẢN PHẨM & TRẠNG THÁI */}
+        {/* CỘT PHẢI: TRẠNG THÁI HỆ THỐNG & SẢN PHẨM MUA */}
         <div className="flex-1 flex flex-col gap-4">
-          <div className="bg-white p-5 rounded-[5px] border border-gray-200 shadow-sm">
+          {/* CARD: TRẠNG THÁI HỆ THỐNG (ĐÃ FIX: Thêm relative z-20 để dropdown nổi lên trên) */}
+          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md relative z-20">
             <TitleManagement color="violet">
               Trạng thái hệ thống
             </TitleManagement>
-            <div className="flex gap-4">
+            <div className="flex gap-4 mt-3">
               <div className="flex-1">
                 <SelectPro
                   label="Phương thức"
@@ -253,8 +261,9 @@ const EditOrderPage = () => {
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-[5px] border border-gray-200 shadow-sm">
-            <div className="flex justify-between items-center mb-4">
+          {/* CARD: DANH SÁCH SẢN PHẨM MUA (ĐÃ FIX: Thêm relative z-10 để nằm dưới tầng dropdown) */}
+          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md relative z-10">
+            <div className="flex justify-between items-center mb-5">
               <TitleManagement color="blue">
                 Danh sách sản phẩm ({items.length})
               </TitleManagement>
@@ -271,19 +280,22 @@ const EditOrderPage = () => {
                     },
                   ])
                 }
-                className="bg-blue-600 text-white px-3 py-2 rounded-[5px] text-xs font-bold flex items-center gap-2 hover:bg-blue-700 transition"
+                className="bg-sky-500/10 text-sky-400 border border-sky-500/20 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-sky-500/20 shadow-[0_0_15px_rgba(14,165,233,0.05)] transition-all duration-150"
               >
-                <Plus size={14} /> Thêm món
+                <Plus size={16} strokeWidth={2.5} /> Thêm món
               </button>
             </div>
 
-            <div className="space-y-3 min-h-[550px] max-h-[550px] overflow-y-auto pr-2 custom-scrollbar">
-              {items.map((item) => (
+            {/* DANH SÁCH DÒNG SẢN PHẨM MUA */}
+            <div className="flex flex-col gap-3 min-h-[500px] max-h-[500px] overflow-y-auto pr-2 custom-scrollbar pb-10">
+              {items.map((item, index) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-3 p-3 bg-slate-50 rounded-[5px] border border-slate-100"
+                  className="flex items-center gap-4 p-4 bg-[#111827]/40 border border-slate-800/60 rounded-xl relative transition-all duration-150"
+                  style={{ zIndex: items.length - index }}
                 >
-                  <div className="flex-1">
+                  {/* Trường chọn biến thể sản phẩm */}
+                  <div className="flex-1 min-w-0">
                     <SelectPro
                       value={item.variantId}
                       options={variantsOptions}
@@ -293,7 +305,9 @@ const EditOrderPage = () => {
                       label="Sản phẩm"
                     />
                   </div>
-                  <div className="w-20">
+
+                  {/* Số lượng */}
+                  <div className="w-24 flex-shrink-0">
                     <FloatingInput
                       label="SL"
                       type="number"
@@ -303,7 +317,9 @@ const EditOrderPage = () => {
                       }
                     />
                   </div>
-                  <div className="w-32">
+
+                  {/* Đơn giá mua */}
+                  <div className="w-36 flex-shrink-0">
                     <FloatingInput
                       label="Giá"
                       type="number"
@@ -317,15 +333,21 @@ const EditOrderPage = () => {
                       }
                     />
                   </div>
-                  <div className="w-28 text-right font-bold text-blue-600 text-sm">
-                    {formatCurrency(item.quantity * item.price_at_purchase)}
+
+                  {/* Tổng tiền của dòng sản phẩm */}
+                  <div className="w-[110px] text-right pr-2 flex-shrink-0">
+                    <span className="text-xs font-bold font-mono text-sky-400 bg-sky-500/5 px-2 py-1 rounded border border-sky-500/10">
+                      {formatCurrency(item.quantity * item.price_at_purchase)}
+                    </span>
                   </div>
+
+                  {/* Nút xóa dòng sản phẩm */}
                   <button
                     type="button"
                     onClick={() =>
                       setItems(items.filter((i) => i.id !== item.id))
                     }
-                    className="p-2 text-slate-300 hover:text-rose-500 transition"
+                    className="p-2 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all duration-150 flex-shrink-0"
                   >
                     <Trash2 size={18} />
                   </button>

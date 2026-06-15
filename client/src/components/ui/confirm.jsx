@@ -1,25 +1,20 @@
 import React, { useRef, useEffect } from "react";
-import { AlertCircle, LogOut, TriangleAlert, X } from "lucide-react";
+import { LogOut, TriangleAlert, X } from "lucide-react";
 
+// 1. MODAL XÁC NHẬN XÓA (STYLE GLASSOS NEON DANGER)
 const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
-  // 1. Tạo một tham chiếu (ref) đến hộp thoại chính
   const modalRef = useRef();
 
   useEffect(() => {
-    // 2. Hàm xử lý khi nhấn chuột
     const handleClickOutside = (event) => {
-      // Nếu nhấn vào vùng ngoài (không nằm trong modalRef) thì đóng modal
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         onCancel();
       }
     };
 
-    // 3. Đăng ký sự kiện khi modal đang mở
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-
-    // 4. Quan trọng: Xóa sự kiện khi đóng modal hoặc unmount để tránh lỗi bộ nhớ
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -28,39 +23,48 @@ const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      {/* 5. Gắn ref vào đây - Đây là vùng "bên trong" */}
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-in fade-in duration-200">
+      {/* KHUNG MODAL TỐI MỜ HÀO QUANG ĐỎ GIẬN DỮ */}
       <div
         ref={modalRef}
-        className="relative w-full max-w-md bg-white border-4 border-[#323232] shadow-[8px_8px_0px_0px_#323232] rounded-[10px] p-6 animate-in fade-in zoom-in duration-200"
+        className="relative w-full max-w-sm bg-[#0D121F]/90 border border-rose-500/30 
+                   shadow-[0_0_40px_rgba(244,63,94,0.15)] rounded-2xl p-6 
+                   backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200"
       >
+        {/* Nút đóng X */}
         <button
           onClick={onCancel}
-          className="absolute top-4 right-4 text-gray-400 hover:text-[#323232]"
+          className="absolute top-4 right-4 text-slate-500 hover:text-slate-300 transition-colors duration-150"
         >
-          <X size={24} />
+          <X size={18} />
         </button>
 
         <div className="flex flex-col items-center text-center">
-          <div className="mb-4 p-4 bg-red-100 rounded-full border-2 border-[#323232]">
-            <TriangleAlert size={40} className="text-red-500" />
+          {/* Vòng tròn cảnh báo Đỏ phát sáng */}
+          <div className="mb-4 p-3.5 bg-rose-500/10 rounded-full border border-rose-500/30 shadow-[0_0_15px_rgba(244,63,94,0.1)]">
+            <TriangleAlert size={32} className="text-rose-400" />
           </div>
 
-          <h3 className="text-2xl font-black uppercase text-[#323232] mb-2">
+          {/* Tiêu đề Modal: Bỏ font-black thô, dùng font-bold tracking rộng */}
+          <h3 className="text-lg font-bold text-slate-100 tracking-wide mb-1.5">
             {title}
           </h3>
-          <p className="text-gray-500 font-medium mb-8">{message}</p>
 
-          <div className="flex w-full gap-4">
+          <p className="text-slate-400 text-xs leading-relaxed mb-6 px-2">
+            {message}
+          </p>
+
+          {/* Cụm nút bấm hàng ngang phẳng lì, hiện đại */}
+          <div className="flex w-full gap-3">
             <button
               onClick={onCancel}
-              className="flex-1 py-3 font-bold uppercase border-2 border-[#323232] rounded-[5px] shadow-[4px_4px_0px_0px_#323232] active:translate-y-1 active:shadow-none transition-all"
+              className="flex-1 py-2 rounded-xl text-xs font-semibold text-slate-400 bg-slate-900 border border-slate-800 hover:bg-slate-800 hover:text-slate-200 transition-all duration-150"
             >
-              Hủy
+              Hủy bỏ
             </button>
             <button
               onClick={onConfirm}
-              className="flex-1 py-3 font-bold uppercase bg-red-500 text-white border-2 border-[#323232] rounded-[5px] shadow-[4px_4px_0px_0px_#323232] active:translate-y-1 active:shadow-none transition-all"
+              className="flex-1 py-2 rounded-xl text-xs font-semibold text-white bg-rose-600 hover:bg-rose-500 shadow-[0_0_15px_rgba(225,29,72,0.2)] transition-all duration-150"
             >
               Đồng ý
             </button>
@@ -71,6 +75,7 @@ const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
   );
 };
 
+// 2. MODAL XÁC NHẬN CHUNG (THOÁT/ĐĂNG XUẤT/THÔNG BÁO)
 const Confirm = ({
   isOpen,
   title,
@@ -81,7 +86,6 @@ const Confirm = ({
 }) => {
   const modalRef = useRef();
 
-  // Đóng khi click ra ngoài vùng modal
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -94,49 +98,58 @@ const Confirm = ({
 
   if (!isOpen) return null;
 
-  // Cấu hình màu sắc theo loại thông báo
   const isDanger = type === "danger";
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-[1px] animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-in fade-in duration-200">
+      {/* KHUNG MODAL THEME TỐI ĐA NĂNG */}
       <div
         ref={modalRef}
-        className="relative w-full max-w-sm bg-white rounded-xl shadow-2xl p-6 border border-slate-100 animate-in zoom-in-95 duration-200"
+        className={`relative w-full max-w-sm bg-[#0D121F]/90 border rounded-2xl p-6 backdrop-blur-xl animate-in zoom-in-95 duration-200 shadow-2xl
+                   ${isDanger ? "border-rose-500/20 shadow-rose-500/5" : "border-sky-500/20 shadow-sky-500/5"}`}
       >
-        {/* Nút đóng góc trên */}
         <button
           onClick={onCancel}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+          className="absolute top-4 right-4 text-slate-500 hover:text-slate-300 transition-colors duration-150"
         >
-          <X size={20} />
+          <X size={18} />
         </button>
 
         <div className="flex flex-col items-center text-center">
-          {/* Icon tròn nhẹ nhàng */}
+          {/* Vòng tròn Icon mờ */}
           <div
-            className={`mb-4 p-3 rounded-full ${
-              isDanger ? "bg-red-50 text-red-500" : "bg-blue-50 text-blue-500"
+            className={`mb-4 p-3.5 rounded-full border ${
+              isDanger
+                ? "bg-rose-500/10 text-rose-400 border-rose-500/30"
+                : "bg-sky-500/10 text-sky-400 border-sky-500/30"
             }`}
           >
-            <LogOut color="#f72b2b" />
+            <LogOut
+              size={24}
+              className={isDanger ? "text-rose-400" : "text-sky-400"}
+            />
           </div>
 
-          <h3 className="text-xl font-semibold text-slate-800 mb-2">{title}</h3>
-          <p className="text-slate-500 text-sm leading-relaxed mb-6">
+          <h3 className="text-lg font-bold text-slate-100 tracking-wide mb-1.5">
+            {title}
+          </h3>
+          <p className="text-slate-400 text-xs leading-relaxed mb-6 px-2">
             {message}
           </p>
 
           <div className="flex w-full gap-3">
             <button
               onClick={onCancel}
-              className="flex-1 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+              className="flex-1 py-2 rounded-xl text-xs font-semibold text-slate-400 bg-slate-900 border border-slate-800 hover:bg-slate-800 hover:text-slate-200 transition-all duration-150"
             >
               Hủy bỏ
             </button>
             <button
               onClick={onConfirm}
-              className={`flex-1 py-2.5 text-sm font-medium text-white rounded-lg transition-opacity hover:opacity-90 ${
-                isDanger ? "bg-red-500" : "bg-blue-600"
+              className={`flex-1 py-2 rounded-xl text-xs font-semibold text-white transition-all duration-150 ${
+                isDanger
+                  ? "bg-rose-600 hover:bg-rose-500 shadow-[0_0_15px_rgba(225,29,72,0.2)]"
+                  : "bg-sky-600 hover:bg-sky-500 shadow-[0_0_15px_rgba(14,165,233,0.2)]"
               }`}
             >
               Xác nhận

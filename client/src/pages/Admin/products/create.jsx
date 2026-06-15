@@ -200,9 +200,9 @@ const CreateProductPage = () => {
             <FloatingTextarea
               id="product_desc"
               label="Mô tả sản phẩm"
-              placeholder="Nhập mô tả chi tiết..."
-              value={description} // Truyền giá trị từ state vào
-              onChange={(e) => setDescription(e.target.value)} // Cập nhật state khi gõ
+              placeholder=" "
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               required={true}
             />
           </div>

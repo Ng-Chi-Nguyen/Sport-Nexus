@@ -85,6 +85,17 @@
   background-color: #3b95d1 !important;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 /* 6. Hỗ trợ Firefox (Dành cho 5% người dùng còn lại) */
 @supports (scrollbar-width: thin) {
   .custom-scrollbar {

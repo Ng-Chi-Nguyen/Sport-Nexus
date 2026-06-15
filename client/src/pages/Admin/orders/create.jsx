@@ -17,7 +17,7 @@ import orderApi from "@/api/customer/orderApi";
 import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
-  { title: <LayoutDashboard size={20} />, route: "" },
+  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
   { title: "Quản lý kinh doanh", route: "" },
   { title: "Đơn hàng", route: "/management/orders" },
   { title: "Thêm đơn hàng mới", route: "#" },
@@ -26,7 +26,7 @@ const breadcrumbData = [
 const CreateOrderPage = () => {
   const navigate = useNavigate();
   const response = useLoaderData();
-  // console.log(response);
+
   // state form
   const [items, setItems] = useState([
     {
@@ -40,8 +40,8 @@ const CreateOrderPage = () => {
   const [address, setAddress] = useState("");
   const [method, setMethod] = useState("COD");
   const [paymentStatus, setPaymentStatus] = useState("Pending");
-  const [discount, setDiscount] = useState(0); // tiền giảm
-  const [final, setFinal] = useState(0); // tiền trả thực tế
+  const [discount, setDiscount] = useState(0);
+  const [final, setFinal] = useState(0);
   const [code, setCode] = useState(null);
   const [status, setStatus] = useState("Processing");
 
@@ -72,7 +72,6 @@ const CreateOrderPage = () => {
     setFinal(0);
   };
 
-  // 1. Tính Tạm tính (Tổng tiền hàng)
   const totalAmount = useMemo(() => {
     return items.reduce((acc, item) => {
       return (
@@ -80,12 +79,6 @@ const CreateOrderPage = () => {
       );
     }, 0);
   }, [items]);
-
-  // 2. Tính Tổng cuối (Sau khi trừ giảm giá)
-  // const finalAmount = useMemo(() => {
-  //   const result = totalAmount - Number(discount || 0);
-  //   return result > 0 ? result : 0;
-  // }, [totalAmount, discount]);
 
   const variantsOptions = useMemo(
     () =>
@@ -107,17 +100,13 @@ const CreateOrderPage = () => {
   };
 
   const handleApplyCoupon = async () => {
-    // console.log(totalAmount);
-    // console.log(code);
     const dataCouponToSend = {
       amount: totalAmount,
       code: code,
     };
-    // console.log(dataCouponToSend);
     try {
       const resCoupon = await couponApi.check(dataCouponToSend);
       if (resCoupon.success) {
-        // console.log(resCoupon);
         toast.success(resCoupon.message);
         setDiscount(resCoupon.data.discount);
         setFinal(resCoupon.data.newAmount);
@@ -129,7 +118,6 @@ const CreateOrderPage = () => {
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
         "Đã có lỗi xảy ra!";
-
       toast.error(errorMessage);
     }
   };
@@ -153,7 +141,6 @@ const CreateOrderPage = () => {
         price_at_purchase: Number(item.price_at_purchase),
       })),
     };
-    // console.log(dataToSend);
     try {
       const response = await orderApi.create(dataToSend);
       if (response.success) {
@@ -168,21 +155,24 @@ const CreateOrderPage = () => {
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
         "Đã có lỗi xảy ra!";
-
       toast.error(errorMessage);
     }
   };
 
   return (
-    <div className="animate-in fade-in duration-500">
+    <div className="animate-in fade-in duration-500 space-y-4">
       <Breadcrumbs data={breadcrumbData} />
-      <h2>Tạo đơn hàng mới</h2>
+      <h2 className="text-xl font-bold text-slate-100 tracking-wide">
+        Tạo đơn hàng mới
+      </h2>
 
-      <form onSubmit={handleSubmit} className="flex gap-2 items-start">
-        <div className="w-1/4 flex flex-col gap-2">
-          <div className="bg-white p-5 rounded-[5px] border border-gray-200">
+      <form onSubmit={handleSubmit} className="flex gap-4 items-start w-full">
+        {/* CỘT TRÁI (THÔNG TIN KHÁCH HÀNG & TỔNG KẾT) */}
+        <div className="w-[30%] flex flex-col gap-4">
+          {/* CARD: THÔNG TIN KHÁCH HÀNG */}
+          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
             <TitleManagement color="cyan">Thông tin khách hàng</TitleManagement>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-5 mt-3">
               <FloatingInput
                 label="Email khách hàng"
                 value={email}
@@ -196,44 +186,48 @@ const CreateOrderPage = () => {
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-[5px] border border-gray-200">
+          {/* CARD: MÃ GIẢM GIÁ */}
+          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
             <TitleManagement color="orange">
               Thanh toán & Mã giảm giá
             </TitleManagement>
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-2 items-end">
-                <div className="flex-1">
-                  <FloatingInput
-                    label="Mã giảm giá"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={handleApplyCoupon}
-                  className="h-[46px] px-4 bg-blue-50 text-blue-600 border border-blue-200 rounded-[5px] text-[11px] font-black hover:bg-blue-100 transition-all uppercase tracking-wider"
-                >
-                  K.tra
-                </button>
+            <div className="flex gap-3 items-end mt-3">
+              <div className="flex-1">
+                <FloatingInput
+                  label="Mã giảm giá"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                />
               </div>
+              <button
+                type="button"
+                onClick={handleApplyCoupon}
+                className="h-[46px] px-4 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-lg text-xs font-bold hover:bg-sky-500/20 transition-all uppercase tracking-wider flex-shrink-0"
+              >
+                K.tra
+              </button>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-[5px] border border-gray-200">
+          {/* CARD: TỔNG KẾT ĐƠN HÀNG */}
+          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
             <TitleManagement color="emerald">Tổng kết đơn hàng</TitleManagement>
-            <div className="space-y-2 text-sm font-medium">
-              <div className="flex justify-between text-slate-500">
+            <div className="space-y-3 text-sm font-medium mt-4">
+              <div className="flex justify-between text-slate-400">
                 <span>Tạm tính:</span>
-                <span>{formatCurrency(totalAmount)}</span>
+                <span className="font-mono text-slate-300">
+                  {formatCurrency(totalAmount)}
+                </span>
               </div>
-              <div className="flex justify-between text-slate-500">
+              <div className="flex justify-between text-slate-400">
                 <span>Số tiền giảm:</span>
-                <span>{formatCurrency(discount)}</span>
+                <span className="font-mono text-rose-400">
+                  -{formatCurrency(discount)}
+                </span>
               </div>
-              <div className="flex justify-between text-green-500 border-t pt-2 text-lg font-black">
+              <div className="flex justify-between text-emerald-400 border-t border-slate-800/80 pt-3 text-base font-black">
                 <span>Tổng cuối:</span>
-                <span>
+                <span className="font-mono bg-emerald-500/5 px-2.5 py-0.5 rounded-lg border border-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
                   {discount !== 0
                     ? formatCurrency(final)
                     : formatCurrency(totalAmount)}
@@ -245,10 +239,12 @@ const CreateOrderPage = () => {
           <Submit_GoBack />
         </div>
 
-        <div className="flex-1 flex flex-col gap-2">
-          <div className="p-5 rounded-[5px] border border-gray-200">
+        {/* CỘT PHẢI (THÔNG TIN ĐƠN HÀNG & DANH SÁCH MÓN HÀNG) */}
+        <div className="flex-1 flex flex-col gap-4">
+          {/* CARD: THÔNG TIN ĐƠN HÀNG (SELECTS TRẠNG THÁI) */}
+          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md z-20">
             <TitleManagement color="violet">Thông tin đơn hàng</TitleManagement>
-            <div className="flex gap-2">
+            <div className="flex gap-4 mt-3">
               <div className="w-1/3">
                 <SelectPro
                   label="Phương thức thanh toán"
@@ -289,28 +285,32 @@ const CreateOrderPage = () => {
               </div>
             </div>
           </div>
-          <div className=" bg-white p-5 rounded-[5px] border border-gray-200">
-            <div className="flex justify-between items-start">
+
+          {/* CARD: DANH SÁCH SẢN PHẨM MUA */}
+          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
+            <div className="flex justify-between items-center mb-5">
               <TitleManagement color="blue">
                 Danh sách sản phẩm mua
               </TitleManagement>
               <button
                 type="button"
                 onClick={handleAddItem}
-                className="bg-blue-500 text-white px-4 py-2 rounded-[5px] text-sm font-bold flex items-center gap-2 hover:bg-blue-600 transition"
+                className="bg-sky-500/10 text-sky-400 border border-sky-500/20 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-sky-500/20 shadow-[0_0_15px_rgba(14,165,233,0.05)] transition-all duration-150"
               >
-                <Plus size={16} /> Thêm sản phẩm
+                <Plus size={16} strokeWidth={2.5} /> Thêm sản phẩm
               </button>
             </div>
 
-            <div className="flex flex-col gap-4 min-h-[550px] max-h-[550px] overflow-y-auto pr-2 custom-scrollbar pb-20">
+            {/* VÙNG SCROLL CHỨA CÁC ITEM DÒNG SẢN PHẨM */}
+            <div className="flex flex-col gap-3 min-h-[500px] max-h-[500px] overflow-y-auto pr-2 custom-scrollbar pb-10">
               {items.map((item, index) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-3 p-4 bg-slate-50 rounded-[5px] border border-gray-200 relative"
-                  style={{ zIndex: items.length - index }} // Chống ẩn Select
+                  className="flex items-center gap-4 p-4 bg-[#111827]/40 border border-slate-800/60 rounded-xl relative transition-all duration-150"
+                  style={{ zIndex: items.length - index }}
                 >
-                  <div className="flex-1">
+                  {/* Select sản phẩm */}
+                  <div className="flex-1 min-w-0">
                     <SelectPro
                       value={item.variantId}
                       options={variantsOptions}
@@ -320,7 +320,9 @@ const CreateOrderPage = () => {
                       label="Sản phẩm"
                     />
                   </div>
-                  <div className="w-24">
+
+                  {/* Số lượng */}
+                  <div className="w-24 flex-shrink-0">
                     <FloatingInput
                       label="SL"
                       type="number"
@@ -330,7 +332,9 @@ const CreateOrderPage = () => {
                       }
                     />
                   </div>
-                  <div className="w-40">
+
+                  {/* Đơn giá */}
+                  <div className="w-36 flex-shrink-0">
                     <FloatingInput
                       label="Đơn giá"
                       type="number"
@@ -344,11 +348,15 @@ const CreateOrderPage = () => {
                       }
                     />
                   </div>
-                  <div className="w-[70px]">
-                    <span className="text-xs font-bold text-blue-600">
+
+                  {/* Thành tiền từng item */}
+                  <div className="w-[100px] text-right pr-2 flex-shrink-0">
+                    <span className="text-xs font-bold font-mono text-sky-400 bg-sky-500/5 px-2 py-1 rounded border border-sky-500/10">
                       {formatCurrency(item.quantity * item.price_at_purchase)}
                     </span>
                   </div>
+
+                  {/* Nút xóa item */}
                   <button
                     type="button"
                     onClick={() => {
@@ -356,9 +364,9 @@ const CreateOrderPage = () => {
                       setDiscount(0);
                       setFinal(0);
                     }}
-                    className="p-2 text-slate-400 hover:text-red-500 transition"
+                    className="p-2 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all duration-150 flex-shrink-0"
                   >
-                    <Trash2 size={20} />
+                    <Trash2 size={18} />
                   </button>
                 </div>
               ))}

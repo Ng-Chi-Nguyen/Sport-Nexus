@@ -1,65 +1,67 @@
-import { useEffect, useState } from "react";
-import { Eye, EyeClosed, ImagePlus, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Eye, EyeClosed, ImagePlus } from "lucide-react";
 
+// 1. INPUT CƠ BẢN PHONG CÁCH TỐI MỜ
 const InputFrom = (props) => {
-  let { type, placeholder, onChange, value } = props;
+  let { type, placeholder, onChange, value, className = "" } = props;
   return (
-    <>
-      <input
-        type={type}
-        value={value} // Nhận giá trị từ cha truyền vào
-        onChange={onChange}
-        placeholder={placeholder}
-        className="peer py-3 px-3 cursor-pointer transition-all border border-gray-500 outline-none rounded-[5px] focus:border-primary focus:ring-1 focus:ring-primary"
-      />
-    </>
+    <input
+      type={type}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className={`peer py-2.5 px-4 w-full cursor-pointer transition-all duration-200
+                 bg-[#111827]/40 text-slate-200 border border-slate-800 outline-none rounded-xl 
+                 placeholder:text-slate-600 focus:border-sky-500/50 focus:bg-[#161F32]/60
+                 focus:ring-1 focus:ring-sky-500/20 ${className}`}
+    />
   );
 };
 
+// 2. INPUT MẬT KHẨU CƠ BẢN
 const InputPassword = (props) => {
-  const [type, setType] = useState(false);
-  let { placeholder } = props;
+  const [show, setShow] = useState(false);
+  let { placeholder, value, onChange, className = "" } = props;
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <input
-        type={type ? "password" : "text"}
+        type={show ? "text" : "password"}
+        value={value}
+        onChange={onChange}
         placeholder={placeholder}
-        className="peer py-3 px-3 cursor-pointer transition-all border border-gray-500 outline-none rounded-[5px] focus:border-primary focus:ring-1 focus:ring-primary w-full"
+        className={`peer py-2.5 pl-4 pr-11 w-full cursor-pointer transition-all duration-200
+                   bg-[#111827]/40 text-slate-200 border border-slate-800 outline-none rounded-xl 
+                   placeholder:text-slate-600 focus:border-sky-500/50 focus:bg-[#161F32]/60
+                   focus:ring-1 focus:ring-sky-500/20 ${className}`}
       />
-      {type ? (
-        <EyeClosed
-          className="absolute cursor-pointer top-[30%] right-[10px]"
-          onClick={() => setType(!type)}
-        />
-      ) : (
-        <Eye
-          className="absolute cursor-pointer top-[30%] right-[10px]"
-          onClick={() => setType(!type)}
-        />
-      )}
+      <div
+        className="absolute cursor-pointer top-1/2 -translate-y-1/2 right-4 text-slate-500 hover:text-sky-400 transition-colors"
+        onClick={() => setShow(!show)}
+      >
+        {show ? (
+          <Eye size={18} strokeWidth={1.5} />
+        ) : (
+          <EyeClosed size={18} strokeWidth={1.5} />
+        )}
+      </div>
     </div>
   );
 };
 
+// 3. COMPONENT TẢI ẢNH (AVATAR/LOGO) CHUẨN GLASSOS
 const InputFile = ({ label, value, onChange }) => {
   const [preview, setPreview] = useState(null);
 
-  // Xử lý hiển thị ban đầu và khi value thay đổi
   useEffect(() => {
     if (!value) {
       setPreview(null);
       return;
     }
-
-    // Nếu value là đối tượng File (người dùng vừa chọn)
     if (value instanceof File) {
       const objectUrl = URL.createObjectURL(value);
       setPreview(objectUrl);
-      // Cleanup để tránh rò rỉ bộ nhớ
       return () => URL.revokeObjectURL(objectUrl);
     }
-
-    // Nếu value là string (URL từ database)
     if (typeof value === "string") {
       setPreview(value);
     }
@@ -68,27 +70,23 @@ const InputFile = ({ label, value, onChange }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      onChange(file); // Gửi file lên cha để cập nhật state
+      onChange(file);
     }
   };
-
-  // const handleRemove = (e) => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  //   onChange(null); // Xóa ảnh ở state cha
-  // };
 
   return (
     <div className="flex flex-col gap-2 w-full">
       {label && (
-        <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
-          <span className="w-2 h-4 bg-[#4facf3]"></span> {label}
+        <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 mb-3 flex items-center gap-2 border-b border-white/5">
+          <span className="w-1.5 h-3.5 rounded-sm bg-sky-500 shadow-[0_0_8px_#0ea5e9]"></span>
+          {label}
         </h3>
       )}
 
       <label
-        className="relative group m-auto w-[200px] h-[200px] rounded-full bg-gray-50 hover:border-[#4facf3] 
-        transition-all flex items-center justify-center overflow-hidden cursor-pointer"
+        className="relative group m-auto w-[160px] h-[160px] rounded-full bg-[#0D121F] border border-slate-800/80
+                   hover:border-sky-500/40 hover:shadow-[0_0_15px_rgba(14,165,233,0.15)]
+                   transition-all duration-300 flex items-center justify-center overflow-hidden cursor-pointer"
       >
         <input
           type="file"
@@ -102,29 +100,25 @@ const InputFile = ({ label, value, onChange }) => {
             <img
               src={preview}
               alt="Preview"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover mix-blend-screen p-1 rounded-full"
               onError={(e) => {
-                e.target.style.display = "none"; // Ẩn ảnh nếu đường dẫn lỗi
+                e.target.style.display = "none";
               }}
             />
-            {/* Overlay khi hover */}
-            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <ImagePlus size={30} className="text-white" />
+            {/* Lớp phủ khi di chuột vào */}
+            <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1">
+              <ImagePlus size={24} className="text-sky-400" />
+              <span className="text-[10px] text-slate-300 font-medium">
+                Thay đổi ảnh
+              </span>
             </div>
-
-            {/* Nút Xóa */}
-            {/* <button
-              type="button"
-              onClick={handleRemove}
-              className="absolute top-2 right-4 p-1 bg-red-500 text-white rounded-full border-2 border-[#323232] hover:scale-110 transition-transform z-30 shadow-[2px_2px_0px_0px_#323232]"
-            >
-              <X size={16} />
-            </button> */}
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center text-gray-400">
-            <ImagePlus size={32} className="mb-2" />
-            <span className="text-[12px] font-bold">NHẤN ĐỂ TẢI ẢNH</span>
+          <div className="flex flex-col items-center justify-center text-slate-500 group-hover:text-sky-400 transition-colors">
+            <ImagePlus size={28} className="mb-1.5" strokeWidth={1.5} />
+            <span className="text-[10px] font-bold tracking-wider">
+              TẢI ẢNH LÊN
+            </span>
           </div>
         )}
       </label>
@@ -132,29 +126,31 @@ const InputFile = ({ label, value, onChange }) => {
   );
 };
 
+// 4. FLOATING INPUT CAO CẤP (Fix lỗi nền cắt viền)
 const FloatingInput = ({ label, id, ...props }) => {
   return (
-    <div className="relative w-full">
+    <div className="relative w-full group">
       <input
         id={id}
         {...props}
-        placeholder=" " // Quan trọng: Khoảng trắng để kích hoạt CSS logic
-        className="peer w-full p-[10px_15px] text-base rounded-lg border border-[#8d8d8d] 
-                   tracking-wider outline-none transition-all 
-                   focus:border-[#4facf3] focus:ring-1 focus:ring-[#4facf3]/20"
+        placeholder=" "
+        className="peer w-full p-[11px_15px] text-sm rounded-xl border border-slate-800 bg-[#111827]/40 
+                   text-slate-200 tracking-wide outline-none transition-all duration-200
+                   focus:border-sky-500/50 focus:bg-[#161F32]/60 focus:ring-1 focus:ring-sky-500/10"
       />
       <label
         htmlFor={id}
-        className="absolute left-[15px] top-[10px] text-[#8d8d8d] pointer-events-none 
-                   transition-all duration-300
-                   peer-focus:-translate-y-[22px] peer-focus:-translate-x-2 
-                   peer-focus:scale-[0.8] peer-focus:bg-white peer-focus:px-1 
-                   peer-focus:text-[#4facf3] peer-focus:font-bold
-                   peer-[:not(:placeholder-shown)]:-translate-y-[22px] 
-                   peer-[:not(:placeholder-shown)]:-translate-x-2 
-                   peer-[:not(:placeholder-shown)]:scale-[0.8] 
-                   peer-[:not(:placeholder-shown)]:bg-white 
-                   peer-[:not(:placeholder-shown)]:px-1"
+        className="absolute left-[15px] top-[11px] text-slate-500 text-sm pointer-events-none 
+                   transition-all duration-200 tracking-wide
+                   peer-focus:-translate-y-[21px] peer-focus:-translate-x-1.5 
+                   peer-focus:scale-[0.82] peer-focus:bg-[#0D121F] peer-focus:px-1.5 
+                   peer-focus:text-sky-400 peer-focus:font-semibold
+                   
+                   peer-[:not(:placeholder-shown)]:-translate-y-[21px] 
+                   peer-[:not(:placeholder-shown)]:-translate-x-1.5 
+                   peer-[:not(:placeholder-shown)]:scale-[0.82] 
+                   peer-[:not(:placeholder-shown)]:bg-[#0D121F] 
+                   peer-[:not(:placeholder-shown)]:px-1.5 peer-[:not(:placeholder-shown)]:text-slate-400"
       >
         {label}
       </label>
@@ -162,45 +158,46 @@ const FloatingInput = ({ label, id, ...props }) => {
   );
 };
 
+// 5. FLOATING INPUT PASSWORD CAO CẤP
 const FloatingInputPassword = ({ label, id, ...props }) => {
   const [showPass, setShowPass] = useState(false);
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full group">
       <input
         id={id}
         type={showPass ? "text" : "password"}
         {...props}
         placeholder=" "
-        className="peer w-full p-[10px_15px] text-base rounded-lg border border-[#8d8d8d] 
-                   tracking-wider outline-none transition-all 
-                   focus:border-[#4facf3] focus:ring-1 focus:ring-[#4facf3]/20"
+        className="peer w-full p-[11px_15px] pr-11 text-sm rounded-xl border border-slate-800 bg-[#111827]/40 
+                   text-slate-200 tracking-wide outline-none transition-all duration-200
+                   focus:border-sky-500/50 focus:bg-[#161F32]/60 focus:ring-1 focus:ring-sky-500/10"
       />
 
-      {/* ICON PHẢI NẰM NGOÀI THẺ INPUT */}
       <div
-        className="absolute cursor-pointer top-1/2 -translate-y-1/2 right-[15px] text-[#8d8d8d] hover:text-[#4facf3] transition-colors"
+        className="absolute cursor-pointer top-1/2 -translate-y-1/2 right-[15px] text-slate-500 hover:text-sky-400 transition-colors z-10"
         onClick={() => setShowPass(!showPass)}
       >
         {showPass ? (
-          <Eye size={20} strokeWidth={1.5} />
+          <Eye size={18} strokeWidth={1.5} />
         ) : (
-          <EyeClosed size={20} strokeWidth={1.5} />
+          <EyeClosed size={18} strokeWidth={1.5} />
         )}
       </div>
 
       <label
         htmlFor={id}
-        className="absolute left-[15px] top-[10px] text-[#8d8d8d] pointer-events-none 
-                   transition-all duration-300
-                   peer-focus:-translate-y-[22px] peer-focus:-translate-x-2 
-                   peer-focus:scale-[0.8] peer-focus:bg-white peer-focus:px-1 
-                   peer-focus:text-[#4facf3] peer-focus:font-bold
-                   peer-[:not(:placeholder-shown)]:-translate-y-[22px] 
-                   peer-[:not(:placeholder-shown)]:-translate-x-2 
-                   peer-[:not(:placeholder-shown)]:scale-[0.8] 
-                   peer-[:not(:placeholder-shown)]:bg-white 
-                   peer-[:not(:placeholder-shown)]:px-1"
+        className="absolute left-[15px] top-[11px] text-slate-500 text-sm pointer-events-none 
+                   transition-all duration-200 tracking-wide
+                   peer-focus:-translate-y-[21px] peer-focus:-translate-x-1.5 
+                   peer-focus:scale-[0.82] peer-focus:bg-[#0D121F] peer-focus:px-1.5 
+                   peer-focus:text-sky-400 peer-focus:font-semibold
+                   
+                   peer-[:not(:placeholder-shown)]:-translate-y-[21px] 
+                   peer-[:not(:placeholder-shown)]:-translate-x-1.5 
+                   peer-[:not(:placeholder-shown)]:scale-[0.82] 
+                   peer-[:not(:placeholder-shown)]:bg-[#0D121F] 
+                   peer-[:not(:placeholder-shown)]:px-1.5 peer-[:not(:placeholder-shown)]:text-slate-400"
       >
         {label}
       </label>
