@@ -1,555 +1,275 @@
 import { lazy } from "react";
-// Loader
-import LoaderPermissions from "@/loaders/permissionLoader";
-import LoaderUser from "@/loaders/userLoader";
-import LoaderBrand from "@/loaders/brandLoader";
-import LoaderSupplier from "@/loaders/supplierLoader";
-import LoaderCategory from "@/loaders/categoryLoader";
-import LoaderProduct from "@/loaders/productLoader";
-import LoaderAttr from "@/loaders/attributeKey";
-import LoaderPurchase from "@/loaders/purchaseOrder";
-import LoaderProductVariant from "@/loaders/productVariantLoader";
-import LoaderCoupon from "@/loaders/couponLoadet";
-import LoaderOrder from "@/loaders/customer/orderLoader";
-// lib
-import { queryClient } from "@/lib/react-query";
-import LoaderStock from "@/loaders/management/stockMovement";
+import * as RouteLoaders from "./adminLoader.jsx";
 
-// Lazy load các trang để giảm dung lượng file ban đầu
-// User
-const UserPage = lazy(() => import("@/pages/Admin/users"));
-const CreateUserPage = lazy(() => import("@/pages/Admin/users/create"));
-const EditUserPage = lazy(() => import("@/pages/Admin/users/edit"));
+// ─── 1. KHAI BÁO LAZY LOAD TƯỜNG MINH (ĐỒNG BỘ 100% CẤU TRÚC THƯ MỤC THỰC TẾ) ───
+const Dashboard = lazy(() => import("@/pages/Admin/Dashboard/dashboard.jsx"));
+
+// Hệ thống User (Thư mục)
+const UserPage = lazy(() => import("@/pages/Admin/users/index.jsx"));
+const CreateUserPage = lazy(() => import("@/pages/Admin/users/create.jsx"));
+const EditUserPage = lazy(() => import("@/pages/Admin/users/edit.jsx"));
 const AddRolePermissionPage = lazy(
-  () => import("@/pages/Admin/users/addRolePermission"),
+  () => import("@/pages/Admin/users/addRolePermission.jsx"),
 );
 
-const Dashboard = lazy(() => import("@/pages/Admin/Dashboard/dashboard"));
-// product
-const ProductPage = lazy(() => import("@/pages/Admin/products"));
-const CreateProductPage = lazy(() => import("@/pages/Admin/products/create"));
-const EditProductPage = lazy(() => import("@/pages/Admin/products/edit"));
-// Brands
-const BrandPage = lazy(() => import("@/pages/Admin/brands"));
-const CreateBrandPage = lazy(() => import("@/pages/Admin/brands/create"));
-const EditBrandPage = lazy(() => import("@/pages/Admin/brands/edit"));
-const CartPage = lazy(() => import("@/pages/Admin/Carts"));
-// Coupon
-const CouponPage = lazy(() => import("@/pages/Admin/coupons"));
-const CreateCouponPage = lazy(() => import("@/pages/Admin/coupons/create"));
-const EditCouponPage = lazy(() => import("@/pages/Admin/coupons/edit"));
-const OrderPage = lazy(() => import("@/pages/Admin/orders"));
-const EditOrderPage = lazy(() => import("@/pages/Admin/orders/edit"));
-const CreateOrderPage = lazy(() => import("@/pages/Admin/orders/create"));
-// PurchaseOrder
-const PurchaseOrderItemPage = lazy(
-  () => import("@/pages/Admin/purchaseorderitems"),
+// Catalog & Sản phẩm (Thư mục)
+const ProductPage = lazy(() => import("@/pages/Admin/products/index.jsx"));
+const CreateProductPage = lazy(
+  () => import("@/pages/Admin/products/create.jsx"),
 );
-const PurchaseOrderPage = lazy(() => import("@/pages/Admin/purchaseorders"));
+const EditProductPage = lazy(() => import("@/pages/Admin/products/edit.jsx"));
+
+// Thương hiệu (Thư mục)
+const BrandPage = lazy(() => import("@/pages/Admin/brands/index.jsx"));
+const CreateBrandPage = lazy(() => import("@/pages/Admin/brands/create.jsx"));
+const EditBrandPage = lazy(() => import("@/pages/Admin/brands/edit.jsx"));
+
+// 🌟 ĐÃ SỬA: Chuyển toàn bộ nhóm này từ file đơn sang trỏ đúng file index.jsx trong thư mục con
+const CartPage = lazy(() => import("@/pages/Admin/carts/index.jsx"));
+const Review = lazy(() => import("@/pages/Admin/reviews/index.jsx"));
+const LogPage = lazy(() => import("@/pages/Admin/systemlogs/index.jsx"));
+const AddressPage = lazy(() => import("@/pages/Admin/useraddresses/index.jsx"));
+
+// Khuyến mãi (Thư mục)
+const CouponPage = lazy(() => import("@/pages/Admin/coupons/index.jsx"));
+const CreateCouponPage = lazy(() => import("@/pages/Admin/coupons/create.jsx"));
+const EditCouponPage = lazy(() => import("@/pages/Admin/coupons/edit.jsx"));
+
+// Đơn hàng (Thư mục)
+const OrderPage = lazy(() => import("@/pages/Admin/orders/index.jsx"));
+const EditOrderPage = lazy(() => import("@/pages/Admin/orders/edit.jsx"));
+const CreateOrderPage = lazy(() => import("@/pages/Admin/orders/create.jsx"));
+
+// Nhập hàng & Chuỗi cung ứng (Thư mục)
+const PurchaseOrderItemPage = lazy(
+  () => import("@/pages/Admin/purchaseorderitems/index.jsx"),
+);
+const PurchaseOrderPage = lazy(
+  () => import("@/pages/Admin/purchaseorders/index.jsx"),
+);
 const EditPurchaseOrderPage = lazy(
-  () => import("@/pages/Admin/purchaseorders/edit"),
+  () => import("@/pages/Admin/purchaseorders/edit.jsx"),
 );
 const CreatePurchaseOrderPage = lazy(
-  () => import("@/pages/Admin/purchaseorders/create"),
+  () => import("@/pages/Admin/purchaseorders/create.jsx"),
 );
-// Stock
-const StockPage = lazy(() => import("@/pages/Admin/stockmovements"));
-const EditStockPage = lazy(() => import("@/pages/Admin/stockmovements/edit"));
+
+// Tồn kho (Thư mục)
+const StockPage = lazy(() => import("@/pages/Admin/stockmovements/index.jsx"));
+const EditStockPage = lazy(
+  () => import("@/pages/Admin/stockmovements/edit.jsx"),
+);
 const CreateStockPage = lazy(
-  () => import("@/pages/Admin/stockmovements/create"),
+  () => import("@/pages/Admin/stockmovements/create.jsx"),
 );
-// Supplier
-const SupplierPage = lazy(() => import("@/pages/Admin/suppliers"));
-const CreateSupplierPage = lazy(() => import("@/pages/Admin/suppliers/create"));
-const EditSupplierPage = lazy(() => import("@/pages/Admin/suppliers/edit"));
-// End Supplier
-const LogPage = lazy(() => import("@/pages/Admin/systemlogs"));
-const AddressPage = lazy(() => import("@/pages/Admin/useraddresses"));
-// Role
-const PermissionPage = lazy(() => import("@/pages/Admin/permissions"));
+
+// Nhà cung cấp (Thư mục)
+const SupplierPage = lazy(() => import("@/pages/Admin/suppliers/index.jsx"));
+const CreateSupplierPage = lazy(
+  () => import("@/pages/Admin/suppliers/create.jsx"),
+);
+const EditSupplierPage = lazy(() => import("@/pages/Admin/suppliers/edit.jsx"));
+
+// Phân quyền (Thư mục)
+const PermissionPage = lazy(
+  () => import("@/pages/Admin/permissions/index.jsx"),
+);
 const CreatePermissionPage = lazy(
-  () => import("@/pages/Admin/permissions/create"),
+  () => import("@/pages/Admin/permissions/create.jsx"),
 );
-const EditPermissionPage = lazy(() => import("@/pages/Admin/permissions/edit"));
-// Category
-const Category = lazy(() => import("@/pages/Admin/categories"));
+const EditPermissionPage = lazy(
+  () => import("@/pages/Admin/permissions/edit.jsx"),
+);
+
+// Danh mục (Thư mục)
+const Category = lazy(() => import("@/pages/Admin/categories/index.jsx"));
 const CreateCategoryPage = lazy(
-  () => import("@/pages/Admin/categories/create"),
+  () => import("@/pages/Admin/categories/create.jsx"),
 );
-const EditCategoryPage = lazy(() => import("@/pages/Admin/categories/edit"));
+const EditCategoryPage = lazy(
+  () => import("@/pages/Admin/categories/edit.jsx"),
+);
 
-const Review = lazy(() => import("@/pages/Admin/reviews"));
-const Variant = lazy(() => import("@/pages/Admin/productVariant"));
-const EditVariant = lazy(() => import("@/pages/Admin/productVariant/edit"));
-const CreateVariant = lazy(() => import("@/pages/Admin/productVariant/create"));
-
-const AttributeKey = lazy(() => import("@/pages/Admin/attributeKey"));
+// Thuộc tính & Biến thể (Thư mục con/File lẻ)
+const Variant = lazy(() => import("@/pages/Admin/productVariant/index.jsx"));
+const EditVariant = lazy(() => import("@/pages/Admin/productVariant/edit.jsx"));
+const CreateVariant = lazy(
+  () => import("@/pages/Admin/productVariant/create.jsx"),
+);
+const AttributeKey = lazy(() => import("@/pages/Admin/attributeKey/index.jsx"));
 const CreateAttributeKey = lazy(
-  () => import("@/pages/Admin/attributeKey/create"),
+  () => import("@/pages/Admin/attributeKey/create.jsx"),
 );
-const EditAttributeKey = lazy(() => import("@/pages/Admin/attributeKey/edit"));
+const EditAttributeKey = lazy(
+  () => import("@/pages/Admin/attributeKey/edit.jsx"),
+);
 
+// ─── 2. SƠ ĐỒ ĐỊNH TUYẾN CHÍNH ───
 export const adminRoutes = {
-  path: "management", // Tiền tố chung
+  path: "management",
   children: [
     { path: "dashboard", element: <Dashboard /> },
-    // User
-    {
-      path: "users",
-      element: <UserPage />,
-      loader: async ({ request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1;
-        return await queryClient.fetchQuery({
-          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
-          queryKey: ["users", page],
-          queryFn: () => LoaderUser.getAllUsers(page),
-          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
-        });
-      },
-    },
-    {
-      path: "users/create",
-      element: <CreateUserPage />,
-    },
+    { path: "carts", element: <CartPage /> },
+    { path: "logs", element: <LogPage /> },
+    { path: "addresses", element: <AddressPage /> },
+    { path: "reviews", element: <Review /> },
+
+    // Hệ thống User & Phân quyền
+    { path: "users", element: <UserPage />, loader: RouteLoaders.usersLoader },
+    { path: "users/create", element: <CreateUserPage /> },
     {
       path: "users/edit/:userId",
       element: <EditUserPage />,
-      loader: LoaderUser.getUserById,
+      loader: RouteLoaders.userEditLoader,
     },
     {
       path: "users/add-role/:userId",
       element: <AddRolePermissionPage />,
-      loader: async ({ params, request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1;
-        const [user, allPermissions] = await Promise.all([
-          // 2. Phải GỌI hàm () và TRUYỀN { params } vào
-          LoaderUser.getUserById({ params }),
-          LoaderPermissions.getAllPermissions(page),
-        ]);
-
-        // console.log("Dữ liệu user:", user);
-        return { user, allPermissions };
-      },
+      loader: RouteLoaders.userAddRoleLoader,
     },
-    // End User
-    // products
+    {
+      path: "permissions",
+      element: <PermissionPage />,
+      loader: RouteLoaders.permissionsLoader,
+    },
+    { path: "permissions/create", element: <CreatePermissionPage /> },
+    {
+      path: "permissions/edit/:slug",
+      element: <EditPermissionPage />,
+      loader: RouteLoaders.permissionEditLoader,
+    },
+
+    // Catalog & Sản phẩm
     {
       path: "products",
       element: <ProductPage />,
-      loader: async ({ request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1;
-        return await queryClient.fetchQuery({
-          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
-          queryKey: ["products", page],
-          queryFn: () => LoaderProduct.getAllProducst(page),
-          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
-        });
-      },
+      loader: RouteLoaders.productsLoader,
     },
     {
       path: "products/create",
       element: <CreateProductPage />,
-      loader: async () => {
-        const [brands, suppliers, categories] = await Promise.all([
-          queryClient.fetchQuery({
-            queryKey: ["brands-select"],
-            queryFn: () => LoaderBrand.getBrandsDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["suppliers-select"],
-            queryFn: () => LoaderSupplier.getSuppliersDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["categories-select"],
-            queryFn: () => LoaderCategory.getCategoriesDropdown(),
-          }),
-        ]);
-        return { brands, suppliers, categories };
-      },
+      loader: RouteLoaders.productCreateLoader,
     },
     {
       path: "products/edit/:productId",
       element: <EditProductPage />,
-      loader: async ({ params }) => {
-        const { productId } = params;
-        // console.log(productId);
-        const [brands, suppliers, categories, product] = await Promise.all([
-          queryClient.fetchQuery({
-            queryKey: ["brands-select"],
-            queryFn: () => LoaderBrand.getBrandsDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["suppliers-select"],
-            queryFn: () => LoaderSupplier.getSuppliersDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["categories-select"],
-            queryFn: () => LoaderCategory.getCategoriesDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["product", productId],
-            queryFn: () => LoaderProduct.getProductById(productId),
-          }),
-        ]);
-        return { brands, suppliers, categories, product };
-      },
+      loader: RouteLoaders.productEditLoader,
     },
-    // end products
-    // orders
-    {
-      path: "orders",
-      element: <OrderPage />,
-      loader: async ({ request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1;
-        return await queryClient.fetchQuery({
-          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
-          queryKey: ["orders", page],
-          queryFn: () => LoaderOrder.getAllOrders(page),
-          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
-        });
-      },
-    },
-    {
-      path: "orders/edit/:orderId",
-      element: <EditOrderPage />,
-      loader: async ({ params }) => {
-        const { orderId } = params;
-        const [productVariants, order] = await Promise.all([
-          queryClient.fetchQuery({
-            queryKey: ["variants-select"],
-            queryFn: () => LoaderProductVariant.getProductVariantsDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["order", orderId],
-            queryFn: () => LoaderOrder.getOrderById(orderId),
-            staleTime: 0,
-          }),
-        ]);
-
-        return { productVariants, order };
-      },
-    },
-    {
-      path: "orders/create",
-      element: <CreateOrderPage />,
-      loader: async () => {
-        const [productVariants] = await Promise.all([
-          queryClient.fetchQuery({
-            queryKey: ["variants-select"],
-            queryFn: () => LoaderProductVariant.getProductVariantsDropdown(),
-          }),
-        ]);
-        return { productVariants };
-      },
-    },
-    // Brands
-    {
-      path: "brands",
-      element: <BrandPage />,
-      loader: async ({ request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1;
-        return await queryClient.fetchQuery({
-          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
-          queryKey: ["brands", page],
-          queryFn: () => LoaderBrand.getAllBrands(page),
-          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
-        });
-      },
-    },
-    { path: "brands/create", element: <CreateBrandPage /> },
-    {
-      path: "brands/edit/:brandId",
-      element: <EditBrandPage />,
-      loader: LoaderBrand.getBrandById,
-    },
-    // End Brands
-    { path: "carts", element: <CartPage /> },
-    // coupons
-    {
-      path: "coupons",
-      element: <CouponPage />,
-      loader: async ({ request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1;
-        return await queryClient.fetchQuery({
-          queryKey: ["coupons", page],
-          queryFn: () => LoaderCoupon.getAllCoupons(page),
-        });
-      },
-    },
-    { path: "coupons/create", element: <CreateCouponPage /> },
-    {
-      path: "coupons/edit/:couponId",
-      element: <EditCouponPage />,
-      loader: async ({ params }) => {
-        const { couponId } = params;
-        return await queryClient.fetchQuery({
-          queryKey: ["coupon", couponId],
-          queryFn: () => LoaderCoupon.getCouponById(couponId),
-          staleTime: 0,
-        });
-      },
-    },
-    // end coupons
-    { path: "purchase-item", element: <PurchaseOrderItemPage /> },
-    // purchase
-    {
-      path: "purchase",
-      element: <PurchaseOrderPage />,
-      loader: async ({ request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1;
-        return await queryClient.fetchQuery({
-          queryKey: ["purchase-order", page],
-          queryFn: () => LoaderPurchase.getAllPurchases(page),
-        });
-      },
-    },
-    {
-      path: "purchase/edit/:purchaseId",
-      element: <EditPurchaseOrderPage />,
-      loader: async ({ params }) => {
-        const { purchaseId } = params;
-
-        // Sửa 'products' thành 'productVariants' ở đây
-        const [suppliers, productVariants, purchase] = await Promise.all([
-          queryClient.fetchQuery({
-            queryKey: ["suppliers-select"],
-            queryFn: () => LoaderSupplier.getSuppliersDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["variants-select"],
-            queryFn: () => LoaderProductVariant.getProductVariantsDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["purchase-order", [purchaseId]],
-            queryFn: () => LoaderPurchase.getPurchaseById(purchaseId),
-          }),
-        ]);
-
-        // Bây giờ productVariants đã tồn tại để return
-        return { suppliers, productVariants, purchase };
-      },
-    },
-    {
-      path: "purchase/create",
-      element: <CreatePurchaseOrderPage />,
-      loader: async () => {
-        const [suppliers, productVariants] = await Promise.all([
-          queryClient.fetchQuery({
-            queryKey: ["suppliers-select"],
-            queryFn: () => LoaderSupplier.getSuppliersDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["variants-select"],
-            queryFn: () => LoaderProductVariant.getProductVariantsDropdown(),
-          }),
-        ]);
-        return { suppliers, productVariants };
-      },
-    },
-    // end purchase
-    // permissions
-    {
-      path: "permissions",
-      element: <PermissionPage />,
-      loader: async ({ request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1;
-        return await queryClient.fetchQuery({
-          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
-          queryKey: ["permissions", page],
-          queryFn: () => LoaderPermissions.getGroups(page),
-          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
-        });
-      },
-    },
-    {
-      path: "permissions/create",
-      element: <CreatePermissionPage />,
-    },
-    {
-      path: `permissions/edit/:slug`,
-      element: <EditPermissionPage />,
-      loader: LoaderPermissions.getBySlug,
-    },
-    // End permissions
-    // stock
-    {
-      path: "stocks",
-      element: <StockPage />,
-      loader: async ({ request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1;
-        return await queryClient.fetchQuery({
-          queryKey: ["stocks", page],
-          queryFn: () => LoaderStock.getAllStocks(page),
-          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
-        });
-      },
-    },
-    { path: "stocks/edit/:stockId", element: <EditStockPage /> },
-    {
-      path: "stocks/create",
-      element: <CreateStockPage />,
-      loader: async () => {
-        const [orders, variants, purchases] = await Promise.all([
-          queryClient.fetchQuery({
-            queryKey: ["orders-select"],
-            queryFn: () => LoaderOrder.getOrderDropdowns(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["variants-select"],
-            queryFn: () => LoaderProductVariant.getProductVariantsDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["purchase-orders-select"],
-            queryFn: () => LoaderPurchase.getPurchasesDropdown(),
-          }),
-        ]);
-
-        return { orders, variants, purchases };
-      },
-    },
-    // suppliers
-    {
-      path: "suppliers",
-      element: <SupplierPage />,
-      loader: async ({ request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1;
-        return await queryClient.fetchQuery({
-          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
-          queryKey: ["suppliers", page],
-          queryFn: () => LoaderSupplier.getAllSupplier(page),
-          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
-        });
-      },
-    },
-    { path: "suppliers/create", element: <CreateSupplierPage /> },
-    {
-      path: "suppliers/edit/:supplierId",
-      element: <EditSupplierPage />,
-      loader: LoaderSupplier.getSupplierById,
-    },
-    // End suppliers
-    { path: "logs", element: <LogPage /> },
-    { path: "addresses", element: <AddressPage /> },
-    // categories
-    {
-      path: "categories",
-      element: <Category />,
-      loader: async ({ request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1; // Trích xuất ?page= từ URL
-        // Sử dụng fetchQuery để quản lý bộ nhớ đệm
-        return await queryClient.fetchQuery({
-          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
-          queryKey: ["categories", page],
-          queryFn: () => LoaderCategory.getAllCategories(page),
-          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
-        });
-      },
-    },
-    { path: "categories/create", element: <CreateCategoryPage /> },
-    {
-      path: "categories/edit/:catrgoryId",
-      element: <EditCategoryPage />,
-      loader: LoaderCategory.getCategoryById,
-    },
-    // End categories
-
-    { path: "reviews", element: <Review /> },
-    // product-variants
     {
       path: "product-variants",
       element: <Variant />,
-      loader: async ({ request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1;
-        return await queryClient.fetchQuery({
-          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
-          queryKey: ["product-variants", page],
-          queryFn: () => LoaderProductVariant.getAllProducstVariants(page),
-          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
-        });
-      },
-    },
-    {
-      path: "product-variants/edit/:variantId",
-      element: <EditVariant />,
-      loader: async ({ params }) => {
-        const { variantId } = params;
-        const [attributeKeys, products, product_variant] = await Promise.all([
-          queryClient.fetchQuery({
-            queryKey: ["attribute-key-all"],
-            queryFn: () => LoaderAttr.getAllAttributesDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["products-dropdown"],
-            queryFn: () => LoaderProduct.getProductsDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["product-variant", [variantId]],
-            queryFn: () =>
-              LoaderProductVariant.getProductVariantById(variantId),
-          }),
-        ]);
-        return { attributeKeys, products, product_variant };
-      },
+      loader: RouteLoaders.productVariantsLoader,
     },
     {
       path: "product-variants/create",
       element: <CreateVariant />,
-      loader: async () => {
-        const [attributeKeys, products] = await Promise.all([
-          queryClient.fetchQuery({
-            queryKey: ["attribute-key-all"],
-            queryFn: () => LoaderAttr.getAllAttributesDropdown(),
-          }),
-          queryClient.fetchQuery({
-            queryKey: ["products-dropdown"],
-            queryFn: () => LoaderProduct.getProductsDropdown(),
-          }),
-        ]);
-        return { attributeKeys, products };
-      },
+      loader: RouteLoaders.variantCreateLoader,
     },
-    // end product-variants
-    // attribute key
+    {
+      path: "product-variants/edit/:variantId",
+      element: <EditVariant />,
+      loader: RouteLoaders.variantEditLoader,
+    },
     {
       path: "attribute-key",
       element: <AttributeKey />,
-      loader: async ({ request }) => {
-        const url = new URL(request.url);
-        const page = url.searchParams.get("page") || 1;
-        return await queryClient.fetchQuery({
-          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
-          queryKey: ["attribute-keys", page],
-          queryFn: () => LoaderAttr.getAllAttrs(page),
-          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
-        });
-      },
+      loader: RouteLoaders.attributeKeyLoader,
     },
     { path: "attribute-key/create", element: <CreateAttributeKey /> },
     {
       path: "attribute-key/edit/:attrId",
       element: <EditAttributeKey />,
-      loader: async ({ params }) => {
-        const { attrId } = params;
-        return await queryClient.fetchQuery({
-          // queryKey phải chứa 'page' để phân biệt cache của trang 1, trang 2...
-          queryKey: ["attribute-keys", attrId],
-          queryFn: () => LoaderAttr.getAttrById(attrId),
-          // Cấu trúc này đảm bảo nếu quay lại trang 1, nó sẽ lấy từ cache
-        });
-      },
+      loader: RouteLoaders.attributeKeyEditLoader,
     },
-    // End attribute key
+
+    // Đơn hàng & Khuyến mãi
+    {
+      path: "orders",
+      element: <OrderPage />,
+      loader: RouteLoaders.ordersLoader,
+    },
+    {
+      path: "orders/create",
+      element: <CreateOrderPage />,
+      loader: RouteLoaders.orderCreateLoader,
+    },
+    {
+      path: "orders/edit/:orderId",
+      element: <EditOrderPage />,
+      loader: RouteLoaders.orderEditLoader,
+    },
+    {
+      path: "coupons",
+      element: <CouponPage />,
+      loader: RouteLoaders.couponsLoader,
+    },
+    { path: "coupons/create", element: <CreateCouponPage /> },
+    {
+      path: "coupons/edit/:couponId",
+      element: <EditCouponPage />,
+      loader: RouteLoaders.couponEditLoader,
+    },
+
+    // Chuỗi cung ứng & Kho vận
+    {
+      path: "brands",
+      element: <BrandPage />,
+      loader: RouteLoaders.brandsLoader,
+    },
+    { path: "brands/create", element: <CreateBrandPage /> },
+    {
+      path: "brands/edit/:brandId",
+      element: <EditBrandPage />,
+      loader: RouteLoaders.brandEditLoader,
+    },
+    {
+      path: "suppliers",
+      element: <SupplierPage />,
+      loader: RouteLoaders.suppliersLoader,
+    },
+    { path: "suppliers/create", element: <CreateSupplierPage /> },
+    {
+      path: "suppliers/edit/:supplierId",
+      element: <EditSupplierPage />,
+      loader: RouteLoaders.supplierEditLoader,
+    },
+    { path: "purchase-item", element: <PurchaseOrderItemPage /> },
+    {
+      path: "purchase",
+      element: <PurchaseOrderPage />,
+      loader: RouteLoaders.purchaseLoader,
+    },
+    {
+      path: "purchase/create",
+      element: <CreatePurchaseOrderPage />,
+      loader: RouteLoaders.purchaseCreateLoader,
+    },
+    {
+      path: "purchase/edit/:purchaseId",
+      element: <EditPurchaseOrderPage />,
+      loader: RouteLoaders.purchaseEditLoader,
+    },
+    {
+      path: "stocks",
+      element: <StockPage />,
+      loader: RouteLoaders.stocksLoader,
+    },
+    {
+      path: "stocks/create",
+      element: <CreateStockPage />,
+      loader: RouteLoaders.stockCreateLoader,
+    },
+    { path: "stocks/edit/:stockId", element: <EditStockPage /> },
+    {
+      path: "categories",
+      element: <Category />,
+      loader: RouteLoaders.categoriesLoader,
+    },
+    { path: "categories/create", element: <CreateCategoryPage /> },
+    {
+      path: "categories/edit/:catrgoryId",
+      element: <EditCategoryPage />,
+      loader: RouteLoaders.categoryEditLoader,
+    },
   ],
 };
