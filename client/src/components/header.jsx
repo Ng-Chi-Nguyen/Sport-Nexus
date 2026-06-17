@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import Logo from "./logo";
+import { Logo } from "./logo";
 import SearchHeader from "./search";
 
 const Header = () => {
