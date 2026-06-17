@@ -13,4 +13,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,                     // Giúp "đánh lừa" server rằng request này đến từ cùng domain của server
+        secure: false,                          // Bỏ qua kiểm tra chứng chỉ SSL nếu backend dùng https chưa chứng thực đầy đủ
+        // optional: nếu API thật của bạn không có chữ '/api' ở đầu, dùng dòng dưới để loại bỏ nó khi gửi đi
+        // rewrite: (path) => path.replace(/^\/api/, '') 
+      },
+    },
+  },
 })

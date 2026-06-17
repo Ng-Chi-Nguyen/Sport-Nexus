@@ -31,7 +31,7 @@ export const SportNexusProvider = ({ children }) => {
 //     console.log("Số lượng Query hiện tại:", allQueries.length);
 //     console.log(
 //       "Danh sách Keys:",
-//       allQueries.map((q) => q.queryKey)
+//       allQueries.map((q) => q.queryKey),
 //     );
 //   }
 // });

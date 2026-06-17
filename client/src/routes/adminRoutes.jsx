@@ -120,7 +120,7 @@ export const adminRoutes = {
     {
       path: "users/add-role/:userId",
       element: <AddRolePermissionPage />,
-      loader: async ({ params }) => {
+      loader: async ({ params, request }) => {
         const url = new URL(request.url);
         const page = url.searchParams.get("page") || 1;
         const [user, allPermissions] = await Promise.all([

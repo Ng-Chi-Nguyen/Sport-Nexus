@@ -185,8 +185,7 @@ const CreatePurchaseOrder = () => {
           <Submit_GoBack />
         </div>
 
-        {/* CỘT PHẢI: DANH SÁCH MÓN HÀNG NHẬP VỀ (70% RỘNG - relative z-10) */}
-        <div className="flex-1 bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-xl backdrop-blur-md relative z-10">
+        <div className="flex-1 bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-xl backdrop-blur-md relative z-20">
           <div className="flex items-center justify-between mb-6">
             <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 flex items-center gap-2 border-b border-white/5">
               <span className="w-1.5 h-3.5 rounded-sm bg-violet-500 shadow-[0_0_8px_#8b5cf6]"></span>
@@ -201,13 +200,13 @@ const CreatePurchaseOrder = () => {
             </button>
           </div>
 
-          {/* VÙNG CUỘN CHỨA CÁC INPUT ITEM */}
-          <div className="flex flex-col gap-3 max-h-[580px] overflow-y-auto pr-2 pb-20 custom-scrollbar">
+          {/* ĐÃ SỬA: Giữ nguyên max-h-[580px] và overflow-y-auto của bạn nhưng tăng pb-60 để tạo khoảng trống cho ô cuối bung menu */}
+          <div className="flex flex-col gap-3 max-h-[580px] overflow-y-auto pr-2 pb-60 custom-scrollbar relative z-30">
             {items.map((item, index) => (
               <div
                 key={item.id}
                 className="flex items-center gap-4 p-4 bg-[#111827]/40 border border-slate-800/60 rounded-xl hover:border-slate-700 transition-all duration-150 relative"
-                style={{ zIndex: items.length - index }}
+                style={{ zIndex: items.length - index }} // Giữ nguyên logic tính z-index lùi dần của bạn để dòng trên đè dòng dưới
               >
                 {/* Chọn Biến thể sản phẩm */}
                 <div className="w-2/4">
