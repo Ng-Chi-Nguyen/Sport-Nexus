@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import { homeLoader } from "./webLoader";
 
 const HomePage = lazy(() => import("@/pages/Home/"));
 const Index = lazy(() => import("@/pages/profile"));
@@ -13,6 +14,7 @@ export const webRoutes = {
     {
       path: "",
       element: <HomePage />,
+      loader: homeLoader,
     },
     {
       path: "/profile",

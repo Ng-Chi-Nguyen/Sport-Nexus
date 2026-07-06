@@ -133,7 +133,8 @@ const Footer = () => {
       </div>
       <div className="flex w-full justify-center -mt-10">
         <p className="text-[8px] font-bold text-gray-400 uppercase">
-          © 2026 SPORT NEXUS - TIỂU LUẬN TỐT NGHIỆP CNTT - Bảng quyền thuộc về{" "}
+          <span className="text-blue-500">227060172</span> © 2026 SPORT NEXUS -
+          TIỂU LUẬN TỐT NGHIỆP CNTT - Bảng quyền thuộc về{" "}
           <span className="text-blue-500">Nguyễn Chí Nguyện</span>
         </p>
       </div>
@@ -146,8 +147,8 @@ const FooterAuth = () => {
     <>
       <div className="flex w-full justify-center -mt-10">
         <p className="text-[8px] font-bold text-gray-400 uppercase">
-          © 2026 SPORT NEXUS - TIỂU LUẬN TỐT NGHIỆP CNTT - Bảng quyền thuộc về{" "}
-          <span className="text-blue-500">Nguyễn Chí Nguyện</span>
+          © 227060172 2026 SPORT NEXUS - TIỂU LUẬN TỐT NGHIỆP CNTT - Bảng quyền
+          thuộc về <span className="text-blue-500">Nguyễn Chí Nguyện</span>
         </p>
       </div>
     </>

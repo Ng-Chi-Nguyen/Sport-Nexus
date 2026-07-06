@@ -1,12 +1,16 @@
-import { HeroBanner } from "./components/HeroBanner";
+import { useLoaderData } from "react-router-dom";
+import { HeroBanner } from "./components/heroBanner";
 import { SpecialSale } from "./components/specialSale";
 import { CategoryBanners } from "./components/categoryBanners";
 import { NewArrivals } from "./components/newArrivals";
 import { ProductSection } from "./components/productSection";
 import { MiddleBanner } from "./components/middleBanner";
 import { SportsNews } from "./components/sportsNews";
+import { NavCategoryMenu } from "@/components/NavCategoryMenu";
 
 const HomePage = () => {
+  const data = useLoaderData();
+  console.log(">>> HomePage loader data:", data);
   // ─── MOCK DATA (BẠN GIỮ NGUYÊN HOÀN TOÀN MẢNG DATA CŨ) ───
   const saleProducts = [
     {
@@ -213,6 +217,7 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-[#F4F6F9] text-slate-800 font-sans antialiased selection:bg-rose-500/20">
+      <NavCategoryMenu />
       {/* 1. Khu vực Banner lớn trên đỉnh */}
       <HeroBanner />
 
