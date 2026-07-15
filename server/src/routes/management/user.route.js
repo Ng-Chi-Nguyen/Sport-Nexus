@@ -3,7 +3,7 @@ import userController from '../../controllers/management/user.controller.js';
 import userSchema from '../../validators/management/user.validator.js';
 import { validate } from '../../middlewares/validation.middleware.js';
 import { uploadImageAvatar } from '../../middlewares/fileUpload.middleware.js';
-import { verifyToken, checkPermission } from '../../middlewares/verifyToken.middlware.js';
+import { verifyToken, checkPermission, isAdmin } from '../../middlewares/verifyToken.middlware.js';
 
 const userRoute = express.Router();
 
@@ -13,7 +13,7 @@ userRoute
     .get("/:id", userController.getUserById)
     .get("/", userController.getAllUser)
     .put("/:id", verifyToken, checkPermission("sua-nguoi-dung"), uploadImageAvatar, validate(userSchema.updateUser), userController.updateUser)
-    .put('/permissions/:id', userController.updateExtraPermissions)
+    .put('/permissions/:id', verifyToken, isAdmin, userController.updateExtraPermissions)
     .delete("/:id", verifyToken, checkPermission("xoa-nguoi-dung"), userController.deleteUserById)
 
 export default userRoute;

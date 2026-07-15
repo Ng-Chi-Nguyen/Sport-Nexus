@@ -80,14 +80,41 @@ const CreateOrderPage = () => {
     }, 0);
   }, [items]);
 
-  const variantsOptions = useMemo(
-    () =>
-      response.productVariants.data.map((v) => ({
+  // ❌ Đoạn code cũ đang lỗi:
+  // const variantsOptions = useMemo(
+  //   () =>
+  //     response.productVariants.data.map((v) => ({
+  //       id: v.id,
+  //       name: `${v.product.name} - ${v.VariableAttributes[0].attributeKey.name}: ${v.VariableAttributes[0].value}`,
+  //     })),
+  //   [response.productVariants.data],
+  // );
+
+  //  Đoạn code MỚI đã được sửa an toàn:
+  const variantsOptions = useMemo(() => {
+    // Đề phòng trường hợp dữ liệu chưa được load kịp hoặc rỗng
+    if (!response?.productVariants?.data) return [];
+
+    return response.productVariants.data.map((v) => {
+      // Kiểm tra xem sản phẩm có thuộc tính biến thể nào không
+      const hasAttributes =
+        v.VariableAttributes && v.VariableAttributes.length > 0;
+
+      // Nếu có thì lấy tên thuộc tính, nếu không thì để chuỗi rỗng
+      const attrName = hasAttributes
+        ? v.VariableAttributes[0]?.attributeKey?.name
+        : "";
+      const attrValue = hasAttributes ? v.VariableAttributes[0]?.value : "";
+
+      // Tạo nhãn hiển thị, nếu không có biến thể thì chỉ hiện tên sản phẩm gốc
+      const variantLabel = hasAttributes ? ` - ${attrName}: ${attrValue}` : "";
+
+      return {
         id: v.id,
-        name: `${v.product.name} - ${v.VariableAttributes[0].attributeKey.name}: ${v.VariableAttributes[0].value}`,
-      })),
-    [response.productVariants.data],
-  );
+        name: `${v.product?.name || "Sản phẩm không rõ tên"}${variantLabel}`,
+      };
+    });
+  }, [response?.productVariants?.data]);
 
   const handleMethodChange = (methodName) => {
     setMethod(methodName);

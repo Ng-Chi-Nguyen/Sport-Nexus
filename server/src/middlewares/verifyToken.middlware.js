@@ -67,3 +67,27 @@ export const checkPermission = (requiredSlug) => {
         next();
     };
 };
+
+
+export const isAdmin = (req, res, next) => {
+    // 1. Kiểm tra xem dữ liệu user đã được nạp từ verifyToken chưa
+    if (!req.user) {
+        return res.status(401).json({ message: "Bạn chưa đăng nhập!" });
+    }
+    // 2. Lấy thông tin role (do trong verifyToken bạn đã include: { role: true })
+    const roleSlug = req.user.role?.slug;
+    const roleName = req.user.role?.name;
+    // console.log(req.user.role)
+    // console.log(userRole)
+
+    // 3. Kiểm tra xem có đúng là Admin hay không
+    // Bạn hãy check lại database xem tên chính xác là "QUẢN TRỊ VIÊN", "Admin" hay "admin" nhé
+    if (roleSlug === "admin" || roleName === "Quản trị viên") {
+        return next(); // Đúng admin -> Cho qua để vào controller
+    }
+
+    // 4. Nếu là Nhân viên -> Chặn lại trả về 403
+    return res.status(403).json({
+        message: "Từ chối truy cập. Chỉ có Quản trị viên mới có quyền thực hiện hành động này!"
+    });
+};

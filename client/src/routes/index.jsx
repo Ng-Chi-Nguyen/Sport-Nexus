@@ -7,6 +7,8 @@ import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { authRoutes } from "./authRoute";
 import { webRoutes } from "./webRoute";
 
+import AdminGuard from "@/components/AdminGuard";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,8 +25,14 @@ const router = createBrowserRouter([
       },
       {
         path: adminRoutes.path,
-        element: <AdminLayout />,
-        children: adminRoutes.children,
+        element: <AdminGuard />,
+        children: [
+          {
+            path: "",
+            element: <AdminLayout />,
+            children: adminRoutes.children,
+          },
+        ],
       },
     ],
   },

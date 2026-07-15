@@ -36,6 +36,7 @@ const homeService = {
                 },
                 Reviews: {
                     select: { rating: true },
+                    take: 20,
                 },
             },
         });

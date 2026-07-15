@@ -25,7 +25,7 @@ const AddRolePermissionPage = () => {
   const userData = user?.data?.user;
   const permissionsData = allPermissions?.data;
   const userPerms = userData?.permissions || [];
-  const rolePerms = userData?.roles?.[0]?.permissions || [];
+  const rolePerms = userData?.role?.permissions || [];
 
   // --- LOGIC TRA CỨU MODULES CHỦ ĐỘNG (GIỐNG TRANG PHÂN QUYỀN) ---
   const [isModuleOpen, setIsModuleOpen] = useState(false);

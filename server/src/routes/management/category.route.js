@@ -13,9 +13,9 @@ categoryRoute
     .put("/:id", verifyToken, checkPermission("sua-danh-muc"), validate(categorySchema.updateCategory), uploadImageCategory, categoryController.updateCategory)
     .delete("/:id", verifyToken, checkPermission("xoa-danh-muc"), categoryController.deleteCategory)
 
+    .get("/all", categoryController.getCategoriesDropdown)
     .get("/:id", categoryController.getCategoryById)
     .get("/", categoryController.getAllCategory)
 
-    .get("/all", categoryController.getCategoriesDropdown)
 
 export default categoryRoute;

@@ -45,14 +45,30 @@ const CreatePurchaseOrder = () => {
     [responses.suppliers.data],
   );
 
-  const variantsOptions = useMemo(
-    () =>
-      responses.productVariants.data.map((v) => ({
+  const variantsOptions = useMemo(() => {
+    // Phòng trường hợp dữ liệu loader chưa sẵn sàng
+    if (!responses?.productVariants?.data) return [];
+
+    return responses.productVariants.data.map((v) => {
+      // Kiểm tra xem biến thể này có chứa thuộc tính nào không
+      const hasAttributes =
+        Array.isArray(v.VariableAttributes) && v.VariableAttributes.length > 0;
+
+      // Lấy thông tin an toàn qua dấu ?.
+      const attrName = hasAttributes
+        ? v.VariableAttributes[0]?.attributeKey?.name
+        : "";
+      const attrValue = hasAttributes ? v.VariableAttributes[0]?.value : "";
+
+      // Nếu có biến thể thì hiển thị ghép, không có thì chỉ hiện tên sản phẩm gốc
+      const variantLabel = hasAttributes ? ` - ${attrName}: ${attrValue}` : "";
+
+      return {
         id: v.id,
-        name: `${v.product.name} - ${v.VariableAttributes[0].attributeKey.name}: ${v.VariableAttributes[0].value}`,
-      })),
-    [responses.productVariants.data],
-  );
+        name: `${v.product?.name || "Sản phẩm không rõ tên"}${variantLabel}`,
+      };
+    });
+  }, [responses?.productVariants?.data]);
 
   // 5. Hàm xử lý logic món hàng
   const handleAddItem = (e) => {

@@ -38,7 +38,7 @@ const Header = () => {
           </div>
           <span className="border border-solid w-[1px] h-8"></span>
           <div className="flex items-center">
-            {user && user.role_id !== 5 && (
+            {user && user.role.slug !== "customer" && (
               <Link
                 to="/management/dashboard"
                 className="mr-3 cursor-pointer group"

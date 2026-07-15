@@ -85,13 +85,29 @@ const ProfilePage = () => {
   };
 
   const confirmLogout = async () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("user");
-    await authApi.logout(user.id);
-    setIsLogoutModalOpen(false);
-    toast.success("Đăng xuất thành công. Hẹn gặp lại bạn!");
-    navigate("/auth/login");
+    try {
+      // 1. Tắt toàn bộ các thông báo đang chạy trước đó để giải phóng DOM
+      toast.dismiss();
+
+      // 2. Gọi API logout TRƯỚC KHI xóa token trong localStorage
+      if (user?.id) {
+        await authApi.logout(user.id);
+      }
+    } catch (error) {
+      console.error("Lỗi API logout:", error);
+    } finally {
+      // 3. Xóa dữ liệu trong storage
+      localStorage.removeItem("token");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user");
+
+      // 4. Đóng modal
+      setIsLogoutModalOpen(false);
+
+      // 5. Sử dụng window.location.href để chuyển hướng khi đăng xuất thay vì navigate().
+      // Cách này sẽ làm mới toàn bộ State/DOM của ứng dụng, vừa sạch bộ nhớ vừa không bao giờ lo bị lỗi crash "toastNode is null".
+      window.location.href = "/auth/login";
+    }
   };
 
   return (

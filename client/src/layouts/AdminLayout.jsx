@@ -105,7 +105,7 @@ const AdminLayout = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.href = "/login";
+    window.location.href = "/auth/login";
   };
 
   return (

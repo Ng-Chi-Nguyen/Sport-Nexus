@@ -10,10 +10,11 @@ const supplierRoute = express.Router();
 supplierRoute
 
     .post("/", verifyToken, checkPermission("them-nha-cung-cap"), validate(supplierSchema.createSupplier), uploadImageLogoSupplier, supplierController.createSupplier)
+    .put("/:id", verifyToken, checkPermission("sua-nha-cung-cap"), validate(supplierSchema.updateSupplier), uploadImageLogoSupplier, supplierController.updateSuplier)
+    .delete("/:id", verifyToken, checkPermission("xoa-nha-cung-cap"), supplierController.deleteSupplier)
+
     .get("/all", supplierController.getSuppliersDropdown)
     .get("/:id", supplierController.getSupplierById)
     .get("/", supplierController.getAllSupplier)
-    .put("/:id", verifyToken, checkPermission("sua-nha-cung-cap"), validate(supplierSchema.updateSupplier), uploadImageLogoSupplier, supplierController.updateSuplier)
-    .delete("/:id", verifyToken, checkPermission("xoa-nha-cung-cap"), supplierController.deleteSupplier)
 
 export default supplierRoute;

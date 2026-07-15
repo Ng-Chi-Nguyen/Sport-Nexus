@@ -104,7 +104,7 @@ const ProductPage = () => {
         <BtnAdd
           route={"/management/products/create"}
           className="w-[30%]"
-          name="Thêm nhà cung cấp"
+          name="Thêm sản phẩm mới"
         />
       </div>
       <h2 className="mt-4">Danh sách sản phẩm</h2>
@@ -210,13 +210,11 @@ const ProductPage = () => {
             )}
           </tbody>
         </table>
-        <div className="border-t-2 border-[#323232] bg-[#f8f9fa]">
-          <Pagination
-            totalPages={paginationInfo.totalPages}
-            currentPage={paginationInfo.currentPage}
-            onPageChange={handlePageChange}
-          />
-        </div>
+        <Pagination
+          totalPages={paginationInfo.totalPages}
+          currentPage={paginationInfo.currentPage}
+          onPageChange={handlePageChange}
+        />
         <ConfirmDelete
           isOpen={isConfirmOpen}
           title="Xóa sản phẩm"

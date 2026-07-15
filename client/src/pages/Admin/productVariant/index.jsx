@@ -221,13 +221,11 @@ const variantVariant = () => {
             )}
           </tbody>
         </table>
-        <div className="border-t-2 border-[#323232] bg-[#f8f9fa]">
-          <Pagination
-            totalPages={paginationInfo.totalPages}
-            currentPage={paginationInfo.currentPage}
-            onPageChange={handlePageChange}
-          />
-        </div>
+        <Pagination
+          totalPages={paginationInfo.totalPages}
+          currentPage={paginationInfo.currentPage}
+          onPageChange={handlePageChange}
+        />
         <ConfirmDelete
           isOpen={isConfirmOpen}
           title="Xóa biến thể sản phẩm"

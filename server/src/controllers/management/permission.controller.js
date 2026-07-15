@@ -120,10 +120,10 @@ const permissionController = {
     getAllRole: async (req, res) => {
         try {
             let roles = await permissionService.getAllRole();
-            if (!roles || roles.length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Không tìm thấy quyền."
+            if (!roles || Object.keys(roles).length === 0) {
+                return res.status(200).json({
+                    success: true,
+                    data: {}
                 });
             }
             return res.status(200).json({
@@ -131,9 +131,6 @@ const permissionController = {
                 data: roles
             });
         } catch (error) {
-            if (error.code === 'P2025') {
-                return res.status(404).json({ success: false, message: "Không tìm thấy quyền." });
-            }
             return res.status(500).json({
                 success: false,
                 message: "Lỗi server nội bộ",

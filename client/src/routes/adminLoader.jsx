@@ -38,21 +38,65 @@ export const productsLoader = ({ request }) =>
     queryFn: () => LoaderProduct.getAllProducst(getPage(request)),
   });
 
+// export const productCreateLoader = async () => {
+//   const [brands, suppliers, categories] = await Promise.all([
+//     queryClient.fetchQuery({
+//       queryKey: ["brands-select"],
+//       queryFn: () => LoaderBrand.getBrandsDropdown(),
+//     }),
+//     queryClient.fetchQuery({
+//       queryKey: ["suppliers-select"],
+//       queryFn: () => LoaderSupplier.getSuppliersDropdown(),
+//     }),
+//     queryClient.fetchQuery({
+//       queryKey: ["categories-select"],
+//       queryFn: () => LoaderCategory.getCategoriesDropdown(),
+//     }),
+//   ]);
+//   return { brands, suppliers, categories };
+// };
 export const productCreateLoader = async () => {
   const [brands, suppliers, categories] = await Promise.all([
-    queryClient.fetchQuery({
-      queryKey: ["brands-select"],
-      queryFn: () => LoaderBrand.getBrandsDropdown(),
-    }),
-    queryClient.fetchQuery({
-      queryKey: ["suppliers-select"],
-      queryFn: () => LoaderSupplier.getSuppliersDropdown(),
-    }),
-    queryClient.fetchQuery({
-      queryKey: ["categories-select"],
-      queryFn: () => LoaderCategory.getCategoriesDropdown(),
-    }),
+    queryClient
+      .fetchQuery({
+        queryKey: ["brands-select"],
+        queryFn: () => LoaderBrand.getBrandsDropdown(),
+      })
+      .catch((err) => {
+        console.error(
+          "❌ API Thương hiệu (Brands) bị lỗi 500:",
+          err.response?.data || err.message,
+        );
+        return []; // Trả về mảng rỗng để không bị sập
+      }),
+
+    queryClient
+      .fetchQuery({
+        queryKey: ["suppliers-select"],
+        queryFn: () => LoaderSupplier.getSuppliersDropdown(),
+      })
+      .catch((err) => {
+        console.error(
+          "❌ API Nhà cung cấp (Suppliers) bị lỗi 500:",
+          err.response?.data || err.message,
+        );
+        return [];
+      }),
+
+    queryClient
+      .fetchQuery({
+        queryKey: ["categories-select"],
+        queryFn: () => LoaderCategory.getCategoriesDropdown(),
+      })
+      .catch((err) => {
+        console.error(
+          "❌ API Danh mục (Categories) bị lỗi 500:",
+          err.response?.data || err.message,
+        );
+        return [];
+      }),
   ]);
+
   return { brands, suppliers, categories };
 };
 

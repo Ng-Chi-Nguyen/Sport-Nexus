@@ -93,7 +93,7 @@ const CreateProductVariant = () => {
 
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
         {/* KHỐI 1: GIÁ & KHO HÀNG (4 CỘT) */}
-        <div className="col-span-12 lg:col-span-4 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-6 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
+        <div className="col-span-12 lg:col-span-4 flex flex-col bg-[#0D121F]/40 border border-gray-200  p-6 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
           <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 mb-6 flex items-center gap-2 border-b border-white/5">
             <span className="w-1.5 h-3.5 rounded-sm bg-sky-500 shadow-[0_0_8px_#0ea5e9]"></span>
             Giá & Kho hàng
@@ -115,7 +115,7 @@ const CreateProductVariant = () => {
         </div>
 
         {/* KHỐI 2: CẤU HÌNH THUỘC TÍNH & NÚT HÀNH ĐỘNG (8 CỘT) */}
-        <div className="col-span-12 lg:col-span-8 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-6 rounded-2xl shadow-2xl backdrop-blur-md relative z-20">
+        <div className="col-span-12 lg:col-span-8 flex flex-col bg-[#0D121F]/40 border border-gray-200  p-6 rounded-2xl shadow-2xl backdrop-blur-md relative z-20">
           <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 mb-6 flex items-center gap-2 border-b border-white/5">
             <span className="w-1.5 h-3.5 rounded-sm bg-violet-500 shadow-[0_0_8px_#8b5cf6]"></span>
             Cấu hình thuộc tính
