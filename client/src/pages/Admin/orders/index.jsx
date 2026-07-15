@@ -5,7 +5,7 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
 import Pagination from "@/components/ui/pagination";
-import Badge from "@/components/ui/badge"; // ĐÃ THÊM: Sửa lỗi Badge is not defined
+import Badge from "@/components/ui/badge";
 import { formatFullDateTime, formatCurrency } from "@/utils/formatters";
 
 const breadcrumbData = [
@@ -84,27 +84,20 @@ const OrderPage = () => {
           Danh sách đơn hàng
         </h2>
 
-        {/* BẢNG ĐƠN HÀNG CHUẨN ĐƯỜNG KÈ TRẮNG MỜ BIÊN DƯỚI */}
+        {/* BẢNG ĐƠN HÀNG */}
         <div className="table-retro">
           <table className="w-full border-separate border-spacing-0">
             <thead>
               <tr>
-                {/* Giảm từ 35% xuống 32% */}
                 <th scope="col" className="px-6 py-4 w-[32%] !text-start">
                   Thông tin khách hàng
                 </th>
-
-                {/* TĂNG TRỌNG TÂM: Từ 20% lên 28% để số tiền không bị co kéo lệch hàng */}
                 <th scope="col" className="px-6 py-4 w-[28%] text-center">
                   Giá trị đơn
                 </th>
-
-                {/* Giảm từ 33% xuống 28% */}
                 <th scope="col" className="px-6 py-4 w-[28%] !text-start">
                   Trạng thái & Thời gian
                 </th>
-
-                {/* Giữ nguyên 12% */}
                 <th scope="col" className="px-6 py-4 w-[12%] text-center">
                   Thao tác
                 </th>
@@ -118,18 +111,14 @@ const OrderPage = () => {
                     <td className="px-6 py-5">
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] bg-[#161F32] text-slate-400 px-2 py-0.5 rounded border border-slate-800 font-bold uppercase tracking-wider">
-                            Email
-                          </span>
+                          <Badge color="nexus">Email</Badge>
                           <span className="font-semibold text-slate-200 text-sm tracking-wide">
                             {order.user_email || "Khách tại cửa hàng"}
                           </span>
                         </div>
 
                         <div className="flex items-center gap-2 text-slate-400">
-                          <span className="text-[10px] bg-[#161F32] text-slate-400 px-2 py-0.5 rounded border border-slate-800 font-bold uppercase tracking-wider flex-shrink-0">
-                            Địa chỉ
-                          </span>
+                          <Badge color="nexus">Địa chỉ</Badge>
                           <span
                             className="truncate max-w-[240px] text-xs text-slate-400"
                             title={order.shipping_address}
@@ -139,7 +128,7 @@ const OrderPage = () => {
                         </div>
 
                         <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 pt-0.5">
-                          <span>Thanh toán:</span>
+                          <Badge color="nexus">Thanh toán</Badge>
                           <span className="text-slate-300 font-medium font-mono uppercase bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800/60">
                             {order.payment_method}
                           </span>
@@ -152,31 +141,21 @@ const OrderPage = () => {
                       </div>
                     </td>
 
-                    {/* CỘT 2: DÒNG TIỀN (ĐÃ DỌN DẸP THẺ TD THỪA) */}
+                    {/* CỘT 2: DÒNG TIỀN */}
                     <td className="px-6 py-5">
                       <div className="flex flex-col items-center justify-center gap-2 w-full">
-                        {/* 1. Tiền gốc */}
+                        {/* Tiền gốc */}
                         <div className="flex items-center gap-2 w-fit">
-                          <Badge
-                            color="slate"
-                            className="text-[10px] scale-95 opacity-50"
-                          >
-                            Gốc
-                          </Badge>
+                          <Badge color="slate">Gốc</Badge>
                           <span className="text-xs font-mono text-slate-400 line-through tracking-wide">
                             {formatCurrency(order.total_amount)}
                           </span>
                         </div>
 
-                        {/* 2. Tiền giảm */}
+                        {/* Tiền giảm */}
                         {Number(order.discount_amount) > 0 ? (
                           <div className="flex items-center gap-2 w-fit">
-                            <Badge
-                              color="error"
-                              className="text-[10px] scale-95"
-                            >
-                              Giảm
-                            </Badge>
+                            <Badge color="error">Giảm</Badge>
                             <span className="text-xs font-mono font-bold text-rose-400">
                               -{formatCurrency(order.discount_amount)}
                             </span>
@@ -185,14 +164,9 @@ const OrderPage = () => {
                           <div className="h-[20px]"></div>
                         )}
 
-                        {/* 3. Tiền thực thu */}
+                        {/* Tiền thực thu */}
                         <div className="flex items-center gap-2 w-fit mt-0.5">
-                          <Badge
-                            color="success"
-                            className="text-[10px] uppercase font-bold tracking-wider"
-                          >
-                            Thực thu
-                          </Badge>
+                          <Badge color="success">Thực thu</Badge>
                           <span className="text-sm font-black font-mono text-emerald-400 tracking-wide bg-emerald-500/5 px-2.5 py-0.5 rounded-lg border border-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
                             {formatCurrency(order.final_amount)}
                           </span>
@@ -204,18 +178,14 @@ const OrderPage = () => {
                     <td className="px-6 py-5">
                       <div className="space-y-2 text-xs">
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] bg-[#161F32] text-slate-500 px-2 py-0.5 rounded border border-slate-800 font-bold uppercase tracking-wider">
-                            Lịch sử
-                          </span>
+                          <Badge color="nexus">Lịch sử</Badge>
                           <span className="text-slate-400 font-mono text-[11px]">
                             {formatFullDateTime(order.created_at)}
                           </span>
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] bg-[#161F32] text-slate-500 px-2 py-0.5 rounded border border-slate-800 font-bold uppercase tracking-wider">
-                            Vận chuyển
-                          </span>
+                          <Badge color="nexus">Vận chuyển</Badge>
                           <span
                             className={`inline-flex items-center justify-center min-w-[90px] px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase border ${getOrderStatusClass(order.status)}`}
                           >
@@ -224,9 +194,7 @@ const OrderPage = () => {
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] bg-[#161F32] text-slate-500 px-2 py-0.5 rounded border border-slate-800 font-bold uppercase tracking-wider">
-                            Khuyến mãi
-                          </span>
+                          <Badge color="nexus">Khuyến mãi</Badge>
                           {order.coupon_code ? (
                             <span className="text-[11px] font-mono font-semibold text-violet-400 bg-violet-500/5 px-2 py-0.5 rounded border border-violet-500/10">
                               {order.coupon_code}
@@ -240,7 +208,7 @@ const OrderPage = () => {
                       </div>
                     </td>
 
-                    {/* CỘT 4: THAO TÁC BTNACTIONS */}
+                    {/* CỘT 4: THAO TÁC */}
                     <td className="px-6 py-5 text-center">
                       <BtnActions
                         id={order.id}
