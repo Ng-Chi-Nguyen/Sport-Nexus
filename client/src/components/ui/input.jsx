@@ -10,7 +10,7 @@ const InputFrom = (props) => {
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className={`peer py-2.5 px-4 w-full cursor-pointer transition-all duration-200
+      className={`peer py-2.5 px-4 w-full cursor-pointer transition-colors duration-200
                  bg-[#111827]/40 text-slate-200 border border-slate-800 outline-none rounded-xl 
                  placeholder:text-slate-600 focus:border-sky-500/50 focus:bg-[#161F32]/60
                  focus:ring-1 focus:ring-sky-500/20 ${className}`}
@@ -29,7 +29,7 @@ const InputPassword = (props) => {
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`peer py-2.5 pl-4 pr-11 w-full cursor-pointer transition-all duration-200
+        className={`peer py-2.5 pl-4 pr-11 w-full cursor-pointer transition-colors duration-200
                    bg-[#111827]/40 text-slate-200 border border-slate-800 outline-none rounded-xl 
                    placeholder:text-slate-600 focus:border-sky-500/50 focus:bg-[#161F32]/60
                    focus:ring-1 focus:ring-sky-500/20 ${className}`}
@@ -135,7 +135,7 @@ const FloatingInput = ({ label, id, ...props }) => {
         {...props}
         placeholder=" "
         className="peer w-full p-[11px_15px] text-sm rounded-xl border border-slate-800 bg-[#111827]/40 
-                   text-slate-200 tracking-wide outline-none transition-all duration-200
+                   text-slate-200 tracking-wide outline-none transition-colors duration-200
                    focus:border-sky-500/50 focus:bg-[#161F32]/60 focus:ring-1 focus:ring-sky-500/10"
       />
       <label
@@ -170,7 +170,7 @@ const FloatingInputPassword = ({ label, id, ...props }) => {
         {...props}
         placeholder=" "
         className="peer w-full p-[11px_15px] pr-11 text-sm rounded-xl border border-slate-800 bg-[#111827]/40 
-                   text-slate-200 tracking-wide outline-none transition-all duration-200
+                   text-slate-200 tracking-wide outline-none transition-colors duration-200
                    focus:border-sky-500/50 focus:bg-[#161F32]/60 focus:ring-1 focus:ring-sky-500/10"
       />
 

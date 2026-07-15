@@ -114,7 +114,6 @@ const OrderPage = () => {
         <BtnAdd route={"/management/orders/create"} name="Tạo đơn hàng" />
       </div>
 
-      {/* HỆ THỐNG CÁC THANH LỌC CHUYỂN THÀNH SELECT DROPDOWN (SỬ DỤNG HẰNG SỐ IMPORT THAY THẾ) */}
       <div className="flex flex-wrap items-center gap-4 p-4 bg-[#0D121F]/40 border border-slate-900 rounded-2xl shadow-md w-full">
         {/* Dropdown Vận chuyển */}
         <div className="flex flex-col gap-1.5">

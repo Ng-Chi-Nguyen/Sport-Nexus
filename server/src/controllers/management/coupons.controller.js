@@ -52,20 +52,30 @@ const couponController = {
     },
 
     getAllCoupon: async (req, res) => {
-        const page = parseInt(req.params.page || 1)
+        const { page, is_active, search, discount_type, date_from, date_to, discount_min, discount_max } = req.query;
         try {
-            let list_coupons = await couponService.getAllCoupon(page);
+            let result = await couponService.getAllCoupon({
+                page: parseInt(page || 1),
+                is_active: is_active !== undefined ? is_active : '',
+                search,
+                discount_type,
+                date_from,
+                date_to,
+                discount_min,
+                discount_max,
+            });
 
-            if (!list_coupons || list_coupons.length === 0) {
+            if (!result || result.list_coupons.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: "Không tìm thấy mã giảm giá.",
+                    data: { list_coupons: [], pagination: { totalPages: 1, currentPage: 1 } }
                 });
             }
 
             return res.status(200).json({
                 success: true,
-                data: list_coupons
+                data: result
             })
         } catch (error) {
             return res.status(500).json({

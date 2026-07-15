@@ -45,16 +45,41 @@ const couponService = {
         return coupon;
     },
 
-    getAllCoupon: async (page) => {
+    getAllCoupon: async ({ page, is_active, search, discount_type, date_from, date_to, discount_min, discount_max } = {}) => {
         const limit = 6;
-        const currentPage = Math.max(1, page);
+        const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
+        const where = {};
+        if (is_active !== undefined && is_active !== '') {
+            where.is_active = is_active === 'true';
+        }
+        if (search) {
+            where.code = { contains: search };
+        }
+        if (discount_type) {
+            where.discount_type = discount_type;
+        }
+        if (date_from || date_to) {
+            where.start_date = {};
+            if (date_from) where.start_date.gte = new Date(date_from);
+        }
+        if (date_to) {
+            where.end_date = { lte: new Date(date_to) };
+        }
+        if (discount_min !== undefined && discount_min !== '') {
+            where.discount_value = { ...where.discount_value, gte: parseInt(discount_min) };
+        }
+        if (discount_max !== undefined && discount_max !== '') {
+            where.discount_value = { ...where.discount_value, lte: parseInt(discount_max) };
+        }
         let [list_coupons, totalItems] = await Promise.all([
             prisma.coupons.findMany({
+                where,
                 take: limit,
                 skip: skip,
+                orderBy: { created_at: 'desc' },
             }),
-            prisma.coupons.count()
+            prisma.coupons.count({ where })
         ])
         return {
             list_coupons, pagination: {

@@ -22,7 +22,7 @@ const FloatingTextarea = ({
         placeholder=" " // 💡 BẮT BUỘC phải giữ khoảng trắng này
         className="block px-4 pb-3 pt-5 w-full text-sm min-h-[140px] max-h-[350px] text-slate-200 
                    bg-[#111827]/40 border border-slate-800 rounded-xl appearance-none outline-none 
-                   transition-all duration-200 tracking-wide custom-scrollbar
+                   transition-colors duration-200 tracking-wide custom-scrollbar
                    focus:border-sky-500/50 focus:bg-[#161F32]/60 focus:ring-1 focus:ring-sky-500/10
                    disabled:opacity-40 disabled:cursor-not-allowed peer"
         {...props}

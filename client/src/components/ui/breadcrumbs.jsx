@@ -15,7 +15,7 @@ const Breadcrumbs = (props) => {
               className={`transition-colors duration-200 my-2 ${
                 isLast
                   ? "text-[#4facf3] font-bold uppercase italic tracking-tighter"
-                  : "text-gray-500 hover:text-gray-700"
+                  : "text-slate-400 hover:text-slate-300"
               }`}
             >
               {item.title}
@@ -25,7 +25,7 @@ const Breadcrumbs = (props) => {
             {!isLast && (
               <ChevronRight
                 size={16}
-                className="text-gray-400"
+                className="text-slate-600"
                 strokeWidth={2}
               />
             )}

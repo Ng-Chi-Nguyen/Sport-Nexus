@@ -85,6 +85,14 @@
   background-color: #3b95d1 !important;
 }
 
+/* Kill browser default focus ring gây chớp trắng */
+*:focus {
+  outline: none !important;
+}
+*:focus-visible {
+  outline: none !important;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;

@@ -172,8 +172,17 @@ export const brandEditLoader = (args) => LoaderBrand.getBrandById(args);
 
 export const couponsLoader = ({ request }) =>
   queryClient.fetchQuery({
-    queryKey: ["coupons", getPage(request)],
-    queryFn: () => LoaderCoupon.getAllCoupons(getPage(request)),
+    queryKey: ["coupons", getPage(request), getSearchParam(request, "is_active"), getSearchParam(request, "search"), getSearchParam(request, "discount_type"), getSearchParam(request, "date_from"), getSearchParam(request, "date_to"), getSearchParam(request, "discount_min"), getSearchParam(request, "discount_max")],
+    queryFn: () => LoaderCoupon.getAllCoupons({
+      page: getPage(request),
+      is_active: getSearchParam(request, "is_active"),
+      search: getSearchParam(request, "search"),
+      discount_type: getSearchParam(request, "discount_type"),
+      date_from: getSearchParam(request, "date_from"),
+      date_to: getSearchParam(request, "date_to"),
+      discount_min: getSearchParam(request, "discount_min"),
+      discount_max: getSearchParam(request, "discount_max"),
+    }),
   });
 
 export const couponEditLoader = ({ params }) =>
