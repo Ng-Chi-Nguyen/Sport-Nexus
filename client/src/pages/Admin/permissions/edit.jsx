@@ -13,6 +13,7 @@ import permissionApi from "@/api/management/permissionApi";
 import { MODULE_LABELS, ACTION_OPTIONS } from "@/constants/permission";
 // lib
 import { queryClient } from "@/lib/react-query";
+import { TitleManagement } from "@/components/ui/title";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -79,11 +80,9 @@ const EditPermissionPage = () => {
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
         {/* CONTAINER CHÍNH: Phủ kính tối mờ xuyên thấu, gán z-20 chống che dropdown */}
         <div className="col-span-12 lg:col-span-8 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-6 rounded-2xl shadow-2xl backdrop-blur-md relative z-20">
-          <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 mb-6 flex items-center gap-2 border-b border-white/5">
-            <span className="w-1.5 h-3.5 rounded-sm bg-violet-500 shadow-[0_0_8px_#8b5cf6]"></span>
+          <TitleManagement color="violet">
             Cấu hình tham số quyền hạn
-          </h3>
-
+          </TitleManagement>
           {/* Hàng chứa 2 ô SelectPro rộng rãi */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
             <div className="flex flex-col gap-1">

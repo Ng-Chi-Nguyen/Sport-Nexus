@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import statusOptions from "@/constants/purchaseOrder";
 import purchaseOrderdApi from "@/api/management/purchaseOrderApi";
 import { queryClient } from "@/lib/react-query";
+import { TitleManagement } from "@/components/ui/title";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -140,10 +141,7 @@ const CreatePurchaseOrder = () => {
           <div className="bg-[#0D121F]/40 border border-slate-900 p-4 rounded-xl shadow-xl backdrop-blur-md space-y-3.5">
             {/* PHẦN 1: NHÀ CUNG CẤP (Bỏ bớt margin-bottom dư thừa) */}
             <div>
-              <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-1 mb-2 flex items-center gap-2 border-b border-white/5">
-                <span className="w-1.5 h-3 rounded-sm bg-sky-500 shadow-[0_0_8px_#0ea5e9]"></span>
-                Nhà cung cấp
-              </h3>
+              <TitleManagement color="blue">Nhà cung cấp</TitleManagement>
               <SelectPro
                 value={selectSupplier}
                 options={suppliersOptions}
@@ -154,10 +152,9 @@ const CreatePurchaseOrder = () => {
 
             {/* PHẦN 2: TRẠNG THÁI MẶC ĐỊNH */}
             <div className="border-t border-white/5 pt-3">
-              <h3 className="font-semibold text-xs text-emerald-400/90 uppercase tracking-wider pb-1 mb-2 flex items-center gap-2 border-b border-white/5">
-                <span className="w-1.5 h-3 rounded-sm bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
+              <TitleManagement color="green">
                 Trạng thái mặc định
-              </h3>
+              </TitleManagement>
               <SelectPro
                 value={selectStatus}
                 options={statusOptions}
@@ -168,11 +165,9 @@ const CreatePurchaseOrder = () => {
 
             {/* PHẦN 3: THỜI GIAN & NGÂN SÁCH (ĐÃ THU GỌN CỰC ĐẠI) */}
             <div className="border-t border-white/5 pt-3">
-              <h3 className="font-semibold text-xs text-orange-400/90 uppercase tracking-wider pb-1 mb-2 flex items-center gap-2 border-b border-white/5">
-                <span className="w-1.5 h-3 rounded-sm bg-orange-500 shadow-[0_0_8px_#f97316]"></span>
+              <TitleManagement color="orange">
                 Thời gian & Ngân sách
-              </h3>
-
+              </TitleManagement>
               {/* Nén khoảng cách giữa Input Date và Text hiển thị tiền tiền bằng gap-2 */}
               <div className="flex flex-col gap-2">
                 <FloatingInput
@@ -203,10 +198,9 @@ const CreatePurchaseOrder = () => {
 
         <div className="flex-1 bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-xl backdrop-blur-md relative z-20">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 flex items-center gap-2 border-b border-white/5">
-              <span className="w-1.5 h-3.5 rounded-sm bg-violet-500 shadow-[0_0_8px_#8b5cf6]"></span>
+            <TitleManagement color="violet">
               Danh sách món hàng nhập về
-            </h3>
+            </TitleManagement>
             <button
               type="button"
               onClick={handleAddItem}

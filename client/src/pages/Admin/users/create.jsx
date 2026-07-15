@@ -15,6 +15,7 @@ import { Submit_GoBack } from "@/components/ui/button";
 import userApi from "@/api/management/userApi";
 // lib
 import { queryClient } from "@/lib/react-query";
+import { TitleManagement } from "@/components/ui/title";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -82,10 +83,7 @@ const CreateUserPage = () => {
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
         {/* KHỐI 1: ẢNH ĐẠI DIỆN (3 CỘT) */}
         <div className="col-span-12 md:col-span-4 lg:col-span-3 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
-          <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 mb-6 flex items-center gap-2 border-b border-white/5">
-            <span className="w-1.5 h-3.5 rounded-sm bg-sky-500 shadow-[0_0_8px_#0ea5e9]"></span>
-            Ảnh đại diện
-          </h3>
+          <TitleManagement color="cyan">Ảnh đại diện</TitleManagement>
           <div className="flex items-center justify-center w-full py-2">
             <InputFile value={avatar} onChange={(file) => setAvatar(file)} />
           </div>
@@ -93,10 +91,7 @@ const CreateUserPage = () => {
 
         {/* KHỐI 2: THÔNG TIN CƠ BẢN (5 CỘT) */}
         <div className="col-span-12 md:col-span-8 lg:col-span-5 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
-          <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 mb-6 flex items-center gap-2 border-b border-white/5">
-            <span className="w-1.5 h-3.5 rounded-sm bg-violet-500 shadow-[0_0_8px_#8b5cf6]"></span>
-            Thông tin cơ bản
-          </h3>
+          <TitleManagement color="green">Thông tin cơ bản</TitleManagement>
           <div className="space-y-5">
             <FloatingInput
               id="full_name"
@@ -132,11 +127,7 @@ const CreateUserPage = () => {
 
         {/* KHỐI 3: PHÂN QUYỀN TÀI KHOẢN (4 CỘT - ĐÃ FIX relative z-20) */}
         <div className="col-span-12 md:col-span-12 lg:col-span-4 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-2xl backdrop-blur-md relative z-20 h-fit">
-          <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 mb-6 flex items-center gap-2 border-b border-white/5">
-            <span className="w-1.5 h-3.5 rounded-sm bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
-            Loại tài khoản
-          </h3>
-
+          <TitleManagement color="blue">Trạng thái quyền</TitleManagement>
           <div className="space-y-6">
             <Select
               label="Loại tài khoản"

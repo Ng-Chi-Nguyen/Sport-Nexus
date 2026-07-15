@@ -60,14 +60,29 @@ const EditOrderPage = () => {
     }, 0);
   }, [items]);
 
-  const variantsOptions = useMemo(
-    () =>
-      response.productVariants.data.map((v) => ({
+  const variantsOptions = useMemo(() => {
+    if (!response?.productVariants?.data) return [];
+
+    return response.productVariants.data.map((v) => {
+      // Kiểm tra xem sản phẩm có thuộc tính biến thể hay không
+      const hasAttributes =
+        Array.isArray(v.VariableAttributes) && v.VariableAttributes.length > 0;
+
+      // Trích xuất an toàn qua Optional Chaining
+      const attrName = hasAttributes
+        ? v.VariableAttributes[0]?.attributeKey?.name
+        : "";
+      const attrValue = hasAttributes ? v.VariableAttributes[0]?.value : "";
+
+      // Tạo nhãn: có biến thể thì hiển thị kèm theo, không có thì chỉ hiện tên sản phẩm gốc
+      const variantLabel = hasAttributes ? ` - ${attrName}: ${attrValue}` : "";
+
+      return {
         id: v.id,
-        name: `${v.product.name} - ${v.VariableAttributes[0].attributeKey.name}: ${v.VariableAttributes[0].value}`,
-      })),
-    [response.productVariants.data],
-  );
+        name: `${v.product?.name || "Sản phẩm không rõ tên"}${variantLabel}`,
+      };
+    });
+  }, [response?.productVariants?.data]);
 
   const handleItemChange = (itemId, field, value) => {
     setItems(

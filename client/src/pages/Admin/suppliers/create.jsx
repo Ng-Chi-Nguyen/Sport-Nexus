@@ -12,6 +12,7 @@ import supplierdApi from "@/api/management/supplierApi";
 // lib
 import { queryClient } from "@/lib/react-query";
 import { Submit_GoBack } from "@/components/ui/button";
+import { TitleManagement } from "@/components/ui/title";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -102,10 +103,9 @@ const CreateSupplierPage = () => {
           {/* PHẦN THÔNG TIN CHI TIẾT */}
           <div className="flex-1 flex flex-col gap-6">
             <div className="border border-gray-200 p-3 rounded-[5px]">
-              <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
-                <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin người
-                liên hệ mua hàng phẩm
-              </h3>
+              <TitleManagement color="green">
+                Thông tin người liên hệ mua hàng phẩm
+              </TitleManagement>
               <div className="flex flex-wrap gap-4">
                 <div className="w-full md:w-[48%]">
                   <FloatingInput
@@ -147,10 +147,9 @@ const CreateSupplierPage = () => {
             </div>
             {/* PHẦN ĐỊA CHỈ */}
             <div className=" p-4 border border-gray-200 p-3 rounded-[5px]">
-              <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
-                <span className="w-2 h-4 bg-[#4facf3]"></span> Địa chỉ kho/văn
-                phòng nhà cung cấp
-              </h3>
+              <TitleManagement color="emerald">
+                Địa chỉ kho/văn phòng nhà cung cấp
+              </TitleManagement>
               {/* 3. Truyền hàm handleAddressChange vào component con */}
               <AddressSelector onAddressChange={handleAddressChange} />
 
@@ -172,11 +171,10 @@ const CreateSupplierPage = () => {
             </div>
           </div>
           <div className="border border-gray-200 p-3 rounded-[5px]">
-            <InputFile
-              label="Logo nhà cung cấp (nếu có)"
-              value={logo}
-              onChange={(file) => setLogo(file)}
-            />
+            <TitleManagement color="cyan">
+              Logo nhà cung cấp (nếu có)
+            </TitleManagement>
+            <InputFile value={logo} onChange={(file) => setLogo(file)} />
             <div className="mt-10">
               <Submit_GoBack />
             </div>

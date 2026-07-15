@@ -8,6 +8,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import productVariantdApi from "@/api/core/productVariantApi";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query";
+import { TitleManagement } from "@/components/ui/title";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -108,10 +109,8 @@ const EditProductVariant = () => {
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
         {/* KHỐI 1: GIÁ & KHO HÀNG (THEME GLASSOS TỐI MỜ) */}
         <div className="col-span-12 lg:col-span-4 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-6 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
-          <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 mb-6 flex items-center gap-2 border-b border-white/5">
-            <span className="w-1.5 h-3.5 rounded-sm bg-sky-500 shadow-[0_0_8px_#0ea5e9]"></span>
-            Giá & Kho hàng
-          </h3>
+          <TitleManagement color="green">Giá & Kho hàng</TitleManagement>
+
           <div className="space-y-5">
             <FloatingInput
               label="Số lượng tồn kho"
@@ -130,11 +129,7 @@ const EditProductVariant = () => {
 
         {/* KHỐI 2: CẤU HÌNH THUỘC TÍNH (THEME GLASSOS TỐI MỜ - CHỐNG CHE DROPDOWN) */}
         <div className="col-span-12 lg:col-span-8 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-6 rounded-2xl shadow-2xl backdrop-blur-md relative z-20">
-          <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 mb-6 flex items-center gap-2 border-b border-white/5">
-            <span className="w-1.5 h-3.5 rounded-sm bg-violet-500 shadow-[0_0_8px_#8b5cf6]"></span>
-            Cấu hình thuộc tính
-          </h3>
-
+          <TitleManagement color="blue">Cấu hình thuộc tính</TitleManagement>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
             <div className="flex flex-col gap-1">
               <SelectPro

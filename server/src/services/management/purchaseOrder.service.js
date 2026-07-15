@@ -55,9 +55,17 @@ const purchaseOrderService = {
         let purchaseOrder = await prisma.PurchaseOrders.findUnique({
             where: { id: purchaseOrderId },
             include: {
-                PurchaseOrderItems: true
+                PurchaseOrderItems: true,
+                supplier: true
             }
         })
+        if (purchaseOrder?.supplier?.location_data) {
+            const loc = purchaseOrder.supplier.location_data;
+            if (!loc.ward && loc.district) {
+                loc.ward = loc.district;
+                delete loc.district;
+            }
+        }
         return purchaseOrder;
     },
 

@@ -17,6 +17,7 @@ import { Submit_GoBack } from "@/components/ui/button";
 import { toast } from "sonner";
 import productdApi from "@/api/core/productApi";
 import { queryClient } from "@/lib/react-query";
+import { TitleManagement } from "@/components/ui/title";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -145,9 +146,7 @@ const CreateProductPage = () => {
       <form onSubmit={handleSubmit} className="flex gap-3 mt-2">
         <div className="w-1/2 flex flex-col gap-3">
           <div className="border border-gray-200 rounded-[5px] p-3">
-            <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
-              <span className="w-2 h-4 bg-[#4facf3]"></span> Phân loại hệ thống
-            </h3>
+            <TitleManagement color="amber">Phân loại hệ thống</TitleManagement>
             <div className="flex gap-2 mb-2">
               <div className="w-1/2">
                 <SelectPro
@@ -174,17 +173,15 @@ const CreateProductPage = () => {
             />
           </div>
           <div className="border border-gray-200 p-3 rounded-[5px]">
+            <TitleManagement color="cyan">Ảnh đại diện</TitleManagement>
             <InputFile
-              label="Ảnh đại diện"
               value={thumbnail}
               onChange={(file) => setThumbnail(file)}
             />
           </div>
         </div>
         <div className="border border-gray-200 w-2/3 p-3 rounded-[5px]">
-          <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">
-            <span className="w-2 h-4 bg-[#4facf3]"></span> Thông tin sản phẩm
-          </h3>
+          <TitleManagement color="emerald">Thông tin sản phẩm</TitleManagement>
           <div className="flex gap-2">
             <FloatingInput
               id="name"
@@ -209,8 +206,8 @@ const CreateProductPage = () => {
               id="product_desc"
               label="Mô tả sản phẩm"
               placeholder="Nhập mô tả chi tiết..."
-              value={description} // Truyền giá trị từ state vào
-              onChange={(e) => setDescription(e.target.value)} // Cập nhật state khi gõ
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               required={true}
             />
           </div>

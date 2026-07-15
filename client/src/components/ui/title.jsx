@@ -48,6 +48,11 @@ const TitleManagement = (props) => {
       text: "text-slate-600",
       bgSpan: "bg-slate-500",
     },
+    green: {
+      border: "border-green-500",
+      text: "text-green-600",
+      bgSpan: "bg-green-500",
+    },
   };
 
   const styles = colorMap[color] || colorMap.blue;

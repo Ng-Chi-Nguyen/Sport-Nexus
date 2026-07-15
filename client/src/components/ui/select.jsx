@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import countryData from "@/assets/data/countries.json";
 import addressData from "@/assets/data/addressVN_afterUpdate.json";
@@ -249,28 +249,58 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
 
+  // 1. Tự động map dữ liệu cũ từ API vào ô Select
   useEffect(() => {
     if (initialProvince) {
-      const foundProvince = addressData.find(
-        (p) => p.FullName === initialProvince,
-      );
+      // Chuẩn hóa tên tỉnh: viết thường, loại bỏ chữ viết tắt
+      const cleanInitialProvince = initialProvince
+        .toLowerCase()
+        .replace("tp.", "")
+        .replace("thành phố", "")
+        .replace("tỉnh", "")
+        .trim();
+
+      const foundProvince = addressData.find((p) => {
+        const pName = p.FullName.toLowerCase();
+        return (
+          pName.includes(cleanInitialProvince) ||
+          cleanInitialProvince.includes(pName)
+        );
+      });
+
       if (foundProvince) {
         setSelectedProvince(foundProvince.Code);
 
         if (initialWard) {
-          let allWards = foundProvince.Districts
-            ? foundProvince.Districts.flatMap((d) => d.Wards || [])
-            : foundProvince.Wards || [];
+          const lowerWard = initialWard.toLowerCase().trim();
+          const searchVariants = [lowerWard];
 
-          const foundWard = allWards.find((w) => w.FullName === initialWard);
-          if (foundWard) {
-            setSelectedWard(foundWard.Code);
-          }
+          const stripped = lowerWard.replace(/^(quận|huyện|phường|xã|thị trấn)\s+/i, "").trim();
+          if (stripped && stripped !== lowerWard) searchVariants.push(stripped);
+
+          const matchInList = (list) =>
+            list?.find((item) =>
+              searchVariants.some((v) => {
+                const name = item.FullName.toLowerCase();
+                return name.includes(v) || v.includes(name);
+              }),
+            );
+
+          const foundItem =
+            matchInList(foundProvince.Districts) ||
+            matchInList(
+              foundProvince.Districts
+                ? foundProvince.Districts.flatMap((d) => d.Wards || [])
+                : foundProvince.Wards,
+            );
+
+          if (foundItem) setSelectedWard(foundItem.Code);
         }
       }
     }
   }, [initialProvince, initialWard]);
 
+  // 2. Chuẩn bị options cho Select Tỉnh/Thành
   const provinceOptions = useMemo(() => {
     return addressData.map((p) => ({
       slug: p.Code,
@@ -278,26 +308,42 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
     }));
   }, []);
 
+  // 3. Chuẩn bị options cho Select Quận/Phường (Động theo tỉnh được chọn)
   const wardOptions = useMemo(() => {
     const province = addressData.find((p) => p.Code === selectedProvince);
     if (!province) return [];
 
-    const allWards = province.Districts
-      ? province.Districts.flatMap((d) => d.Wards || [])
-      : province.Wards || [];
+    // Ưu tiên lấy danh sách cấp Quận/Huyện hiển thị lên ô số 2
+    const listItems =
+      province.Districts && province.Districts.length > 0
+        ? province.Districts
+        : province.Wards || [];
 
-    return allWards.map((w) => ({
-      slug: w.Code,
-      name: w.FullName,
+    return listItems.map((item) => ({
+      slug: item.Code,
+      name: item.FullName,
     }));
   }, [selectedProvince]);
 
+  // 4. Bắn ngược data đã chọn lên component Form cha khi thay đổi mục
   useEffect(() => {
     const provinceObj = addressData.find((p) => p.Code === selectedProvince);
-    let allWards = provinceObj?.Districts
-      ? provinceObj.Districts.flatMap((d) => d.Wards || [])
-      : provinceObj?.Wards || [];
-    const wardObj = allWards.find((w) => w.Code === selectedWard);
+    if (!provinceObj) return;
+
+    let allItems =
+      provinceObj.Districts && provinceObj.Districts.length > 0
+        ? provinceObj.Districts
+        : provinceObj.Wards || [];
+
+    // Gộp cả danh sách phường xã của toàn bộ huyện để tìm kiếm code chuẩn xác
+    if (provinceObj.Districts) {
+      allItems = [
+        ...allItems,
+        ...provinceObj.Districts.flatMap((d) => d.Wards || []),
+      ];
+    }
+
+    const wardObj = allItems.find((w) => w.Code === selectedWard);
 
     if (onAddressChange && selectedProvince) {
       onAddressChange({

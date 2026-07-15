@@ -13,6 +13,7 @@ import categoryApi from "@/api/management/categoryApi";
 import { queryClient } from "@/lib/react-query";
 import { AnimatedCheckbox } from "@/components/ui/ckeckbox";
 import { Submit_GoBack } from "@/components/ui/button";
+import { TitleManagement } from "@/components/ui/title";
 
 const breadcrumbData = [
   {
@@ -90,11 +91,8 @@ const EditCategoryPage = () => {
         className="flex items-start border border-gray-200 rounded-[10px] w-fit p-4 gap-3 mt-2"
       >
         <div className="border border-gray-200 rounded-[5px] p-3">
-          <InputFile
-            label="Ảnh đại diện"
-            value={image}
-            onChange={(file) => setImage(file)}
-          />
+          <TitleManagement color="cyan">Ảnh đại diện</TitleManagement>
+          <InputFile value={image} onChange={(file) => setImage(file)} />
         </div>
         <div className="flex flex-col gap-3 border border-gray-200 rounded-[5px] p-3">
           <h3 className="font-black text-xs uppercase border-b-2 border-blue-500 pb-2 mb-4 flex items-center gap-2">

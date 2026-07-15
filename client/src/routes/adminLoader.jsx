@@ -192,6 +192,9 @@ export const purchaseCreateLoader = async () => {
 };
 
 export const purchaseEditLoader = async ({ params }) => {
+  // Tự động kiểm tra xem router đang đặt tên biến là purchaseId hay id
+  const purchaseId = params.purchaseId || params.id;
+
   const [suppliers, productVariants, purchase] = await Promise.all([
     queryClient.fetchQuery({
       queryKey: ["suppliers-select"],
@@ -202,8 +205,9 @@ export const purchaseEditLoader = async ({ params }) => {
       queryFn: () => LoaderProductVariant.getProductVariantsDropdown(),
     }),
     queryClient.fetchQuery({
-      queryKey: ["purchase-order", [params.purchaseId]],
-      queryFn: () => LoaderPurchase.getPurchaseById(params.purchaseId),
+      // Truyền biến purchaseId đã kiểm tra vào đây
+      queryKey: ["purchase-order", [purchaseId]],
+      queryFn: () => LoaderPurchase.getPurchaseById(purchaseId),
     }),
   ]);
   return { suppliers, productVariants, purchase };
