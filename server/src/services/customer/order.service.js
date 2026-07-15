@@ -4,7 +4,7 @@ const orderService = {
     createOrder: async (orderData) => {
         let { total_amount, status, shipping_address, payment_method,
             payment_status, discount_amount, final_amount, coupon_code, user_email, items } = orderData;
-        console.log(orderData)
+        // console.log(orderData)
         let newOrder = await prisma.Orders.create({
             data: {
                 total_amount: total_amount,
@@ -99,13 +99,40 @@ const orderService = {
         return orders;
     },
 
-    getAllOrders: async (page) => {
-        // console.log(page)
+    getAllOrders: async ({ page, status, payment_status, payment_method, date_from, date_to, amount_min, amount_max, search } = {}) => {
         const limit = 5;
-        const currentPage = Math.max(1, page);
+        const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
+
+        const where = {};
+        if (status) where.status = status;
+        if (payment_status) where.payment_status = payment_status;
+        if (payment_method) where.payment_method = payment_method;
+        if (search) {
+            const conditions = [
+                { user_email: { contains: search } },
+                { coupon_code: { contains: search } },
+            ];
+            const searchId = Number(search);
+            if (!isNaN(searchId)) {
+                conditions.push({ id: searchId });
+            }
+            where.OR = conditions;
+        }
+        if (date_from || date_to) {
+            where.created_at = {};
+            if (date_from) where.created_at.gte = new Date(date_from);
+            if (date_to) where.created_at.lte = new Date(date_to + 'T23:59:59.999Z');
+        }
+        if (amount_min || amount_max) {
+            where.final_amount = {};
+            if (amount_min) where.final_amount.gte = Number(amount_min);
+            if (amount_max) where.final_amount.lte = Number(amount_max);
+        }
+
         const [orders, totalItems] = await Promise.all([
             prisma.Orders.findMany({
+                where,
                 take: limit,
                 skip: skip,
                 orderBy: {
@@ -115,7 +142,7 @@ const orderService = {
                     OrderItems: true
                 }
             }),
-            prisma.Orders.count()
+            prisma.Orders.count({ where })
         ])
         return {
             orders, pagination: {

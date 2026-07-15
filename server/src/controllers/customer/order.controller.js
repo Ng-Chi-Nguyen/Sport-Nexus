@@ -34,7 +34,7 @@ const orderController = {
 
             return res.status(200).json({
                 success: true,
-                data: items
+                data: result
             })
         } catch (error) {
             return res.status(500).json({
@@ -147,10 +147,18 @@ const orderController = {
 
 
     getAllOrders: async (req, res) => {
-        const page = parseInt(req.query.page || 1)
+        const page = parseInt(req.query.page || 1);
+        const status = req.query.status || '';
+        const payment_status = req.query.payment_status || '';
+        const payment_method = req.query.payment_method || '';
+        const date_from = req.query.date_from || '';
+        const date_to = req.query.date_to || '';
+        const amount_min = req.query.amount_min || '';
+        const amount_max = req.query.amount_max || '';
+        const search = req.query.search || '';
         try {
-            let orders = await orderService.getAllOrders(page);
-            if (!orders || orders.length === 0) {
+            let result = await orderService.getAllOrders({ page, status, payment_status, payment_method, date_from, date_to, amount_min, amount_max, search });
+            if (!result || result.orders.length === 0) {
                 return res.status(404).json({
                     success: false,
                     message: "Không có đơn hàng nào."
@@ -158,7 +166,7 @@ const orderController = {
             }
             return res.status(200).json({
                 success: true,
-                data: orders
+                data: result
             })
         } catch (error) {
             return res.status(500).json({

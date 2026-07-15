@@ -122,10 +122,22 @@ export const productEditLoader = async ({ params }) => {
   return { brands, suppliers, categories, product };
 };
 
+const getSearchParam = (request, key) => new URL(request.url).searchParams.get(key) || '';
+
 export const ordersLoader = ({ request }) =>
   queryClient.fetchQuery({
-    queryKey: ["orders", getPage(request)],
-    queryFn: () => LoaderOrder.getAllOrders(getPage(request)),
+    queryKey: ["orders", getPage(request), getSearchParam(request, "status"), getSearchParam(request, "payment_status"), getSearchParam(request, "payment_method"), getSearchParam(request, "date_from"), getSearchParam(request, "date_to"), getSearchParam(request, "amount_min"), getSearchParam(request, "amount_max"), getSearchParam(request, "search")],
+    queryFn: () => LoaderOrder.getAllOrders({
+      page: getPage(request),
+      status: getSearchParam(request, "status"),
+      payment_status: getSearchParam(request, "payment_status"),
+      payment_method: getSearchParam(request, "payment_method"),
+      date_from: getSearchParam(request, "date_from"),
+      date_to: getSearchParam(request, "date_to"),
+      amount_min: getSearchParam(request, "amount_min"),
+      amount_max: getSearchParam(request, "amount_max"),
+      search: getSearchParam(request, "search"),
+    }),
   });
 
 export const orderCreateLoader = async () => ({
