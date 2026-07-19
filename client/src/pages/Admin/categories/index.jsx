@@ -64,16 +64,6 @@ const CategoryPage = () => {
   const categories = responses?.data?.list_categories || [];
   const pagination = responses?.data?.pagination;
 
-  const hasAllClear = currentActive !== "";
-
-  const clearAllFilters = () => {
-    const params = new URLSearchParams();
-    const search = searchParams.get("search");
-    if (search) params.set("search", search);
-    params.set("page", "1");
-    setSearchParams(params);
-  };
-
   const handleActiveClick = (value) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", "1");
@@ -154,16 +144,6 @@ const CategoryPage = () => {
           })}
         </div>
 
-        {hasAllClear && (
-          <button
-            type="button"
-            onClick={clearAllFilters}
-            className="px-2.5 py-1.5 text-[10px] font-bold rounded border border-slate-800 text-slate-500 hover:bg-slate-800/60 hover:text-slate-300 transition-colors cursor-pointer shrink-0"
-          >
-            Xóa bộ lọc
-          </button>
-        )}
-
         <BtnAdd
           route={"/management/categories/create"}
           className="w-[30%]"
@@ -171,7 +151,7 @@ const CategoryPage = () => {
         />
       </div>
       <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <h2 className="text-lg font-semibold text-slate-100 tracking-wide mb-6">
+        <h2 className="section-title">
           Danh sách danh mục
         </h2>
         <div className="table-retro">

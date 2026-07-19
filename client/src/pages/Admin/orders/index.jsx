@@ -25,27 +25,7 @@ const breadcrumbData = [
   { title: "Đơn hàng", route: "/management/orders" },
 ];
 
-// --- HÀM BỔ TRỢ (UTILITIES) VỀ MÀU SẮC GIỮ LẠI ---
-const getOrderStatusClass = (status) => {
-  const styles = {
-    Processing: "bg-sky-500/10 text-sky-400 border-sky-500/20",
-    Shipping: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    Delivered: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    Cancelled: "bg-rose-500/10 text-rose-400 border-rose-500/20",
-    Refunded: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  };
-  return styles[status] || "bg-slate-500/10 text-slate-400 border-slate-500/20";
-};
-
-const getPaymentStatusClass = (status) => {
-  const styles = {
-    Pending: "bg-amber-500/10 text-amber-500 border-amber-500/20",
-    Paid: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    Failed: "bg-rose-500/10 text-rose-400 border-rose-500/20",
-    Refunded: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  };
-  return styles[status] || "bg-slate-500/10 text-slate-400 border-slate-400/20";
-};
+import { getOrderStatusClass, getPaymentStatusClass } from "@/utils/statusStyles";
 
 // --- COMPONENT CHÍNH ---
 const OrderPage = () => {
@@ -291,7 +271,7 @@ const OrderPage = () => {
 
       {/* KHỐI BẢNG CONTAINER TỐI CHỦ ĐẠO */}
       <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <h2 className="text-lg font-semibold text-slate-100 tracking-wide mb-6">
+        <h2 className="section-title">
           Danh sách đơn hàng
         </h2>
 

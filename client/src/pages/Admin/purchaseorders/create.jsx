@@ -6,10 +6,11 @@ import { LayoutDashboard, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import statusOptions from "@/constants/purchaseOrder";
+import { PURCHASE_STATUS_OPTIONS } from "@/constants/management/purchaseOrder";
 import purchaseOrderdApi from "@/api/management/purchaseOrderApi";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
+import { formatCurrency } from "@/utils/formatters";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -157,7 +158,7 @@ const CreatePurchaseOrder = () => {
               </TitleManagement>
               <SelectPro
                 value={selectStatus}
-                options={statusOptions}
+                options={PURCHASE_STATUS_OPTIONS.map(s => ({ id: s.slug, name: s.name }))}
                 onChange={setSelectStatus}
                 label="Trạng thái"
               />
@@ -183,10 +184,7 @@ const CreatePurchaseOrder = () => {
                     Tổng ước tính:
                   </span>
                   <span className="text-base font-black text-rose-400 font-mono">
-                    {new Intl.NumberFormat("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    }).format(totalCost)}
+                    {formatCurrency(totalCost)}
                   </span>
                 </div>
               </div>

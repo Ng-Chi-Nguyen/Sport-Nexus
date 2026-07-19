@@ -8,7 +8,7 @@ import {
   useRevalidator,
   useSearchParams,
 } from "react-router-dom";
-import { formatDate } from "@/utils/formatters";
+import { formatDate, formatCurrency } from "@/utils/formatters";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import Pagination from "@/components/ui/pagination";
 import { useState, useEffect, useMemo } from "react";
@@ -18,18 +18,7 @@ import couponApi from "@/api/management/couponApi";
 
 // Import component SimpleSelect mới từ thư mục chứa ui components của bạn
 import { SimpleSelect } from "@/components/ui/select";
-
-const ACTIVE_TABS = [
-  { value: "", label: "Tất cả" },
-  { value: "true", label: "Còn hiệu lực" },
-  { value: "false", label: "Hết hiệu lực" },
-];
-
-const DISCOUNT_TYPE_OPTIONS = [
-  { slug: "", name: "Tất cả" },
-  { slug: "CASH", name: "Tiền mặt" },
-  { slug: "PERCENTAGE", name: "Phần trăm" },
-];
+import { ACTIVE_TABS, DISCOUNT_TYPE_OPTIONS } from "@/constants/management/coupon";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -61,12 +50,6 @@ const CouponPage = () => {
 
   const coupons = responses?.data?.list_coupons || [];
   const pagination = responses?.data?.pagination || {};
-
-  const formatCurrency = (value) =>
-    new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(value);
 
   const hasActiveFilters =
     isActive ||

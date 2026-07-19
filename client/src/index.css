@@ -49,6 +49,68 @@
   .table-retro tbody tr:hover td {
     @apply !bg-[#1E293B]/40 text-white !important;
   }
+
+  /* =============================================
+     ===             FILTER / FORM              ===
+     ============================================= */
+
+  /* Ô nhập liệu nền tối — dùng cho mọi <input>, <select>
+     trong filter panel và form. Đã gồm đầy đủ:
+     - padding, border-radius, height đồng bộ
+     - màu nền/viền/chữ tối
+     - focus ring xanh + placeholder màu xám   */
+  .input-dark {
+    @apply w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none placeholder:text-slate-600;
+  }
+  .input-dark:focus {
+    @apply border-sky-500/50 ring-1 ring-sky-500/20;
+  }
+
+  /* Nhãn cho mỗi bộ lọc — chữ nhỏ, in hoa, tracking rộng */
+  .label-filter {
+    @apply block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5;
+  }
+
+  /* Khung bao bọc panel filter collapsible */
+  .filter-panel {
+    @apply p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg;
+  }
+
+  /* =============================================
+     ===             CONTAINERS                ===
+     ============================================= */
+
+  /* Vùng nội dung chính (bao bọc bảng, grid, form section)
+     Nền tối trong suốt + viền + bo góc + đổ bóng + kính mờ */
+  .glass-card {
+    @apply bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md;
+  }
+
+  /* Tiêu đề section bên trong glass-card — dùng với h2/h3 */
+  .section-title {
+    @apply text-lg font-semibold text-slate-100 tracking-wide mb-6;
+  }
+
+  /* =============================================
+     ===             TAG / BUTTON              ===
+     ============================================= */
+
+  /* Base nút tag/tab dạng badge — chỉ layout, không màu
+     Kết hợp với .btn-tag-idle hoặc .btn-tag-active */
+  .btn-tag {
+    @apply px-3 py-1.5 text-xs font-bold rounded-lg border cursor-pointer transition-colors;
+  }
+
+  /* Trạng thái idle (chưa chọn) — nền tối, viền xám */
+  .btn-tag-idle {
+    @apply bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200;
+  }
+
+  /* Trạng thái active (đang chọn) — nền xanh nhạt, viền xanh,
+     kèm hiệu ứng glow nhẹ */
+  .btn-tag-active {
+    @apply bg-sky-500/10 text-sky-400 border-sky-500/20 shadow-[0_0_12px_rgba(14,165,233,0.1)];
+  }
 }
 
 /* 1. Reset vùng chứa */

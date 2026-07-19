@@ -1,12 +1,13 @@
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo } from "react";
 import { LayoutDashboard } from "lucide-react";
-import { Link, useLoaderData, useSearchParams } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd } from "@/components/ui/button";
-import { SearchTable } from "@/components/ui/search";
 import { CountrySelect } from "@/components/ui/select";
 import { CardBrand } from "@/components/ui/card";
+import FilterPanel from "@/components/ui/FilterPanel";
+import useTableFilters from "@/hooks/useTableFilters";
 import Pagination from "@/components/ui/pagination";
 
 const breadcrumbData = [
@@ -20,39 +21,18 @@ const breadcrumbData = [
 
 const BrandPage = () => {
   const responses = useLoaderData();
-  const [searchParams, setSearchParams] = useSearchParams();
   const { brands, pagination } = responses?.data || {};
-
-  const currentOrigin = searchParams.get("origin") || "";
-  const currentSearch = searchParams.get("search") || "";
-
-  const [searchInput, setSearchInput] = useState(currentSearch);
-  const isFirstRender = useRef(true);
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    const timer = setTimeout(() => {
-      const params = new URLSearchParams(searchParams);
-      params.set("page", "1");
-      if (searchInput) params.set("search", searchInput);
-      else params.delete("search");
-      setSearchParams(params);
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [searchInput]);
-
-  const hasAllClear = currentSearch || currentOrigin;
-
-  const clearAllFilters = () => {
-    const params = new URLSearchParams();
-    const search = searchParams.get("search");
-    if (search) params.set("search", search);
-    params.set("page", "1");
-    setSearchParams(params);
-  };
+  const {
+    searchInput,
+    setSearchInput,
+    showFilters,
+    setShowFilters,
+    hasActiveFilters,
+    setFilter,
+    clearAllFilters,
+    searchParams,
+    setSearchParams,
+  } = useTableFilters();
 
   const paginationInfo = pagination || {
     totalPages: 1,
@@ -70,54 +50,33 @@ const BrandPage = () => {
     setSearchParams(params);
   };
 
-  const handleOriginClick = (value) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", "1");
-    if (value) params.set("origin", value);
-    else params.delete("origin");
-    setSearchParams(params);
-  };
-
   return (
     <div className="space-y-6">
       <Breadcrumbs data={breadcrumbData} />
 
-      {/* THANH TÌM KIẾM & BỘ LỌC & NÚT THÊM - ĐÃ FIX KHÔNG BỊ ĐÈ */}
-      <div className="flex items-center gap-4 w-full">
-        <div className="flex-1 relative group">
-          <SearchTable
-            placeholder="Tìm kiếm tên thương hiệu..."
-            value={searchInput}
-            onChange={(val) => setSearchInput(val)}
-          />
-        </div>
-
-        <div className="w-[250px] shrink-0">
-          <CountrySelect
-            value={currentOrigin}
-            onChange={(val) => handleOriginClick(val)}
-            label="Xuất xứ"
-          />
-        </div>
-
-        {hasAllClear && (
-          <button
-            type="button"
-            onClick={clearAllFilters}
-            className="shrink-0 px-2.5 py-1.5 text-[10px] font-bold rounded border border-slate-800 text-slate-500 hover:bg-slate-800/60 hover:text-slate-300 transition-colors cursor-pointer"
-          >
-            Xóa bộ lọc
-          </button>
-        )}
-
-        <div className="shrink-0">
+      <FilterPanel
+        searchValue={searchInput}
+        onSearchChange={setSearchInput}
+        showFilters={showFilters}
+        onToggleFilters={() => setShowFilters(!showFilters)}
+        hasActiveFilters={hasActiveFilters}
+        onClearFilters={clearAllFilters}
+        searchPlaceholder="Tìm kiếm tên thương hiệu..."
+        addButton={
           <BtnAdd route={"/management/brands/create"} name="Thêm thương hiệu" />
+        }
+      >
+        <div>
+          <CountrySelect
+            value={searchParams.get("origin") || ""}
+            onChange={(val) => setFilter("origin", val)}
+          />
         </div>
-      </div>
+      </FilterPanel>
 
       {/* CONTAINER TỐI GLASSOS */}
       <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <h2 className="text-lg font-semibold text-slate-100 tracking-wide mb-6">
+        <h2 className="section-title">
           Danh sách thương hiệu
         </h2>
 

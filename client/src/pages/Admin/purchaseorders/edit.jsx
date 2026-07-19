@@ -4,12 +4,13 @@ import { SelectPro } from "@/components/ui/select";
 import { FloatingInput } from "@/components/ui/input";
 import { LayoutDashboard, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
-import statusOptions from "@/constants/purchaseOrder";
+import { PURCHASE_STATUS_OPTIONS } from "@/constants/management/purchaseOrder";
 import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import purchaseOrderApi from "@/api/management/purchaseOrderApi";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
+import { formatCurrency } from "@/utils/formatters";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -194,7 +195,7 @@ const EditPurchaseOrder = () => {
               <TitleManagement color="green">Trạng thái đơn</TitleManagement>
               <SelectPro
                 value={selectStatus}
-                options={statusOptions}
+                options={PURCHASE_STATUS_OPTIONS.map(s => ({ id: s.slug, name: s.name }))}
                 onChange={setSelectStatus}
                 label="Trạng thái"
               />
@@ -218,10 +219,7 @@ const EditPurchaseOrder = () => {
                     Tổng tiền (VNĐ):
                   </span>
                   <span className="text-base font-black text-rose-400 font-mono">
-                    {new Intl.NumberFormat("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    }).format(totalCost)}
+                    {formatCurrency(totalCost)}
                   </span>
                 </div>
               </div>

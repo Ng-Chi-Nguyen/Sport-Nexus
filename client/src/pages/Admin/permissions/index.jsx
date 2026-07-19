@@ -18,23 +18,13 @@ import { PERMISSION_TRANSLATIONS } from "@/constants/permission";
 // api
 import permissionApi from "@/api/management/permissionApi";
 import { queryClient } from "@/lib/react-query";
+import { getActionColor } from "@/utils/statusStyles";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
   { title: "Quản lý người dùng & phân quyền", route: "" },
   { title: "Phân quyền", route: "" },
 ];
-
-// Hàm trả về màu sắc chuẩn cho cấu trúc dữ liệu Badge của bạn
-const getActionColor = (action) => {
-  const colors = {
-    create: "success", // xanh lá
-    read: "info", // xanh dương
-    update: "warning", // vàng
-    delete: "error", // đỏ
-  };
-  return colors[action] || "slate";
-};
 
 const PermissionPage = () => {
   const response = useLoaderData();
@@ -157,7 +147,7 @@ const PermissionPage = () => {
 
       {/* KHỐI LAYOUT TỐI CHỦ ĐẠO HỆ THỐNG */}
       <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md relative z-10">
-        <h3 className="text-lg font-semibold text-slate-100 tracking-wide mb-6">
+        <h3 className="section-title">
           Danh sách quyền hạn
         </h3>
 

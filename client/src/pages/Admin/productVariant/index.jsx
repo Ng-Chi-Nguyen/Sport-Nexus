@@ -21,7 +21,7 @@ import { ConfirmDelete } from "@/components/ui/confirm";
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
   { title: "Quản lý sản phẩm & kho", route: "" },
-  { title: "Biến thể sản phẩm", route: "#" },
+  { title: "Món hàng", route: "#" },
 ];
 
 const VariantPage = () => {

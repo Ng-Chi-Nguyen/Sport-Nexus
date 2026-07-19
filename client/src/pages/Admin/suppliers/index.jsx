@@ -162,7 +162,7 @@ const SupplierPage = () => {
       </div>
 
       <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <h2 className="text-lg font-semibold text-slate-100 tracking-wide mb-6">
+        <h2 className="section-title">
           Danh sách nhà cung cấp
         </h2>
 

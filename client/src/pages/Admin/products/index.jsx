@@ -10,6 +10,7 @@ import {
   Filter,
   ChevronDown,
 } from "lucide-react";
+import { formatCurrency } from "@/utils/formatters";
 import {
   useLoaderData,
   useRevalidator,
@@ -134,11 +135,7 @@ const ProductPage = () => {
     currentPage: 1,
   };
 
-  const formatPrice = (value) =>
-    new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(value);
+
 
   return (
     <>
@@ -338,7 +335,7 @@ const ProductPage = () => {
                         <div className="flex items-center gap-2 mt-1">
                           <Badge color="blue">{product.category.name}</Badge>
                           <span className="text-xs text-emerald-400 font-black">
-                            {formatPrice(product.base_price)}
+                            {formatCurrency(product.base_price)}
                           </span>
                         </div>
                       </div>
