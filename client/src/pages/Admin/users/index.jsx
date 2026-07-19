@@ -105,7 +105,9 @@ const UserPage = () => {
   }, [usersData]);
 
   const handlePageChange = (newPage) => {
-    setSearchParams({ page: newPage });
+    const params = new URLSearchParams(searchParams);
+    params.set("page", newPage);
+    setSearchParams(params);
   };
 
   const openConfirm = (id) => {
@@ -179,7 +181,7 @@ const UserPage = () => {
 
       {/* Filter panel */}
       <div className={`transition-all duration-300 ease-in-out ${
-        showFilters ? "max-h-[500px] opacity-100 overflow-visible" : "max-h-0 opacity-0 overflow-hidden"
+        showFilters ? "max-h-[500px] opacity-100 mb-4 overflow-visible" : "max-h-0 opacity-0 overflow-hidden"
       }`}>
         <div className="p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
           <div className="flex items-end gap-4">
@@ -189,16 +191,16 @@ const UserPage = () => {
               <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                 Trạng thái
               </label>
-              <div className="flex items-center gap-1 flex-wrap">
+              <div className="flex items-center gap-0.5 p-0.5 bg-[#111827]/60 border border-slate-800 rounded-lg h-10">
                 {statusOptions.map((opt) => (
                   <button
                     key={opt.slug}
                     type="button"
                     onClick={() => setFilter("status", opt.slug)}
-                    className={`px-3 py-1.5 text-xs font-bold rounded-lg border cursor-pointer transition-all ${
+                    className={`flex-1 text-center py-1 text-[11px] font-bold rounded-md cursor-pointer transition-colors h-full ${
                       currentStatus === opt.slug
-                        ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
-                        : "bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200"
+                        ? "bg-sky-500/10 text-sky-400 border border-sky-500/20"
+                        : "text-slate-500 hover:text-slate-300"
                     }`}
                   >
                     {opt.name}
@@ -212,16 +214,16 @@ const UserPage = () => {
               <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                 Xác thực
               </label>
-              <div className="flex items-center gap-1 flex-wrap">
+              <div className="flex items-center gap-0.5 p-0.5 bg-[#111827]/60 border border-slate-800 rounded-lg h-10">
                 {verifiedOptions.map((opt) => (
                   <button
                     key={opt.slug}
                     type="button"
                     onClick={() => setFilter("is_verified", opt.slug)}
-                    className={`px-3 py-1.5 text-xs font-bold rounded-lg border cursor-pointer transition-all ${
+                    className={`flex-1 text-center py-1 text-[11px] font-bold rounded-md cursor-pointer transition-colors h-full ${
                       currentIsVerified === opt.slug
-                        ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
-                        : "bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200"
+                        ? "bg-sky-500/10 text-sky-400 border border-sky-500/20"
+                        : "text-slate-500 hover:text-slate-300"
                     }`}
                   >
                     {opt.name}
