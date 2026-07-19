@@ -32,11 +32,29 @@ export const userAddRoleLoader = async ({ params, request }) => {
   return { user, allPermissions };
 };
 
-export const productsLoader = ({ request }) =>
-  queryClient.fetchQuery({
-    queryKey: ["products", getPage(request)],
-    queryFn: () => LoaderProduct.getAllProducst(getPage(request)),
+export const productsLoader = async ({ request }) => {
+  const productPromise = queryClient.fetchQuery({
+    queryKey: ["products", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "is_active"), getSearchParam(request, "category_id"), getSearchParam(request, "brand_id"), getSearchParam(request, "supplier_id"), getSearchParam(request, "price_min"), getSearchParam(request, "price_max")],
+    queryFn: () => LoaderProduct.getAllProducts({ page: getPage(request), search: getSearchParam(request, "search"), is_active: getSearchParam(request, "is_active"), category_id: getSearchParam(request, "category_id"), brand_id: getSearchParam(request, "brand_id"), supplier_id: getSearchParam(request, "supplier_id"), price_min: getSearchParam(request, "price_min"), price_max: getSearchParam(request, "price_max") }),
   });
+  const categoriesPromise = queryClient.fetchQuery({
+    queryKey: ["category-dropdown"],
+    queryFn: () => LoaderCategory.getCategoriesDropdown(),
+    staleTime: 60000,
+  });
+  const brandsPromise = queryClient.fetchQuery({
+    queryKey: ["brand-dropdown"],
+    queryFn: () => LoaderBrand.getBrandsDropdown(),
+    staleTime: 60000,
+  });
+  const suppliersPromise = queryClient.fetchQuery({
+    queryKey: ["supplier-dropdown"],
+    queryFn: () => LoaderSupplier.getSuppliersDropdown(),
+    staleTime: 60000,
+  });
+  const [products, categories, brands, suppliers] = await Promise.all([productPromise, categoriesPromise, brandsPromise, suppliersPromise]);
+  return { ...products, categories: categories?.data || [], brands: brands?.data || [], suppliers: suppliers?.data || [] };
+};
 
 // export const productCreateLoader = async () => {
 //   const [brands, suppliers, categories] = await Promise.all([

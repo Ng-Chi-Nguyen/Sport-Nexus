@@ -79,14 +79,23 @@ const productService = {
         return product;
     },
 
-    getAllProduct: async (page) => {
-        // console.log(page)
+    getAllProduct: async ({ page, search, is_active, category_id, brand_id, supplier_id, price_min, price_max } = {}) => {
         const limit = 6;
-        const currentPage = Math.max(1, page);
+        const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
-        // console.log(skip)
+        const where = {};
+        if (search) where.name = { contains: search };
+        if (is_active !== undefined && is_active !== '') {
+            where.is_active = is_active === 'true';
+        }
+        if (category_id) where.category_id = parseInt(category_id);
+        if (brand_id) where.brand_id = parseInt(brand_id);
+        if (supplier_id) where.supplier_id = parseInt(supplier_id);
+        if (price_min) where.base_price = { ...where.base_price, gte: parseFloat(price_min) };
+        if (price_max) where.base_price = { ...where.base_price, lte: parseFloat(price_max) };
         let [list_products, totalItems] = await Promise.all([
             prisma.Products.findMany({
+                where,
                 take: limit,
                 skip: skip,
                 select: {
@@ -96,26 +105,20 @@ const productService = {
                     description: true,
                     thumbnail: true,
                     is_active: true,
-                    is_active: true,
                     slug: true,
                     category: {
-                        select: {
-                            name: true,
-                        }
+                        select: { name: true, id: true }
                     },
                     brand: {
-                        select: {
-                            name: true,
-                        }
+                        select: { name: true, id: true }
                     },
                     supplier: {
-                        select: {
-                            name: true,
-                        }
+                        select: { name: true, id: true }
                     },
-                }
+                },
+                orderBy: { id: 'desc' }
             }),
-            prisma.Products.count()
+            prisma.Products.count({ where })
         ])
         return {
             list_products, pagination: {

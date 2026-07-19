@@ -132,13 +132,20 @@ const productController = {
     },
 
     getAllProduct: async (req, res) => {
-        const page = parseInt(req.query.page || 1)
+        const page = parseInt(req.query.page || 1);
+        const search = req.query.search || '';
+        const is_active = req.query.is_active;
+        const category_id = req.query.category_id || '';
+        const brand_id = req.query.brand_id || '';
+        const supplier_id = req.query.supplier_id || '';
+        const price_min = req.query.price_min || '';
+        const price_max = req.query.price_max || '';
         try {
-            let list_products = await productService.getAllProduct(page);
-            if (!list_products || list_products.length === 0) {
+            let list_products = await productService.getAllProduct({ page, search, is_active, category_id, brand_id, supplier_id, price_min, price_max });
+            if (!list_products || list_products.list_products.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                    message: "Không tìm thấy sản phẩm."
                 });
             }
             return res.status(200).json({
