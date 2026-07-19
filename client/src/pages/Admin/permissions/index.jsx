@@ -12,6 +12,7 @@ import { BtnAdd, BtnActions } from "@/components/ui/button";
 import Pagination from "@/components/ui/pagination";
 import { SearchTable } from "@/components/ui/search";
 import { ConfirmDelete } from "@/components/ui/confirm";
+import Badge from "@/components/ui/badge";
 // constants
 import { PERMISSION_TRANSLATIONS } from "@/constants/permission";
 // api
@@ -24,17 +25,18 @@ const breadcrumbData = [
   { title: "Phân quyền", route: "" },
 ];
 
-const getActionBadgeClass = (action) => {
-  const styles = {
-    create: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    read: "bg-sky-500/10 text-sky-400 border-sky-500/20",
-    update: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    delete: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+// Hàm trả về màu sắc chuẩn cho cấu trúc dữ liệu Badge của bạn
+const getActionColor = (action) => {
+  const colors = {
+    create: "success", // xanh lá
+    read: "info", // xanh dương
+    update: "warning", // vàng
+    delete: "error", // đỏ
   };
-  return styles[action] || "bg-slate-500/10 text-slate-400 border-slate-500/20";
+  return colors[action] || "slate";
 };
 
-const PermissionPagePage = () => {
+const PermissionPage = () => {
   const response = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
@@ -43,7 +45,7 @@ const PermissionPagePage = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  // --- LOGIC QUẢN LÝ BẢNG POP-UP MODULES NGOÀI BẢNG ---
+  // --- LOGIC QUẢN LÝ BẢNG POP-UP MODULES ---
   const [isModuleOpen, setIsModuleOpen] = useState(false);
   const popoverRef = useRef(null);
 
@@ -59,7 +61,6 @@ const PermissionPagePage = () => {
     }
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isModuleOpen]);
-  // --------------------------------------------------
 
   const permissionsData = response?.data || {};
   const paginationInfo = response?.pagination || {
@@ -108,12 +109,12 @@ const PermissionPagePage = () => {
           <SearchTable placeholder="Tìm kiếm mã quyền hạn..." />
         </div>
 
-        {/* 🌟 NÚT BẤM TRA CỨU MODULE ĐỘC LẬP NGOÀI BẢNG */}
+        {/* NÚT BẤM TRA CỨU MODULE ĐỘC LẬP NGOÀI BẢNG */}
         <div className="relative" ref={popoverRef}>
           <button
             type="button"
             onClick={() => setIsModuleOpen(!isModuleOpen)}
-            className={`h-[44px] px-4 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center gap-2 border transition-all duration-200
+            className={`h-[44px] px-4 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center gap-2 border transition-all duration-200 cursor-pointer
                        ${
                          isModuleOpen
                            ? "bg-sky-500/20 text-sky-400 border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)]"
@@ -124,7 +125,7 @@ const PermissionPagePage = () => {
             Tra cứu Module
           </button>
 
-          {/* BẢNG HIỂN THỊ NỘI DUNG: Hoàn toàn không sợ lỗi cắt cụt vì nằm ngoài table */}
+          {/* BẢNG HIỂN THỊ NỘI DUNG POP-UP MODULES */}
           {isModuleOpen && (
             <div className="absolute right-0 top-full mt-2.5 z-50 w-[320px] p-4 bg-[#0D121F]/95 border border-slate-800 rounded-xl shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-150">
               <p className="text-sky-400 border-b border-white/5 mb-3 pb-1.5 font-bold font-mono text-xs tracking-wider">
@@ -188,18 +189,25 @@ const PermissionPagePage = () => {
                     <td className="px-6 py-5 font-semibold text-slate-200 tracking-wide whitespace-nowrap">
                       {permission.name}
                     </td>
+
+                    {/* SỬ DỤNG COMPONENT BADGE CHO MODULE (MÀU SLATE) */}
                     <td className="px-6 py-5 text-center">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-[#111827] border border-slate-800 text-slate-400 tracking-wide uppercase font-mono">
-                        {permission.module}
-                      </span>
+                      <Badge color="slate">
+                        <span className="font-mono uppercase tracking-wide">
+                          {permission.module}
+                        </span>
+                      </Badge>
                     </td>
+
+                    {/* SỬ DỤNG COMPONENT BADGE CHO HÀNH ĐỘNG (ĐỘNG MÀU) */}
                     <td className="px-6 py-5 text-center">
-                      <span
-                        className={`inline-flex items-center justify-center min-w-[65px] px-2 py-0.5 rounded-md text-[11px] font-bold uppercase border ${getActionBadgeClass(permission.action)}`}
-                      >
-                        {permission.action}
-                      </span>
+                      <Badge color={getActionColor(permission.action)}>
+                        <span className="font-bold uppercase min-w-[55px] text-center inline-block">
+                          {permission.action}
+                        </span>
+                      </Badge>
                     </td>
+
                     <td className="px-6 py-5 text-center font-mono text-slate-500 text-[12px] tracking-wide">
                       {permission.slug}
                     </td>
@@ -246,4 +254,4 @@ const PermissionPagePage = () => {
   );
 };
 
-export default PermissionPagePage;
+export default PermissionPage;
