@@ -1,6 +1,6 @@
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, ChevronDown, Filter } from "lucide-react";
 import { useLoaderData, useSearchParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
@@ -8,10 +8,10 @@ import { SearchTable } from "@/components/ui/search";
 import Pagination from "@/components/ui/pagination";
 import Badge from "@/components/ui/badge";
 import { formatFullDateTime, formatCurrency } from "@/utils/formatters";
+import { SimpleSelect } from "@/components/ui/select";
 
 // IMPORT các hằng số từ file constants.js cùng cấp
 import {
-  DROPDOWN_SELECT_CLASS,
   STATUS_LABELS,
   STATUS_PAYMENT,
   STATUS_OPTIONS,
@@ -53,6 +53,8 @@ const OrderPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const orders = responses?.data?.orders || [];
 
+  const [showFilters, setShowFilters] = useState(false);
+
   // Đọc dữ liệu từ URL params
   const currentSearch = searchParams.get("search") || "";
   const currentStatus = searchParams.get("status") || "";
@@ -69,6 +71,15 @@ const OrderPage = () => {
   useEffect(() => {
     setSearchTerm(currentSearch);
   }, [currentSearch]);
+
+  const hasActiveFilters =
+    currentStatus ||
+    currentPaymentStatus ||
+    currentPaymentMethod ||
+    currentDateFrom ||
+    currentDateTo ||
+    currentAmountMin ||
+    currentAmountMax;
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -93,17 +104,41 @@ const OrderPage = () => {
     setSearchParams(params);
   };
 
+  const clearAllFilters = () => {
+    const params = new URLSearchParams();
+    const search = searchParams.get("search");
+    if (search) params.set("search", search);
+    params.set("page", "1");
+    setSearchParams(params);
+  };
+
   const paginationInfo = responses?.data?.pagination || {
     totalPages: 1,
     currentPage: 1,
   };
 
+  // Chuyển đổi định dạng danh sách options từ label/value sang slug/name cho SimpleSelect
+  const statusOptionsMapped = useMemo(
+    () => STATUS_OPTIONS.map((opt) => ({ slug: opt.value, name: opt.label })),
+    [],
+  );
+
+  const paymentOptionsMapped = useMemo(
+    () => PAYMENT_OPTIONS.map((opt) => ({ slug: opt.value, name: opt.label })),
+    [],
+  );
+
+  const methodOptionsMapped = useMemo(
+    () => METHOD_OPTIONS.map((opt) => ({ slug: opt.value, name: opt.label })),
+    [],
+  );
+
   return (
     <div className="space-y-6">
       <Breadcrumbs data={breadcrumbData} />
 
-      {/* THANH TÌM KIẾM TÍCH HỢP SUBMIT TRONG Ô NHẬP */}
-      <div className="flex items-center gap-4">
+      {/* THANH TÌM KIẾM TÍCH HỢP NÚT BỘ LỌC CỦA COUPON */}
+      <div className="flex items-center gap-3 my-4">
         <form onSubmit={handleSearchSubmit} className="flex-1">
           <SearchTable
             placeholder="Tìm mã đơn hàng, email khách hàng..."
@@ -111,133 +146,146 @@ const OrderPage = () => {
             onChange={(val) => setSearchTerm(val)}
           />
         </form>
+
+        <button
+          type="button"
+          onClick={() => setShowFilters(!showFilters)}
+          className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
+            hasActiveFilters
+              ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
+              : "bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200"
+          }`}
+        >
+          <Filter size={14} />
+          Bộ lọc
+          {hasActiveFilters && (
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
+          )}
+          <ChevronDown
+            size={14}
+            className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
+          />
+        </button>
+
         <BtnAdd route={"/management/orders/create"} name="Tạo đơn hàng" />
       </div>
 
-      <div className="flex flex-wrap items-center gap-4 p-4 bg-[#0D121F]/40 border border-slate-900 rounded-2xl shadow-md w-full">
-        {/* Dropdown Vận chuyển */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-            Vận chuyển
-          </label>
-          <select
-            value={currentStatus}
-            onChange={(e) =>
-              handleDropdownFilterChange("status", e.target.value)
-            }
-            className={DROPDOWN_SELECT_CLASS}
-          >
-            <option value="">Tất cả trạng thái</option>
-            {STATUS_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
+      {/* KHU VỰC CÁC Ô LỌC HÀNG NGANG FLEXBOX AN TOÀN TRÁNH ẨN DROP-DOWN */}
+      <div
+        className={`transition-all duration-300 ease-in-out ${
+          showFilters
+            ? "max-h-[500px] opacity-100 mb-4 overflow-visible"
+            : "max-h-0 opacity-0 overflow-hidden"
+        }`}
+      >
+        <div className="p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
+          <div className="flex flex-wrap items-end gap-4">
+            {/* 1. Dropdown Vận chuyển */}
+            <div className="flex-1 min-w-[150px]">
+              <SimpleSelect
+                label="Vận chuyển"
+                options={statusOptionsMapped}
+                value={currentStatus}
+                onChange={(val) => handleDropdownFilterChange("status", val)}
+                placeholder="Tất cả trạng thái"
+              />
+            </div>
 
-        {/* Dropdown Thanh toán */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-            Thanh toán
-          </label>
-          <select
-            value={currentPaymentStatus}
-            onChange={(e) =>
-              handleDropdownFilterChange("payment_status", e.target.value)
-            }
-            className={DROPDOWN_SELECT_CLASS}
-          >
-            <option value="">Tất cả trạng thái</option>
-            {PAYMENT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
+            {/* 2. Dropdown Thanh toán */}
+            <div className="flex-1 min-w-[150px]">
+              <SimpleSelect
+                label="Thanh toán"
+                options={paymentOptionsMapped}
+                value={currentPaymentStatus}
+                onChange={(val) =>
+                  handleDropdownFilterChange("payment_status", val)
+                }
+                placeholder="Tất cả trạng thái"
+              />
+            </div>
 
-        {/* Dropdown Phương thức */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-            Phương thức
-          </label>
-          <select
-            value={currentPaymentMethod}
-            onChange={(e) =>
-              handleDropdownFilterChange("payment_method", e.target.value)
-            }
-            className={DROPDOWN_SELECT_CLASS}
-          >
-            <option value="">Tất cả phương thức</option>
-            {METHOD_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
+            {/* 3. Dropdown Phương thức */}
+            <div className="flex-1 min-w-[160px]">
+              <SimpleSelect
+                label="Phương thức"
+                options={methodOptionsMapped}
+                value={currentPaymentMethod}
+                onChange={(val) =>
+                  handleDropdownFilterChange("payment_method", val)
+                }
+                placeholder="Tất cả phương thức"
+              />
+            </div>
 
-        {/* Lọc thời gian ngày bắt đầu */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-            Từ ngày
-          </label>
-          <input
-            type="date"
-            value={currentDateFrom}
-            onChange={(e) =>
-              handleDropdownFilterChange("date_from", e.target.value)
-            }
-            className="px-3 py-1.5 rounded-xl text-xs bg-[#111827]/80 text-slate-300 border border-slate-800/80 focus:outline-none focus:border-sky-500/60 focus:ring-1 focus:ring-sky-500/20 transition-all duration-150 cursor-pointer"
-          />
-        </div>
+            {/* 4. Lọc thời gian ngày bắt đầu */}
+            <div className="flex-1 min-w-[130px]">
+              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                Từ ngày
+              </label>
+              <input
+                type="date"
+                value={currentDateFrom}
+                onChange={(e) =>
+                  handleDropdownFilterChange("date_from", e.target.value)
+                }
+                className="w-full h-10 px-2.5 text-sm rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 [color-scheme:dark]"
+              />
+            </div>
 
-        {/* Lọc thời gian ngày kết thúc */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-            Đến ngày
-          </label>
-          <input
-            type="date"
-            value={currentDateTo}
-            onChange={(e) =>
-              handleDropdownFilterChange("date_to", e.target.value)
-            }
-            className="px-3 py-1.5 rounded-xl text-xs bg-[#111827]/80 text-slate-300 border border-slate-800/80 focus:outline-none focus:border-sky-500/60 focus:ring-1 focus:ring-sky-500/20 transition-all duration-150 cursor-pointer"
-          />
-        </div>
+            {/* 5. Lọc thời gian ngày kết thúc */}
+            <div className="flex-1 min-w-[130px]">
+              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                Đến ngày
+              </label>
+              <input
+                type="date"
+                value={currentDateTo}
+                onChange={(e) =>
+                  handleDropdownFilterChange("date_to", e.target.value)
+                }
+                className="w-full h-10 px-2.5 text-sm rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 [color-scheme:dark]"
+              />
+            </div>
 
-        {/* Lọc giá trị đơn hàng tối thiểu */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-            Giá trị tối thiểu
-          </label>
-          <input
-            type="number"
-            placeholder="Từ (đ)"
-            value={currentAmountMin}
-            onChange={(e) =>
-              handleDropdownFilterChange("amount_min", e.target.value)
-            }
-            className="px-3 py-1.5 rounded-xl text-xs bg-[#111827]/80 text-slate-300 border border-slate-800/80 focus:outline-none focus:border-sky-500/60 focus:ring-1 focus:ring-sky-500/20 transition-all duration-150 w-28 font-mono"
-          />
-        </div>
+            {/* 6. Lọc khoảng giá trị đơn hàng */}
+            <div className="w-[180px] shrink-0">
+              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                Giá trị đơn hàng
+              </label>
+              <div className="flex items-center gap-1">
+                <input
+                  type="number"
+                  placeholder="Từ (đ)"
+                  value={currentAmountMin}
+                  onChange={(e) =>
+                    handleDropdownFilterChange("amount_min", e.target.value)
+                  }
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600 font-mono"
+                />
+                <span className="text-slate-600 shrink-0">–</span>
+                <input
+                  type="number"
+                  placeholder="Đến (đ)"
+                  value={currentAmountMax}
+                  onChange={(e) =>
+                    handleDropdownFilterChange("amount_max", e.target.value)
+                  }
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600 font-mono"
+                />
+              </div>
+            </div>
 
-        {/* Lọc giá trị đơn hàng tối đa */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-            Giá trị tối đa
-          </label>
-          <input
-            type="number"
-            placeholder="Đến (đ)"
-            value={currentAmountMax}
-            onChange={(e) =>
-              handleDropdownFilterChange("amount_max", e.target.value)
-            }
-            className="px-3 py-1.5 rounded-xl text-xs bg-[#111827]/80 text-slate-300 border border-slate-800/80 focus:outline-none focus:border-sky-500/60 focus:ring-1 focus:ring-sky-500/20 transition-all duration-150 w-28 font-mono"
-          />
+            {/* 7. Nút Xóa bộ lọc nhỏ gọn cùng hàng ngang */}
+            <div className="h-10 flex items-center shrink-0 ml-auto">
+              <button
+                type="button"
+                onClick={clearAllFilters}
+                className="px-2.5 py-1 text-[10px] font-bold rounded border border-slate-800 text-slate-500 hover:bg-slate-800/60 hover:text-slate-300 transition-colors cursor-pointer whitespace-nowrap"
+              >
+                Xóa bộ lọc
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -4,6 +4,7 @@ import countryData from "@/assets/data/countries.json";
 import addressData from "@/assets/data/addressVN_afterUpdate.json";
 
 // 1. COMPONENT SELECT TIÊU CHUẨN (Hỗ trợ cấu trúc Object & Array)
+// Đã được tối ưu bỏ min-width để co giãn tự nhiên trong ô lọc hàng ngang
 const Select = ({
   options,
   value,
@@ -28,13 +29,13 @@ const Select = ({
 
   return (
     <div
-      className={`relative w-full min-w-[240px] cursor-pointer text-slate-200 font-medium transition-all ${
-        isOpen ? "z-[9999]" : "z-10"
+      className={`relative w-full cursor-pointer text-slate-200 font-medium transition-all ${
+        isOpen ? "z-[9999] overflow-visible" : "z-10"
       }`}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      {/* NHÃN (LABEL) - Fix lỗi đè cắt nền bằng bg-[#0D121F] */}
+      {/* NHÃN (LABEL) */}
       {label && (
         <label
           className={`absolute -top-2 left-3 bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
@@ -45,33 +46,33 @@ const Select = ({
         </label>
       )}
 
-      {/* TRIGGER KHUNG BẤM */}
+      {/* TRIGGER KHUNG BẤM (Cố định chiều cao h-10 để đồng bộ hàng ngang) */}
       <div
-        className={`bg-[#111827]/40 p-[11px_15px] rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
+        className={`bg-[#111827]/40 h-10 px-3 rounded-lg relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
           isOpen
             ? "border-sky-500/50 bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
             : "border-slate-800"
         }`}
       >
         <span
-          className={`truncate mr-2 ${selectedOption ? "text-slate-200" : "text-slate-600"}`}
+          className={`truncate mr-2 ${selectedOption ? "text-slate-200" : "text-slate-500"}`}
         >
           {selectedOption ? selectedOption.name : placeholder}
         </span>
         <ChevronDown
           size={14}
-          className={`transition-transform duration-200 ${
+          className={`transition-transform duration-200 shrink-0 ${
             isOpen ? "rotate-180 text-sky-400" : "rotate-0 text-slate-500"
           }`}
         />
       </div>
 
-      {/* DROPDOWN MENU MENU CON TRONG SUỐT GLASS */}
+      {/* DROPDOWN MENU CON TRONG SUỐT GLASS (z-[9999] bảo đảm nổi trên table) */}
       <div
-        className={`flex flex-col rounded-xl p-1 bg-[#111827]/95 border border-slate-800 shadow-2xl absolute left-0 w-full transition-all duration-200 z-[110] max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
+        className={`flex flex-col rounded-xl p-1 bg-[#111827]/95 border border-slate-800 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0"
-            : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999]"
+            : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1 z-[-1]"
         }`}
       >
         {safeOptions.map((option) => (
@@ -103,12 +104,11 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
   return (
     <div
       className={`relative w-full h-[42px] cursor-pointer text-slate-200 font-medium transition-all ${
-        isOpen ? "z-[9999]" : "z-10"
+        isOpen ? "z-[9999] overflow-visible" : "z-10"
       }`}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      {/* LABEL */}
       {label && (
         <label
           className={`absolute -top-2 left-3 bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
@@ -119,7 +119,6 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
         </label>
       )}
 
-      {/* TRIGGER TRIGGER */}
       <div
         className={`bg-[#111827]/40 p-[11px_15px] h-full rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
           isOpen
@@ -140,11 +139,10 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
         />
       </div>
 
-      {/* OPTIONS DROPDOWN */}
       <div
-        className={`flex flex-col rounded-xl p-1 bg-[#111827]/95 border border-slate-800 shadow-2xl absolute left-0 w-full transition-all duration-200 z-[110] max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
+        className={`flex flex-col rounded-xl p-1 bg-[#111827]/95 border border-slate-800 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999]"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1"
         }`}
       >
@@ -181,7 +179,7 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
   return (
     <div
       className={`relative w-full min-w-[240px] cursor-pointer text-slate-200 font-medium transition-all ${
-        isOpen ? "z-[9999]" : "z-10"
+        isOpen ? "z-[9999] overflow-visible" : "z-10"
       }`}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
@@ -217,9 +215,9 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
       </div>
 
       <div
-        className={`flex flex-col rounded-xl p-1 bg-[#111827]/95 border border-slate-800 shadow-2xl absolute left-0 w-full transition-all duration-200 z-[110] max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
+        className={`flex flex-col rounded-xl p-1 bg-[#111827]/95 border border-slate-800 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999]"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1"
         }`}
       >
@@ -249,10 +247,8 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
 
-  // 1. Tự động map dữ liệu cũ từ API vào ô Select
   useEffect(() => {
     if (initialProvince) {
-      // Chuẩn hóa tên tỉnh: viết thường, loại bỏ chữ viết tắt
       const cleanInitialProvince = initialProvince
         .toLowerCase()
         .replace("tp.", "")
@@ -275,7 +271,9 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
           const lowerWard = initialWard.toLowerCase().trim();
           const searchVariants = [lowerWard];
 
-          const stripped = lowerWard.replace(/^(quận|huyện|phường|xã|thị trấn)\s+/i, "").trim();
+          const stripped = lowerWard
+            .replace(/^(quận|huyện|phường|xã|thị trấn)\s+/i, "")
+            .trim();
           if (stripped && stripped !== lowerWard) searchVariants.push(stripped);
 
           const matchInList = (list) =>
@@ -300,7 +298,6 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
     }
   }, [initialProvince, initialWard]);
 
-  // 2. Chuẩn bị options cho Select Tỉnh/Thành
   const provinceOptions = useMemo(() => {
     return addressData.map((p) => ({
       slug: p.Code,
@@ -308,12 +305,10 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
     }));
   }, []);
 
-  // 3. Chuẩn bị options cho Select Quận/Phường (Động theo tỉnh được chọn)
   const wardOptions = useMemo(() => {
     const province = addressData.find((p) => p.Code === selectedProvince);
     if (!province) return [];
 
-    // Ưu tiên lấy danh sách cấp Quận/Huyện hiển thị lên ô số 2
     const listItems =
       province.Districts && province.Districts.length > 0
         ? province.Districts
@@ -325,7 +320,6 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
     }));
   }, [selectedProvince]);
 
-  // 4. Bắn ngược data đã chọn lên component Form cha khi thay đổi mục
   useEffect(() => {
     const provinceObj = addressData.find((p) => p.Code === selectedProvince);
     if (!provinceObj) return;
@@ -335,7 +329,6 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
         ? provinceObj.Districts
         : provinceObj.Wards || [];
 
-    // Gộp cả danh sách phường xã của toàn bộ huyện để tìm kiếm code chuẩn xác
     if (provinceObj.Districts) {
       allItems = [
         ...allItems,
@@ -384,4 +377,96 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
   );
 };
 
-export { Select, CountrySelect, AddressSelector, SelectPro };
+const SimpleSelect = ({
+  options,
+  value,
+  onChange,
+  placeholder = "Chọn một mục",
+  label,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Chuẩn hóa dữ liệu đầu vào (hỗ trợ cả Array và Object)
+  const safeOptions = useMemo(() => {
+    if (Array.isArray(options)) return options;
+    if (options && typeof options === "object") {
+      return Object.entries(options).map(([key, val]) => ({
+        slug: key,
+        name: val,
+      }));
+    }
+    return [];
+  }, [options]);
+
+  const selectedOption = safeOptions.find((opt) => opt.slug === value);
+
+  return (
+    <div
+      className={`relative w-full cursor-pointer text-slate-200 font-medium transition-all ${
+        isOpen ? "z-[9999] overflow-visible" : "z-10"
+      }`}
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      {/* NHÃN BÊN TRÊN */}
+      {label && (
+        <label
+          className={`absolute -top-2 left-3 bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
+            isOpen ? "text-sky-400" : "text-slate-500"
+          }`}
+        >
+          {label}
+        </label>
+      )}
+
+      {/* KHUNG BẤM CHÍNH (Chiều cao h-10 đồng bộ các ô lọc khác) */}
+      <div
+        className={`bg-[#111827]/40 h-10 px-3 rounded-lg relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
+          isOpen
+            ? "border-sky-500/50 bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
+            : "border-slate-800"
+        }`}
+      >
+        <span
+          className={`truncate mr-2 ${selectedOption ? "text-slate-200" : "text-slate-500"}`}
+        >
+          {selectedOption ? selectedOption.name : placeholder}
+        </span>
+        <ChevronDown
+          size={14}
+          className={`transition-transform duration-200 shrink-0 ${
+            isOpen ? "rotate-180 text-sky-400" : "rotate-0 text-slate-500"
+          }`}
+        />
+      </div>
+
+      {/* DANH SÁCH DROPDOWN MENU (Hiển thị đè lên bảng bên dưới nhờ z-[9999]) */}
+      <div
+        className={`flex flex-col rounded-lg p-1 bg-[#111827]/98 border border-slate-800/80 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
+          isOpen
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999]"
+            : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1 z-[-1]"
+        }`}
+      >
+        {safeOptions.map((option) => (
+          <div
+            key={option.slug}
+            onClick={() => {
+              onChange(option.slug);
+              setIsOpen(false);
+            }}
+            className={`rounded px-3 py-2 text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
+              value === option.slug
+                ? "text-slate-100 font-semibold bg-slate-800/80"
+                : "text-slate-400 hover:bg-[#161F32] hover:text-slate-200"
+            }`}
+          >
+            {option.name}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export { Select, CountrySelect, AddressSelector, SelectPro, SimpleSelect };

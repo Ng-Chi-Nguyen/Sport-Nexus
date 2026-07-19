@@ -11,10 +11,13 @@ import {
 import { formatDate } from "@/utils/formatters";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import Pagination from "@/components/ui/pagination";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { queryClient } from "@/lib/react-query";
 import { toast } from "sonner";
 import couponApi from "@/api/management/couponApi";
+
+// Import component SimpleSelect mới từ thư mục chứa ui components của bạn
+import { SimpleSelect } from "@/components/ui/select";
 
 const ACTIVE_TABS = [
   { value: "", label: "Tất cả" },
@@ -23,9 +26,9 @@ const ACTIVE_TABS = [
 ];
 
 const DISCOUNT_TYPE_OPTIONS = [
-  { value: "", label: "Tất cả" },
-  { value: "CASH", label: "Tiền mặt" },
-  { value: "PERCENTAGE", label: "Phần trăm" },
+  { slug: "", name: "Tất cả" },
+  { slug: "CASH", name: "Tiền mặt" },
+  { slug: "PERCENTAGE", name: "Phần trăm" },
 ];
 
 const breadcrumbData = [
@@ -161,24 +164,28 @@ const CouponPage = () => {
         <BtnAdd route="/management/coupons/create" name="Thêm khuyến mãi" />
       </div>
 
+      {/* KHU VỰC BỘ LỌC NGANG SỬ DỤNG SIMPLE SELECT VÀ FLEXBOX */}
       <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          showFilters ? "max-h-96 opacity-100 mb-4" : "max-h-0 opacity-0"
+        className={`transition-all duration-300 ease-in-out ${
+          showFilters
+            ? "max-h-[500px] opacity-100 mb-4 overflow-visible"
+            : "max-h-0 opacity-0 overflow-hidden"
         }`}
       >
-        <div className="p-5 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
+        <div className="p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
+          <div className="flex flex-wrap items-end gap-4">
+            {/* 1. Trạng thái */}
+            <div className="w-[230px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                 Trạng thái
               </label>
-              <div className="flex items-center gap-1 p-1 bg-[#111827]/60 border border-slate-800 rounded-lg">
+              <div className="flex items-center gap-0.5 p-0.5 bg-[#111827]/60 border border-slate-800 rounded-lg h-10">
                 {ACTIVE_TABS.map((tab) => (
                   <button
                     key={tab.value}
                     type="button"
                     onClick={() => setFilter("is_active", tab.value)}
-                    className={`px-2.5 py-1.5 text-[11px] font-bold rounded-md cursor-pointer transition-colors ${
+                    className={`flex-1 text-center py-1 text-[11px] font-bold rounded-md cursor-pointer transition-colors h-full ${
                       isActive === tab.value
                         ? "bg-sky-500/10 text-sky-400 border border-sky-500/20"
                         : "text-slate-500 hover:text-slate-300"
@@ -190,39 +197,19 @@ const CouponPage = () => {
               </div>
             </div>
 
-            <div>
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                Loại giảm giá
-              </label>
-              <div className="relative">
-                <select
-                  value={discountType}
-                  onChange={(e) => setFilter("discount_type", e.target.value)}
-                  className="w-full appearance-none px-3 py-2 pr-8 text-sm rounded-lg 
-                    bg-[#111827]/80 text-slate-200 border border-slate-900/60 
-                    outline-none focus:outline-none focus:border-sky-500/40 
-                    focus:ring-1 focus:ring-sky-500/10 
-                    shadow-sm focus:shadow-[0_0_12px_rgba(79,172,243,0.1)]
-                    cursor-pointer hover:border-slate-800 transition-all duration-200"
-                >
-                  {DISCOUNT_TYPE_OPTIONS.map((opt) => (
-                    <option
-                      key={opt.value}
-                      value={opt.value}
-                      className="bg-[#0D121F] text-slate-200"
-                    >
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  size={14}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
-                />
-              </div>
+            {/* 2. Loại giảm giá (Đã thay sang SimpleSelect gọn gàng) */}
+            <div className="flex-1 min-w-[150px]">
+              <SimpleSelect
+                label="Loại giảm giá"
+                options={DISCOUNT_TYPE_OPTIONS}
+                value={discountType}
+                onChange={(val) => setFilter("discount_type", val)}
+                placeholder="Tất cả"
+              />
             </div>
 
-            <div>
+            {/* 3. Từ ngày */}
+            <div className="flex-1 min-w-[140px]">
               <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                 Từ ngày
               </label>
@@ -230,11 +217,12 @@ const CouponPage = () => {
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setFilter("date_from", e.target.value)}
-                className="w-full px-3 py-2 text-sm rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 [color-scheme:dark]"
+                className="w-full h-10 px-2.5 text-sm rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 [color-scheme:dark]"
               />
             </div>
 
-            <div>
+            {/* 4. Đến ngày */}
+            <div className="flex-1 min-w-[140px]">
               <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                 Đến ngày
               </label>
@@ -242,21 +230,22 @@ const CouponPage = () => {
                 type="date"
                 value={dateTo}
                 onChange={(e) => setFilter("date_to", e.target.value)}
-                className="w-full px-3 py-2 text-sm rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 [color-scheme:dark]"
+                className="w-full h-10 px-2.5 text-sm rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 [color-scheme:dark]"
               />
             </div>
 
-            <div className="md:col-span-2 lg:col-span-1">
+            {/* 5. Giá trị giảm */}
+            <div className="w-[180px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                 Giá trị giảm
               </label>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1">
                 <input
                   type="number"
                   placeholder="Tối thiểu"
                   value={discountMin}
                   onChange={(e) => setFilter("discount_min", e.target.value)}
-                  className="w-full px-3 py-2 text-sm rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
                 />
                 <span className="text-slate-600 shrink-0">–</span>
                 <input
@@ -264,20 +253,21 @@ const CouponPage = () => {
                   placeholder="Tối đa"
                   value={discountMax}
                   onChange={(e) => setFilter("discount_max", e.target.value)}
-                  className="w-full px-3 py-2 text-sm rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
                 />
               </div>
             </div>
-          </div>
 
-          <div className="flex justify-end mt-3 pt-3 border-t border-slate-800">
-            <button
-              type="button"
-              onClick={clearAllFilters}
-              className="px-4 py-1.5 text-xs font-bold rounded-lg border border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors cursor-pointer"
-            >
-              Xóa bộ lọc
-            </button>
+            {/* 6. Nút Xóa bộ lọc nhỏ gọn */}
+            <div className="h-10 flex items-center shrink-0 ml-auto">
+              <button
+                type="button"
+                onClick={clearAllFilters}
+                className="px-2.5 py-1 text-[10px] font-bold rounded border border-slate-800 text-slate-500 hover:bg-slate-800/60 hover:text-slate-300 transition-colors cursor-pointer whitespace-nowrap"
+              >
+                Xóa bộ lọc
+              </button>
+            </div>
           </div>
         </div>
       </div>
