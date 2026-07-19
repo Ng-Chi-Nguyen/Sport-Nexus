@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
+import Pagination from "@/components/ui/pagination";
 import { SimpleSelect } from "@/components/ui/select";
 import { LayoutDashboard, Filter, ChevronDown } from "lucide-react";
 import { useLoaderData, useRevalidator, useSearchParams } from "react-router-dom";
@@ -61,6 +62,13 @@ const StockPage = () => {
   };
 
   const stocks = response?.data?.list_stocks || [];
+  const paginationInfo = response?.data?.pagination || { totalPages: 1, currentPage: 1 };
+
+  const handlePageChange = (newPage) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", newPage);
+    setSearchParams(params);
+  };
 
   return (
     <div className="space-y-6">
@@ -207,7 +215,7 @@ const StockPage = () => {
 
           <div className="text-xs bg-[#111827] text-slate-400 border border-slate-800 px-3 py-1.5 rounded-xl font-medium h-fit self-end">
             Tổng số mặt hàng:{" "}
-            <span className="text-sky-400 font-bold">{stocks.length}</span>
+            <span className="text-sky-400 font-bold">{paginationInfo.totalItems || stocks.length}</span>
           </div>
         </div>
 
@@ -300,6 +308,11 @@ const StockPage = () => {
             </tbody>
           </table>
         </div>
+        <Pagination
+          totalPages={paginationInfo.totalPages}
+          currentPage={paginationInfo.currentPage}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );

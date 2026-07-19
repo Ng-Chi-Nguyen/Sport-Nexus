@@ -12,6 +12,7 @@ import LoaderProductVariant from "@/loaders/core/productVariantLoader";
 import LoaderCoupon from "@/loaders/management/couponLoadet";
 import LoaderOrder from "@/loaders/customer/orderLoader";
 import LoaderStock from "@/loaders/management/stockMovement";
+import LoaderLog from "@/loaders/management/logLoader";
 
 // Hàm tiện ích bóc tách số trang từ URL
 const getPage = (request) => new URL(request.url).searchParams.get("page") || 1;
@@ -409,3 +410,17 @@ export const attributeKeyEditLoader = ({ params }) =>
     queryKey: ["attribute-keys", params.attrId],
     queryFn: () => LoaderAttr.getAttrById(params.attrId),
   });
+
+export const logsLoader = async ({ request }) => {
+  return queryClient.fetchQuery({
+    queryKey: ["system-logs", getPage(request), getSearchParam(request, "action_type"), getSearchParam(request, "entity_type"), getSearchParam(request, "status"), getSearchParam(request, "from"), getSearchParam(request, "to")],
+    queryFn: () => LoaderLog.getAllLogs({
+      page: getPage(request),
+      action_type: getSearchParam(request, "action_type"),
+      entity_type: getSearchParam(request, "entity_type"),
+      status: getSearchParam(request, "status"),
+      from: getSearchParam(request, "from"),
+      to: getSearchParam(request, "to"),
+    }),
+  });
+};

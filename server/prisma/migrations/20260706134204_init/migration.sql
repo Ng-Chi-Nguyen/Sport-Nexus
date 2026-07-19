@@ -1,4 +1,4 @@
-﻿-- CreateTable
+-- CreateTable
 CREATE TABLE `permissions` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `slug` VARCHAR(191) NOT NULL,

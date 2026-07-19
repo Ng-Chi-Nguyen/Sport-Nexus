@@ -110,7 +110,7 @@ export const adminRoutes = {
   children: [
     { path: "dashboard", element: <Dashboard /> },
     { path: "carts", element: <CartPage /> },
-    { path: "logs", element: <LogPage /> },
+    { path: "logs", element: <LogPage />, loader: RouteLoaders.logsLoader },
     { path: "addresses", element: <AddressPage /> },
     { path: "reviews", element: <Review /> },
 

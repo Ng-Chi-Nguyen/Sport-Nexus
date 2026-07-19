@@ -186,6 +186,11 @@ model VariableAttributes {
     @@map("variableattributes")
 }
 
+enum LogStatus {
+    SUCCESS
+    FAILED
+}
+
 enum DiscountType {
     CASH
     PERCENTAGE
@@ -377,6 +382,8 @@ model SystemLogs {
     action_type String @db.VarChar(50) // Ví dụ: CREATE, UPDATE, DELETE, STOCK_ADJUSTMENT
     entity_type String @db.VarChar(50) // Ví dụ: ProductVariants, Orders, User
     entity_id   Int? // ID của bản ghi bị ảnh hưởng
+    status      LogStatus? // SUCCESS hoặc FAILED
+    ip_address  String? @db.VarChar(45) // IP của client
 
     // Sử dụng kiểu Json để lưu trữ cấu trúc dữ liệu phức tạp (ví dụ: {oldPrice: 100, newPrice: 120})
     details Json?

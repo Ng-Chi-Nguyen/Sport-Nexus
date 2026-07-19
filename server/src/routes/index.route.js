@@ -17,6 +17,7 @@ import supplierRoute from "./management/supplier.route.js";
 import userRoute from "./management/user.route.js";
 import homeRoute from "./web/home.route.js";
 import permissionRoute from "./management/permission.route.js";
+import logRoute from "./management/log.route.js";
 import sendEmailRoute from "./email/sendEmail.route.js";
 
 const Routes = (app) => {
@@ -32,6 +33,7 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}management/stock/`, stockMovementRoute)
     app.use(`${api_prefix_v1}management/purchase-order/`, purchaseOrderRoute)
     app.use(`${api_prefix_v1}management/permission/`, permissionRoute)
+    app.use(`${api_prefix_v1}management/log/`, logRoute)
 
     // Customer - Khách hàng
     app.use(`${api_prefix_v1}customer/user-address/`, userAddressRoute)
