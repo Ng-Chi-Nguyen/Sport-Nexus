@@ -9,6 +9,7 @@ attriButeKeyRoute
 
     .post("/", validate(attributeKeySchema.createAttributeKey), attributeKeyController.createAttributeKey)
     .get("/all", attributeKeyController.getAllAttributesDropdown)
+    .get("/units", attributeKeyController.getDistinctUnits)
     .get("/:id", attributeKeyController.getAttributeKeyById)
     .get("/", attributeKeyController.getAllAttributeKey)
     .put("/:id", validate(attributeKeySchema.updateAttributeKey), attributeKeyController.updateAttributeKeyBy)

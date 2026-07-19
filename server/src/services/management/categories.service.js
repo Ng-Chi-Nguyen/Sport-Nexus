@@ -31,13 +31,18 @@ const categoryService = {
         return category;
     },
 
-    getAllCategory: async (page) => {
-        // console.log(page)
+    getAllCategory: async ({ page, is_active, search } = {}) => {
         const limit = 6;
-        const currentPage = Math.max(1, page);
+        const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
+        const where = {};
+        if (is_active !== undefined && is_active !== '') {
+            where.is_active = is_active === 'true';
+        }
+        if (search) where.name = { contains: search };
         const [list_categories, totalItems] = await Promise.all([
             prisma.categories.findMany({
+                where,
                 take: limit,
                 skip: skip,
                 select: {
@@ -48,7 +53,7 @@ const categoryService = {
                     is_active: true
                 }
             }),
-            prisma.categories.count()
+            prisma.categories.count({ where })
         ])
         return {
             list_categories, pagination: {

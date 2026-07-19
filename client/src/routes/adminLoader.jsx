@@ -266,19 +266,27 @@ export const stockCreateLoader = async () => {
   return { orders, variants, purchases };
 };
 
-export const suppliersLoader = ({ request }) =>
-  queryClient.fetchQuery({
-    queryKey: ["suppliers", getPage(request)],
-    queryFn: () => LoaderSupplier.getAllSupplier(getPage(request)),
+export const suppliersLoader = async ({ request }) => {
+  const supplierPromise = queryClient.fetchQuery({
+    queryKey: ["suppliers", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "province")],
+    queryFn: () => LoaderSupplier.getAllSupplier({ page: getPage(request), search: getSearchParam(request, "search"), province: getSearchParam(request, "province") }),
   });
+  const provincesPromise = queryClient.fetchQuery({
+    queryKey: ["supplier-provinces"],
+    queryFn: () => LoaderSupplier.getDistinctProvinces(),
+    staleTime: 60000,
+  });
+  const [suppliers, provinces] = await Promise.all([supplierPromise, provincesPromise]);
+  return { ...suppliers, provinces: provinces?.data || [] };
+};
 
 export const supplierEditLoader = (args) =>
   LoaderSupplier.getSupplierById(args);
 
 export const categoriesLoader = ({ request }) =>
   queryClient.fetchQuery({
-    queryKey: ["categories", getPage(request)],
-    queryFn: () => LoaderCategory.getAllCategories(getPage(request)),
+    queryKey: ["categories", getPage(request), getSearchParam(request, "is_active"), getSearchParam(request, "search")],
+    queryFn: () => LoaderCategory.getAllCategories({ page: getPage(request), is_active: getSearchParam(request, "is_active"), search: getSearchParam(request, "search") }),
   });
 
 export const categoryEditLoader = (args) =>
@@ -326,8 +334,8 @@ export const variantEditLoader = async ({ params }) => {
 
 export const attributeKeyLoader = ({ request }) =>
   queryClient.fetchQuery({
-    queryKey: ["attribute-keys", getPage(request)],
-    queryFn: () => LoaderAttr.getAllAttrs(getPage(request)),
+    queryKey: ["attribute-keys", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "unit")],
+    queryFn: () => LoaderAttr.getAllAttrs({ page: getPage(request), search: getSearchParam(request, "search"), unit: getSearchParam(request, "unit") }),
   });
 
 export const attributeKeyEditLoader = ({ params }) =>

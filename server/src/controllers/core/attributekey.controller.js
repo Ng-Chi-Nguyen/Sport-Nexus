@@ -43,21 +43,22 @@ const attributeKeyController = {
     },
 
     getAllAttributeKey: async (req, res) => {
-        const page = parseInt(req.query.page || 1)
-        // console.log(page)
+        const page = parseInt(req.query.page || 1);
+        const search = req.query.search || '';
+        const unit = req.query.unit !== undefined ? req.query.unit : '';
         try {
-            let attributeKeys = await attributeKeyService.getAllAttributeKey(page);
+            let result = await attributeKeyService.getAllAttributeKey({ page, search, unit });
 
-            if (!attributeKeys || attributeKeys.length === 0) {
+            if (!result || result.attribute.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                    message: "Không tìm thấy thuộc tính."
                 });
             }
 
             return res.status(200).json({
                 success: true,
-                data: attributeKeys
+                data: result
             })
         } catch (error) {
             return res.status(500).json({
@@ -85,6 +86,21 @@ const attributeKeyController = {
         } catch (error) {
             return res.status(500).json({
                 message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                error: error.message,
+            })
+        }
+    },
+
+    getDistinctUnits: async (req, res) => {
+        try {
+            let units = await attributeKeyService.getDistinctUnits();
+            return res.status(200).json({
+                success: true,
+                data: units
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: "Lỗi server nội bộ.",
                 error: error.message,
             })
         }

@@ -35,30 +35,54 @@ const supplierService = {
         return supplier;
     },
 
-    getAllSuppliers: async (page) => {
+    getAllSuppliers: async ({ page, search, province } = {}) => {
         const limit = 5;
-        // console.log(page)
-        const currentPage = Math.max(1, page);
-        // console.log(currentPage)
+        const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
-        // console.log(page)
-        // console.log(skip)
+        let AND = [];
+        if (search) AND.push({
+            OR: [
+                { name: { contains: search } },
+                { email: { contains: search } },
+                { phone: { contains: search } },
+                { contact_person: { contains: search } },
+            ]
+        });
+        if (province) {
+            const rows = await prisma.$queryRaw`
+                SELECT id FROM Suppliers
+                WHERE JSON_UNQUOTE(JSON_EXTRACT(location_data, '$.province')) = ${province}
+            `;
+            const ids = rows.map(r => r.id);
+            if (ids.length === 0) {
+                return { supplier: [], pagination: { totalItems: 0, totalPages: 0, currentPage, itemsPerPage: limit } };
+            }
+            AND.push({ id: { in: ids } });
+        }
+        const where = AND.length > 0 ? { AND } : {};
         const [supplier, totalItems] = await Promise.all([
-            prisma.Suppliers.findMany({
-                take: limit,
-                skip: skip
-            }),
-            prisma.Suppliers.count()
+            prisma.Suppliers.findMany({ where, take: limit, skip }),
+            prisma.Suppliers.count({ where })
         ])
-
         return {
             supplier, pagination: {
                 totalItems,
                 totalPages: Math.ceil(totalItems / limit),
-                currentPage: currentPage,
+                currentPage,
                 itemsPerPage: limit
             }
         };
+    },
+
+    getDistinctProvinces: async () => {
+        const rows = await prisma.$queryRaw`
+            SELECT DISTINCT JSON_UNQUOTE(JSON_EXTRACT(location_data, '$.province')) AS province
+            FROM Suppliers
+            WHERE JSON_UNQUOTE(JSON_EXTRACT(location_data, '$.province')) IS NOT NULL
+              AND JSON_UNQUOTE(JSON_EXTRACT(location_data, '$.province')) != ''
+            ORDER BY province ASC
+        `;
+        return rows.map(r => r.province);
     },
 
     getSuppliersDropdown: async () => {

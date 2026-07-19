@@ -55,21 +55,22 @@ const categoryController = {
     },
 
     getAllCategory: async (req, res) => {
-        const page = parseInt(req.query.page || 1)
-        // console.log(page)
+        const page = parseInt(req.query.page || 1);
+        const is_active = req.query.is_active !== undefined ? req.query.is_active : '';
+        const search = req.query.search || '';
         try {
-            let list_categories = await categoryService.getAllCategory(page);
+            let result = await categoryService.getAllCategory({ page, is_active, search });
 
-            if (!list_categories || list_categories.length === 0) {
+            if (!result || result.list_categories.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: "Không tìm thấy danh mục."
                 });
             }
 
-            return res.status(201).json({
+            return res.status(200).json({
                 success: true,
-                data: list_categories
+                data: result
             })
         } catch (error) {
             return res.status(500).json({

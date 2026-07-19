@@ -14,6 +14,7 @@ supplierRoute
     .delete("/:id", verifyToken, checkPermission("xoa-nha-cung-cap"), supplierController.deleteSupplier)
 
     .get("/all", supplierController.getSuppliersDropdown)
+    .get("/provinces", supplierController.getProvinces)
     .get("/:id", supplierController.getSupplierById)
     .get("/", supplierController.getAllSupplier)
 

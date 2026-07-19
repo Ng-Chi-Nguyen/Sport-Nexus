@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { LayoutDashboard } from "lucide-react";
 import {
   useLoaderData,
@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
+import { SimpleSelect } from "@/components/ui/select";
 import { ConfirmDelete } from "@/components/ui/confirm";
 // api
 import supplierdApi from "@/api/management/supplierApi";
@@ -31,11 +32,39 @@ const SupplierPage = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
+  const currentSearch = searchParams.get("search") || "";
+  const currentProvince = searchParams.get("province") || "";
+
+  const [searchInput, setSearchInput] = useState(currentSearch);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) { isFirstRender.current = false; return; }
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(searchParams);
+      params.set("page", "1");
+      if (searchInput) params.set("search", searchInput);
+      else params.delete("search");
+      setSearchParams(params);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const handleProvinceChange = (value) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", "1");
+    if (value) params.set("province", value);
+    else params.delete("province");
+    setSearchParams(params);
+  };
+
   const suppliers = response?.data?.supplier || [];
   const pagination = response?.data?.pagination || [];
 
   const handlePageChange = (newPage) => {
-    setSearchParams({ page: newPage });
+    const params = new URLSearchParams(searchParams);
+    params.set("page", newPage);
+    setSearchParams(params);
   };
 
   const openConfirm = (supplierId) => {
@@ -88,7 +117,22 @@ const SupplierPage = () => {
       {/* THANH TÌM KIẾM & NÚT THÊM */}
       <div className="flex items-center gap-4">
         <div className="flex-1 relative group">
-          <SearchTable placeholder="Tìm kiếm nhà cung cấp..." />
+          <SearchTable
+            placeholder="Tìm kiếm nhà cung cấp..."
+            value={searchInput}
+            onChange={(val) => setSearchInput(val)}
+          />
+        </div>
+        <div className="w-[180px]">
+          <SimpleSelect
+            placeholder="Tất cả tỉnh/thành"
+            value={currentProvince}
+            onChange={(val) => handleProvinceChange(val)}
+            options={[
+              { slug: "", name: "Tất cả" },
+              ...(response.provinces || []).map((p) => ({ slug: p, name: p })),
+            ]}
+          />
         </div>
         <BtnAdd
           route={"/management/suppliers/create"}

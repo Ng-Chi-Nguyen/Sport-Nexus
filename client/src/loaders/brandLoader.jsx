@@ -1,13 +1,20 @@
 import axiosClient from "@/lib/axiosClient";
 
 const LoaderBrand = {
-  getAllBrands: ({ page = 1, origin = '', search = '' } = {}) => {
+  getAllBrands: async ({ page = 1, origin = '', search = '' } = {}) => {
     const params = new URLSearchParams();
     params.set('page', page);
     if (origin) params.set('origin', origin);
     if (search) params.set('search', search);
-    const response = axiosClient.get(`management/brand?${params.toString()}`);
-    return response;
+    try {
+      const response = await axiosClient.get(`management/brand?${params.toString()}`);
+      return response;
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        return { success: true, data: { brands: [], pagination: { totalPages: 1, currentPage: 1 } } };
+      }
+      throw error;
+    }
   },
 
   getBrandById: ({ params }) => {

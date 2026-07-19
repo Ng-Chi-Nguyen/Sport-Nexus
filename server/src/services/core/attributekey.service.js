@@ -20,17 +20,22 @@ const attributeKeyService = {
         return attribute;
     },
 
-    getAllAttributeKey: async (page) => {
+    getAllAttributeKey: async ({ page, search, unit } = {}) => {
         const limit = 6;
-        const currentPage = Math.max(1, page);
+        const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
-
+        const where = {};
+        if (search) where.name = { contains: search };
+        if (unit !== undefined && unit !== '') {
+            where.unit = unit === 'null' ? null : unit;
+        }
         let [attribute, totalItems] = await Promise.all([
             prisma.AttributeKeys.findMany({
+                where,
                 take: limit,
                 skip: skip,
             }),
-            prisma.AttributeKeys.count()
+            prisma.AttributeKeys.count({ where })
         ])
         return {
             attribute, pagination: {
@@ -45,6 +50,14 @@ const attributeKeyService = {
     getAllAttributesDropdown: async () => {
         let attrs = await prisma.AttributeKeys.findMany();
         return attrs;
+    },
+
+    getDistinctUnits: async () => {
+        let units = await prisma.AttributeKeys.findMany({
+            select: { unit: true },
+            distinct: ['unit'],
+        });
+        return units.map(u => u.unit);
     },
 
     updateAttributeKey: async (attrId, dataUpdate) => {

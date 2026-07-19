@@ -58,25 +58,26 @@ const supplierController = {
     },
 
     getAllSupplier: async (req, res) => {
-        let page = parseInt(req.query.page || 1);
-        // console.log(page)
+        const page = parseInt(req.query.page || 1);
+        const search = req.query.search || '';
+        const province = req.query.province || '';
         try {
-            let list_suppliers = await supplierService.getAllSuppliers(page)
+            let result = await supplierService.getAllSuppliers({ page, search, province });
 
-            if (!list_suppliers || list_suppliers.length === 0) {
+            if (!result || result.supplier.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: "Không tìm thấy nhà cung cấp."
                 });
             }
 
             return res.status(200).json({
                 success: true,
-                data: list_suppliers
+                data: result
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: "Lỗi server nội bộ.",
                 error: error.message,
             });
         }
@@ -144,6 +145,15 @@ const supplierController = {
                 message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
                 error: error.message,
             });
+        }
+    },
+
+    getProvinces: async (req, res) => {
+        try {
+            const provinces = await supplierService.getDistinctProvinces();
+            return res.status(200).json({ success: true, data: provinces });
+        } catch (error) {
+            return res.status(500).json({ message: "Lỗi server nội bộ.", error: error.message });
         }
     },
 
