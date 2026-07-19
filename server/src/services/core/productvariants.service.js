@@ -91,12 +91,20 @@ const productVariantService = {
         return productVariants;
     },
 
-    getAllProductVariants: async (page) => {
+    getAllProductVariants: async ({ page, search, product_id, stock_min, stock_max, price_min, price_max } = {}) => {
         const limit = 6;
-        const currentPage = Math.max(1, page);
+        const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
+        const where = {};
+        if (search) where.product = { name: { contains: search } };
+        if (product_id) where.product_id = parseInt(product_id);
+        if (stock_min) where.stock = { ...where.stock, gte: parseInt(stock_min) };
+        if (stock_max) where.stock = { ...where.stock, lte: parseInt(stock_max) };
+        if (price_min) where.price = { ...where.price, gte: parseFloat(price_min) };
+        if (price_max) where.price = { ...where.price, lte: parseFloat(price_max) };
         const [variants, totalItems] = await Promise.all([
             prisma.ProductVariants.findMany({
+                where,
                 take: limit,
                 skip: skip,
                 include: {
@@ -112,9 +120,10 @@ const productVariantService = {
                             attributeKey: true
                         }
                     }
-                }
+                },
+                orderBy: { id: 'desc' }
             }),
-            prisma.ProductVariants.count()
+            prisma.ProductVariants.count({ where })
         ])
         return {
             variants, pagination: {

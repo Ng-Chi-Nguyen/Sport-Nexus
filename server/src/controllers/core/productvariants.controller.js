@@ -72,10 +72,16 @@ const productVariantController = {
     },
 
     getAllProductVariants: async (req, res) => {
-        const page = parseInt(req.query.page || 1)
+        const page = parseInt(req.query.page || 1);
+        const search = req.query.search || '';
+        const product_id = req.query.product_id || '';
+        const stock_min = req.query.stock_min || '';
+        const stock_max = req.query.stock_max || '';
+        const price_min = req.query.price_min || '';
+        const price_max = req.query.price_max || '';
         try {
-            let variants = await productVariantService.getAllProductVariants(page);
-            if (!variants || variants.length === 0) {
+            let variants = await productVariantService.getAllProductVariants({ page, search, product_id, stock_min, stock_max, price_min, price_max });
+            if (!variants || variants.variants.length === 0) {
                 return res.status(404).json({
                     success: false,
                     message: "Không tìm thấy sản phẩm."

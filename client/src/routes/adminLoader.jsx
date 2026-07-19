@@ -310,12 +310,19 @@ export const categoriesLoader = ({ request }) =>
 export const categoryEditLoader = (args) =>
   LoaderCategory.getCategoryById(args);
 
-export const productVariantsLoader = ({ request }) =>
-  queryClient.fetchQuery({
-    queryKey: ["product-variants", getPage(request)],
-    queryFn: () =>
-      LoaderProductVariant.getAllProducstVariants(getPage(request)),
+export const productVariantsLoader = async ({ request }) => {
+  const variantsPromise = queryClient.fetchQuery({
+    queryKey: ["product-variants", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "product_id"), getSearchParam(request, "stock_min"), getSearchParam(request, "stock_max"), getSearchParam(request, "price_min"), getSearchParam(request, "price_max")],
+    queryFn: () => LoaderProductVariant.getAllProducstVariants({ page: getPage(request), search: getSearchParam(request, "search"), product_id: getSearchParam(request, "product_id"), stock_min: getSearchParam(request, "stock_min"), stock_max: getSearchParam(request, "stock_max"), price_min: getSearchParam(request, "price_min"), price_max: getSearchParam(request, "price_max") }),
   });
+  const productsPromise = queryClient.fetchQuery({
+    queryKey: ["product-variant-products"],
+    queryFn: () => LoaderProduct.getProductsDropdown(),
+    staleTime: 60000,
+  });
+  const [variants, products] = await Promise.all([variantsPromise, productsPromise]);
+  return { ...variants, products: products?.data || [] };
+};
 
 export const variantCreateLoader = async () => {
   const [attributeKeys, products] = await Promise.all([
