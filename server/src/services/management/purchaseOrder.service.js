@@ -98,19 +98,44 @@ const purchaseOrderService = {
         return purchaseOrders;
     },
 
-    getAllPurchaseOrder: async (page) => {
+    getAllPurchaseOrder: async ({ page, status, supplier_id, date_from, date_to, cost_min, cost_max, search } = {}) => {
         const limit = 6;
-        let currentPage = Math.max(1, page);
+        let currentPage = Math.max(1, page || 1);
         let skip = (currentPage - 1) * limit;
+
+        let where = {};
+
+        if (status) where.status = status;
+
+        if (supplier_id) where.supplier_id = Number(supplier_id);
+
+        if (date_from || date_to) {
+            where.order_date = {};
+            if (date_from) where.order_date.gte = new Date(date_from);
+            if (date_to) where.order_date.lte = new Date(date_to + "T23:59:59.999Z");
+        }
+
+        if (cost_min || cost_max) {
+            where.total_cost = {};
+            if (cost_min) where.total_cost.gte = Number(cost_min);
+            if (cost_max) where.total_cost.lte = Number(cost_max);
+        }
+
+        if (search) {
+            where.id = Number(search) || undefined;
+        }
+
         let [purchaseOrders, totalItems] = await Promise.all([
             prisma.PurchaseOrders.findMany({
+                where,
                 take: limit,
                 skip: skip,
                 include: {
                     PurchaseOrderItems: true
-                }
+                },
+                orderBy: { id: "desc" }
             }),
-            prisma.PurchaseOrders.count()
+            prisma.PurchaseOrders.count({ where })
         ])
         return {
             purchaseOrders, pagination: {

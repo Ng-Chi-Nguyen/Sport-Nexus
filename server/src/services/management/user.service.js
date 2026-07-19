@@ -116,15 +116,40 @@ const userService = {
         return { user };
     },
 
-    getAllUser: async (page) => {
+    getAllUser: async ({ page, search, status, is_verified, role_id, date_from, date_to } = {}) => {
         const limit = 6;
-        const currentPage = Math.max(1, page);
-        // console.log(currentPage)
+        const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
-        // console.log(skip)
 
-        let [listUsers, totalItems, listPermissions] = await Promise.all([
+        let where = {};
+
+        if (search) {
+            where.OR = [
+                { full_name: { contains: search } },
+                { email: { contains: search } },
+                { phone_number: { contains: search } },
+            ];
+        }
+
+        if (status !== undefined && status !== '') {
+            where.status = status === 'true' || status === true;
+        }
+
+        if (is_verified !== undefined && is_verified !== '') {
+            where.is_verified = is_verified === 'true' || is_verified === true;
+        }
+
+        if (role_id) where.role_id = Number(role_id);
+
+        if (date_from || date_to) {
+            where.created_at = {};
+            if (date_from) where.created_at.gte = new Date(date_from);
+            if (date_to) where.created_at.lte = new Date(date_to + "T23:59:59.999Z");
+        }
+
+        let [listUsers, totalItems] = await Promise.all([
             prisma.Users.findMany({
+                where,
                 take: limit,
                 skip: skip,
                 select: {
@@ -145,13 +170,13 @@ const userService = {
                         }
                     }
                 },
+                orderBy: { id: "desc" }
             }),
-            prisma.Users.count(),
+            prisma.Users.count({ where }),
         ])
 
         return {
             data: listUsers,
-            dataPermission: listPermissions,
             pagination: {
                 totalItems,
                 totalPages: Math.ceil(totalItems / limit),
@@ -159,6 +184,12 @@ const userService = {
                 itemsPerPage: limit
             }
         };
+    },
+
+    getRolesDropdown: async () => {
+        return await prisma.Roles.findMany({
+            select: { id: true, name: true }
+        });
     },
 
     deleteUser: async (userId, currentUser) => {

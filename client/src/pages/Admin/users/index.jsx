@@ -1,17 +1,14 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import {
   useLoaderData,
   useRevalidator,
   useSearchParams,
 } from "react-router-dom";
 import {
-  CheckCheck,
   LayoutDashboard,
-  LockOpen,
-  Lock,
   ShieldAlert,
-  UserCheck,
-  UserX,
+  Filter,
+  ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
@@ -19,12 +16,15 @@ import { Link } from "react-router-dom";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
+import { SimpleSelect } from "@/components/ui/select";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import Pagination from "@/components/ui/pagination";
 // utils
 import { formatFullDateTime } from "@/utils/formatters";
 // lib
 import { queryClient } from "@/lib/react-query";
+// api
+import userApi from "@/api/management/userApi";
 // image
 import avatarDefault from "@/assets/images/avatar-default.jpg";
 
@@ -48,9 +48,49 @@ const UserPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
 
-  // state
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
+
+  const currentSearch = searchParams.get("search") || "";
+  const currentStatus = searchParams.get("status") || "";
+  const currentIsVerified = searchParams.get("is_verified") || "";
+  const currentRoleId = searchParams.get("role_id") || "";
+  const currentDateFrom = searchParams.get("date_from") || "";
+  const currentDateTo = searchParams.get("date_to") || "";
+
+  const [searchInput, setSearchInput] = useState(currentSearch);
+  const [showFilters, setShowFilters] = useState(false);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) { isFirstRender.current = false; return; }
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(searchParams);
+      params.set("page", "1");
+      if (searchInput) params.set("search", searchInput);
+      else params.delete("search");
+      setSearchParams(params);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const hasActiveFilters = currentStatus || currentIsVerified || currentRoleId || currentDateFrom || currentDateTo;
+
+  const setFilter = (key, value) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", "1");
+    if (value !== '' && value !== undefined) params.set(key, value);
+    else params.delete(key);
+    setSearchParams(params);
+  };
+
+  const clearAllFilters = () => {
+    const params = new URLSearchParams();
+    const search = searchParams.get("search");
+    if (search) params.set("search", search);
+    params.set("page", "1");
+    setSearchParams(params);
+  };
 
   const usersData = responses?.data?.data || {};
 
@@ -93,16 +133,149 @@ const UserPage = () => {
     }
   };
 
+  const statusOptions = [
+    { slug: "", name: "Tất cả" },
+    { slug: "true", name: "Hoạt động" },
+    { slug: "false", name: "Vô hiệu" },
+  ];
+
+  const verifiedOptions = [
+    { slug: "", name: "Tất cả" },
+    { slug: "true", name: "Đã xác thực" },
+    { slug: "false", name: "Chưa xác thực" },
+  ];
+
+  const roles = responses.roles || [];
+
   return (
     <div className="space-y-6">
       <Breadcrumbs data={breadcrumbData} />
 
-      {/* THANH TÌM KIẾM & NÚT THÊM */}
+      {/* THANH TÌM KIẾM & NÚT LỌC */}
       <div className="flex items-center gap-4">
         <div className="flex-1 relative group">
-          <SearchTable placeholder="Tìm kiếm người dùng..." />
+          <SearchTable
+            placeholder="Tìm kiếm tên, email, số điện thoại..."
+            value={searchInput}
+            onChange={(val) => setSearchInput(val)}
+          />
         </div>
+        <button
+          type="button"
+          onClick={() => setShowFilters(!showFilters)}
+          className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
+            hasActiveFilters
+              ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
+              : "bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200"
+          }`}
+        >
+          <Filter size={14} />
+          Bộ lọc
+          {hasActiveFilters && <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />}
+          <ChevronDown size={14} className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`} />
+        </button>
         <BtnAdd route={"/management/users/create"} name="Thêm người dùng" />
+      </div>
+
+      {/* Filter panel */}
+      <div className={`transition-all duration-300 ease-in-out ${
+        showFilters ? "max-h-[500px] opacity-100 overflow-visible" : "max-h-0 opacity-0 overflow-hidden"
+      }`}>
+        <div className="p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
+          <div className="flex items-end gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 flex-1 items-end">
+            {/* Trạng thái */}
+            <div>
+              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                Trạng thái
+              </label>
+              <div className="flex items-center gap-1 flex-wrap">
+                {statusOptions.map((opt) => (
+                  <button
+                    key={opt.slug}
+                    type="button"
+                    onClick={() => setFilter("status", opt.slug)}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-lg border cursor-pointer transition-all ${
+                      currentStatus === opt.slug
+                        ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
+                        : "bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200"
+                    }`}
+                  >
+                    {opt.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Xác thực */}
+            <div>
+              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                Xác thực
+              </label>
+              <div className="flex items-center gap-1 flex-wrap">
+                {verifiedOptions.map((opt) => (
+                  <button
+                    key={opt.slug}
+                    type="button"
+                    onClick={() => setFilter("is_verified", opt.slug)}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-lg border cursor-pointer transition-all ${
+                      currentIsVerified === opt.slug
+                        ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
+                        : "bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200"
+                    }`}
+                  >
+                    {opt.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Vai trò */}
+            <SimpleSelect
+              label="Vai trò"
+              value={currentRoleId}
+              onChange={(val) => setFilter("role_id", val)}
+              options={[
+                { slug: "", name: "Tất cả" },
+                ...roles.map((r) => ({ slug: String(r.id), name: r.name })),
+              ]}
+              placeholder="Tất cả"
+            />
+
+            {/* Ngày tạo */}
+            <div>
+              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                Ngày tạo
+              </label>
+              <div className="flex items-center gap-1">
+                <input
+                  type="date"
+                  value={currentDateFrom}
+                  onChange={(e) => setFilter("date_from", e.target.value)}
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20"
+                />
+                <span className="text-slate-600 shrink-0">–</span>
+                <input
+                  type="date"
+                  value={currentDateTo}
+                  onChange={(e) => setFilter("date_to", e.target.value)}
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20"
+                />
+              </div>
+            </div>
+            </div>
+
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={clearAllFilters}
+                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
+              >
+                Xoá bộ lọc
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* KHỐI LAYOUT TỐI CHỦ ĐẠO */}

@@ -86,16 +86,22 @@ const stockMovementController = {
     },
 
     getAllStockMovement: async (req, res) => {
-        const page = parseInt(req.params.page || 1)
+        const page = parseInt(req.query.page || 1);
+        const search = req.query.search || '';
+        const product_id = req.query.product_id || '';
+        const stock_min = req.query.stock_min || '';
+        const stock_max = req.query.stock_max || '';
+        const price_min = req.query.price_min || '';
+        const price_max = req.query.price_max || '';
         try {
-            let stockMovements = await stockMovementService.getAllStockMovement(page);
-            if (!stockMovements || stockMovements.length === 0) {
-                return res.status(409).json({
+            let stockMovements = await stockMovementService.getAllStockMovement({ page, search, product_id, stock_min, stock_max, price_min, price_max });
+            if (!stockMovements || stockMovements.list_stocks.length === 0) {
+                return res.status(404).json({
                     success: false,
                     message: "Không có tồn kho"
                 });
             }
-            return res.status(201).json({
+            return res.status(200).json({
                 success: true,
                 data: stockMovements
             });

@@ -64,6 +64,16 @@ const CategoryPage = () => {
   const categories = responses?.data?.list_categories || [];
   const pagination = responses?.data?.pagination;
 
+  const hasAllClear = currentActive !== "";
+
+  const clearAllFilters = () => {
+    const params = new URLSearchParams();
+    const search = searchParams.get("search");
+    if (search) params.set("search", search);
+    params.set("page", "1");
+    setSearchParams(params);
+  };
+
   const handleActiveClick = (value) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", "1");
@@ -143,6 +153,17 @@ const CategoryPage = () => {
             );
           })}
         </div>
+
+        {hasAllClear && (
+          <button
+            type="button"
+            onClick={clearAllFilters}
+            className="px-2.5 py-1.5 text-[10px] font-bold rounded border border-slate-800 text-slate-500 hover:bg-slate-800/60 hover:text-slate-300 transition-colors cursor-pointer shrink-0"
+          >
+            Xóa bộ lọc
+          </button>
+        )}
+
         <BtnAdd
           route={"/management/categories/create"}
           className="w-[30%]"

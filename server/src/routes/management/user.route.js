@@ -10,6 +10,7 @@ const userRoute = express.Router();
 userRoute
 
     .post("/", verifyToken, checkPermission("them-nguoi-dung"), validate(userSchema.createUser), uploadImageAvatar, userController.createUser)
+    .get("/roles", userController.getRolesDropdown)
     .get("/:id", userController.getUserById)
     .get("/", userController.getAllUser)
     .put("/:id", verifyToken, checkPermission("sua-nguoi-dung"), uploadImageAvatar, validate(userSchema.updateUser), userController.updateUser)

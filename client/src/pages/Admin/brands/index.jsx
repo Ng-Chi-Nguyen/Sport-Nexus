@@ -44,6 +44,16 @@ const BrandPage = () => {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
+  const hasAllClear = currentSearch || currentOrigin;
+
+  const clearAllFilters = () => {
+    const params = new URLSearchParams();
+    const search = searchParams.get("search");
+    if (search) params.set("search", search);
+    params.set("page", "1");
+    setSearchParams(params);
+  };
+
   const paginationInfo = pagination || {
     totalPages: 1,
     currentPage: 1,
@@ -82,7 +92,6 @@ const BrandPage = () => {
           />
         </div>
 
-        {/* Tăng chiều rộng lên w-[220px] và thêm shrink-0 để không bị bóp nghẹt */}
         <div className="w-[250px] shrink-0">
           <CountrySelect
             value={currentOrigin}
@@ -91,7 +100,16 @@ const BrandPage = () => {
           />
         </div>
 
-        {/* Thêm shrink-0 để giữ nguyên kích thước nút thêm */}
+        {hasAllClear && (
+          <button
+            type="button"
+            onClick={clearAllFilters}
+            className="shrink-0 px-2.5 py-1.5 text-[10px] font-bold rounded border border-slate-800 text-slate-500 hover:bg-slate-800/60 hover:text-slate-300 transition-colors cursor-pointer"
+          >
+            Xóa bộ lọc
+          </button>
+        )}
+
         <div className="shrink-0">
           <BtnAdd route={"/management/brands/create"} name="Thêm thương hiệu" />
         </div>

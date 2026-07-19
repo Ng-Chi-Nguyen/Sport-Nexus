@@ -98,25 +98,48 @@ const userController = {
     },
 
     getAllUser: async (req, res) => {
-        const page = parseInt(req.query.page) || 1;
-        // console.log(page)
+        const { page, search, status, is_verified, role_id, date_from, date_to } = req.query;
         try {
-            let list_users = await userService.getAllUser(page);
+            let result = await userService.getAllUser({
+                page: parseInt(page || 1),
+                search: search || '',
+                status: status !== undefined ? status : '',
+                is_verified: is_verified !== undefined ? is_verified : '',
+                role_id: role_id || '',
+                date_from: date_from || '',
+                date_to: date_to || '',
+            });
 
-            if (!list_users || list_users.length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Không tìm thấy thường hiệu."
+            if (!result || result.data.length === 0) {
+                return res.status(200).json({
+                    success: true,
+                    data: { data: [], pagination: { totalPages: 1, currentPage: 1 } }
                 });
             }
 
-            return res.status(201).json({
+            return res.status(200).json({
                 success: true,
-                data: list_users,
+                data: result,
             });
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: "Lỗi server nội bộ.",
+                error: error.message,
+            });
+        }
+    },
+
+    getRolesDropdown: async (req, res) => {
+        try {
+            const roles = await userService.getRolesDropdown();
+            return res.status(200).json({
+                success: true,
+                data: roles,
+            });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Không thể lấy danh sách vai trò.",
                 error: error.message,
             });
         }

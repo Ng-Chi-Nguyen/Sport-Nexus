@@ -16,11 +16,27 @@ import LoaderStock from "@/loaders/management/stockMovement";
 // Hàm tiện ích bóc tách số trang từ URL
 const getPage = (request) => new URL(request.url).searchParams.get("page") || 1;
 
-export const usersLoader = ({ request }) =>
-  queryClient.fetchQuery({
-    queryKey: ["users", getPage(request)],
-    queryFn: () => LoaderUser.getAllUsers(getPage(request)),
+export const usersLoader = async ({ request }) => {
+  const usersPromise = queryClient.fetchQuery({
+    queryKey: ["users", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "status"), getSearchParam(request, "is_verified"), getSearchParam(request, "role_id"), getSearchParam(request, "date_from"), getSearchParam(request, "date_to")],
+    queryFn: () => LoaderUser.getAllUsers({
+      page: getPage(request),
+      search: getSearchParam(request, "search"),
+      status: getSearchParam(request, "status"),
+      is_verified: getSearchParam(request, "is_verified"),
+      role_id: getSearchParam(request, "role_id"),
+      date_from: getSearchParam(request, "date_from"),
+      date_to: getSearchParam(request, "date_to"),
+    }),
   });
+  const rolesPromise = queryClient.fetchQuery({
+    queryKey: ["user-roles"],
+    queryFn: () => LoaderUser.getRolesDropdown(),
+    staleTime: 60000,
+  });
+  const [users, roles] = await Promise.all([usersPromise, rolesPromise]);
+  return { ...users, roles: roles?.data || [] };
+};
 
 export const userEditLoader = (args) => LoaderUser.getUserById(args);
 
@@ -210,11 +226,28 @@ export const couponEditLoader = ({ params }) =>
     staleTime: 0,
   });
 
-export const purchaseLoader = ({ request }) =>
-  queryClient.fetchQuery({
-    queryKey: ["purchase-order", getPage(request)],
-    queryFn: () => LoaderPurchase.getAllPurchases(getPage(request)),
+export const purchaseLoader = async ({ request }) => {
+  const purchasePromise = queryClient.fetchQuery({
+    queryKey: ["purchase-order", getPage(request), getSearchParam(request, "status"), getSearchParam(request, "supplier_id"), getSearchParam(request, "date_from"), getSearchParam(request, "date_to"), getSearchParam(request, "cost_min"), getSearchParam(request, "cost_max"), getSearchParam(request, "search")],
+    queryFn: () => LoaderPurchase.getAllPurchases({
+      page: getPage(request),
+      status: getSearchParam(request, "status"),
+      supplier_id: getSearchParam(request, "supplier_id"),
+      date_from: getSearchParam(request, "date_from"),
+      date_to: getSearchParam(request, "date_to"),
+      cost_min: getSearchParam(request, "cost_min"),
+      cost_max: getSearchParam(request, "cost_max"),
+      search: getSearchParam(request, "search"),
+    }),
   });
+  const suppliersPromise = queryClient.fetchQuery({
+    queryKey: ["purchase-suppliers"],
+    queryFn: () => LoaderSupplier.getSuppliersDropdown(),
+    staleTime: 60000,
+  });
+  const [purchaseOrders, suppliers] = await Promise.all([purchasePromise, suppliersPromise]);
+  return { ...purchaseOrders, suppliers: suppliers?.data || [] };
+};
 
 export const purchaseCreateLoader = async () => {
   const [suppliers, productVariants] = await Promise.all([
@@ -260,11 +293,19 @@ export const permissionsLoader = ({ request }) =>
 
 export const permissionEditLoader = (args) => LoaderPermissions.getBySlug(args);
 
-export const stocksLoader = ({ request }) =>
-  queryClient.fetchQuery({
-    queryKey: ["stocks", getPage(request)],
-    queryFn: () => LoaderStock.getAllStocks(getPage(request)),
+export const stocksLoader = async ({ request }) => {
+  const stocksPromise = queryClient.fetchQuery({
+    queryKey: ["stocks", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "product_id"), getSearchParam(request, "stock_min"), getSearchParam(request, "stock_max"), getSearchParam(request, "price_min"), getSearchParam(request, "price_max")],
+    queryFn: () => LoaderStock.getAllStocks({ page: getPage(request), search: getSearchParam(request, "search"), product_id: getSearchParam(request, "product_id"), stock_min: getSearchParam(request, "stock_min"), stock_max: getSearchParam(request, "stock_max"), price_min: getSearchParam(request, "price_min"), price_max: getSearchParam(request, "price_max") }),
   });
+  const productsPromise = queryClient.fetchQuery({
+    queryKey: ["stock-products"],
+    queryFn: () => LoaderProduct.getProductsDropdown(),
+    staleTime: 60000,
+  });
+  const [stocks, products] = await Promise.all([stocksPromise, productsPromise]);
+  return { ...stocks, products: products?.data || [] };
+};
 
 export const stockCreateLoader = async () => {
   const [orders, variants, purchases] = await Promise.all([

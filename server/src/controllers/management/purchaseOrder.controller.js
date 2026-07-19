@@ -125,18 +125,27 @@ const purchaseOrderController = {
     },
 
     getAllPurchaseOrder: async (req, res) => {
-        let page = parseInt(req.query.page || 1)
+        const { page, status, supplier_id, date_from, date_to, cost_min, cost_max, search } = req.query;
         try {
-            let purchaseOrders = await purchaseOrderService.getAllPurchaseOrder(page);
-            if (!purchaseOrders || purchaseOrders.length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Không tìm thấy đơn nhập hàng."
+            let result = await purchaseOrderService.getAllPurchaseOrder({
+                page: parseInt(page || 1),
+                status: status || '',
+                supplier_id: supplier_id || '',
+                date_from: date_from || '',
+                date_to: date_to || '',
+                cost_min: cost_min || '',
+                cost_max: cost_max || '',
+                search: search || '',
+            });
+            if (!result || result.purchaseOrders.length === 0) {
+                return res.status(200).json({
+                    success: true,
+                    data: { purchaseOrders: [], pagination: { totalPages: 1, currentPage: 1 } }
                 });
             }
             return res.status(200).json({
                 success: true,
-                data: purchaseOrders
+                data: result
             });
         } catch (error) {
             if (error.code === 'P2025') {
