@@ -30,16 +30,20 @@ const brandService = {
         return brand;
     },
 
-    getAllBrands: async (page) => {
+    getAllBrands: async ({ page, origin, search } = {}) => {
         const limit = 12;
-        const currentPage = Math.max(1, page);
+        const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
+        const where = {};
+        if (origin) where.origin = origin;
+        if (search) where.name = { contains: search };
         const [brands, totalItems] = await Promise.all([
             prisma.Brands.findMany({
+                where,
                 take: limit,
                 skip: skip,
             }),
-            prisma.Brands.count()
+            prisma.Brands.count({ where })
         ])
         return {
             brands, totalItems, pagination: {

@@ -164,8 +164,8 @@ export const orderEditLoader = async ({ params }) => {
 
 export const brandsLoader = ({ request }) =>
   queryClient.fetchQuery({
-    queryKey: ["brands", getPage(request)],
-    queryFn: () => LoaderBrand.getAllBrands(getPage(request)),
+    queryKey: ["brands", getPage(request), getSearchParam(request, "origin"), getSearchParam(request, "search")],
+    queryFn: () => LoaderBrand.getAllBrands({ page: getPage(request), origin: getSearchParam(request, "origin"), search: getSearchParam(request, "search") }),
   });
 
 export const brandEditLoader = (args) => LoaderBrand.getBrandById(args);

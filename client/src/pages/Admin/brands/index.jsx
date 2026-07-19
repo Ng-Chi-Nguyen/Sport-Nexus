@@ -1,10 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { Link, useLoaderData, useSearchParams } from "react-router-dom";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
+import { CountrySelect } from "@/components/ui/select";
 import { CardBrand } from "@/components/ui/card";
 import Pagination from "@/components/ui/pagination";
 
@@ -22,6 +23,27 @@ const BrandPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { brands, pagination } = responses?.data || {};
 
+  const currentOrigin = searchParams.get("origin") || "";
+  const currentSearch = searchParams.get("search") || "";
+
+  const [searchInput, setSearchInput] = useState(currentSearch);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(searchParams);
+      params.set("page", "1");
+      if (searchInput) params.set("search", searchInput);
+      else params.delete("search");
+      setSearchParams(params);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   const paginationInfo = pagination || {
     totalPages: 1,
     currentPage: 1,
@@ -33,19 +55,46 @@ const BrandPage = () => {
   }, [brands]);
 
   const handlePageChange = (newPage) => {
-    setSearchParams({ page: newPage });
+    const params = new URLSearchParams(searchParams);
+    params.set("page", newPage);
+    setSearchParams(params);
+  };
+
+  const handleOriginClick = (value) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", "1");
+    if (value) params.set("origin", value);
+    else params.delete("origin");
+    setSearchParams(params);
   };
 
   return (
     <div className="space-y-6">
       <Breadcrumbs data={breadcrumbData} />
 
-      {/* THANH TÌM KIẾM & NÚT THÊM */}
-      <div className="flex items-center gap-4">
+      {/* THANH TÌM KIẾM & BỘ LỌC & NÚT THÊM - ĐÃ FIX KHÔNG BỊ ĐÈ */}
+      <div className="flex items-center gap-4 w-full">
         <div className="flex-1 relative group">
-          <SearchTable placeholder="Tìm kiếm tên thương hiệu..." />
+          <SearchTable
+            placeholder="Tìm kiếm tên thương hiệu..."
+            value={searchInput}
+            onChange={(val) => setSearchInput(val)}
+          />
         </div>
-        <BtnAdd route={"/management/brands/create"} name="Thêm thương hiệu" />
+
+        {/* Tăng chiều rộng lên w-[220px] và thêm shrink-0 để không bị bóp nghẹt */}
+        <div className="w-[250px] shrink-0">
+          <CountrySelect
+            value={currentOrigin}
+            onChange={(val) => handleOriginClick(val)}
+            label="Xuất xứ"
+          />
+        </div>
+
+        {/* Thêm shrink-0 để giữ nguyên kích thước nút thêm */}
+        <div className="shrink-0">
+          <BtnAdd route={"/management/brands/create"} name="Thêm thương hiệu" />
+        </div>
       </div>
 
       {/* CONTAINER TỐI GLASSOS */}
@@ -54,7 +103,7 @@ const BrandPage = () => {
           Danh sách thương hiệu
         </h2>
 
-        {/* ĐÃ FIX GRID: Thay đổi từ 6 cột dọc sang 1, 2, và tối đa 3 cột ngang cực rộng rãi */}
+        {/* GRID THƯƠNG HIỆU */}
         {allBrands.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
             {allBrands.map((brand, index) => (

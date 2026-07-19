@@ -56,25 +56,26 @@ const brandController = {
     },
 
     getAllBrands: async (req, res) => {
-        // console.log("Đã đi vô đây 2")
         const page = parseInt(req.query.page) || 1;
+        const origin = req.query.origin || '';
+        const search = req.query.search || '';
         try {
-            let list_brands = await brandService.getAllBrands(page);
+            let result = await brandService.getAllBrands({ page, origin, search });
 
-            if (!list_brands || list_brands.length === 0) {
+            if (!result || result.brands.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: "Không tìm thấy thương hiệu."
                 });
             }
 
             return res.status(200).json({
                 success: true,
-                data: list_brands
+                data: result
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: "Lỗi server nội bộ.",
                 error: error.message,
             })
         }
