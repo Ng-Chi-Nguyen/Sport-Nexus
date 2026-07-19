@@ -175,24 +175,6 @@ const PurchaseOrderPage = () => {
         <BtnAdd route={"/management/purchase/create"} name="Thêm đơn nhập hàng" />
       </div>
 
-      {/* Status tabs */}
-      <div className="flex items-center gap-1 flex-wrap">
-        {statusOptions.map((opt) => (
-          <button
-            key={opt.slug}
-            type="button"
-            onClick={() => setFilter("status", opt.slug)}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-lg border cursor-pointer transition-all ${
-              currentStatus === opt.slug
-                ? "bg-sky-500/10 text-sky-400 border-sky-500/20 shadow-[0_0_12px_rgba(14,165,233,0.1)]"
-                : "bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200"
-            }`}
-          >
-            {opt.name}
-          </button>
-        ))}
-      </div>
-
       {/* Filter panel */}
       <div className={`transition-all duration-300 ease-in-out ${
         showFilters ? "max-h-[500px] opacity-100 mb-4 overflow-visible" : "max-h-0 opacity-0 overflow-hidden"
@@ -200,6 +182,13 @@ const PurchaseOrderPage = () => {
         <div className="p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
           <div className="flex items-end gap-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 flex-1 items-end">
+            <SimpleSelect
+              label="Trạng thái"
+              value={currentStatus}
+              onChange={(val) => setFilter("status", val)}
+              options={statusOptions}
+              placeholder="Tất cả"
+            />
             <SimpleSelect
               label="Nhà cung cấp"
               value={currentSupplierId}
