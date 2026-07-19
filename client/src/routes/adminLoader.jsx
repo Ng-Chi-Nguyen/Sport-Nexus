@@ -1,15 +1,15 @@
 // adminLoaders.js
 import { queryClient } from "@/lib/react-query";
-import LoaderPermissions from "@/loaders/permissionLoader";
-import LoaderUser from "@/loaders/userLoader";
-import LoaderBrand from "@/loaders/brandLoader";
-import LoaderSupplier from "@/loaders/supplierLoader";
-import LoaderCategory from "@/loaders/categoryLoader";
-import LoaderProduct from "@/loaders/productLoader";
-import LoaderAttr from "@/loaders/attributeKey";
-import LoaderPurchase from "@/loaders/purchaseOrder";
-import LoaderProductVariant from "@/loaders/productVariantLoader";
-import LoaderCoupon from "@/loaders/couponLoadet";
+import LoaderPermissions from "@/loaders/management/permissionLoader";
+import LoaderUser from "@/loaders/management/userLoader";
+import LoaderBrand from "@/loaders/management/brandLoader";
+import LoaderSupplier from "@/loaders/management/supplierLoader";
+import LoaderCategory from "@/loaders/management/categoryLoader";
+import LoaderProduct from "@/loaders/core/productLoader";
+import LoaderAttr from "@/loaders/core/attributeKey";
+import LoaderPurchase from "@/loaders/management/purchaseOrder";
+import LoaderProductVariant from "@/loaders/core/productVariantLoader";
+import LoaderCoupon from "@/loaders/management/couponLoadet";
 import LoaderOrder from "@/loaders/customer/orderLoader";
 import LoaderStock from "@/loaders/management/stockMovement";
 

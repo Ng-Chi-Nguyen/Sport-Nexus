@@ -12,7 +12,7 @@ import Badge from "@/components/ui/badge";
 import { SimpleSelect } from "@/components/ui/select";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import attributeKeyApi from "@/api/core/attributrKeyApi";
-import LoaderAttr from "@/loaders/attributeKey";
+import LoaderAttr from "@/loaders/core/attributeKey";
 import { queryClient } from "@/lib/react-query";
 import { toast } from "sonner";
 import Pagination from "@/components/ui/pagination";
