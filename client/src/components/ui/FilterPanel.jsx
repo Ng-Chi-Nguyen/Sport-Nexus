@@ -27,13 +27,13 @@ const FilterPanel = ({
           onClick={onToggleFilters}
           className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
             hasActiveFilters
-              ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
+              ? "bg-[#4facf3]/10 text-[#4facf3] border-[#4facf3]/20"
               : "bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200"
           }`}
         >
           <Filter size={14} />
           Bộ lọc
-          {hasActiveFilters && <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />}
+          {hasActiveFilters && <span className="w-1.5 h-1.5 rounded-full bg-[#4facf3]" />}
           <ChevronDown size={14} className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`} />
         </button>
         {addButton}

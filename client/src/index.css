@@ -63,7 +63,7 @@
     @apply w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none placeholder:text-slate-600;
   }
   .input-dark:focus {
-    @apply border-sky-500/50 ring-1 ring-sky-500/20;
+    @apply border-[#4facf3]/50 ring-1 ring-[#4facf3]/20;
   }
 
   /* Nhãn cho mỗi bộ lọc — chữ nhỏ, in hoa, tracking rộng */

@@ -1,66 +1,87 @@
-import { useState } from "react";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Sparkles } from "lucide-react";
+
+const GradPlaceholder = ({ gradient, initial }) => (
+  <div
+    className={`w-full h-full bg-gradient-to-br ${gradient} flex items-center justify-center`}
+  >
+    <span className="text-white/30 font-black text-6xl select-none">
+      {initial}
+    </span>
+  </div>
+);
 
 export const SpecialSale = ({ products }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      {/* Đổi dải màu gradient từ rose sang blue */}
-      <div className="bg-gradient-to-b from-blue-600 to-blue-700 rounded-3xl p-1 pt-0 shadow-2xl overflow-hidden">
-        <div className="flex justify-center">
-          <div className="bg-blue-800 text-white text-sm md:text-base font-black px-12 py-3 rounded-b-2xl uppercase tracking-widest shadow-md italic border-x border-b border-blue-900/40">
-            💥 Special Sale !
+    <div className="max-w-7xl mx-auto px-4 py-10">
+      <div className="bg-gradient-to-br from-rose-50 to-orange-50 rounded-3xl border border-rose-100/60 overflow-hidden">
+        <div className="flex items-center gap-3 px-6 pt-6 pb-4">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center shadow-lg shadow-rose-200">
+            <Sparkles className="text-white" size={16} />
+          </div>
+          <div>
+            <span className="text-[10px] font-bold text-rose-400 uppercase tracking-widest">
+              Bán chạy nhất
+            </span>
+            <h3 className="text-lg font-black text-slate-900">
+              Best Sellers
+            </h3>
           </div>
         </div>
-        {/* Đổi nền khối chứa sản phẩm sang mã blue-600 (#2563EB) */}
-        <div className="p-4 md:p-6 bg-[#2563EB] rounded-b-3xl">
+        <div className="px-6 pb-6">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {products.map((product) => (
+            {products.map((product, idx) => (
               <div
                 key={product.id}
-                className="bg-white rounded-xl p-3 border border-slate-100 flex flex-col justify-between hover:shadow-xl transition-all duration-200 group relative"
+                className="group bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
               >
-                <div className="absolute top-2 left-2 z-10 bg-orange-500 text-white font-extrabold text-[9px] px-1.5 py-0.5 rounded uppercase tracking-wide">
-                  {product.tag}
-                </div>
-                <div className="aspect-square w-full rounded-lg bg-slate-50/50 overflow-hidden mb-3 relative flex items-center justify-center">
+                <div className="relative aspect-square rounded-t-xl overflow-hidden bg-slate-50">
                   <img
                     src={product.img}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "flex";
+                    }}
                   />
-                  {/* Badge giảm giá đổi sang xanh */}
-                  <div className="absolute bottom-2 right-2 bg-blue-600 text-white font-black text-[10px] w-8 h-8 rounded-full flex items-center justify-center border-2 border-white shadow-md">
-                    {product.discount}
+                  <div className="hidden w-full h-full absolute inset-0">
+                    <GradPlaceholder
+                      gradient={product.gradient}
+                      initial={product.initial}
+                    />
                   </div>
+                  {product.tag && (
+                    <div className="absolute top-2 left-2 z-10 bg-gradient-to-r from-rose-500 to-orange-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-md shadow-lg shadow-rose-200/50">
+                      {product.tag}
+                    </div>
+                  )}
+                  {product.discount && (
+                    <div className="absolute bottom-2 right-2 bg-white text-rose-600 font-black text-[11px] w-8 h-8 rounded-full flex items-center justify-center border-2 border-rose-100 shadow-md">
+                      {product.discount}
+                    </div>
+                  )}
                 </div>
-                <div className="space-y-2 flex-1 flex flex-col justify-between">
-                  <h4 className="text-[12px] font-medium text-slate-700 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
+                <div className="p-3 space-y-2">
+                  <h4 className="text-[13px] font-medium text-slate-700 line-clamp-2 leading-snug group-hover:text-rose-600 transition-colors">
                     {product.name}
                   </h4>
-                  <div className="pt-1 border-t border-slate-50">
-                    <p className="text-slate-400 line-through text-[11px] font-medium">
-                      {product.oldPrice}
-                    </p>
-                    <p className="text-sm font-black text-blue-600 mt-0.5">
-                      {product.price}
-                    </p>
+                  <div className="pt-1.5 border-t border-slate-50">
+                    {product.oldPrice && (
+                      <p className="text-slate-300 line-through text-[11px] font-medium">
+                        {product.oldPrice}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between mt-0.5">
+                      <p className="text-sm font-black text-rose-600">
+                        {product.price}
+                      </p>
+                      <button className="text-[11px] font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1">
+                        <ShoppingCart size={12} />
+                      </button>
+                    </div>
                   </div>
-                  <button className="w-full mt-1 text-[11px] font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5">
-                    <ShoppingCart size={12} /> Đặt hàng
-                  </button>
                 </div>
               </div>
-            ))}
-          </div>
-          <div className="flex justify-center items-center gap-1.5 mt-6">
-            {[0, 1, 2, 3, 4, 5].map((dot) => (
-              <button
-                key={dot}
-                onClick={() => setCurrentSlide(dot)}
-                className={`h-1.5 rounded-full transition-all duration-200 ${currentSlide === dot ? "w-6 bg-white" : "w-1.5 bg-white/40 hover:bg-white/60"}`}
-              />
             ))}
           </div>
         </div>
