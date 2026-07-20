@@ -37,10 +37,10 @@ const RegisterForm = () => {
       slug: "customer",
     };
 
-    console.log(formData);
+    // console.log(formData);
     try {
       const response = await authApi.create(formData);
-      console.log(response);
+      // console.log(response);
       setName;
       if (response.data.success) {
         ShowToast("success", response.data.message);

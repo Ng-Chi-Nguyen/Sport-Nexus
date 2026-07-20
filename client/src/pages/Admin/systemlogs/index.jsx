@@ -1,6 +1,7 @@
-import { useMemo } from "react";
-import { LayoutDashboard } from "lucide-react";
-import { useLoaderData } from "react-router-dom";
+import { useMemo, useCallback } from "react";
+import { LayoutDashboard, RefreshCw } from "lucide-react";
+import { useLoaderData, useRevalidator } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import FilterPanel from "@/components/ui/FilterPanel";
 import Pagination from "@/components/ui/pagination";
@@ -27,6 +28,14 @@ const LogPage = () => {
     setFilter,
     clearAllFilters,
   } = useTableFilters();
+
+  const queryClient = useQueryClient();
+  const revalidator = useRevalidator();
+
+  const handleRefresh = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ["system-logs"] });
+    setTimeout(() => revalidator.revalidate(), 0);
+  }, [queryClient, revalidator]);
 
   const paginationInfo = pagination || { totalPages: 1, currentPage: 1 };
   const allLogs = useMemo(() => {
@@ -90,7 +99,17 @@ const LogPage = () => {
       </FilterPanel>
 
       <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <h2 className="section-title">Lịch sử hoạt động</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="section-title">Lịch sử hoạt động</h2>
+          <button
+            onClick={handleRefresh}
+            disabled={revalidator.state === "loading"}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Tải lại"
+          >
+            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+          </button>
+        </div>
 
         {allLogs.length > 0 ? (
           <div className="space-y-2 mb-6">

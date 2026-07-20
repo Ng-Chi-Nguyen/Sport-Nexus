@@ -376,8 +376,8 @@ model PurchaseOrderItems {
 model SystemLogs {
     id        Int      @id @default(autoincrement())
     timestamp DateTime @default(now())
-    user_id   Int
-    user      Users    @relation(fields: [user_id], references: [id])
+    user_id   Int?
+    user      Users?   @relation(fields: [user_id], references: [id])
 
     action_type String @db.VarChar(50) // Ví dụ: CREATE, UPDATE, DELETE, STOCK_ADJUSTMENT
     entity_type String @db.VarChar(50) // Ví dụ: ProductVariants, Orders, User

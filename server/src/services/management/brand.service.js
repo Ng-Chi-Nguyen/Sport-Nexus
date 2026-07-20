@@ -31,7 +31,7 @@ const brandService = {
     },
 
     getAllBrands: async ({ page, origin, search } = {}) => {
-        const limit = 12;
+        const limit = 10;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
         const where = {};

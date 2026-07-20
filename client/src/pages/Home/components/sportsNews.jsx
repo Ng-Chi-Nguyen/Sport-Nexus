@@ -1,15 +1,21 @@
 import { Newspaper, ChevronRight } from "lucide-react";
 
-const featuredNews = {
-  title:
-    "Kích thước sân bóng chuyền hơi nam và nữ: Những thông số bạn bắt buộc cần biết",
-  excerpt:
-    "Tại Việt Nam, bóng chuyền hơi đã trở thành một phong trào rèn luyện sức khỏe vô cùng bổ ích cho mọi lứa tuổi...",
-  category: "Bóng chuyền",
-  img: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=600&q=80",
-};
+const newsList = [
+  {
+    title: "Sân bóng chuyền hơi: Tiêu chuẩn thiết kế và sự khác biệt với sân đấu lớn",
+  },
+  {
+    title: "Tiêu chuẩn xây dựng sân bóng chuyền chất lượng cho câu lạc bộ",
+  },
+  {
+    title: "Kích thước sân bóng chuyền hơi mới nhất: Những điều cần lưu ý khi kẻ vạch",
+  },
+  {
+    title: "Cập nhật luật bóng chuyền hơi mới nhất: Quy định đổi sân và tính điểm",
+  },
+];
 
-export const SportsNews = ({ news }) => {
+export const SportsNews = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm">
@@ -29,22 +35,18 @@ export const SportsNews = ({ news }) => {
         <div className="p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="group cursor-pointer rounded-xl overflow-hidden border border-slate-50 hover:shadow-md transition-shadow">
-              <div className="aspect-[16/9] overflow-hidden bg-slate-100">
-                <img
-                  src={featuredNews.img}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  alt={featuredNews.title}
-                />
+              <div className="aspect-[16/9] overflow-hidden bg-gradient-to-br from-blue-100 to-sky-50 flex items-center justify-center">
+                <span className="text-slate-300 font-black text-4xl">BÓNG CHUYỀN</span>
               </div>
               <div className="p-4 space-y-2">
                 <span className="inline-block text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wider">
-                  {featuredNews.category}
+                  Bóng chuyền
                 </span>
                 <h4 className="text-base font-bold text-slate-900 leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
-                  {featuredNews.title}
+                  Kích thước sân bóng chuyền hơi nam và nữ: Những thông số bạn bắt buộc cần biết
                 </h4>
                 <p className="text-[13px] text-slate-500 line-clamp-2 leading-relaxed">
-                  {featuredNews.excerpt}
+                  Tại Việt Nam, bóng chuyền hơi đã trở thành một phong trào rèn luyện sức khỏe vô cùng bổ ích cho mọi lứa tuổi...
                 </p>
                 <div className="flex items-center text-blue-600 text-[12px] font-semibold gap-0.5 pt-1">
                   Đọc tiếp <ChevronRight size={14} />
@@ -53,17 +55,15 @@ export const SportsNews = ({ news }) => {
             </div>
 
             <div className="divide-y divide-slate-100">
-              {news.map((item, idx) => (
+              {newsList.map((item, idx) => (
                 <div
                   key={idx}
                   className="flex gap-4 py-4 first:pt-0 last:pb-0 cursor-pointer group"
                 >
-                  <div className="w-24 h-20 rounded-xl overflow-hidden bg-slate-100 shrink-0 shadow-sm">
-                    <img
-                      src={item.img}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      alt="Thumb"
-                    />
+                  <div className="w-24 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 shrink-0 shadow-sm flex items-center justify-center">
+                    <span className="text-slate-300 text-2xl font-black">
+                      {item.title.charAt(0)}
+                    </span>
                   </div>
                   <div className="flex-1 min-w-0 flex flex-col justify-center">
                     <h5 className="text-[13px] font-bold text-slate-700 leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">

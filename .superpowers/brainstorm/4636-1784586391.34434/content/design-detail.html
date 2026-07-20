@@ -1,0 +1,231 @@
+<h2>📐 Design Chi Tiết — Hướng B (Hiện đại, Tối giản)</h2>
+
+<div class="section">
+  <h3>1. Trang Danh Sách (index.jsx)</h3>
+  <div class="mockup">
+    <div class="mockup-header">Brand List — Layout</div>
+    <div class="mockup-body" style="padding: 1rem; background: #0D121F; border-radius: 0 0 12px 12px; min-height: 300px;">
+      <!-- Breadcrumb -->
+      <div style="display:flex; gap:8px; font-size:12px; color:#64748b; margin-bottom:16px;">
+        <span>🏠 Dashboard</span>
+        <span>›</span>
+        <span style="color:#4facf3;font-weight:bold;">Thương hiệu</span>
+      </div>
+
+      <!-- Search + Filter + Add row -->
+      <div style="display:flex; gap:12px; margin-bottom:20px;">
+        <div style="flex:1; height:40px; background:#111827; border:1px solid #1e293b; border-radius:8px; padding:0 12px; display:flex; align-items:center;">
+          <span style="color:#475569; font-size:13px;">🔍 Tìm kiếm tên thương hiệu...</span>
+        </div>
+        <div style="width:100px; height:40px; background:#111827; border:1px solid #1e293b; border-radius:8px; display:flex; align-items:center; justify-content:center; gap:6px;">
+          <span style="color:#94a3b8;font-size:12px;">⚙ Bộ lọc</span>
+        </div>
+        <div style="width:140px; height:40px; background:#2563eb; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:6px;">
+          <span style="color:white;font-size:13px;font-weight:600;">+ Thêm thương hiệu</span>
+        </div>
+      </div>
+
+      <!-- Filter panel (collapsed default) -->
+      <div style="padding:12px; background:#0D121F; border:1px solid #1e293b; border-radius:12px; margin-bottom:20px; display:flex; gap:12px;">
+        <div style="width:200px; height:36px; background:#111827; border:1px solid #1e293b; border-radius:8px; display:flex; align-items:center; padding:0 10px;">
+          <span style="color:#64748b;font-size:12px;">🌍 Xuất xứ</span>
+        </div>
+      </div>
+
+      <!-- Section title -->
+      <div style="font-size:15px; font-weight:700; color:#e2e8f0; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <span style="width:4px; height:16px; background:#4facf3; border-radius:2px; display:inline-block;"></span>
+        Danh sách thương hiệu
+      </div>
+
+      <!-- Card Grid -->
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;">
+        <div style="background:#111827; border:1px solid #1e293b; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px;">
+          <div style="width:52px; height:52px; border-radius:50%; background:#0D121F; border:1px solid #1e293b; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <div style="width:40px; height:40px; border-radius:50%; background:#1e293b;"></div>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:14px; font-weight:600; color:#e2e8f0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Nike</div>
+            <div style="display:flex; gap:8px; margin-top:6px;">
+              <span style="font-size:10px; background:#4facf3/10; color:#4facf3; border:1px solid #4facf3/20; border-radius:4px; padding:2px 8px;">🇺🇸 United States</span>
+              <span style="font-size:9px; color:#64748b; background:#0f172a; border-radius:4px; padding:2px 8px;">Hệ thống</span>
+            </div>
+          </div>
+        </div>
+        <div style="background:#111827; border:1px solid #1e293b; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px;">
+          <div style="width:52px; height:52px; border-radius:50%; background:#0D121F; border:1px solid #1e293b; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <div style="width:40px; height:40px; border-radius:50%; background:#1e293b;"></div>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:14px; font-weight:600; color:#e2e8f0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Adidas</div>
+            <div style="display:flex; gap:8px; margin-top:6px;">
+              <span style="font-size:10px; background:#4facf3/10; color:#4facf3; border:1px solid #4facf3/20; border-radius:4px; padding:2px 8px;">🇩🇪 Germany</span>
+              <span style="font-size:9px; color:#64748b; background:#0f172a; border-radius:4px; padding:2px 8px;">Hệ thống</span>
+            </div>
+          </div>
+        </div>
+        <div style="background:#111827; border:1px solid #1e293b; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px;">
+          <div style="width:52px; height:52px; border-radius:50%; background:#0D121F; border:1px solid #1e293b; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <div style="width:40px; height:40px; border-radius:50%; background:#1e293b;"></div>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:14px; font-weight:600; color:#e2e8f0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Puma</div>
+            <div style="display:flex; gap:8px; margin-top:6px;">
+              <span style="font-size:10px; background:#4facf3/10; color:#4facf3; border:1px solid #4facf3/20; border-radius:4px; padding:2px 8px;">🇩🇪 Germany</span>
+              <span style="font-size:9px; color:#64748b; background:#0f172a; border-radius:4px; padding:2px 8px;">Hệ thống</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <div style="width:32px; height:32px; background:#0f172a; border:1px solid #1e293b; border-radius:8px;"></div>
+        <div style="width:32px; height:32px; background:#4facf3/20; border:1px solid #4facf3/50; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#4facf3; font-size:12px; font-weight:bold;">1</div>
+        <div style="width:32px; height:32px; background:#0f172a; border:1px solid #1e293b; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#64748b; font-size:12px;">2</div>
+        <div style="width:32px; height:32px; background:#0f172a; border:1px solid #1e293b; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#64748b; font-size:12px;">3</div>
+        <div style="width:32px; height:32px; background:#0f172a; border:1px solid #1e293b; border-radius:8px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>2. Trang Thêm / Sửa (create.jsx / edit.jsx)</h3>
+  <div class="mockup">
+    <div class="mockup-header">Brand Form — Layout 2 cột</div>
+    <div class="mockup-body" style="padding: 1rem; background: #0D121F; border-radius: 0 0 12px 12px;">
+      <!-- Breadcrumb -->
+      <div style="display:flex; gap:8px; font-size:12px; color:#64748b; margin-bottom:16px;">
+        <span>🏠 Dashboard</span>
+        <span>›</span>
+        <a style="color:#94a3b8;">Thương hiệu</a>
+        <span>›</span>
+        <span style="color:#4facf3;font-weight:bold;">Thêm thương hiệu</span>
+      </div>
+
+      <!-- Form card -->
+      <div style="background:#0D121F; border:1px solid #1e293b; border-radius:16px; padding:24px;">
+        <div style="display:grid; grid-template-columns: 200px 1fr; gap:32px;">
+          <!-- Left: Logo Upload -->
+          <div>
+            <div style="font-size:11px; font-weight:900; color:#06b6d4; text-transform:uppercase; border-bottom:2px solid #06b6d4; padding-bottom:8px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+              <span style="width:8px; height:16px; background:#06b6d4; display:inline-block;"></span> Logo thương hiệu
+            </div>
+            <div style="width:160px; height:160px; border-radius:50%; background:#0D121F; border:1px solid #1e293b; margin:0 auto; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+              <div style="text-align:center; color:#64748b;">
+                <div style="font-size:28px; margin-bottom:8px;">📷</div>
+                <div style="font-size:10px; font-weight:bold;">TẢI ẢNH LÊN</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Form Fields -->
+          <div>
+            <div style="font-size:11px; font-weight:900; color:#3b82f6; text-transform:uppercase; border-bottom:2px solid #3b82f6; padding-bottom:8px; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+              <span style="width:8px; height:16px; background:#3b82f6; display:inline-block;"></span> Thông tin thương hiệu
+            </div>
+            <div style="margin-bottom:20px;">
+              <div style="position:relative;">
+                <input type="text" placeholder=" " value="Nike" style="width:100%; padding:11px 15px; font-size:14px; background:#111827; border:1px solid #1e293b; border-radius:12px; color:#e2e8f0; outline:none; box-sizing:border-box;" />
+                <label style="position:absolute; left:15px; top:-8px; font-size:11px; color:#4facf3; font-weight:600; background:#0D121F; padding:0 6px;">Tên thương hiệu</label>
+              </div>
+            </div>
+            <div>
+              <div style="height:42px; background:#111827; border:1px solid #1e293b; border-radius:12px; display:flex; align-items:center; justify-content:space-between; padding:0 15px;">
+                <span style="color:#e2e8f0; font-size:13px;">🇺🇸 United States</span>
+                <span style="color:#64748b;">▼</span>
+              </div>
+              <label style="font-size:11px; color:#4facf3; font-weight:600; margin-top:-22px; display:inline-block; background:#0D121F; padding:0 6px; margin-left:12px;">Xuất xứ</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions row -->
+        <div style="display:flex; gap:12px; margin-top:32px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.05);">
+          <div style="height:44px; padding:0 20px; background:#111827; border:1px solid #1e293b; border-radius:12px; display:flex; align-items:center; gap:8px; color:#94a3b8; font-size:13px; cursor:pointer;">
+            ← Quay lại
+          </div>
+          <div style="height:44px; padding:0 24px; background:#0284c7; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:14px; font-weight:600; cursor:pointer; box-shadow: 0 0 15px rgba(14,165,233,0.2);">
+            Lưu lại
+          </div>
+          <!-- Chỉ có ở Edit page -->
+          <div style="height:44px; padding:0 24px; background:rgba(244,63,94,0.1); border:1px solid rgba(244,63,94,0.2); border-radius:12px; display:flex; align-items:center; justify-content:center; color:#fb7185; font-size:13px; font-weight:600; cursor:pointer; margin-left:auto;">
+            🗑 Xóa thương hiệu
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p style="margin-top:8px; font-size:12px; color:#64748b;">✨ <strong>Thay đổi chính:</strong> Grid 2 cột, card border dark đồng bộ, responsive, preview logo tròn, floating labels chuẩn, action buttons căn chỉnh đẹp</p>
+</div>
+
+<div class="section">
+  <h3>3. Cập nhật CardBrand</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="padding: 1rem; background: #0D121F; border-radius: 0 0 12px 12px;">
+      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px;">
+        <!-- Before -->
+        <div style="background:#111827; border:1px solid #1e293b; border-radius:12px; padding:16px;">
+          <div style="font-size:11px; font-weight:700; color:#f59e0b; margin-bottom:8px;">❌ CŨ</div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:64px; height:64px; border-radius:50%; background:#0D121F; border:2px solid #1e293b;"></div>
+            <div>
+              <div style="font-size:13px; color:#cbd5e1;">Nike</div>
+              <div style="font-size:10px; color:#64748b;">United States</div>
+            </div>
+          </div>
+        </div>
+        <!-- After -->
+        <div style="background:#111827; border:1px solid #4facf3/30; border-radius:12px; padding:16px; box-shadow: 0 0 20px rgba(79,172,243,0.08);">
+          <div style="font-size:11px; font-weight:700; color:#4facf3; margin-bottom:8px;">✅ MỚI</div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:52px; height:52px; border-radius:50%; background:#0D121F; border:2px solid #1e293b; display:flex; align-items:center; justify-content:center; padding:4px;">
+              <div style="width:100%; height:100%; border-radius:50%; background:linear-gradient(135deg, #1e293b, #0f172a);"></div>
+            </div>
+            <div>
+              <div style="font-size:14px; font-weight:600; color:#f1f5f9;">Nike</div>
+              <div style="display:flex; gap:6px; margin-top:4px;">
+                <span style="font-size:10px; padding:2px 8px; background:rgba(79,172,243,0.1); color:#4facf3; border-radius:4px;">🇺🇸 United States</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3 style="color:#4facf3;">Thay đổi cụ thể</h3>
+  <table style="width:100%; border-collapse:collapse; font-size:13px;">
+    <thead>
+      <tr style="border-bottom:1px solid #1e293b;">
+        <th style="text-align:left; padding:8px; color:#94a3b8;">File</th>
+        <th style="text-align:left; padding:8px; color:#94a3b8;">Thay đổi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #1e293b;">
+        <td style="padding:8px; color:#e2e8f0;">index.jsx</td>
+        <td style="padding:8px; color:#cbd5e1;">Giữ nguyên cấu trúc, tinh chỉnh spacing, section title style</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1e293b;">
+        <td style="padding:8px; color:#e2e8f0;">create.jsx</td>
+        <td style="padding:8px; color:#cbd5e1;">Layout 2 cột, dark theme glassmorphism, sửa <code>w-fit</code> → responsive</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1e293b;">
+        <td style="padding:8px; color:#e2e8f0;">edit.jsx</td>
+        <td style="padding:8px; color:#cbd5e1;">Giống create, thêm delete button, sửa typo "sữa" → "sửa"</td>
+      </tr>
+      <tr>
+        <td style="padding:8px; color:#e2e8f0;">CardBrand</td>
+        <td style="padding:8px; color:#cbd5e1;">Thu nhỏ avatar (64→52px), cập nhật padding, refined hover effect</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <p class="subtitle">👇 Bạn thấy design này OK không? Có muốn điều chỉnh gì trước khi tôi code không?</p>
+</div>

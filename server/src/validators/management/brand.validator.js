@@ -12,15 +12,15 @@ const brandSchema = {
             'string.min': 'Nơi xuất xứ phải có ít nhất {#limit} ký tự.',
             'string.max': 'Nơi xuất xứ không được vượt quá {#limit} ký tự.',
         }),
-        logo_url: Joi.string().base64({ paddingRequired: true }).required().messages({
-            'any.required': 'Logo thương hiệu không được để trống',
+        logo_url: Joi.string().base64({ paddingRequired: true }).optional().allow('').messages({
+            'base64.base64': 'Logo thương hiệu không đúng định dạng Base64.',
         })
     }),
 
     updateBrand: Joi.object({
         name: Joi.string(),
         origin: Joi.string(),
-        logo_url: Joi.string().base64({ paddingRequired: true })
+        logo_url: Joi.string().base64({ paddingRequired: true }).optional().allow('')
     }).min(1).unknown(false)
 }
 

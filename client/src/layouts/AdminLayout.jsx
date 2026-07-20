@@ -89,7 +89,7 @@ const AdminLayout = () => {
       return {};
     }
   }, []);
-
+  console.log(localUser);
   // Đóng Popover khi click ra ngoài vùng chỉ định
   useEffect(() => {
     const handleClickOutside = (event) => {

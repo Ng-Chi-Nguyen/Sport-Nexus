@@ -62,7 +62,7 @@ const EditCouponPage = () => {
     // console.log(dataToSend);
     try {
       const response = await couponApi.update(couponOld.id, dataToSend);
-      console.log(response.data);
+      // console.log(response.data);
       if (response.success) {
         await Promise.all([
           queryClient.setQueryData(["coupon", couponOld.id], response.data),

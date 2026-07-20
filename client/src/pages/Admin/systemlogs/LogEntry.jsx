@@ -17,10 +17,16 @@ const entityLinks = {
 
 const LogEntry = ({ log }) => {
   const [expanded, setExpanded] = useState(false);
-  const config = actionConfig[log.action_type] || { icon: Pencil, label: "đã tác động", color: "text-slate-400" };
+  const config = actionConfig[log.action_type] || {
+    icon: Pencil,
+    label: "đã tác động",
+    color: "text-slate-400",
+  };
   const ActionIcon = config.icon;
   const isDelete = log.action_type === "DELETE";
-  const entityLink = isDelete ? null : entityLinks[log.entity_type]?.(log.entity_id);
+  const entityLink = isDelete
+    ? null
+    : entityLinks[log.entity_type]?.(log.entity_id);
   const entityName = entityNames[log.entity_type] || log.entity_type;
   const displayId = log.entity_id ? `#${log.entity_id}` : "";
 
@@ -35,17 +41,22 @@ const LogEntry = ({ log }) => {
       }`}
       onClick={() => setExpanded(!expanded)}
     >
+      <div className="">{log.id}</div>
       <div className={`shrink-0 mt-0.5 ${config.color}`}>
         <ActionIcon size={18} strokeWidth={1.5} />
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 text-sm flex-wrap">
-          <span className="text-slate-500 text-xs font-mono shrink-0">{time}</span>
+          <span className="text-slate-500 text-xs font-mono shrink-0">
+            {time}
+          </span>
           <span className="text-slate-300 font-medium truncate">
             {log.user?.full_name || log.user?.email || "Hệ thống"}
           </span>
-          <span className={`text-xs font-medium ${config.color}`}>{config.label}</span>
+          <span className={`text-xs font-medium ${config.color}`}>
+            {config.label}
+          </span>
           <span className="text-slate-400">{entityName}</span>
           {entityLink ? (
             <Link
@@ -118,7 +129,9 @@ function renderDetails(log) {
         <div key={i} className="flex items-center gap-2 text-slate-400">
           <span className="text-slate-500">{change.field}:</span>
           {change.from !== undefined && (
-            <span className="line-through text-rose-400/70">{String(change.from)}</span>
+            <span className="line-through text-rose-400/70">
+              {String(change.from)}
+            </span>
           )}
           {change.from !== undefined && change.to !== undefined && (
             <span className="text-slate-600">→</span>

@@ -51,12 +51,12 @@ const authController = {
             res.clearCookie('token'); // Nếu bạn có dùng cookie
 
             if (!result) {
-                console.log("Xác thực thất bại");
-                console.log(result)
+                // console.log("Xác thực thất bại");
+                // console.log(result)
                 return res.status(302).redirect("http://localhost:5173");
             }
 
-            console.log("Xác thực thành công, đang chuyển hướng...");
+            // console.log("Xác thực thành công, đang chuyển hướng...");
             // Sử dụng status 302 (Found) để ép trình duyệt chuyển hướng
             return res.status(302).redirect("http://localhost:5173");
         } catch (error) {
@@ -68,7 +68,7 @@ const authController = {
     refreshToken: async (req, res) => {
         try {
             const { refreshToken } = req.body;
-            console.log(refreshToken)
+            // console.log(refreshToken)
             // Gọi logic từ Service
             const result = await authService.refreshToken(refreshToken);
 

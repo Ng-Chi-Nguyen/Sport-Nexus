@@ -1,0 +1,95 @@
+<h2>🎯 Redesign Giao Diện Trang Thương Hiệu</h2>
+<p class="subtitle">3 trang: Danh sách | Thêm mới | Chỉnh sửa + component CardBrand</p>
+
+<div class="section">
+  <h3>Hiện trạng</h3>
+  <ul>
+    <li><strong>Danh sách:</strong> Dark theme glassmorphism ✅ — đã ổn, chỉ cần tinh chỉnh</li>
+    <li><strong>Thêm mới / Chỉnh sửa:</strong> Dùng border <code>gray-200</code>, <code>blue-200</code> — chưa đồng bộ dark theme ❌</li>
+    <li><strong>Typography:</strong> "Chỉnh sữa" → lỗi chính tả</li>
+    <li><strong>Layout form:</strong> <code>w-fit</code> gây hẹp, thiếu responsive</li>
+    <li><strong>CardBrand:</strong> Đã đẹp, nhưng có thể cải thiện thêm</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h3>Chọn hướng thiết kế bạn thích</h3>
+  <p class="subtitle">Click vào option để chọn, sau đó trả lời trong terminal</p>
+</div>
+
+<div class="cards" data-multiselect>
+  <div class="card" data-choice="polish">
+    <div class="card-body">
+      <h3>A. Giữ &amp; Đánh bóng</h3>
+      <p>Giữ nguyên phong cách glassmorphism hiện tại. Đồng bộ form create/edit sang dark theme. CardBrand cập nhật nhẹ animation. Ít thay đổi nhất.</p>
+      <div class="pros-cons" style="margin-top: 0.75rem;">
+        <div class="pros">
+          <h4>Ưu</h4>
+          <ul>
+            <li>Nhanh, ít rủi ro</li>
+            <li>Giữ nguyên bố cục quen thuộc</li>
+            <li>Dễ quay lại code cũ</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Nhược</h4>
+          <ul>
+            <li>Không đột phá</li>
+            <li>File vẫn còn code dư</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="modern">
+    <div class="card-body">
+      <h3>B. Hiện đại, Tối giản</h3>
+      <p>Di chuyển sang thiết kế cleaner: card whitespace nhiều hơn, form 2 cột, preview logo sống động, hiệu ứng mượt mà hơn.</p>
+      <div class="pros-cons" style="margin-top: 0.75rem;">
+        <div class="pros">
+          <h4>Ưu</h4>
+          <ul>
+            <li>UI chuyên nghiệp hơn</li>
+            <li>Form dùng thoải mái hơn</li>
+            <li>Responsive tốt</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Nhược</h4>
+          <ul>
+            <li>Thay đổi nhiều hơn</li>
+            <li>Cần review kỹ</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="vibrant">
+    <div class="card-body">
+      <h3>C. Mạnh mẽ, Sắc màu</h3>
+      <p>Gradient backgrounds, card nổi bật với hiệu ứng glow, brand logo hiển thị lớn, grid layout độc đáo, form chia tab rõ ràng.</p>
+      <div class="pros-cons" style="margin-top: 0.75rem;">
+        <div class="pros">
+          <h4>Ưu</h4>
+          <ul>
+            <li>Ấn tượng thị giác</li>
+            <li>Khác biệt rõ so với cũ</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Nhược</h4>
+          <ul>
+            <li>Over-engineer có thể xảy ra</li>
+            <li>Nặng hiệu ứng, chậm hơn</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <p class="subtitle">👇 Sau khi xem, trả lời trong terminal: chọn A, B hay C? Hoặc kết hợp giữa các option?</p>
+</div>

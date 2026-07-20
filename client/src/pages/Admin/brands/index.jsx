@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { Link, useLoaderData } from "react-router-dom";
-// components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd } from "@/components/ui/button";
 import { CountrySelect } from "@/components/ui/select";
@@ -9,6 +8,7 @@ import { CardBrand } from "@/components/ui/card";
 import FilterPanel from "@/components/ui/FilterPanel";
 import useTableFilters from "@/hooks/useTableFilters";
 import Pagination from "@/components/ui/pagination";
+import Badge from "@/components/ui/badge";
 
 const breadcrumbData = [
   {
@@ -74,33 +74,39 @@ const BrandPage = () => {
         </div>
       </FilterPanel>
 
-      {/* CONTAINER TỐI GLASSOS */}
-      <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <h2 className="section-title">
-          Danh sách thương hiệu
-        </h2>
+      <div className="bg-[#0D121F]/30 border border-slate-900/80 rounded-2xl p-3 shadow-xl">
+        <div className="flex items-center gap-3 mb-6 justify-between">
+          <h2 className="text-sm font-bold text-slate-200 tracking-wide uppercase">
+            Danh sách thương hiệu
+          </h2>
+          <div>
+            {allBrands.length > 0 && (
+              <Badge>{pagination.totalItems || 0} thương hiệu</Badge>
+            )}
+          </div>
+        </div>
 
-        {/* GRID THƯƠNG HIỆU */}
         {allBrands.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {allBrands.map((brand, index) => (
               <Link
                 to={`/management/brands/edit/${brand.id}`}
                 key={brand.id || brand._id || index}
-                className="block hover:scale-[1.015] active:scale-[0.985] transition-transform duration-200"
               >
                 <CardBrand data={brand} />
               </Link>
             ))}
           </div>
         ) : (
-          <div className="py-20 text-center text-slate-500 italic text-sm">
-            Không tìm thấy thương hiệu nào trên hệ thống.
+          <div className="py-24 text-center">
+            <div className="text-4xl mb-4 opacity-30">🏷️</div>
+            <p className="text-slate-500 italic text-sm">
+              Không tìm thấy thương hiệu nào trên hệ thống.
+            </p>
           </div>
         )}
 
-        {/* PHÂN TRANG */}
-        <div className="mt-6 border-t border-white/5 pt-4">
+        <div className="mt-6 border-t border-white/[0.03] pt-4">
           <Pagination
             totalPages={paginationInfo.totalPages}
             currentPage={paginationInfo.currentPage}
