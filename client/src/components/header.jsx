@@ -8,16 +8,26 @@ import {
 import { Link } from "react-router-dom";
 
 import { Logo } from "./logo";
+import { NavCategoryMenu } from "./NavCategoryMenu";
 
-const Header = () => {
+const Header = ({ isScrolled, categories }) => {
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white/80 backdrop-blur-md border-b border-gray-200/70 shadow-sm">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4 lg:gap-8">
-        <div className="flex-shrink-0">
+        <div className="flex items-center gap-3">
           <Logo />
+          <div
+            className={`transition-all duration-300 ${
+              isScrolled
+                ? "opacity-100 pointer-events-auto"
+                : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <NavCategoryMenu compact categories={categories} />
+          </div>
         </div>
 
         <div className="flex-1 max-w-2xl hidden sm:block">

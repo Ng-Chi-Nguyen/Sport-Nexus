@@ -126,81 +126,44 @@ const InputFile = ({ label, value, onChange }) => {
   );
 };
 
-// 4. FLOATING INPUT CAO CẤP (Fix lỗi nền cắt viền)
-const FloatingInput = ({ label, id, ...props }) => {
+// 4. FLOATING INPUT CAO CẤP
+const FloatingInput = ({ label, id, light, ...props }) => {
+  const inputClass = light
+    ? "peer w-full p-[11px_15px] text-sm rounded-xl border border-gray-200 bg-white text-gray-900 tracking-wide outline-none transition-colors duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+    : "peer w-full p-[11px_15px] text-sm rounded-xl border border-slate-800 bg-[#111827]/40 text-slate-200 tracking-wide outline-none transition-colors duration-200 focus:border-sky-500/50 focus:bg-[#161F32]/60 focus:ring-1 focus:ring-sky-500/10";
+  const labelClass = light
+    ? "absolute left-[15px] top-[11px] text-gray-400 text-sm pointer-events-none transition-all duration-200 tracking-wide peer-focus:-translate-y-[21px] peer-focus:-translate-x-1.5 peer-focus:scale-[0.82] peer-focus:bg-white peer-focus:px-1.5 peer-focus:text-blue-500 peer-focus:font-semibold peer-[:not(:placeholder-shown)]:-translate-y-[21px] peer-[:not(:placeholder-shown)]:-translate-x-1.5 peer-[:not(:placeholder-shown)]:scale-[0.82] peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-1.5 peer-[:not(:placeholder-shown)]:text-gray-500"
+    : "absolute left-[15px] top-[11px] text-slate-500 text-sm pointer-events-none transition-all duration-200 tracking-wide peer-focus:-translate-y-[21px] peer-focus:-translate-x-1.5 peer-focus:scale-[0.82] peer-focus:bg-[#0D121F] peer-focus:px-1.5 peer-focus:text-sky-400 peer-focus:font-semibold peer-[:not(:placeholder-shown)]:-translate-y-[21px] peer-[:not(:placeholder-shown)]:-translate-x-1.5 peer-[:not(:placeholder-shown)]:scale-[0.82] peer-[:not(:placeholder-shown)]:bg-[#0D121F] peer-[:not(:placeholder-shown)]:px-1.5 peer-[:not(:placeholder-shown)]:text-slate-400";
+
   return (
     <div className="relative w-full group">
-      <input
-        id={id}
-        {...props}
-        placeholder=" "
-        className="peer w-full p-[11px_15px] text-sm rounded-xl border border-slate-800 bg-[#111827]/40 
-                   text-slate-200 tracking-wide outline-none transition-colors duration-200
-                   focus:border-sky-500/50 focus:bg-[#161F32]/60 focus:ring-1 focus:ring-sky-500/10"
-      />
-      <label
-        htmlFor={id}
-        className="absolute left-[15px] top-[11px] text-slate-500 text-sm pointer-events-none 
-                   transition-all duration-200 tracking-wide
-                   peer-focus:-translate-y-[21px] peer-focus:-translate-x-1.5 
-                   peer-focus:scale-[0.82] peer-focus:bg-[#0D121F] peer-focus:px-1.5 
-                   peer-focus:text-sky-400 peer-focus:font-semibold
-                   
-                   peer-[:not(:placeholder-shown)]:-translate-y-[21px] 
-                   peer-[:not(:placeholder-shown)]:-translate-x-1.5 
-                   peer-[:not(:placeholder-shown)]:scale-[0.82] 
-                   peer-[:not(:placeholder-shown)]:bg-[#0D121F] 
-                   peer-[:not(:placeholder-shown)]:px-1.5 peer-[:not(:placeholder-shown)]:text-slate-400"
-      >
-        {label}
-      </label>
+      <input id={id} {...props} placeholder=" " className={inputClass} />
+      <label htmlFor={id} className={labelClass}>{label}</label>
     </div>
   );
 };
 
 // 5. FLOATING INPUT PASSWORD CAO CẤP
-const FloatingInputPassword = ({ label, id, ...props }) => {
+const FloatingInputPassword = ({ label, id, light, ...props }) => {
   const [showPass, setShowPass] = useState(false);
+
+  const inputClass = light
+    ? "peer w-full p-[11px_15px] pr-11 text-sm rounded-xl border border-gray-200 bg-white text-gray-900 tracking-wide outline-none transition-colors duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+    : "peer w-full p-[11px_15px] pr-11 text-sm rounded-xl border border-slate-800 bg-[#111827]/40 text-slate-200 tracking-wide outline-none transition-colors duration-200 focus:border-sky-500/50 focus:bg-[#161F32]/60 focus:ring-1 focus:ring-sky-500/10";
+  const labelClass = light
+    ? "absolute left-[15px] top-[11px] text-gray-400 text-sm pointer-events-none transition-all duration-200 tracking-wide peer-focus:-translate-y-[21px] peer-focus:-translate-x-1.5 peer-focus:scale-[0.82] peer-focus:bg-white peer-focus:px-1.5 peer-focus:text-blue-500 peer-focus:font-semibold peer-[:not(:placeholder-shown)]:-translate-y-[21px] peer-[:not(:placeholder-shown)]:-translate-x-1.5 peer-[:not(:placeholder-shown)]:scale-[0.82] peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-1.5 peer-[:not(:placeholder-shown)]:text-gray-500"
+    : "absolute left-[15px] top-[11px] text-slate-500 text-sm pointer-events-none transition-all duration-200 tracking-wide peer-focus:-translate-y-[21px] peer-focus:-translate-x-1.5 peer-focus:scale-[0.82] peer-focus:bg-[#0D121F] peer-focus:px-1.5 peer-focus:text-sky-400 peer-focus:font-semibold peer-[:not(:placeholder-shown)]:-translate-y-[21px] peer-[:not(:placeholder-shown)]:-translate-x-1.5 peer-[:not(:placeholder-shown)]:scale-[0.82] peer-[:not(:placeholder-shown)]:bg-[#0D121F] peer-[:not(:placeholder-shown)]:px-1.5 peer-[:not(:placeholder-shown)]:text-slate-400";
+  const eyeClass = light
+    ? "absolute cursor-pointer top-1/2 -translate-y-1/2 right-[15px] text-gray-400 hover:text-blue-500 transition-colors z-10"
+    : "absolute cursor-pointer top-1/2 -translate-y-1/2 right-[15px] text-slate-500 hover:text-sky-400 transition-colors z-10";
 
   return (
     <div className="relative w-full group">
-      <input
-        id={id}
-        type={showPass ? "text" : "password"}
-        {...props}
-        placeholder=" "
-        className="peer w-full p-[11px_15px] pr-11 text-sm rounded-xl border border-slate-800 bg-[#111827]/40 
-                   text-slate-200 tracking-wide outline-none transition-colors duration-200
-                   focus:border-sky-500/50 focus:bg-[#161F32]/60 focus:ring-1 focus:ring-sky-500/10"
-      />
-
-      <div
-        className="absolute cursor-pointer top-1/2 -translate-y-1/2 right-[15px] text-slate-500 hover:text-sky-400 transition-colors z-10"
-        onClick={() => setShowPass(!showPass)}
-      >
-        {showPass ? (
-          <Eye size={18} strokeWidth={1.5} />
-        ) : (
-          <EyeClosed size={18} strokeWidth={1.5} />
-        )}
+      <input id={id} type={showPass ? "text" : "password"} {...props} placeholder=" " className={inputClass} />
+      <div className={eyeClass} onClick={() => setShowPass(!showPass)}>
+        {showPass ? <Eye size={18} strokeWidth={1.5} /> : <EyeClosed size={18} strokeWidth={1.5} />}
       </div>
-
-      <label
-        htmlFor={id}
-        className="absolute left-[15px] top-[11px] text-slate-500 text-sm pointer-events-none 
-                   transition-all duration-200 tracking-wide
-                   peer-focus:-translate-y-[21px] peer-focus:-translate-x-1.5 
-                   peer-focus:scale-[0.82] peer-focus:bg-[#0D121F] peer-focus:px-1.5 
-                   peer-focus:text-sky-400 peer-focus:font-semibold
-                   
-                   peer-[:not(:placeholder-shown)]:-translate-y-[21px] 
-                   peer-[:not(:placeholder-shown)]:-translate-x-1.5 
-                   peer-[:not(:placeholder-shown)]:scale-[0.82] 
-                   peer-[:not(:placeholder-shown)]:bg-[#0D121F] 
-                   peer-[:not(:placeholder-shown)]:px-1.5 peer-[:not(:placeholder-shown)]:text-slate-400"
-      >
-        {label}
-      </label>
+      <label htmlFor={id} className={labelClass}>{label}</label>
     </div>
   );
 };

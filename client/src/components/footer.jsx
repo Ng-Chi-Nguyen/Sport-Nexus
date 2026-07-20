@@ -1,72 +1,104 @@
 import {
-  Facebook,
   Instagram,
-  Twitter,
   Mail,
   Phone,
   MapPin,
-  FacebookIcon,
+  Facebook,
   Youtube,
+  ArrowUpRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Logo } from "./logo";
 
 const Footer = () => {
   return (
-    <footer className="bg-white border-t-4 border-[#323232] pt-3 pb-2 px-4 md:px-16 lg:px-24">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-        {/* Cột 1: Giới thiệu Sport Nexus */}
-        <div className="space-y-4">
-          <Logo />
-          <p className="text-gray-500 font-medium text-sm leading-relaxed">
-            Hệ thống quản lý thể thao hiện đại, tối ưu hóa quy trình vận hành và
-            nâng cao trải nghiệm người dùng trong dự án khóa luận tốt nghiệp.
+    <footer className="bg-white border-t-4 border-slate-900 pt-16 pb-6 px-4 md:px-16 lg:px-24 font-sans select-none">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-slate-200">
+        {/* Cột 1: Giới thiệu */}
+        <div className="space-y-5">
+          <div className="inline-block transform hover:-rotate-1 transition-transform">
+            <Logo />
+          </div>
+          <p className="text-slate-600 font-medium text-sm leading-relaxed max-w-xs">
+            Hệ thống quản lý và phân phối sản phẩm thể thao hiện đại, tối ưu quy
+            trình vận hành trong dự án khóa luận tốt nghiệp.
           </p>
-          <div className="flex gap-4">
-            <Link to="" className="btn-neo">
-              <FacebookIcon size={20} className="text-white" />
-            </Link>
-            <Link to="" className="btn-neo">
+          {/* Hàng nút mạng xã hội phong cách Neo-brutalism */}
+          <div className="flex flex-wrap gap-3 pt-2">
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-neo p-2 bg-[#1877F2] border-2 border-slate-900 shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#000] transition-all rounded"
+            >
+              <Facebook size={18} className="text-white" />
+            </a>
+            <a
+              href="https://tiktok.com"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-neo p-2 bg-slate-900 border-2 border-slate-900 shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#000] transition-all rounded"
+            >
               <svg
-                width={20} // Tăng lên 24 để to rõ hơn
-                height={20} // Phải bằng width để icon không bị dẹt
+                width={18}
+                height={18}
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="white" // Đổi sang màu trắng để nổi bật trên nền xanh
-                strokeWidth="2.5" // Tăng độ dày nét vẽ cho chuẩn phong cách Neo-brutalism
+                stroke="white"
+                strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
                 <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
               </svg>
-            </Link>
-            <Link to="" className="btn-neo">
-              <Youtube size={20} className="text-white" />
-            </Link>
-            <Link to="" className="btn-neo">
-              <Instagram size={20} className="text-white" />
-            </Link>
-            <Link to="" className="btn-neo">
-              <Mail size={20} className="text-white" />
-            </Link>
+            </a>
+            <a
+              href="https://youtube.com"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-neo p-2 bg-[#FF0000] border-2 border-slate-900 shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#000] transition-all rounded"
+            >
+              <Youtube size={18} className="text-white" />
+            </a>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-neo p-2 bg-[#E1306C] border-2 border-slate-900 shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#000] transition-all rounded"
+            >
+              <Instagram size={18} className="text-white" />
+            </a>
+            <a
+              href="mailto:ngchinguyen2606@gmail.com"
+              className="btn-neo p-2 bg-amber-500 border-2 border-slate-900 shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#000] transition-all rounded"
+            >
+              <Mail size={18} className="text-white" />
+            </a>
           </div>
         </div>
 
         {/* Cột 2: Điều hướng nhanh */}
         <div>
-          <h3 className="font-black uppercase text-[#323232] mb-2">
+          <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 mb-5 border-l-4 border-blue-500 pl-2">
             Liên kết nhanh
           </h3>
-          <ul className="space-y-1 text-sm font-bold text-gray-500 uppercase tracking-tighter">
+          <ul className="space-y-3 text-[13px] font-bold text-slate-600 uppercase tracking-tight">
             <li>
-              <Link to="/" className="hover:text-[#4facf3] transition-colors">
-                Trang chủ
+              <Link
+                to="/"
+                className="hover:text-blue-600 hover:underline inline-flex items-center gap-0.5 transition-all"
+              >
+                Trang chủ{" "}
+                <ArrowUpRight
+                  size={12}
+                  className="opacity-0 hover:opacity-100"
+                />
               </Link>
             </li>
             <li>
               <Link
                 to="/products"
-                className="hover:text-[#4facf3] transition-colors"
+                className="hover:text-blue-600 hover:underline inline-flex items-center gap-0.5 transition-all"
               >
                 Sản phẩm
               </Link>
@@ -74,7 +106,7 @@ const Footer = () => {
             <li>
               <Link
                 to="/orders"
-                className="hover:text-[#4facf3] transition-colors"
+                className="hover:text-blue-600 hover:underline inline-flex items-center gap-0.5 transition-all"
               >
                 Đơn hàng
               </Link>
@@ -82,7 +114,7 @@ const Footer = () => {
             <li>
               <Link
                 to="/auth/login"
-                className="hover:text-[#4facf3] transition-colors"
+                className="hover:text-blue-600 hover:underline inline-flex items-center gap-0.5 transition-all"
               >
                 Quản trị
               </Link>
@@ -90,52 +122,82 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Cột 3: Chính sách */}
+        {/* Cột 3: Hỗ trợ */}
         <div>
-          <h3 className="font-black uppercase text-[#323232] mb-2">Hỗ trợ</h3>
-          <ul className="space-y-1 text-sm font-bold text-gray-500 uppercase tracking-tighter">
+          <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 mb-5 border-l-4 border-blue-500 pl-2">
+            Hỗ trợ khách hàng
+          </h3>
+          <ul className="space-y-3 text-[13px] font-bold text-slate-600 uppercase tracking-tight">
             <li>
-              <a href="#" className="hover:text-[#4facf3] transition-colors">
+              <a
+                href="#privacy"
+                className="hover:text-blue-600 transition-colors block"
+              >
                 Chính sách bảo mật
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-[#4facf3] transition-colors">
+              <a
+                href="#terms"
+                className="hover:text-blue-600 transition-colors block"
+              >
                 Điều khoản sử dụng
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-[#4facf3] transition-colors">
+              <a
+                href="#refund"
+                className="hover:text-blue-600 transition-colors block"
+              >
                 Chính sách hoàn tiền
               </a>
             </li>
           </ul>
         </div>
 
-        {/* Cột 4: Liên hệ */}
+        {/* Cột 4: Thông tin liên hệ */}
         <div>
-          <h3 className="font-black uppercase text-[#323232] mb-2">Liên hệ</h3>
-          <ul className="space-y-1 text-sm font-medium text-gray-500">
-            <li className="flex items-start gap-3">
-              <MapPin size={18} className="text-[#4facf3] shrink-0" />
-              <span>Đường 3/2 , Phường Ninh Kiều, Cần Thơ</span>
+          <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 mb-5 border-l-4 border-blue-500 pl-2">
+            Thông tin liên hệ
+          </h3>
+          <ul className="space-y-3 text-[13px] font-semibold text-slate-600">
+            <li className="flex items-start gap-2.5">
+              <MapPin size={16} className="text-blue-600 shrink-0 mt-0.5" />
+              <span className="leading-tight">
+                Đường 3/2, Phường Xuân Khánh, Quận Ninh Kiều, Cần Thơ
+              </span>
             </li>
-            <li className="flex items-center gap-3">
-              <Phone size={18} className="text-[#4facf3] shrink-0" />
-              <span>+84 812 312 831</span>
+            <li className="flex items-center gap-2.5">
+              <Phone size={16} className="text-blue-600 shrink-0" />
+              <a
+                href="tel:0812312831"
+                className="hover:text-blue-600 transition-colors"
+              >
+                +84 812 312 831
+              </a>
             </li>
-            <li className="flex items-center gap-3">
-              <Mail size={18} className="text-[#4facf3] shrink-0" />
-              <span>ngchinguyen2606@gmail.com</span>
+            <li className="flex items-center gap-2.5">
+              <Mail size={16} className="text-blue-600 shrink-0" />
+              <a
+                href="mailto:ngchinguyen2606@gmail.com"
+                className="hover:text-blue-600 transition-colors truncate"
+              >
+                ngchinguyen2606@gmail.com
+              </a>
             </li>
           </ul>
         </div>
       </div>
-      <div className="flex w-full justify-center -mt-10">
-        <p className="text-[8px] font-bold text-gray-400 uppercase">
-          <span className="text-blue-500">227060172</span> © 2026 SPORT NEXUS -
-          TIỂU LUẬN TỐT NGHIỆP CNTT - Bảng quyền thuộc về{" "}
-          <span className="text-blue-500">Nguyễn Chí Nguyện</span>
+
+      {/* Dòng bản quyền phía dưới cùng */}
+      <div className="pt-6 text-center">
+        <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">
+          Mã số SV:{" "}
+          <span className="text-blue-600 font-extrabold">227060172</span> — BẢN
+          QUYỀN THUỘC VỀ{" "}
+          <span className="text-slate-700 font-extrabold">
+            NGUYỄN CHÍ NGUYỆN
+          </span>
         </p>
       </div>
     </footer>
@@ -144,14 +206,12 @@ const Footer = () => {
 
 const FooterAuth = () => {
   return (
-    <>
-      <div className="flex w-full justify-center -mt-10">
-        <p className="text-[8px] font-bold text-gray-400 uppercase">
-          © 227060172 2026 SPORT NEXUS - TIỂU LUẬN TỐT NGHIỆP CNTT - Bảng quyền
-          thuộc về <span className="text-blue-500">Nguyễn Chí Nguyện</span>
-        </p>
-      </div>
-    </>
+    <footer className="w-full py-6 bg-transparent text-center border-t border-slate-100">
+      <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">
+        © 227060172 | SPORT NEXUS — TIỂU LUẬN TỐT NGHIỆP CNTT —
+        <span className="text-blue-600 font-extrabold"> NGUYỄN CHÍ NGUYỆN</span>
+      </p>
+    </footer>
   );
 };
 

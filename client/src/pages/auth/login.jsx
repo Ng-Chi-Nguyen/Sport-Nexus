@@ -1,41 +1,22 @@
 import { useState } from "react";
-import { FacebookIcon } from "lucide-react";
+import { Facebook, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-// components
-import { FloatingInput } from "@/components/ui/input";
-import Breadcrumbs from "@/components/ui/breadcrumbs";
+import { FloatingInput, FloatingInputPassword } from "@/components/ui/input";
 import ShowToast from "@/components/ui/toast";
-import { FloatingInputPassword } from "@/components/ui/input";
-// api
-import authApi from "@/api/auth/auth";
 
-const breadcrumbsData = [
-  {
-    title: "Trang chủ",
-    route: "/",
-  },
-  {
-    title: "Đăng nhập",
-    route: "",
-  },
-];
+import authApi from "@/api/auth/auth";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  // state login
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = {
-      username: username,
-      password: password,
-    };
-    // console.log(formData);
+    setLoading(true);
     try {
-      const response = await authApi.login(formData);
-      // console.log(response);
+      const response = await authApi.login({ username, password });
       if (response.data.success) {
         const { accessToken, user } = response.data.data;
         localStorage.setItem("accessToken", accessToken);
@@ -45,97 +26,90 @@ const LoginForm = () => {
         navigate("/");
       }
     } catch (error) {
-      // console.log(error);
-      ShowToast("error", error.response.data.message);
+      ShowToast("error", error.response?.data?.message || "Đăng nhập thất bại");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="bg-gray-100 pb-[52px] relative">
-      <Breadcrumbs data={breadcrumbsData} />
-      {/* Container chính với phong cách Sport Nexus */}
-      <div className="relative w-full max-w-[400px] bg-white p-8 shadow-[0px_0px_40px_rgba(0,0,0,0.06)] overflow-hidden rounded-lg">
-        {/* Khối hình học trang trí ở nền */}
-        <div className="absolute w-[300px] h-[300px] bg-[#e6f4fe] rotate-[45deg] -left-[150px] -bottom-[50px] z-0 rounded-[30px] shadow-[5px_5px_10px_rgba(0,0,0,0.08)]"></div>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <FloatingInput
+        id="email"
+        label="Email / Số điện thoại"
+        type="email"
+        required
+        light
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
 
-        <div className="relative z-10">
-          <h2 className="text-3xl font-black text-[#323232] mb-2 uppercase tracking-tight text-center">
-            ĐĂNG NHẬP
-          </h2>
-          <p className="text-gray-500 text-sm mb-8 text-center font-medium">
-            Sport Nexus
-          </p>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <FloatingInput
-              id="email"
-              label="Địa chỉ Email / Số điện thoại"
-              type="email"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
+      <FloatingInputPassword
+        id="password"
+        label="Mật khẩu"
+        required
+        light
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
 
-            <FloatingInputPassword
-              id="password"
-              label="Mật khẩu"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+      <button
+        type="submit"
+        disabled={loading}
+        className="relative w-full py-3.5 rounded-xl font-black text-sm uppercase tracking-[0.15em]
+                   bg-gradient-to-r from-orange-500 via-rose-500 to-red-600
+                   text-white shadow-[0_4px_20px_rgba(255,107,53,0.3)]
+                   hover:shadow-[0_6px_30px_rgba(255,107,53,0.4)]
+                   hover:scale-[1.01] active:scale-[0.98]
+                   transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed
+                   flex items-center justify-center gap-2"
+      >
+        {loading ? <Loader2 size={18} className="animate-spin" /> : null}
+        <span>Đăng nhập ngay</span>
+      </button>
 
-            {/* Nút bấm 3D đồng bộ màu xanh #4facf3 */}
-            <button
-              type="submit"
-              className="w-full bg-[#4facf3] hover:bg-[#3d9bdb] text-white font-black py-4 rounded-lg 
-                         uppercase tracking-[2px] shadow-[0px_4px_0px_0px_#323232] 
-                         active:translate-y-1 active:shadow-none transition-all duration-75"
-            >
-              Đăng nhập ngay
-            </button>
-
-            <div className="text-center mt-6">
-              <span className="text-gray-500 text-sm">Chưa có tài khoản? </span>
-              <Link
-                to="/auth/register"
-                className="text-[#4facf3] font-bold text-sm hover:underline"
-              >
-                Đăng ký
-              </Link>
-            </div>
-          </form>
-          <p className="text-gray-500 text-sm my-2 text-center font-medium">
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-100" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-white px-3 text-gray-300 font-bold tracking-[0.2em]">
             Hoặc
-          </p>
-          <div className="flex justify-center mt-3 gap-2">
-            <Link
-              to=""
-              className="p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
-            >
-              <FacebookIcon size={20} className="text-white" />
-            </Link>
-            <Link
-              to=""
-              className="p-2 bg-[#4facf3] border-2 border-[#323232] shadow-[3px_3px_0px_0px_#323232] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
-            >
-              <svg
-                width={20}
-                height={20}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                {/* Đường nét vẽ biểu tượng chữ G đơn giản */}
-                <path d="M12 12h8.5" />
-                <path d="M20.5 12a8.5 8.5 0 1 1-2.5-6" />
-              </svg>
-            </Link>
-          </div>
+          </span>
         </div>
       </div>
-    </div>
+
+      <div className="flex justify-center gap-3">
+        <button
+          type="button"
+          className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl border border-gray-200
+                     bg-white text-gray-400 hover:text-gray-600 hover:border-gray-300
+                     transition-all duration-200 text-xs font-bold uppercase tracking-wider"
+        >
+          <Facebook size={16} />
+          Facebook
+        </button>
+        <button
+          type="button"
+          className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl border border-gray-200
+                     bg-white text-gray-400 hover:text-gray-600 hover:border-gray-300
+                     transition-all duration-200 text-xs font-bold uppercase tracking-wider"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 12h8.5" />
+            <path d="M20.5 12a8.5 8.5 0 1 1-2.5-6" />
+          </svg>
+          Google
+        </button>
+      </div>
+
+      <p className="text-center text-gray-400 text-xs">
+        Chưa có tài khoản?{" "}
+        <Link to="/auth/register" className="text-blue-500 hover:text-blue-600 font-bold hover:underline transition-colors">
+          Đăng ký ngay
+        </Link>
+      </p>
+    </form>
   );
 };
 

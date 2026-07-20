@@ -1,12 +1,10 @@
 import { useLoaderData } from "react-router-dom";
-import { HeroBanner } from "./components/heroBanner";
 import { SpecialSale } from "./components/specialSale";
 import { CategoryBanners } from "./components/categoryBanners";
 import { NewArrivals } from "./components/newArrivals";
 import { ProductSection } from "./components/productSection";
 import { MiddleBanner } from "./components/middleBanner";
 import { SportsNews } from "./components/sportsNews";
-import { NavCategoryMenu } from "@/components/NavCategoryMenu";
 
 const HomePage = () => {
   const apiData = useLoaderData();
@@ -26,8 +24,6 @@ const HomePage = () => {
   // console.log(bestSellers);
   return (
     <div className="min-h-screen bg-[#F4F6F9] text-slate-800 font-sans antialiased selection:bg-blue-500/20">
-      <NavCategoryMenu />
-      <HeroBanner />
       {bestSellers.length > 0 && <SpecialSale products={bestSellers} />}
       {categories.length > 0 && <CategoryBanners categories={categories} />}
       {newestProducts.length > 0 && <NewArrivals products={newestProducts} />}

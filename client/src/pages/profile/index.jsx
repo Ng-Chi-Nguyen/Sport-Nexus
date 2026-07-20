@@ -1,5 +1,4 @@
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-// image
 import logoDefault from "@/assets/images/logodefault.jpg";
 import {
   CircleCheck,
@@ -9,15 +8,9 @@ import {
   MapPinHouse,
   RotateCcwKey,
   ShieldOff,
+  ChevronRight,
 } from "lucide-react";
-import {
-  Link,
-  Navigate,
-  NavLink,
-  Outlet,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Confirm } from "@/components/ui/confirm";
 import authApi from "@/api/auth/auth";
@@ -28,39 +21,35 @@ const breadcrumbNameMap = {
   "/profile/address": "Địa chỉ",
   "/profile/order": "Đơn hàng",
   "/profile/reset-password": "Đổi mật khẩu",
-  "/profile/edit": "Chỉnh sữa thông tin tài khoản",
+  "/profile/edit": "Chỉnh sửa thông tin",
 };
 
 const menuProfile = [
-  {
-    name: "Hồ sơ",
-    path: "/profile",
-    exact: true,
-    icon: <FileUser color="#112aee" size={15} />,
-  },
+  { name: "Hồ sơ", path: "/profile", exact: true, icon: FileUser },
   {
     name: "Địa chỉ",
     path: "/profile/address",
     exact: false,
-    icon: <MapPinHouse color="#112aee" size={15} />,
+    icon: MapPinHouse,
   },
-  {
-    name: "Đơn hàng",
-    path: "/profile/order",
-    exact: false,
-    icon: <ListOrdered color="#112aee" size={15} />,
-  },
+  { name: "Đơn hàng", path: "/profile/order", exact: false, icon: ListOrdered },
   {
     name: "Đổi mật khẩu",
     path: "/profile/reset-password",
     exact: false,
-    icon: <RotateCcwKey color="#112aee" size={15} />,
+    icon: RotateCcwKey,
   },
 ];
 
+const menuIcons = {
+  "Hồ sơ": "from-blue-500 to-cyan-400",
+  "Địa chỉ": "from-orange-400 to-rose-400",
+  "Đơn hàng": "from-purple-500 to-pink-400",
+  "Đổi mật khẩu": "from-emerald-500 to-teal-400",
+};
+
 const ProfilePage = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -69,163 +58,154 @@ const ProfilePage = () => {
   const currentPath = location.pathname;
 
   let breadcrumbsData = [...base];
-
   if (currentPath === "/profile") {
     breadcrumbsData.push({ title: "Tài khoản", route: "" });
   } else if (breadcrumbNameMap[currentPath]) {
-    // Nếu là trang con, thêm cả "Hồ sơ cá nhân" và trang hiện tại
     breadcrumbsData.push(
       { title: "Tài khoản", route: "/profile" },
       { title: breadcrumbNameMap[currentPath], route: "" },
     );
   }
 
-  const handleLogoutClick = () => {
-    setIsLogoutModalOpen(true);
-  };
+  const handleLogoutClick = () => setIsLogoutModalOpen(true);
 
   const confirmLogout = async () => {
     try {
-      // 1. Tắt toàn bộ các thông báo đang chạy trước đó để giải phóng DOM
       toast.dismiss();
-
-      // 2. Gọi API logout TRƯỚC KHI xóa token trong localStorage
       if (user?.id) {
         await authApi.logout(user.id);
       }
     } catch (error) {
       console.error("Lỗi API logout:", error);
     } finally {
-      // 3. Xóa dữ liệu trong storage
       localStorage.removeItem("token");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user");
-
-      // 4. Đóng modal
       setIsLogoutModalOpen(false);
-
-      // 5. Sử dụng window.location.href để chuyển hướng khi đăng xuất thay vì navigate().
-      // Cách này sẽ làm mới toàn bộ State/DOM của ứng dụng, vừa sạch bộ nhớ vừa không bao giờ lo bị lỗi crash "toastNode is null".
       window.location.href = "/auth/login";
     }
   };
 
   return (
-    <div className="">
-      <Breadcrumbs data={breadcrumbsData} />
-      <div className="flex">
-        <div className="relative z-1 overflow-hidden w-[30%] p-3 bg-white border border-[#ddd] mr-5">
-          {/* <div className="absolute w-[300px] h-[300px] bg-primary rotate-[45deg] -right-[100px] -top-[50px] z-0 rounded-[30px] shadow-[5px_5px_10px_rgba(0,0,0,0.08)]"></div> */}
-          <div className="relative z-10">
-            <div className="border-b border-solid border-gray-400 pb-3 z-10">
-              <div className="border-4 border-primary w-[150px] overflow-hidden h-auto rounded-[50%] mx-auto">
-                <img
-                  src={user.avatar ? user.avatar : logoDefault}
-                  alt="avatar"
-                />
-              </div>
-              <div className="flex items-center gap-2 justify-center text-center mt-1 text-[22px] uppercase font-black">
-                <div className="">{user.full_name}</div>
-                <div
-                  className=""
-                  title={user.is_verified ? "Đã xác thực" : "Chưa xác thực"}
-                >
-                  {user.is_verified ? (
-                    <span>
-                      <CircleCheck color="#5793fb" size={17} />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Breadcrumbs */}
+        <div className="mb-6">
+          <Breadcrumbs data={breadcrumbsData} />
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Sidebar */}
+          <div className="w-full lg:w-72 shrink-0">
+            <div className="relative bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+              {/* Avatar */}
+              <div className="flex flex-col items-center mb-5">
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 via-purple-500 to-orange-500 p-[3px] mb-3">
+                  <div className="w-full h-full rounded-2xl bg-white overflow-hidden">
+                    <img
+                      src={user?.avatar || logoDefault}
+                      alt="avatar"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-1.5">
+                    <h3 className="text-gray-900 font-bold text-base tracking-tight">
+                      {user?.full_name}
+                    </h3>
+                    <span
+                      title={
+                        user?.is_verified ? "Đã xác thực" : "Chưa xác thực"
+                      }
+                    >
+                      {user?.is_verified ? (
+                        <CircleCheck size={15} className="text-emerald-400" />
+                      ) : (
+                        <ShieldOff size={15} className="text-rose-400" />
+                      )}
                     </span>
-                  ) : (
-                    <span>
-                      <ShieldOff color="#ee2b2b" size={17} />
-                    </span>
-                  )}
+                  </div>
+                  <span className="inline-block mt-1.5 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-blue-50 text-blue-600 border border-blue-100">
+                    {user?.role?.name || "Customer"}
+                  </span>
                 </div>
               </div>
-              <div className="bg-[#4facf3] text-center border-2 border-[#323232] text-[#FFF] uppercase w-[60%] font-black italic mx-auto py-[2px] px-2 mt-3 text-[14px]">
-                {user.role.name}
-              </div>
-            </div>
-            {/* <div className="bg-blue-100 border-2 border-b-[#4facf3]">
-              <div className="flex ml-7 mr-3">
-                <p className="font-bold">Trạng thái: </p>
-                <span className="ml-2 text-blue-600 font-bold">
-                  {user.status ? (
-                    <div className="flex items-center">
-                      <p className="mr-1">Hoạt động</p>
-                      <span>
-                        <CircleCheck color="#2b3beeff" size={17} />
-                      </span>
-                    </div>
-                  ) : (
-                    "Đã khóa"
-                  )}
-                </span>
-              </div>
-              <div className="flex ml-7 mr-3">
-                <p className="font-bold">Xác thực: </p>
-                <span className="ml-2 text-red-400 font-bold  mt-0">
-                  {user.is_verified ? (
-                    <div className="flex items-center">
-                      <p className="mr-1 text-[#2bee38]">Đã xác thực</p>
-                      <span>
-                        <CircleCheck color="#2bee38" size={17} />
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center">
-                      <p className="mr-1">Chưa xác thực </p>
-                      <span>
-                        <ShieldOff color="#ee2b2b" size={17} />
-                      </span>
-                    </div>
-                  )}
-                </span>
-              </div>
-            </div> */}
-            <div className="custom-scrollbar">
-              <ul className="px-[30px] pt-[10px]">
-                {menuProfile.map((item, index) => (
-                  <li key={index}>
-                    <NavLink
-                      key={item.path}
-                      to={item.path}
-                      end={item.exact} // Áp dụng end cho trang chủ Profile
-                      className={({ isActive }) => `
-                    flex items-center gap-3 px-4 py-1 transition-all border-2 border-transparent
-                    ${
-                      isActive
-                        ? "bg-blue-50 text-blue-600 border-l-[#4facf3] font-bold"
-                        : "text-gray-500 hover:bg-gray-100 hover:text-blue-500"
+
+              <div className="h-[1px] bg-gray-100 mb-4" />
+
+              {/* Nav Menu */}
+              <nav className="space-y-1">
+                {menuProfile.map((item) => (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    end={item.exact}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                        isActive
+                          ? "bg-blue-50 text-blue-600 border border-blue-100"
+                          : "text-gray-500 hover:text-gray-700 hover:bg-gray-50 border border-transparent"
+                      }`
                     }
-                  `}
-                    >
-                      {item.icon}
-                      <span className="text-[14px]">{item.name}</span>
-                    </NavLink>
-                  </li>
-                ))}
-                <li>
-                  <button
-                    onClick={handleLogoutClick}
-                    className="w-full flex items-center gap-3 px-4 py-1 transition-all border-l-2 border-transparent text-gray-500 hover:bg-red-50 hover:text-red-500 hover:border-l-red-500"
                   >
-                    <LogOut size={15} color="#ee1111" />
-                    <span className="text-[14px] text-[#ee1111]">
-                      Đăng xuất
-                    </span>
-                  </button>
-                </li>
-              </ul>
+                    {({ isActive }) => (
+                      <>
+                        <div
+                          className={`w-8 h-8 rounded-lg bg-gradient-to-br ${menuIcons[item.name]} p-[1px] shrink-0`}
+                        >
+                          <div
+                            className={`w-full h-full rounded-lg flex items-center justify-center ${isActive ? "bg-blue-50" : "bg-white"}`}
+                          >
+                            <item.icon
+                              size={14}
+                              className={
+                                isActive ? "text-blue-600" : "text-gray-400"
+                              }
+                            />
+                          </div>
+                        </div>
+                        <span className="flex-1">{item.name}</span>
+                        <ChevronRight
+                          size={14}
+                          className={`transition-all duration-200 ${
+                            isActive
+                              ? "opacity-100 translate-x-0"
+                              : "opacity-0 -translate-x-2"
+                          }`}
+                        />
+                      </>
+                    )}
+                  </NavLink>
+                ))}
+              </nav>
+
+              <div className="h-[1px] bg-gray-100 my-4" />
+
+              {/* Logout */}
+              <button
+                onClick={handleLogoutClick}
+                className="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl text-sm font-medium
+                           text-rose-500 hover:text-rose-600 hover:bg-rose-50
+                           border border-transparent hover:border-rose-100 transition-all duration-200"
+              >
+                <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center">
+                  <LogOut size={14} className="text-rose-400" />
+                </div>
+                <span>Đăng xuất</span>
+              </button>
             </div>
           </div>
-        </div>
-        <div className="relative z-1 w-[70%] border border-[#ddd] overflow-hidden">
-          {/* <div className="absolute w-[300px] h-[300px] bg-primary rotate-[45deg] -left-[215px] -top-[50px] z-0 rounded-[30px] shadow-[5px_5px_10px_rgba(0,0,0,0.08)]"></div> */}
-          <div className="z-10 p-4">
-            <Outlet />
+
+          {/* Main Content */}
+          <div className="flex-1 min-w-0">
+            <div className="relative bg-white rounded-2xl border border-gray-100 shadow-sm">
+              <Outlet />
+            </div>
           </div>
         </div>
       </div>
+
       <Confirm
         isOpen={isLogoutModalOpen}
         onConfirm={confirmLogout}

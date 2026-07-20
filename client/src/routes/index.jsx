@@ -1,11 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App";
-import { adminRoutes } from "./adminRoutes"; // Import module vừa tạo
+import { adminRoutes } from "./adminRoutes";
 import NotFound from "@/pages/NotFound";
 import AdminLayout from "@/layouts/AdminLayout";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { authRoutes } from "./authRoute";
 import { webRoutes } from "./webRoute";
+import LoaderCategory from "@/loaders/management/categoryLoader";
 
 import AdminGuard from "@/components/AdminGuard";
 
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    loader: () => LoaderCategory.getCategoriesDropdown(),
     HydrateFallback: LoadingSpinner,
     children: [
       {

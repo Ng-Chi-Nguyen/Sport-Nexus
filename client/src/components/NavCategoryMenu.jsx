@@ -1,201 +1,211 @@
-import { useState, useEffect, useRef } from "react"; // 🌟 THÊM: import useEffect và useRef
-import { ChevronRight, X, Menu } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import {
+  ChevronRight,
+  X,
+  Menu,
+  MapPin,
+  ShieldCheck,
+  PhoneCall,
+  Users,
+  ArrowRight,
+  Grid,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
-export const NavCategoryMenu = () => {
-  // Trạng thái đóng/mở toàn bộ bảng danh mục lớn
+const chunkArray = (arr, size) => {
+  const result = [];
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
+};
+
+export const NavCategoryMenu = ({ isScrolled, compact, categories = [] }) => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  // Trạng thái Tab đang được active bên trong menu
-  const [activeSubTab, setActiveSubTab] = useState("sports");
-
-  // 🌟 THÊM: Tạo một ref để định vị toàn bộ vùng Menu
   const menuRef = useRef(null);
 
-  // 🌟 THÊM: Bộ lắng nghe sự kiện click ngoài vùng menu để tự động đóng
+  const infoLinks = [
+    {
+      name: "Hệ thống cửa hàng",
+      to: "/he-thong-cua-hang",
+      icon: <MapPin size={15} />,
+    },
+    {
+      name: "Chính sách bảo hành",
+      to: "/chinh-sach-bao-hanh",
+      icon: <ShieldCheck size={15} />,
+    },
+    {
+      name: "Tư vấn mua hàng",
+      to: "/tu-van-mua-hang",
+      icon: <PhoneCall size={15} />,
+    },
+    { name: "Tuyển dụng", to: "/tuyen-dung", icon: <Users size={15} /> },
+  ];
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Nếu click ra ngoài vùng menuRef quản lý, ta tiến hành đóng bảng menu
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setIsOpenMenu(false);
       }
     };
-
-    if (isOpenMenu) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    if (isOpenMenu) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpenMenu]);
 
-  // Dữ liệu danh mục
-  const sportsCategories = {
-    "BÓNG RỔ": ["Bóng thi đấu", "Giày bóng rổ", "Quần áo", "Phụ kiện bóng rổ"],
-    "BÓNG CHUYỀN": [
-      "Bóng thi đấu",
-      "Giày bóng chuyền",
-      "Quần áo",
-      "Phụ kiện bóng chuyền",
-    ],
-    "BÓNG ĐÁ & FUTSAL": [
-      "Bóng thi đấu",
-      "Giày bóng đá",
-      "Quần áo",
-      "Phụ kiện bóng đá",
-    ],
-    "TẬP GYM & WORKOUT": ["Quần áo", "Giày tập Gym", "Phụ kiện tập Fitness"],
-    "CHẠY BỘ & ĐI BỘ": ["Giày chạy bộ", "Quần áo", "Phụ kiện chạy bộ"],
-    "CẦU LÔNG": [
-      "Vợt cầu lông",
-      "Cầu thi đấu",
-      "Giày cầu lông",
-      "Quần áo",
-      "Phụ kiện cầu lông",
-    ],
-    "BI-A": [
-      "Gậy Đánh Bi-a",
-      "Gậy Phá Bi-a",
-      "Gậy Nhảy Bi-a",
-      "Bao đựng cơ",
-      "Áo thi đấu",
-      "Phụ kiện bi-a",
-    ],
-    PICKLEBALL: ["Giày Pickleball", "Vợt Pickleball", "Phụ kiện Pickleball"],
-  };
-
-  const navLinks = [
-    { id: "pickleball", label: "Pickleball chính hãng" },
-    { id: "bida", label: "Bi-a Chính Hãng" },
-    { id: "volleyball", label: "Giày bóng chuyền Sao Vàng" },
-    { id: "seagames", label: "SEAGAMES 2026" },
-    { id: "sale", label: "XẢ KHO 50%" },
-  ];
+  const featured = categories.slice(0, 5);
+  const grid = chunkArray(categories, 6);
 
   return (
-    // THÊM: Gắn ref={menuRef} vào thẻ div bọc ngoài cùng này
-    <div className="w-full relative z-50 font-sans select-none" ref={menuRef}>
-      {/* ─── THANH TAB MENU CHÍNH ─── */}
-      <div className="w-full bg-[#1E3A8A] text-white shadow-md">
-        <div className="max-w-[1400px] mx-auto px-4 flex items-center h-12">
-          <button
-            onClick={() => setIsOpenMenu(!isOpenMenu)}
-            className={`h-full px-6 flex items-center gap-2 font-bold text-[13px] uppercase tracking-wide transition-all duration-150
-              ${isOpenMenu ? "bg-[#0F172A]" : "bg-[#1E40AF] hover:bg-[#1D4ED8]"}`}
-          >
-            {isOpenMenu ? <X size={16} /> : <Menu size={16} />}
-            <span>Danh mục sản phẩm</span>
-          </button>
-
-          <nav className="flex items-center h-full ml-4 overflow-x-auto no-scrollbar">
-            {navLinks.map((link) => (
-              <a
-                key={link.id}
-                href={`#${link.id}`}
-                className="h-full px-4 flex items-center text-[13px] font-medium text-slate-100 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap"
+    <div
+      className={`font-sans select-none transition-all duration-300 ${
+        compact ? "relative" : "w-full sticky top-16 z-40 mt-16"
+      } ${
+        compact
+          ? ""
+          : isScrolled
+            ? "-translate-y-full opacity-0 pointer-events-none"
+            : "translate-y-0 opacity-100"
+      }`}
+      ref={menuRef}
+    >
+      {compact ? (
+        <button
+          onClick={() => setIsOpenMenu(!isOpenMenu)}
+          className={`flex items-center gap-1.5 h-9 px-4 rounded-full text-sm font-medium transition-all duration-200 ${
+            isOpenMenu
+              ? "bg-primary/10 text-primary"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+        >
+          <Menu size={16} />
+          <span>Danh mục</span>
+        </button>
+      ) : (
+        <div className="w-full bg-slate-900 text-white border-b border-slate-800 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 flex items-center h-14 justify-between">
+            <div className="flex items-center h-full gap-2">
+              <button
+                onClick={() => setIsOpenMenu(!isOpenMenu)}
+                className={`h-full px-5 flex items-center gap-2.5 font-bold text-[13px] uppercase tracking-wider transition-all duration-200 ${
+                  isOpenMenu
+                    ? "bg-blue-600 text-white"
+                    : "bg-transparent text-slate-200 hover:text-white hover:bg-slate-800"
+                }`}
               >
-                {link.label}
-              </a>
-            ))}
-          </nav>
-        </div>
-      </div>
+                {isOpenMenu ? <X size={16} /> : <Menu size={16} />}
+                <span>Danh mục sản phẩm</span>
+              </button>
 
-      {/* ─── BẢNG MEGA MENU THẢ XUỐNG KHI ĐƯỢC CHỌN ─── */}
-      {isOpenMenu && (
-        <div className="absolute top-full left-0 w-full bg-[#F8FAFC] border-b border-slate-200 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 flex">
-          <div className="max-w-[1400px] w-full mx-auto grid grid-cols-12 bg-white">
-            {/* PANEL TRÁI */}
-            <div className="col-span-10 p-6 border-r border-slate-100">
-              <div className="flex items-center gap-6 border-b border-slate-100 pb-3 mb-6">
-                {["sports", "men", "women", "accessories"].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveSubTab(tab)}
-                    className={`pb-2 text-[13px] font-black uppercase tracking-wider border-b-2 transition-all
-                      ${activeSubTab === tab ? "border-blue-600 text-blue-600" : "border-transparent text-slate-500 hover:text-slate-800"}`}
+              <nav className="hidden md:flex items-center h-full gap-1">
+                {infoLinks.map((link, idx) => (
+                  <Link
+                    key={idx}
+                    to={link.to}
+                    className="h-9 px-3.5 flex items-center gap-2 text-[13px] font-medium text-slate-300 hover:text-white rounded-md hover:bg-slate-800 transition-all"
                   >
-                    {tab === "sports"
-                      ? "🏀 Môn thể thao"
-                      : tab === "men"
-                        ? "🏃‍♂️ Thể thao Nam"
-                        : tab === "women"
-                          ? "🤸‍♀️ Thể thao Nữ"
-                          : "🎒 Phụ kiện"}
-                  </button>
+                    <span className="text-slate-400 group-hover:text-white">
+                      {link.icon}
+                    </span>
+                    <span>{link.name}</span>
+                  </Link>
                 ))}
+              </nav>
+            </div>
+
+            <div className="text-[13px] font-medium text-slate-400 hidden lg:block">
+              Hotline hỗ trợ:{" "}
+              <span className="text-blue-500 font-bold">0812312831</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Menu thả xuống tinh chỉnh tinh tế */}
+      {isOpenMenu && (
+        <div
+          className={`${
+            compact
+              ? "fixed top-16 left-0 w-full"
+              : "absolute top-full left-0 w-full"
+          } bg-white border-b border-slate-200 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200 max-h-[calc(100vh-4rem)] overflow-y-auto z-50`}
+        >
+          <div className="max-w-7xl mx-auto grid grid-cols-12 gap-8 p-8">
+            {/* Bên trái: Lưới danh mục sản phẩm (Chiếm 8 cột) */}
+            <div className="col-span-8">
+              <div className="flex items-center gap-2 text-slate-400 mb-6 pb-2 border-b border-slate-100">
+                <Grid size={14} />
+                <span className="text-[11px] font-bold uppercase tracking-widest">
+                  Tất cả ngành hàng thể thao
+                </span>
               </div>
 
-              {activeSubTab === "sports" && (
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-x-6 gap-y-8">
-                  {Object.entries(sportsCategories).map(([subTitle, items]) => (
-                    <div key={subTitle} className="space-y-2.5">
-                      <h4 className="text-[12px] font-black text-slate-900 tracking-wider uppercase border-l-2 border-blue-600 pl-2">
-                        {subTitle}
-                      </h4>
-                      <ul className="space-y-1.5">
-                        {items.map((item, idx) => (
-                          <li key={idx}>
-                            <a
-                              href={`#${item}`}
-                              className="text-[12px] text-slate-500 hover:text-blue-600 hover:font-medium transition-all block truncate"
-                            >
-                              {item}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
+              {categories.length === 0 ? (
+                <div className="py-12 text-center text-slate-400 text-xs font-medium">
+                  Chưa có danh mục nào
+                </div>
+              ) : (
+                <div className="grid grid-cols-4 gap-x-8 gap-y-4">
+                  {grid.map((group, gi) => (
+                    <div key={gi} className="flex flex-col gap-2.5">
+                      {group.map((cat) => (
+                        <Link
+                          key={cat.id}
+                          to={`/products?category=${cat.slug || cat.name}`}
+                          onClick={() => setIsOpenMenu(false)}
+                          className="text-[13px] text-slate-600 hover:text-blue-600 hover:translate-x-1 transition-all duration-150 truncate block"
+                        >
+                          {cat.name}
+                        </Link>
+                      ))}
                     </div>
                   ))}
                 </div>
               )}
-
-              {activeSubTab !== "sports" && (
-                <div className="py-8 text-center text-slate-400 text-xs font-medium">
-                  Nội dung đang được cập nhật liên tục...
-                </div>
-              )}
             </div>
 
-            {/* PANEL PHẢI */}
-            <div className="col-span-2 flex flex-col justify-between bg-slate-50/60 p-4">
-              <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-4 text-center space-y-2 relative overflow-hidden group">
-                <h4 className="font-black text-blue-800 text-[14px] uppercase tracking-wide leading-tight">
-                  Các môn
-                  <br />
-                  thể thao
-                </h4>
-                <p className="text-[10px] text-blue-500 font-medium">
-                  Sport Nexus Hub
-                </p>
+            {/* Bên phải: Khối điều hướng phụ & Tiện ích (Chiếm 4 cột) */}
+            <div className="col-span-4 grid grid-cols-1 gap-4 border-l border-slate-100 pl-8">
+              {/* Thẻ Banner thiết kế tối giản, sang trọng */}
+              <div className="rounded-xl bg-slate-900 p-5 text-white flex flex-col justify-between min-h-[140px] relative overflow-hidden shadow-sm">
+                <div className="space-y-1">
+                  <h4 className="font-extrabold text-[15px] uppercase tracking-wider text-blue-500">
+                    Sport Nexus Hub
+                  </h4>
+                  <p className="text-[12px] text-slate-400 leading-relaxed">
+                    Trang bị đầy đủ phụ kiện, dụng cụ thi đấu chuyên nghiệp
+                    chính hãng.
+                  </p>
+                </div>
+                <Link
+                  to="/products"
+                  onClick={() => setIsOpenMenu(false)}
+                  className="inline-flex items-center gap-1.5 text-[12px] font-bold text-white hover:text-blue-400 mt-4 group transition-colors"
+                >
+                  <span>Xem tất cả sản phẩm</span>
+                  <ArrowRight
+                    size={14}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </Link>
               </div>
 
-              <div className="space-y-1 mt-4">
-                <div className="bg-blue-600 text-white rounded-lg p-2.5 text-center group cursor-pointer hover:bg-blue-700 transition-all">
-                  <span className="block text-[11px] font-black uppercase tracking-wider">
-                    Môn thể thao
-                  </span>
-                  <span className="text-[9px] text-blue-200 block mt-0.5 group-hover:text-white transition-all">
-                    Xem thêm ›
-                  </span>
+              {/* Danh sách nổi bật thiết kế thanh lịch */}
+              <div className="space-y-1">
+                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">
+                  Danh mục thịnh hành
                 </div>
-                <div className="space-y-0.5 pt-2">
-                  {[
-                    "Pickleball chính hãng",
-                    "Bi-a Chính Hãng",
-                    "Giày bóng chuyền Sao Vàng",
-                  ].map((txt, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center justify-between p-2 rounded-md hover:bg-slate-100 cursor-pointer text-slate-600 hover:text-blue-600 transition-all"
+                <div className="grid grid-cols-1 gap-1">
+                  {featured.map((cat) => (
+                    <Link
+                      key={cat.id}
+                      to={`/products?category=${cat.slug || cat.name}`}
+                      onClick={() => setIsOpenMenu(false)}
+                      className="flex items-center justify-between p-2 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-all text-[12px] font-medium"
                     >
-                      <span className="text-[11px] font-bold truncate">
-                        {txt}
-                      </span>
-                      <ChevronRight
-                        size={12}
-                        className="text-slate-400 shrink-0"
-                      />
-                    </div>
+                      <span>{cat.name}</span>
+                      <ChevronRight size={12} className="text-slate-400" />
+                    </Link>
                   ))}
                 </div>
               </div>
