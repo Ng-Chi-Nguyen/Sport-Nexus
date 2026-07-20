@@ -5,7 +5,11 @@ import { SearchTable } from "@/components/ui/search";
 import Pagination from "@/components/ui/pagination";
 import { SimpleSelect } from "@/components/ui/select";
 import { LayoutDashboard, Filter, ChevronDown } from "lucide-react";
-import { useLoaderData, useRevalidator, useSearchParams } from "react-router-dom";
+import {
+  useLoaderData,
+  useRevalidator,
+  useSearchParams,
+} from "react-router-dom";
 import { formatCurrency } from "@/utils/formatters";
 import { getStockBadgeClass } from "@/utils/statusStyles";
 
@@ -32,7 +36,10 @@ const StockPage = () => {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    if (isFirstRender.current) { isFirstRender.current = false; return; }
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     const timer = setTimeout(() => {
       const params = new URLSearchParams(searchParams);
       params.set("page", "1");
@@ -43,7 +50,12 @@ const StockPage = () => {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  const hasActiveFilters = currentProductId || currentStockMin || currentStockMax || currentPriceMin || currentPriceMax;
+  const hasActiveFilters =
+    currentProductId ||
+    currentStockMin ||
+    currentStockMax ||
+    currentPriceMin ||
+    currentPriceMax;
 
   const setFilter = (key, value) => {
     const params = new URLSearchParams(searchParams);
@@ -62,7 +74,10 @@ const StockPage = () => {
   };
 
   const stocks = response?.data?.list_stocks || [];
-  const paginationInfo = response?.data?.pagination || { totalPages: 1, currentPage: 1 };
+  const paginationInfo = response?.data?.pagination || {
+    totalPages: 1,
+    currentPage: 1,
+  };
 
   const handlePageChange = (newPage) => {
     const params = new URLSearchParams(searchParams);
@@ -93,15 +108,24 @@ const StockPage = () => {
         >
           <Filter size={14} />
           Bộ lọc
-          {hasActiveFilters && <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />}
-          <ChevronDown size={14} className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`} />
+          {hasActiveFilters && (
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
+          )}
+          <ChevronDown
+            size={14}
+            className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
+          />
         </button>
         <BtnAdd route={"/management/stocks/create"} name="Tạo biến động kho" />
       </div>
 
-      <div className={`transition-all duration-300 ease-in-out ${
-        showFilters ? "max-h-[500px] opacity-100 mb-4 overflow-visible" : "max-h-0 opacity-0 overflow-hidden"
-      }`}>
+      <div
+        className={`transition-all duration-300 ease-in-out ${
+          showFilters
+            ? "max-h-[500px] opacity-100 mb-4 overflow-visible"
+            : "max-h-0 opacity-0 overflow-hidden"
+        }`}
+      >
         <div className="p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
           <div className="flex flex-wrap items-end gap-4">
             <div className="flex-1 min-w-[180px]">
@@ -111,7 +135,10 @@ const StockPage = () => {
                 onChange={(val) => setFilter("product_id", val)}
                 options={[
                   { slug: "", name: "Tất cả" },
-                  ...(response.products || []).map((p) => ({ slug: String(p.id), name: p.name })),
+                  ...(response.products || []).map((p) => ({
+                    slug: String(p.id),
+                    name: p.name,
+                  })),
                 ]}
                 placeholder="Tất cả"
               />
@@ -177,7 +204,7 @@ const StockPage = () => {
       </div>
 
       {/* KHỐI NỀN TỔNG - Chuyển hoàn toàn sang tối mờ GlassOS */}
-      <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
+      <div className="\bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
         {/* HEADER TIÊU ĐỀ */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
@@ -215,12 +242,14 @@ const StockPage = () => {
 
           <div className="text-xs bg-[#111827] text-slate-400 border border-slate-800 px-3 py-1.5 rounded-xl font-medium h-fit self-end">
             Tổng số mặt hàng:{" "}
-            <span className="text-sky-400 font-bold">{paginationInfo.totalItems || stocks.length}</span>
+            <span className="text-sky-400 font-bold">
+              {paginationInfo.totalItems || stocks.length}
+            </span>
           </div>
         </div>
 
         {/* BẢNG DỮ LIỆU CHUẨN ĐƯỜNG KẺ TRẮNG MỜ BIÊN DƯỚI */}
-        <div className="table-retro">
+        <div className="mb-2 table-retro">
           <table className="w-full border-separate border-spacing-0">
             <thead>
               <tr>

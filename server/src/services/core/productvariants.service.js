@@ -93,7 +93,7 @@ const productVariantService = {
     },
 
     getAllProductVariants: async ({ page, search, product_id, stock_min, stock_max, price_min, price_max, include_deleted } = {}) => {
-        const limit = 6;
+        const limit = 15;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
         const where = { deleted_at: ACTIVE }

@@ -118,7 +118,7 @@ const userService = {
     },
 
     getAllUser: async ({ page, search, status, is_verified, role_id, date_from, date_to, include_deleted } = {}) => {
-        const limit = 6;
+        const limit = 5;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
 

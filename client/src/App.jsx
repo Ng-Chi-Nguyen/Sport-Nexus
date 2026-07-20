@@ -17,9 +17,9 @@ function App() {
   return (
     <div className="h-screen flex flex-col">
       <Toaster position="top-right" richColors />
-      {!isManagementView && <Header className="h-[65px] shrink-0" />}
+      {!isManagementView && <Header />}
 
-      <main className="flex-1">
+      <main className={`flex-1 ${!isManagementView ? "pt-16" : ""}`}>
         {!isManagementView ? (
           <div className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8">
             <Outlet />

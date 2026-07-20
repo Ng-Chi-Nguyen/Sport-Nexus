@@ -101,7 +101,7 @@ const stockMovementService = {
     },
 
     getAllStockMovement: async ({ page, search, product_id, stock_min, stock_max, price_min, price_max } = {}) => {
-        const limit = 6;
+        const limit = 16;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
         const where = {};

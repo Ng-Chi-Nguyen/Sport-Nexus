@@ -167,10 +167,10 @@ const UserPage = () => {
       </FilterPanel>
 
       {/* KHỐI LAYOUT TỐI CHỦ ĐẠO */}
-      <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
+      <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl pt-2 pl-2 shadow-2xl backdrop-blur-md">
         <h3 className="section-title">Danh sách người dùng</h3>
 
-        <div className="table-retro">
+        <div className="mb-2 table-retro">
           <table className="w-full border-separate border-spacing-0">
             <thead>
               <tr>
@@ -299,13 +299,11 @@ const UserPage = () => {
           </table>
         </div>
 
-        <div className="mt-6">
-          <Pagination
-            totalPages={paginationInfo.totalPages}
-            currentPage={paginationInfo.currentPage}
-            onPageChange={handlePageChange}
-          />
-        </div>
+        <Pagination
+          totalPages={paginationInfo.totalPages}
+          currentPage={paginationInfo.currentPage}
+          onPageChange={handlePageChange}
+        />
 
         <ConfirmDelete
           isOpen={isConfirmOpen}

@@ -37,7 +37,7 @@ const supplierService = {
     },
 
     getAllSuppliers: async ({ page, search, province, include_deleted } = {}) => {
-        const limit = 5;
+        const limit = 10;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
         let AND = [{ deleted_at: ACTIVE }];

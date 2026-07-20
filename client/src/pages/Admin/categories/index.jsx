@@ -150,11 +150,9 @@ const CategoryPage = () => {
           name="Thêm danh mục"
         />
       </div>
-      <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <h2 className="section-title">
-          Danh sách danh mục
-        </h2>
-        <div className="table-retro">
+      <div className="mt-2 bg-[#0D121F]/40 border border-slate-900 rounded-2xl pt-2 pl-2 shadow-2xl backdrop-blur-md">
+        <h2 className="section-title">Danh sách danh mục</h2>
+        <div className="mb-2 table-retro">
           <table className="w-full border-separate border-spacing-0">
             <thead>
               <tr>
@@ -247,14 +245,13 @@ const CategoryPage = () => {
             </tbody>
           </table>
         </div>
-      </div>
-      <div className="mt-6 border-t border-slate-800/40 pt-4">
         <Pagination
           totalPages={pagination?.totalPages || 1}
           currentPage={pagination?.currentPage || 1}
           onPageChange={handlePageChange}
         />
       </div>
+
       <ConfirmDelete
         isOpen={isConfirmOpen}
         title="Xóa danh mục"

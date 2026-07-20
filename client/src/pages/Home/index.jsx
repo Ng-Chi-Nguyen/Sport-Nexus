@@ -25,7 +25,7 @@ const HomePage = () => {
   );
   // console.log(bestSellers);
   return (
-    <div className="min-h-screen bg-[#F4F6F9] text-slate-800 font-sans antialiased selection:bg-rose-500/20">
+    <div className="min-h-screen bg-[#F4F6F9] text-slate-800 font-sans antialiased selection:bg-blue-500/20">
       <NavCategoryMenu />
       <HeroBanner />
       {bestSellers.length > 0 && <SpecialSale products={bestSellers} />}

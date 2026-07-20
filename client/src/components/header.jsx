@@ -1,7 +1,6 @@
 import {
-  Icon,
   LayoutDashboard,
-  NotebookText,
+  Search,
   Settings,
   ShoppingCart,
   User,
@@ -9,93 +8,90 @@ import {
 import { Link } from "react-router-dom";
 
 import { Logo } from "./logo";
-import SearchHeader from "./search";
 
 const Header = () => {
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
-  // console.log(user);
+
   return (
-    <>
-      <header className="w-full bg-white border-b shadow-sm h-[65px]">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-8">
-          <div className="flex-shrink-0 w-[200px]">
-            <Logo />
-          </div>
-          <div className="flex-1 max-w-2xl">
-            <SearchHeader />
-          </div>
-          <div className="flex items-center bg-blue-500 px-3 py-1 rounded-[30px] text-white ">
-            <div className="pr-3">
-              <NotebookText />
-            </div>
-            <div className="">
-              <p className="mb-[-7px] text-[12px]">Tư vấn mua hàng</p>
-              <span className="font-bold cursor-pointer text-[14px]">
-                0812312831
-              </span>
-            </div>
-          </div>
-          <span className="border border-solid w-[1px] h-8"></span>
-          <div className="flex items-center">
-            {user && user.role.slug !== "customer" && (
-              <Link
-                to="/management/dashboard"
-                className="mr-3 cursor-pointer group"
-              >
-                <LayoutDashboard
-                  size={28}
-                  strokeWidth={1}
-                  className="group-hover:text-blue-600 transition-colors"
-                />
-              </Link>
-            )}
+    <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white/80 backdrop-blur-md border-b border-gray-200/70 shadow-sm">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4 lg:gap-8">
+        <div className="flex-shrink-0">
+          <Logo />
+        </div>
 
-            {user ? (
-              <Link
-                to="/profile"
-                className="border-b-2 border-b-blue-500 flex items-center mr-5 px-3 py-1 hover:bg-blue-100 duration-500"
-              >
-                <User className="text-blue-500" />
-                <div className="flex flex-col ml-2">
-                  <p className="text-blue-500 text-[14px] font-bold">
-                    {user.full_name}
-                  </p>
-                  <p className="text-gray-500 text-[8px] -mt-[4px]">
-                    {user.email}
-                  </p>
-                </div>
-              </Link>
-            ) : (
-              <Link
-                to="/auth/login"
-                className="border border-solid flex items-center mr-5 px-3 py-1"
-              >
-                <User className="text-blue-500" />
-                <p className="text-blue-500 font-bold">Tài khoản</p>
-              </Link>
-            )}
-
-            <button className="relative text-blue-500 p-1 rounded-[50%] cursor-pointer p-[8px]">
-              <ShoppingCart />
-              <span className="absolute top-[3px] right-[2px] w-2 h-2 bg-red-600 rounded-[50%]"></span>
+        <div className="flex-1 max-w-2xl hidden sm:block">
+          <div className="relative flex items-center">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+              strokeWidth={2}
+            />
+            <input
+              type="text"
+              placeholder="Tìm kiếm sản phẩm..."
+              className="w-full h-10 pl-10 pr-24 bg-gray-50 border border-gray-200 rounded-full text-sm outline-none transition-all duration-200 placeholder:text-gray-400 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/30"
+            />
+            <button className="absolute right-1 top-1/2 -translate-y-1/2 h-8 px-4 bg-primary hover:bg-blue-600 text-white text-sm font-medium rounded-full transition-colors duration-200">
+              Tìm kiếm
             </button>
-            <span className="border border-solid w-[1px] h-4 ml-2"></span>
-            <div className="ml-2 flex items-center cursor-pointer">
-              <div className="flex items-center justify-center p-4">
-                {/* Nút chứa icon với phong cách Neo-brutalism */}
-                <button className="group rounded-full transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">
-                  <Settings
-                    size={24}
-                    className="text-[#4facf3] transition-transform duration-700 group-hover:animate-spin"
-                  />
-                </button>
-              </div>
-            </div>
           </div>
         </div>
-      </header>
-    </>
+
+        <div className="flex items-center gap-1 sm:gap-2">
+          {user && user.role.slug !== "customer" && (
+            <Link
+              to="/management/dashboard"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-200 font-medium text-sm"
+            >
+              <LayoutDashboard size={18} strokeWidth={1.5} />
+              <span className="hidden lg:inline">Dashboard</span>
+            </Link>
+          )}
+
+          {user ? (
+            <Link
+              to="/profile"
+              className="flex items-center gap-2.5 px-2 py-2 rounded-full border border-gray-200 text-gray-700 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200 min-w-[140px]"
+            >
+              <div className="w-10 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold shrink-0">
+                <img
+                  src={user.avatar}
+                  alt="avatar"
+                  className="w-[150px] h-auto rounded-[50%]"
+                />
+              </div>
+              <div className="flex flex-col leading-tight">
+                <span className="text-sm font-medium max-w-[145px] truncate">
+                  {user.full_name}
+                </span>
+                <span className="text-[10px] text-gray-400 hidden md:block">
+                  {user.email}
+                </span>
+              </div>
+            </Link>
+          ) : (
+            <Link
+              to="/auth/login"
+              className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 text-gray-500 hover:border-primary hover:text-primary transition-all duration-200"
+            >
+              <User size={18} strokeWidth={1.5} />
+              <span className="text-sm font-medium hidden sm:inline">
+                Đăng nhập
+              </span>
+            </Link>
+          )}
+
+          <button className="relative p-2.5 rounded-full text-gray-500 hover:text-primary hover:bg-primary/10 transition-all duration-200">
+            <ShoppingCart size={20} strokeWidth={1.5} />
+            <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white" />
+          </button>
+
+          <button className="p-2.5 rounded-full text-gray-500 hover:text-primary hover:bg-primary/10 transition-all duration-200">
+            <Settings size={20} strokeWidth={1.5} />
+          </button>
+        </div>
+      </div>
+    </header>
   );
 };
 

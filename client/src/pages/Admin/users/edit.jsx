@@ -152,7 +152,7 @@ const EditUserPage = () => {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="">
             <Select
               label="Loại tài khoản"
               options={roleOptions}
@@ -162,7 +162,7 @@ const EditUserPage = () => {
             />
 
             {/* Thanh nút bấm ngăn cách phẳng mượt biên đáy card */}
-            <div className="border-t border-white/5 pt-5 flex justify-end w-full">
+            <div className="border-t border-white/5 flex justify-end w-full">
               <Submit_GoBack />
             </div>
           </div>

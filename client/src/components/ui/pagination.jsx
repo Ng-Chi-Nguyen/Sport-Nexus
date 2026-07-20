@@ -22,7 +22,7 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-end gap-2 mt-6 mb-2 font-medium select-none">
+    <div className="flex items-center justify-end gap-2 font-medium select-none">
       {/* NÚT QUAY LẠI - THEME TỐI */}
       <button
         onClick={() => onPageChange(currentPage - 1)}
