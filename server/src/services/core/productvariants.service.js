@@ -1,4 +1,5 @@
 import prisma from "../../db/prisma.js";
+import { ACTIVE } from "../../utils/prisma.js";
 const productVariantService = {
     createProductVariant: async (dataProductVariant) => {
         let { stock, price, product_id, attributes } = dataProductVariant;
@@ -73,7 +74,7 @@ const productVariantService = {
 
     getProductVariantByProductid: async (productId) => {
         let productVariants = await prisma.ProductVariants.findMany({
-            where: { product_id: productId },
+            where: { product_id: productId, deleted_at: ACTIVE },
             include: {
                 VariableAttributes: {
                     select: {
@@ -91,11 +92,12 @@ const productVariantService = {
         return productVariants;
     },
 
-    getAllProductVariants: async ({ page, search, product_id, stock_min, stock_max, price_min, price_max } = {}) => {
+    getAllProductVariants: async ({ page, search, product_id, stock_min, stock_max, price_min, price_max, include_deleted } = {}) => {
         const limit = 6;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
-        const where = {};
+        const where = { deleted_at: ACTIVE }
+        if (include_deleted) delete where.deleted_at;;
         if (search) where.product = { name: { contains: search } };
         if (product_id) where.product_id = parseInt(product_id);
         if (stock_min) where.stock = { ...where.stock, gte: parseInt(stock_min) };
@@ -137,6 +139,7 @@ const productVariantService = {
 
     getProductVariantsDropdown: async () => {
         return await prisma.productVariants.findMany({
+            where: { deleted_at: ACTIVE },
             select: {
                 id: true,
                 product: {
@@ -202,8 +205,9 @@ const productVariantService = {
     },
 
     deleteProductVariant: async (variantId) => {
-        await prisma.ProductVariants.delete({
-            where: { id: variantId }
+        await prisma.ProductVariants.update({
+            where: { id: variantId },
+            data: { deleted_at: new Date() }
         })
     }
 }

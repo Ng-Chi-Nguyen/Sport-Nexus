@@ -58,8 +58,9 @@ const categoryController = {
         const page = parseInt(req.query.page || 1);
         const is_active = req.query.is_active !== undefined ? req.query.is_active : '';
         const search = req.query.search || '';
+        const include_deleted = req.query.include_deleted === 'true';
         try {
-            let result = await categoryService.getAllCategory({ page, is_active, search });
+            let result = await categoryService.getAllCategory({ page, is_active, search, include_deleted });
 
             if (!result || result.list_categories.length === 0) {
                 return res.status(404).json({

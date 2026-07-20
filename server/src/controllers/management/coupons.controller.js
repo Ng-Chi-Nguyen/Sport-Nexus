@@ -53,6 +53,7 @@ const couponController = {
 
     getAllCoupon: async (req, res) => {
         const { page, is_active, search, discount_type, date_from, date_to, discount_min, discount_max } = req.query;
+        const include_deleted = req.query.include_deleted === 'true';
         try {
             let result = await couponService.getAllCoupon({
                 page: parseInt(page || 1),
@@ -63,6 +64,7 @@ const couponController = {
                 date_to,
                 discount_min,
                 discount_max,
+                include_deleted,
             });
 
             if (!result || result.list_coupons.length === 0) {

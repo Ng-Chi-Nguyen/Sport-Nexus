@@ -59,8 +59,9 @@ const brandController = {
         const page = parseInt(req.query.page) || 1;
         const origin = req.query.origin || '';
         const search = req.query.search || '';
+        const include_deleted = req.query.include_deleted === 'true';
         try {
-            let result = await brandService.getAllBrands({ page, origin, search });
+            let result = await brandService.getAllBrands({ page, origin, search, include_deleted });
 
             if (!result || result.brands.length === 0) {
                 return res.status(404).json({

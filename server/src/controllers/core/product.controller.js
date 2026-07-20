@@ -140,8 +140,9 @@ const productController = {
         const supplier_id = req.query.supplier_id || '';
         const price_min = req.query.price_min || '';
         const price_max = req.query.price_max || '';
+        const include_deleted = req.query.include_deleted === 'true';
         try {
-            let list_products = await productService.getAllProduct({ page, search, is_active, category_id, brand_id, supplier_id, price_min, price_max });
+            let list_products = await productService.getAllProduct({ page, search, is_active, category_id, brand_id, supplier_id, price_min, price_max, include_deleted });
             if (!list_products || list_products.list_products.length === 0) {
                 return res.status(404).json({
                     success: false,

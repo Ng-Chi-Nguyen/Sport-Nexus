@@ -2,6 +2,7 @@ import prisma from "../../db/prisma.js";
 import bcrypt from "bcrypt";
 import emailService from "../email/email.service.js";
 import { deleteImage } from "../../utils/deleteImage.utils.js";
+import { ACTIVE } from "../../utils/prisma.js";
 
 const userService = {
     createUser: async (userData) => {
@@ -116,12 +117,13 @@ const userService = {
         return { user };
     },
 
-    getAllUser: async ({ page, search, status, is_verified, role_id, date_from, date_to } = {}) => {
+    getAllUser: async ({ page, search, status, is_verified, role_id, date_from, date_to, include_deleted } = {}) => {
         const limit = 6;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
 
-        let where = {};
+        let where = { deleted_at: ACTIVE };
+        if (include_deleted) delete where.deleted_at;
 
         if (search) {
             where.OR = [
@@ -193,11 +195,9 @@ const userService = {
     },
 
     deleteUser: async (userId, currentUser) => {
-        if (currentUser.avatar) {
-            await deleteImage(userId, "users", "avatar");
-        }
-        await prisma.users.delete({
-            where: { id: userId }
+        await prisma.users.update({
+            where: { id: userId },
+            data: { deleted_at: new Date() }
         })
     },
 

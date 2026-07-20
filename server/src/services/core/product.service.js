@@ -2,6 +2,7 @@ import prisma from "../../db/prisma.js";
 import { deleteImage } from "../../utils/deleteImage.utils.js";
 import { createAutoSlug } from "../../utils/slug.utils.js";
 import { uploadImage } from "../image/image.service.js";
+import { ACTIVE } from "../../utils/prisma.js";
 
 const productService = {
     createProduct: async (productData) => {
@@ -58,32 +59,30 @@ const productService = {
 
     getProductBySupplierId: async (supplierId) => {
         let product = await prisma.Products.findMany({
-            where: { supplier_id: supplierId }
+            where: { supplier_id: supplierId, deleted_at: ACTIVE }
         })
         return product;
     },
 
     getProductByBrandId: async (brandId) => {
-        // console.log(brandId)
         let product = await prisma.Products.findMany({
-            where: { brand_id: brandId }
+            where: { brand_id: brandId, deleted_at: ACTIVE }
         })
-        // console.log(product)
         return product;
     },
 
     getProductByCategoryId: async (categoryId) => {
         let product = await prisma.Products.findMany({
-            where: { category_id: categoryId }
+            where: { category_id: categoryId, deleted_at: ACTIVE }
         })
         return product;
     },
 
-    getAllProduct: async ({ page, search, is_active, category_id, brand_id, supplier_id, price_min, price_max } = {}) => {
+    getAllProduct: async ({ page, search, is_active, category_id, brand_id, supplier_id, price_min, price_max, include_deleted } = {}) => {
         const limit = 6;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
-        const where = {};
+        const where = { deleted_at: ACTIVE };
         if (search) where.name = { contains: search };
         if (is_active !== undefined && is_active !== '') {
             where.is_active = is_active === 'true';
@@ -93,6 +92,7 @@ const productService = {
         if (supplier_id) where.supplier_id = parseInt(supplier_id);
         if (price_min) where.base_price = { ...where.base_price, gte: parseFloat(price_min) };
         if (price_max) where.base_price = { ...where.base_price, lte: parseFloat(price_max) };
+        if (include_deleted) delete where.deleted_at;
         let [list_products, totalItems] = await Promise.all([
             prisma.Products.findMany({
                 where,
@@ -132,6 +132,7 @@ const productService = {
 
     getAllProductsDropdown: async () => {
         let products = await prisma.Products.findMany({
+            where: { deleted_at: ACTIVE },
             select: {
                 id: true,
                 name: true,
@@ -174,8 +175,10 @@ const productService = {
     },
 
     deleteProduct: async (productId) => {
-        // await deleteImage(productId, "Products", "thumbnail");
-        await prisma.Products.delete({ where: { id: productId } })
+        await prisma.Products.update({
+            where: { id: productId },
+            data: { deleted_at: new Date() }
+        })
     }
 }
 

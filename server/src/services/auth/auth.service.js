@@ -1,6 +1,7 @@
 import prisma from "../../db/prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { ACTIVE } from "../../utils/prisma.js";
 
 const authService = {
     login: async (dataLogin) => {
@@ -8,6 +9,7 @@ const authService = {
         // console.log(dataLogin)
         let user = await prisma.Users.findFirst({
             where: {
+                deleted_at: ACTIVE,
                 OR: [
                     { email: username },
                     { phone_number: username }

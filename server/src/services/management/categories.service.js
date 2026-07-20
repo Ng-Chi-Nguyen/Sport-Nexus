@@ -1,6 +1,7 @@
 import prisma from "../../db/prisma.js";
 import { deleteImage } from "../../utils/deleteImage.utils.js";
 import { createAutoSlug } from "../../utils/slug.utils.js";
+import { ACTIVE } from "../../utils/prisma.js";
 
 const categoryService = {
     createCategory: async (dataCategory) => {
@@ -31,15 +32,16 @@ const categoryService = {
         return category;
     },
 
-    getAllCategory: async ({ page, is_active, search } = {}) => {
+    getAllCategory: async ({ page, is_active, search, include_deleted } = {}) => {
         const limit = 6;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
-        const where = {};
+        const where = { deleted_at: ACTIVE };
         if (is_active !== undefined && is_active !== '') {
             where.is_active = is_active === 'true';
         }
         if (search) where.name = { contains: search };
+        if (include_deleted) delete where.deleted_at;
         const [list_categories, totalItems] = await Promise.all([
             prisma.categories.findMany({
                 where,
@@ -67,6 +69,7 @@ const categoryService = {
 
     getCategoriesDropdown: async () => {
         let categories = await prisma.Categories.findMany({
+            where: { deleted_at: ACTIVE },
             select: {
                 id: true,
                 name: true,
@@ -99,9 +102,9 @@ const categoryService = {
     },
 
     deleteCategory: async (categoryId) => {
-        await deleteImage(categoryId, "categories", "image");
-        await prisma.categories.delete({
-            where: { id: categoryId }
+        await prisma.categories.update({
+            where: { id: categoryId },
+            data: { deleted_at: new Date() }
         })
     }
 }

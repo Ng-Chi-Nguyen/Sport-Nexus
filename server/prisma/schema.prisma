@@ -34,9 +34,9 @@ model Roles {
 model Users {
     id                 Int             @id @default(autoincrement())
     full_name          String
-    email              String          @unique
+    email              String
     password           String
-    phone_number       String?         @unique
+    phone_number       String?
     avatar             String?         @db.Text
     status             Boolean         @default(true)
     is_verified        Boolean         @default(false)
@@ -44,6 +44,7 @@ model Users {
     refresh_token      String?
     created_at         DateTime        @default(now())
     updated_at         DateTime        @updatedAt
+    deleted_at         DateTime        @default(dbgenerated("'1000-01-01 00:00:00'"))
     role_id            Int
     role               Roles           @relation(fields: [role_id], references: [id], onDelete: Cascade)
     UserAddresses      UserAddresses[]
@@ -54,6 +55,8 @@ model Users {
     SystemLogs         SystemLogs[]
     permissions        Permissions[]
 
+    @@unique([email, deleted_at])
+    @@unique([phone_number, deleted_at])
     @@map("users")
 }
 
@@ -74,13 +77,15 @@ model UserAddresses {
 
 // Categories Done
 model Categories {
-    id        Int        @id @default(autoincrement())
-    name      String
-    slug      String     @unique
-    image     String?    @db.Text
-    is_active Boolean    @default(true)
-    Products  Products[]
+    id         Int        @id @default(autoincrement())
+    name       String
+    slug       String
+    image      String?    @db.Text
+    is_active  Boolean    @default(true)
+    deleted_at DateTime   @default(dbgenerated("'1000-01-01 00:00:00'"))
+    Products   Products[]
 
+    @@unique([slug, deleted_at])
     @@map("categories")
 }
 
@@ -93,19 +98,22 @@ model Suppliers {
     name           String
     location_data  Json
     logo_url       String?
+    deleted_at     DateTime         @default(dbgenerated("'1000-01-01 00:00:00'"))
     Products       Products[]
     PurchaseOrders PurchaseOrders[]
 
+    @@unique([name, deleted_at])
     @@map("suppliers")
 }
 
 // Brands Done
 model Brands {
-    id       Int        @id @default(autoincrement())
-    name     String
-    logo     String?
-    origin   String?    @db.Text
-    Products Products[]
+    id         Int        @id @default(autoincrement())
+    name       String
+    logo       String?
+    origin     String?    @db.Text
+    deleted_at DateTime   @default(dbgenerated("'1000-01-01 00:00:00'"))
+    Products   Products[]
 
     @@map("brands")
 }
@@ -114,13 +122,14 @@ model Brands {
 model Products {
     id              Int               @id @default(autoincrement())
     name            String
-    slug            String            @unique
+    slug            String
     base_price      Decimal           @db.Decimal(10, 2)
     is_active       Boolean           @default(true)
     description     String            @db.Text
     thumbnail       String?           @db.Text
     created_at      DateTime          @default(now())
     updated_at      DateTime          @updatedAt
+    deleted_at      DateTime          @default(dbgenerated("'1000-01-01 00:00:00'"))
     category_id     Int
     category        Categories        @relation(fields: [category_id], references: [id], onDelete: Cascade)
     supplier_id     Int
@@ -131,6 +140,7 @@ model Products {
     ProductVariants ProductVariants[]
     Reviews         Reviews[]
 
+    @@unique([slug, deleted_at])
     @@map("products")
 }
 
@@ -150,6 +160,7 @@ model ProductVariants {
     id         Int      @id @default(autoincrement())
     stock      Int
     price      Decimal  @db.Decimal(10, 2)
+    deleted_at DateTime @default(dbgenerated("'1000-01-01 00:00:00'"))
     product_id Int
     product    Products @relation(fields: [product_id], references: [id], onDelete: Cascade)
 
@@ -209,6 +220,7 @@ model Coupons {
     usage_limit     Int
     usage_count     Int          @default(0)
     is_active       Boolean
+    deleted_at      DateTime     @default(dbgenerated("'1000-01-01 00:00:00'"))
     Orders          Orders[]
     Users           Users[]
     created_at      DateTime     @default(now())

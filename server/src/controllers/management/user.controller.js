@@ -99,6 +99,7 @@ const userController = {
 
     getAllUser: async (req, res) => {
         const { page, search, status, is_verified, role_id, date_from, date_to } = req.query;
+        const include_deleted = req.query.include_deleted === 'true';
         try {
             let result = await userService.getAllUser({
                 page: parseInt(page || 1),
@@ -108,6 +109,7 @@ const userController = {
                 role_id: role_id || '',
                 date_from: date_from || '',
                 date_to: date_to || '',
+                include_deleted,
             });
 
             if (!result || result.data.length === 0) {

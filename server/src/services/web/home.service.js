@@ -1,4 +1,5 @@
 import prisma from "../../db/prisma.js";
+import { ACTIVE } from "../../utils/prisma.js";
 
 const productSelect = {
     id: true, name: true, slug: true,
@@ -64,7 +65,7 @@ const homeService = {
 
     getNewestProducts: async (limit = 8) => {
         const products = await prisma.Products.findMany({
-            where: { is_active: true },
+            where: { is_active: true, deleted_at: ACTIVE },
             orderBy: { created_at: "desc" },
             take: limit,
             select: productSelect,
@@ -75,13 +76,14 @@ const homeService = {
 
     getCategories: async () => {
         return prisma.Categories.findMany({
-            where: { is_active: true },
+            where: { is_active: true, deleted_at: ACTIVE },
             select: { id: true, name: true, slug: true, image: true },
         });
     },
 
     getBrands: async () => {
         return prisma.Brands.findMany({
+            where: { deleted_at: ACTIVE },
             select: { id: true, name: true, logo: true },
         });
     },
@@ -99,7 +101,7 @@ const homeService = {
         const variantIds = topVariants.map((v) => v.product_variant_id);
 
         const variants = await prisma.ProductVariants.findMany({
-            where: { id: { in: variantIds } },
+            where: { id: { in: variantIds }, deleted_at: ACTIVE },
             select: {
                 product_id: true,
                 product: { select: productSelect },
@@ -119,7 +121,7 @@ const homeService = {
 
     getTopRated: async (limit = 8) => {
         const products = await prisma.Products.findMany({
-            where: { is_active: true, Reviews: { some: {} } },
+            where: { is_active: true, deleted_at: ACTIVE, Reviews: { some: {} } },
             select: productSelect,
         });
 
@@ -131,7 +133,7 @@ const homeService = {
 
     getProductsByCategory: async (limit = 8, maxCategories = 5) => {
         const categories = await prisma.Categories.findMany({
-            where: { is_active: true },
+            where: { is_active: true, deleted_at: ACTIVE },
             take: maxCategories,
             orderBy: { id: "asc" },
             select: { id: true, name: true, slug: true, image: true },
@@ -140,7 +142,7 @@ const homeService = {
         const result = await Promise.all(
             categories.map(async (cat) => {
                 const products = await prisma.Products.findMany({
-                    where: { is_active: true, category_id: cat.id },
+                    where: { is_active: true, deleted_at: ACTIVE, category_id: cat.id },
                     orderBy: { created_at: "desc" },
                     take: limit,
                     select: productSelect,

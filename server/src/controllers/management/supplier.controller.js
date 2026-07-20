@@ -61,8 +61,9 @@ const supplierController = {
         const page = parseInt(req.query.page || 1);
         const search = req.query.search || '';
         const province = req.query.province || '';
+        const include_deleted = req.query.include_deleted === 'true';
         try {
-            let result = await supplierService.getAllSuppliers({ page, search, province });
+            let result = await supplierService.getAllSuppliers({ page, search, province, include_deleted });
 
             if (!result || result.supplier.length === 0) {
                 return res.status(404).json({

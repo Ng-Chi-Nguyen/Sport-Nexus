@@ -14,7 +14,10 @@ import { queryClient } from "@/lib/react-query";
 import userApi from "@/api/management/userApi";
 import avatarDefault from "@/assets/images/avatar-default.jpg";
 import useTableFilters from "@/hooks/useTableFilters";
-import { USER_STATUS_OPTIONS, USER_VERIFIED_OPTIONS } from "@/constants/management/user";
+import {
+  USER_STATUS_OPTIONS,
+  USER_VERIFIED_OPTIONS,
+} from "@/constants/management/user";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -75,6 +78,7 @@ const UserPage = () => {
         await queryClient.invalidateQueries({ queryKey: ["users"] });
         revalidator.revalidate();
         setIsConfirmOpen(false);
+        toast.success(response.message || "Xóa người dùng thành công!");
       }
     } catch (error) {
       setIsConfirmOpen(false);
@@ -82,7 +86,7 @@ const UserPage = () => {
         error.message ||
           error.response?.data?.message ||
           error.response?.data?.errors?.[0] ||
-          "Đã có lỗi xảy ra!"
+          "Đã có lỗi xảy ra!",
       );
     }
   };
@@ -127,8 +131,18 @@ const UserPage = () => {
           <BtnAdd route={"/management/users/create"} name="Thêm người dùng" />
         }
       >
-        {renderSegmented("status", USER_STATUS_OPTIONS, currentStatus, "Trạng thái")}
-        {renderSegmented("is_verified", USER_VERIFIED_OPTIONS, currentIsVerified, "Xác thực")}
+        {renderSegmented(
+          "status",
+          USER_STATUS_OPTIONS,
+          currentStatus,
+          "Trạng thái",
+        )}
+        {renderSegmented(
+          "is_verified",
+          USER_VERIFIED_OPTIONS,
+          currentIsVerified,
+          "Xác thực",
+        )}
         <SimpleSelect
           label="Vai trò"
           value={currentRoleId}
@@ -154,9 +168,7 @@ const UserPage = () => {
 
       {/* KHỐI LAYOUT TỐI CHỦ ĐẠO */}
       <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <h3 className="section-title">
-          Danh sách người dùng
-        </h3>
+        <h3 className="section-title">Danh sách người dùng</h3>
 
         <div className="table-retro">
           <table className="w-full border-separate border-spacing-0">

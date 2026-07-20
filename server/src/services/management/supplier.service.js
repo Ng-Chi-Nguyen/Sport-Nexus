@@ -1,5 +1,6 @@
 import prisma from "../../db/prisma.js";
 import { deleteImage } from "../../utils/deleteImage.utils.js";
+import { ACTIVE } from "../../utils/prisma.js";
 
 const supplierService = {
     createSuplier: async (supplierData) => {
@@ -35,11 +36,11 @@ const supplierService = {
         return supplier;
     },
 
-    getAllSuppliers: async ({ page, search, province } = {}) => {
+    getAllSuppliers: async ({ page, search, province, include_deleted } = {}) => {
         const limit = 5;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
-        let AND = [];
+        let AND = [{ deleted_at: ACTIVE }];
         if (search) AND.push({
             OR: [
                 { name: { contains: search } },
@@ -60,6 +61,7 @@ const supplierService = {
             AND.push({ id: { in: ids } });
         }
         const where = AND.length > 0 ? { AND } : {};
+        if (include_deleted) where.AND = where.AND.filter(c => !c.deleted_at);
         const [supplier, totalItems] = await Promise.all([
             prisma.Suppliers.findMany({ where, take: limit, skip }),
             prisma.Suppliers.count({ where })
@@ -87,6 +89,7 @@ const supplierService = {
 
     getSuppliersDropdown: async () => {
         let suppliers = await prisma.Suppliers.findMany({
+            where: { deleted_at: ACTIVE },
             select: {
                 id: true,
                 name: true
@@ -118,12 +121,9 @@ const supplierService = {
     },
 
     deleteSupplier: async (supplierId) => {
-        // console.log(supplierId)
-        await deleteImage(supplierId, "suppliers", "logo_url");
-        await prisma.Suppliers.delete({
-            where: {
-                id: supplierId,
-            },
+        await prisma.Suppliers.update({
+            where: { id: supplierId },
+            data: { deleted_at: new Date() }
         })
     }
 }

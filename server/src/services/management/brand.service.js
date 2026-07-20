@@ -1,6 +1,7 @@
 import prisma from "../../db/prisma.js";
 import { deleteImage } from "../../utils/deleteImage.utils.js";
 import { uploadImage } from "../image/image.service.js";
+import { ACTIVE } from "../../utils/prisma.js";
 
 const brandService = {
     createBrand: async (brandData) => {
@@ -30,13 +31,14 @@ const brandService = {
         return brand;
     },
 
-    getAllBrands: async ({ page, origin, search } = {}) => {
+    getAllBrands: async ({ page, origin, search, include_deleted } = {}) => {
         const limit = 10;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
-        const where = {};
+        const where = { deleted_at: ACTIVE };
         if (origin) where.origin = origin;
         if (search) where.name = { contains: search };
+        if (include_deleted) delete where.deleted_at;
         const [brands, totalItems] = await Promise.all([
             prisma.Brands.findMany({
                 where,
@@ -57,6 +59,7 @@ const brandService = {
 
     getBrandsDropdown: async () => {
         let brands = await prisma.Brands.findMany({
+            where: { deleted_at: ACTIVE },
             select: {
                 id: true,
                 name: true,
@@ -89,10 +92,9 @@ const brandService = {
     },
 
     deleteBrand: async (brandId) => {
-        await deleteImage(brandId, "brands", "logo");
-
-        await prisma.Brands.delete({
-            where: { id: brandId }
+        await prisma.Brands.update({
+            where: { id: brandId },
+            data: { deleted_at: new Date() }
         })
     }
 }

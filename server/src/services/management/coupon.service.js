@@ -1,4 +1,5 @@
 import prisma from "../../db/prisma.js";
+import { ACTIVE } from "../../utils/prisma.js";
 
 
 const couponService = {
@@ -45,11 +46,11 @@ const couponService = {
         return coupon;
     },
 
-    getAllCoupon: async ({ page, is_active, search, discount_type, date_from, date_to, discount_min, discount_max } = {}) => {
+    getAllCoupon: async ({ page, is_active, search, discount_type, date_from, date_to, discount_min, discount_max, include_deleted } = {}) => {
         const limit = 6;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
-        const where = {};
+        const where = { deleted_at: ACTIVE };
         if (is_active !== undefined && is_active !== '') {
             where.is_active = is_active === 'true';
         }
@@ -72,6 +73,7 @@ const couponService = {
         if (discount_max !== undefined && discount_max !== '') {
             where.discount_value = { ...where.discount_value, lte: parseInt(discount_max) };
         }
+        if (include_deleted) delete where.deleted_at;
         let [list_coupons, totalItems] = await Promise.all([
             prisma.coupons.findMany({
                 where,
@@ -100,14 +102,15 @@ const couponService = {
     },
 
     deleteCoupon: async (couponId) => {
-        await prisma.coupons.delete({
-            where: { id: couponId }
+        await prisma.coupons.update({
+            where: { id: couponId },
+            data: { deleted_at: new Date() }
         })
     },
 
     checkCoupon: async (amount, code) => {
-        const coupon = await prisma.coupons.findUnique({
-            where: { code: code }
+        const coupon = await prisma.coupons.findFirst({
+            where: { code: code, deleted_at: ACTIVE }
         })
 
         // console.log(coupon)

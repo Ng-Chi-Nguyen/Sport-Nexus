@@ -176,8 +176,9 @@ const purchaseOrderService = {
     },
 
     deletePurchaseOrder: async (purchaseOrderId) => {
-        await prisma.PurchaseOrders.delete({
-            where: { id: purchaseOrderId }
+        await prisma.PurchaseOrders.update({
+            where: { id: purchaseOrderId },
+            data: { status: "CANCELLED" }
         })
     }
 }
