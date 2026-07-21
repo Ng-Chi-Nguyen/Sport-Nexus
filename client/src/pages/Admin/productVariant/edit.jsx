@@ -3,9 +3,10 @@ import { FloatingInput } from "@/components/ui/input";
 import { SelectPro } from "@/components/ui/select";
 import { Submit_GoBack } from "@/components/ui/button";
 import { LayoutDashboard } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import productVariantdApi from "@/api/core/productVariantApi";
+import productAttributeKeyApi from "@/api/management/productAttributeKeyApi";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
@@ -22,7 +23,6 @@ const EditProductVariant = () => {
   const navigate = useNavigate();
 
   const products = response.products.data;
-  const attributeKeys = response.attributeKeys.data;
   const product_variant = response.product_variant.data;
 
   // --- KHỞI TẠO STATE TỪ LOADER DATA BIẾN THỂ ---
@@ -35,6 +35,7 @@ const EditProductVariant = () => {
   const [value, setValue] = useState(
     product_variant.VariableAttributes[0].value,
   );
+  const [assignedAttrKeys, setAssignedAttrKeys] = useState([]);
 
   const productOptions = useMemo(
     () =>
@@ -47,12 +48,25 @@ const EditProductVariant = () => {
 
   const attributeKeyOptions = useMemo(
     () =>
-      attributeKeys.map((attrKey) => ({
+      assignedAttrKeys.map((attrKey) => ({
         id: attrKey.id,
         name: attrKey.name,
       })),
-    [attributeKeys],
+    [assignedAttrKeys],
   );
+
+  useEffect(() => {
+    if (!selectProdut) {
+      setAssignedAttrKeys([]);
+      setSelectAttributeKey("");
+      return;
+    }
+    productAttributeKeyApi.getByProduct(selectProdut).then((res) => {
+      if (res.success) {
+        setAssignedAttrKeys(res.data.map((item) => item.attributeKey).filter(Boolean));
+      }
+    }).catch(() => setAssignedAttrKeys([]));
+  }, [selectProdut]);
 
   const handleProductChange = (productId) => {
     setSelectProduct(productId);

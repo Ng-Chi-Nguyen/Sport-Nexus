@@ -57,6 +57,44 @@ const productService = {
         return product;
     },
 
+    getProductBySlug: async (slug) => {
+        let product = await prisma.Products.findFirst({
+            where: { slug: slug, deleted_at: ACTIVE },
+            include: {
+                brand: { select: { id: true, name: true, logo: true } },
+                category: { select: { id: true, name: true, slug: true } },
+                ProductImages: { select: { id: true, url: true, is_primary: true } },
+                ProductAttributeKeys: {
+                    select: {
+                        attributeKey: { select: { id: true, name: true, unit: true } },
+                    },
+                },
+                ProductVariants: {
+                    select: {
+                        id: true, price: true, stock: true,
+                        VariableAttributes: {
+                            select: {
+                                id: true, value: true,
+                                attributeKey: { select: { id: true, name: true, unit: true } },
+                            },
+                        },
+                    },
+                    orderBy: { price: "asc" },
+                },
+                Reviews: {
+                    select: {
+                        id: true, rating: true, comment: true, user_id: true, created_at: true,
+                        user: { select: { id: true, full_name: true, avatar: true } },
+                    },
+                    take: 10,
+                    orderBy: { created_at: "desc" },
+                },
+            },
+        })
+        // console.log(product)
+        return product;
+    },
+
     getProductBySupplierId: async (supplierId) => {
         let product = await prisma.Products.findMany({
             where: { supplier_id: supplierId, deleted_at: ACTIVE }

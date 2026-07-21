@@ -137,8 +137,9 @@ model Products {
     brand_id        Int
     brand           Brands            @relation(fields: [brand_id], references: [id], onDelete: Cascade)
     ProductImages   ProductImages[]
-    ProductVariants ProductVariants[]
-    Reviews         Reviews[]
+    ProductVariants   ProductVariants[]
+    ProductAttributeKeys ProductAttributeKeys[]
+    Reviews           Reviews[]
 
     @@unique([slug, deleted_at])
     @@map("products")
@@ -179,7 +180,8 @@ model AttributeKeys {
     id                 Int                  @id @default(autoincrement())
     name               String               @unique @db.VarChar(191)
     unit               String?              @db.VarChar(50)
-    VariableAttributes VariableAttributes[]
+    VariableAttributes   VariableAttributes[]
+    ProductAttributeKeys ProductAttributeKeys[]
 
     @@map("attributekeys")
 }
@@ -195,6 +197,17 @@ model VariableAttributes {
 
     @@unique([variable_id, attribute_key_id])
     @@map("variableattributes")
+}
+
+model ProductAttributeKeys {
+    id               Int             @id @default(autoincrement())
+    product_id       Int
+    product          Products        @relation(fields: [product_id], references: [id], onDelete: Cascade)
+    attribute_key_id Int
+    attributeKey     AttributeKeys   @relation(fields: [attribute_key_id], references: [id], onDelete: Cascade)
+
+    @@unique([product_id, attribute_key_id])
+    @@map("productattributekeys")
 }
 
 enum LogStatus {

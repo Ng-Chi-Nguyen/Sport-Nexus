@@ -103,6 +103,9 @@ const CreateAttributeKey = lazy(
 const EditAttributeKey = lazy(
   () => import("@/pages/Admin/attributeKey/edit.jsx"),
 );
+const ProductAttributeKey = lazy(() => import("@/pages/Admin/productAttributeKey/index.jsx"));
+const CreateProductAttributeKey = lazy(() => import("@/pages/Admin/productAttributeKey/create.jsx"));
+const EditProductAttributeKey = lazy(() => import("@/pages/Admin/productAttributeKey/edit.jsx"));
 
 // ─── 2. SƠ ĐỒ ĐỊNH TUYẾN CHÍNH ───
 export const adminRoutes = {
@@ -180,6 +183,15 @@ export const adminRoutes = {
       path: "attribute-key/edit/:attrId",
       element: <EditAttributeKey />,
       loader: RouteLoaders.attributeKeyEditLoader,
+    },
+    {
+      path: "product-attribute-key",
+      element: <ProductAttributeKey />,
+    },
+    { path: "product-attribute-key/create", element: <CreateProductAttributeKey /> },
+    {
+      path: "product-attribute-key/edit/:id",
+      element: <EditProductAttributeKey />,
     },
 
     // Đơn hàng & Khuyến mãi

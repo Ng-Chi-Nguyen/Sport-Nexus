@@ -3,9 +3,10 @@ import { FloatingInput } from "@/components/ui/input";
 import { SelectPro } from "@/components/ui/select";
 import { Submit_GoBack } from "@/components/ui/button";
 import { LayoutDashboard } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import productVariantdApi from "@/api/core/productVariantApi";
+import productAttributeKeyApi from "@/api/management/productAttributeKeyApi";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
@@ -26,9 +27,9 @@ const CreateProductVariant = () => {
   const [stock, setStock] = useState("");
   const [price, setPrice] = useState("");
   const [value, setValue] = useState("");
+  const [assignedAttrKeys, setAssignedAttrKeys] = useState([]);
 
   const products = response.products.data;
-  const attributeKeys = response.attributeKeys.data;
 
   const productOptions = useMemo(() =>
     products.map((product) => ({
@@ -38,11 +39,26 @@ const CreateProductVariant = () => {
   );
 
   const attributeKeyOptions = useMemo(() =>
-    attributeKeys.map((attrKey) => ({
+    assignedAttrKeys.map((attrKey) => ({
       id: attrKey.id,
       name: attrKey.name,
     })),
+    [assignedAttrKeys],
   );
+
+  useEffect(() => {
+    if (!selectProdut) {
+      setAssignedAttrKeys([]);
+      setSelectAttributeKey("");
+      return;
+    }
+    productAttributeKeyApi.getByProduct(selectProdut).then((res) => {
+      if (res.success) {
+        setAssignedAttrKeys(res.data.map((item) => item.attributeKey).filter(Boolean));
+        setSelectAttributeKey("");
+      }
+    }).catch(() => setAssignedAttrKeys([]));
+  }, [selectProdut]);
 
   const handleProductChange = (productId) => {
     setSelectProduct(productId);

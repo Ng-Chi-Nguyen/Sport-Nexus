@@ -7,7 +7,7 @@ import { MiddleBanner } from "./components/middleBanner";
 
 const HomePage = () => {
   const apiData = useLoaderData();
-  console.log(">>> HomePage loader data:", apiData);
+  // console.log(">>> HomePage loader data:", apiData);
 
   const {
     newestProducts = [],

@@ -1,6 +1,7 @@
 import { Earth, ShoppingCart, Eye, Heart, Star } from "lucide-react";
 import Badge from "./badge";
 import { formatCurrency } from "@/utils/formatters";
+import { useNavigate } from "react-router-dom";
 
 const GRADIENTS = [
   "from-blue-500 to-cyan-500",
@@ -79,12 +80,18 @@ const CardBrand = ({ data }) => {
 };
 
 const ProductCard = ({ product, index = 0 }) => {
+  const navigate = useNavigate();
   const salePrice = product.min_price || product.base_price || 0;
   const originalPrice = product.base_price || 0;
   const hasDiscount = originalPrice > salePrice;
   const discountPercent = hasDiscount
     ? Math.round(((originalPrice - salePrice) / originalPrice) * 100)
     : 0;
+
+  const goToDetail = (e) => {
+    e.stopPropagation();
+    navigate(`/san-pham/${product.slug}`);
+  };
 
   return (
     <div className="group flex flex-col bg-white rounded-sm transition-all duration-300 border">
@@ -122,8 +129,9 @@ const ProductCard = ({ product, index = 0 }) => {
               <ShoppingCart size={16} />
             </button>
             <button
-              title="Xem nhanh"
+              title="Xem chi tiết"
               className="p-2.5 hover:bg-slate-50 text-slate-800 transition-colors"
+              onClick={goToDetail}
             >
               <Eye size={16} />
             </button>
@@ -141,7 +149,10 @@ const ProductCard = ({ product, index = 0 }) => {
           </button>
         </div>
 
-        <h3 className="text-[13px] md:text-[14px] font-semibold text-slate-800 line-clamp-2 leading-snug hover:text-blue-600 cursor-pointer transition-colors min-h-[38px]">
+        <h3
+          className="text-[13px] md:text-[14px] font-semibold text-slate-800 line-clamp-2 leading-snug hover:text-blue-600 cursor-pointer transition-colors min-h-[38px]"
+          onClick={() => navigate(`/san-pham/${product.slug}`)}
+        >
           {product.name}
         </h3>
 

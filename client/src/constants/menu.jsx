@@ -48,6 +48,11 @@ export const SIDEBAR_MENU_STRUCTURE = (prefix) => [
         label: "Thuộc tính SP",
         iconName: "Tag",
       },
+      {
+        path: `${prefix}/product-attribute-key`,
+        label: "Gán thuộc tính SP",
+        iconName: "Tags",
+      },
       { path: `${prefix}/brands`, label: "Thương hiệu", iconName: "Award" },
       { path: `${prefix}/stocks`, label: "Tồn kho", iconName: "Warehouse" },
     ],

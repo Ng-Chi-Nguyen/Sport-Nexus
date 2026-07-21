@@ -367,25 +367,15 @@ export const productVariantsLoader = async ({ request }) => {
 };
 
 export const variantCreateLoader = async () => {
-  const [attributeKeys, products] = await Promise.all([
-    queryClient.fetchQuery({
-      queryKey: ["attribute-key-all"],
-      queryFn: () => LoaderAttr.getAllAttributesDropdown(),
-    }),
-    queryClient.fetchQuery({
-      queryKey: ["products-dropdown"],
-      queryFn: () => LoaderProduct.getProductsDropdown(),
-    }),
-  ]);
-  return { attributeKeys, products };
+  const products = await queryClient.fetchQuery({
+    queryKey: ["products-dropdown"],
+    queryFn: () => LoaderProduct.getProductsDropdown(),
+  });
+  return { products };
 };
 
 export const variantEditLoader = async ({ params }) => {
-  const [attributeKeys, products, product_variant] = await Promise.all([
-    queryClient.fetchQuery({
-      queryKey: ["attribute-key-all"],
-      queryFn: () => LoaderAttr.getAllAttributesDropdown(),
-    }),
+  const [products, product_variant] = await Promise.all([
     queryClient.fetchQuery({
       queryKey: ["products-dropdown"],
       queryFn: () => LoaderProduct.getProductsDropdown(),
@@ -396,7 +386,7 @@ export const variantEditLoader = async ({ params }) => {
         LoaderProductVariant.getProductVariantById(params.variantId),
     }),
   ]);
-  return { attributeKeys, products, product_variant };
+  return { products, product_variant };
 };
 
 export const attributeKeyLoader = ({ request }) =>

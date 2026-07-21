@@ -14,7 +14,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    loader: () => LoaderCategory.getCategoriesDropdown(),
+    loader: () => LoaderCategory.getCategoriesDropdown().catch(() => ({ success: true, data: [] })),
     HydrateFallback: LoadingSpinner,
     children: [
       {

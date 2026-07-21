@@ -16,8 +16,10 @@ import stockMovementRoute from "./management/stockMovement.route.js";
 import supplierRoute from "./management/supplier.route.js";
 import userRoute from "./management/user.route.js";
 import homeRoute from "./web/home.route.js";
+import webProductRoute from "./web/product.route.js";
 import permissionRoute from "./management/permission.route.js";
 import logRoute from "./management/log.route.js";
+import productAttributeKeyRoute from "./management/productAttributeKey.route.js";
 import sendEmailRoute from "./email/sendEmail.route.js";
 
 const Routes = (app) => {
@@ -34,6 +36,7 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}management/purchase-order/`, purchaseOrderRoute)
     app.use(`${api_prefix_v1}management/permission/`, permissionRoute)
     app.use(`${api_prefix_v1}management/log/`, logRoute)
+    app.use(`${api_prefix_v1}management/product-attribute-key/`, productAttributeKeyRoute)
 
     // Customer - Khách hàng
     app.use(`${api_prefix_v1}customer/user-address/`, userAddressRoute)
@@ -52,6 +55,7 @@ const Routes = (app) => {
 
     // Web - Hiện thì data các trang / Route các trang
     app.use(`${api_prefix_v1}home/`, homeRoute)
+    app.use(`${api_prefix_v1}home/product/`, webProductRoute)
 
     // Send Email
     app.use(`${api_prefix_v1}email/`, sendEmailRoute)

@@ -1,7 +1,8 @@
 import { lazy } from "react";
-import { homeLoader } from "./webLoader";
+import { homeLoader, productDetailLoader } from "./webLoader";
 
 const HomePage = lazy(() => import("@/pages/Home/"));
+const ProductDetail = lazy(() => import("@/pages/ProductDetail"));
 const InfoPage = lazy(() => import("@/pages/info"));
 const Index = lazy(() => import("@/pages/profile"));
 const ResetPassword = lazy(() => import("@/pages/profile/resetPassword"));
@@ -16,6 +17,11 @@ export const webRoutes = {
       path: "",
       element: <HomePage />,
       loader: homeLoader,
+    },
+    {
+      path: "san-pham/:slug",
+      element: <ProductDetail />,
+      loader: productDetailLoader,
     },
     {
       path: "he-thong-cua-hang",
