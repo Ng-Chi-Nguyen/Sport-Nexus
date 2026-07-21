@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -16,8 +16,10 @@ import FloatingTextarea from "@/components/ui/textarea";
 import { Submit_GoBack } from "@/components/ui/button";
 import { toast } from "sonner";
 import productdApi from "@/api/core/productApi";
+import productImageApi from "@/api/core/productImageApi";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
+import MultiFileUpload from "@/components/ui/MultiFileUpload";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -44,6 +46,21 @@ const CreateProductPage = () => {
   const [basePrice, setbBasePrice] = useState(product.data.base_price);
   const [isActive, setIsActive] = useState(product.data.is_active);
   const [description, setDescription] = useState(product.data.description);
+  const [productImages, setProductImages] = useState([]);
+
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const res = await productImageApi.getByProduct(product.data.id);
+        if (res.success) {
+          setProductImages(res.data || []);
+        }
+      } catch {
+        // Không có ảnh hoặc lỗi
+      }
+    };
+    loadImages();
+  }, [product.data.id]);
 
   // console.log(selectBrand);
 
@@ -93,16 +110,21 @@ const CreateProductPage = () => {
     formData.append("category_id", selectCategory);
     formData.append("description", description);
 
-    // --- ĐOẠN LOG KIỂM TRA ---
-    console.log("=== KIỂM TRA DỮ LIỆU GỬI ĐI ===");
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
-    console.log("===============================");
     try {
       const response = await productdApi.update(product.data.id, formData);
-      // console.log(response);
       if (response.success) {
+        const newFiles = productImages.filter((img) => img instanceof File);
+        const currentImageIds = productImages
+          .filter((img) => !(img instanceof File))
+          .map((img) => ({ id: img.id, is_primary: img.is_primary || false }));
+
+        if (newFiles.length > 0) {
+          const imageFormData = new FormData();
+          newFiles.forEach((file) => imageFormData.append("url", file));
+          imageFormData.append("current_image_ids", JSON.stringify(currentImageIds));
+          await productImageApi.update(product.data.id, imageFormData);
+        }
+
         await queryClient.invalidateQueries({ queryKey: ["products"] });
         toast.success(response.message);
         navigate(-1);
@@ -177,6 +199,14 @@ const CreateProductPage = () => {
             <InputFile
               value={thumbnail}
               onChange={(file) => setThumbnail(file)}
+            />
+          </div>
+          <div className="border border-gray-200 p-3 rounded-[5px]">
+            <MultiFileUpload
+              label="Ảnh mô tả sản phẩm"
+              value={productImages}
+              onChange={setProductImages}
+              maxFiles={10}
             />
           </div>
         </div>

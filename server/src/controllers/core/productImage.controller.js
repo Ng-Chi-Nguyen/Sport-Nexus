@@ -45,13 +45,13 @@ const productImageController = {
         let productImgId = parseInt(req.params.id)
         try {
             let productImg = await productImageService.getProductImageById(productImgId);
-            if (!productImg || productImg.length === 0) {
+            if (!productImg) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                    message: "Không tìm thấy hình ảnh."
                 });
             }
-            return res.status(500).json({
+            return res.status(200).json({
                 success: true,
                 data: productImg
             })
@@ -67,15 +67,9 @@ const productImageController = {
         let productId = parseInt(req.params.id)
         try {
             let productImg = await productImageService.getProductImageByProductId(productId)
-            if (!productImg || productImg.length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
-                });
-            }
-            return res.status(500).json({
+            return res.status(200).json({
                 success: true,
-                data: productImg
+                data: productImg || []
             })
         } catch (error) {
             return res.status(500).json({

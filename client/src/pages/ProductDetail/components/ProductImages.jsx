@@ -11,27 +11,14 @@ const ProductImages = ({ thumbnail, images }) => {
       : [{ url: null, is_primary: false }];
 
   return (
-    <div className="space-y-3">
-      <div className="aspect-square rounded-sm overflow-hidden bg-[#F8F8F8] border border-slate-200">
-        {list[selected]?.url ? (
-          <img
-            src={list[selected].url}
-            alt=""
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-300 text-6xl font-black">
-            ?
-          </div>
-        )}
-      </div>
+    <div className="flex gap-3 mx-auto">
       {list.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="flex flex-col gap-2 overflow-y-auto">
           {list.map((img, i) => (
             <button
               key={i}
               onClick={() => setSelected(i)}
-              className={`w-16 h-16 md:w-20 md:h-20 shrink-0 rounded-sm overflow-hidden border-2 transition-colors ${
+              className={`w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-sm overflow-hidden border-2 transition-colors ${
                 i === selected
                   ? "border-blue-500"
                   : "border-slate-200 hover:border-blue-300"
@@ -46,6 +33,19 @@ const ProductImages = ({ thumbnail, images }) => {
           ))}
         </div>
       )}
+      <div className="w-80 h-80 md:w-96 md:h-96 rounded-sm overflow-hidden border border-slate-200">
+        {list[selected]?.url ? (
+          <img
+            src={list[selected].url}
+            alt=""
+            className="w-full h-full object-contain"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-slate-300 text-6xl font-black">
+            ?
+          </div>
+        )}
+      </div>
     </div>
   );
 };

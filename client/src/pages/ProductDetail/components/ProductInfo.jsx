@@ -36,7 +36,7 @@ const ProductInfo = ({
   return (
     <div className="space-y-4 font-sans select-none">
       {/* Thương hiệu & Danh mục & Mã SP */}
-      <div className="flex flex-wrap items-center gap-2 text-xs">
+      <div className="flex gap-2 text-xs">
         <span className="font-extrabold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">
           #SP{product.id}
         </span>
@@ -47,9 +47,8 @@ const ProductInfo = ({
             {product.category.name}
           </span>
         )}
-
         {product.brand && (
-          <div className="flex items-center gap-1.5 ml-auto border-l border-slate-200 pl-3">
+          <div className="flex items-center gap-1.5 border-l border-slate-200 pl-3">
             {product.brand.logo && (
               <img
                 src={product.brand.logo}

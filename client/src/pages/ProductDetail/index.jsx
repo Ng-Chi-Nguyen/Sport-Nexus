@@ -57,43 +57,99 @@ const ProductDetail = () => {
     return Object.values(map);
   }, [variants]);
 
-  const selectedVariant = useMemo(() => {
-    const entries = Object.entries(selectedAttrs);
-    if (entries.length === 0 || entries.length < attrKeys.length) return null;
-    return (
-      variants.find((v) =>
-        entries.every(([key, val]) =>
+  const availableValues = useMemo(() => {
+    const result = {};
+    attrKeys.forEach((attr) => {
+      const otherSelected = Object.entries(selectedAttrs).filter(([k]) => k !== attr.name);
+      if (otherSelected.length === 0) {
+        result[attr.name] = new Set(attr.values.map((v) => v.value));
+        return;
+      }
+      const matching = variants.filter((v) =>
+        otherSelected.every(([key, val]) =>
           (v.VariableAttributes || []).some(
             (va) => va.attributeKey.name === key && va.value === val,
           ),
         ),
-      ) || null
+      );
+      result[attr.name] = new Set(
+        matching.flatMap((v) =>
+          (v.VariableAttributes || [])
+            .filter((va) => va.attributeKey.name === attr.name)
+            .map((va) => va.value),
+        ),
+      );
+    });
+    return result;
+  }, [selectedAttrs, variants, attrKeys]);
+
+  const hasAttrs = attrKeys.length > 0;
+  const allAttrsSelected = hasAttrs && Object.keys(selectedAttrs).length >= attrKeys.length;
+
+  const selectedVariant = useMemo(() => {
+    const entries = Object.entries(selectedAttrs);
+    if (entries.length === 0 || entries.length < attrKeys.length) return undefined;
+    return variants.find((v) =>
+      entries.every(([key, val]) =>
+        (v.VariableAttributes || []).some(
+          (va) => va.attributeKey.name === key && va.value === val,
+        ),
+      ),
     );
   }, [selectedAttrs, variants, attrKeys.length]);
 
-  const currentPrice = selectedVariant
-    ? Number(selectedVariant.price)
-    : variants.length > 0
-      ? Math.min(...variants.map((v) => Number(v.price)))
-      : Number(product.base_price);
+  const currentPrice = Number(
+    selectedVariant
+      ? selectedVariant.price
+      : variants.length > 0
+        ? Math.min(...variants.map((v) => Number(v.price)))
+        : product.base_price,
+  );
 
-  const currentStock = selectedVariant?.stock ?? null;
-  const maxStock = currentStock ?? 999;
+  const totalStock = variants.reduce((sum, v) => sum + (v.stock || 0), 0);
+
+  const currentStock = useMemo(() => {
+    const entries = Object.entries(selectedAttrs);
+    if (entries.length === 0) return totalStock || null;
+
+    const matching = variants.filter((v) =>
+      entries.every(([key, val]) =>
+        (v.VariableAttributes || []).some(
+          (va) => va.attributeKey.name === key && va.value === val,
+        ),
+      ),
+    );
+
+    if (matching.length === 0) return 0;
+    if (allAttrsSelected) return selectedVariant ? selectedVariant.stock : 0;
+    return matching.reduce((sum, v) => sum + (v.stock || 0), 0);
+  }, [selectedAttrs, variants, totalStock, allAttrsSelected, selectedVariant]);
+
+  const maxStock = currentStock ?? (totalStock || 999);
 
   return (
-    <div className="min-h-screen py-4 md:py-6">
-      <Breadcrumbs
-        data={[
-          { title: "Trang chủ", route: "/" },
-          ...(product.category
-            ? [{ title: product.category.name, route: `/products?category=${product.category.slug || product.category.id}` }]
-            : []),
-          { title: product.name, route: "" },
-        ]}
-      />
+    <div className="min-h-screen py-2 md:py-6">
+      <div className="mx-auto max-w-5xl">
+        <Breadcrumbs
+          data={[
+            { title: "Trang chủ", route: "/" },
+            ...(product.category
+              ? [
+                  {
+                    title: product.category.name,
+                    route: `/products?category=${product.category.slug || product.category.id}`,
+                  },
+                ]
+              : []),
+            { title: product.name, route: "" },
+          ]}
+        />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
-        <ProductImages thumbnail={product.thumbnail} images={product.ProductImages} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-2">
+        <ProductImages
+          thumbnail={product.thumbnail}
+          images={product.ProductImages}
+        />
 
         <div className="space-y-4">
           <ProductInfo
@@ -106,6 +162,7 @@ const ProductDetail = () => {
           <VariantSelector
             attrKeys={attrKeys}
             selectedAttrs={selectedAttrs}
+            availableValues={availableValues}
             onSelect={(key, value) => {
               setSelectedAttrs((prev) => ({ ...prev, [key]: value }));
               setQuantity(1);
@@ -120,7 +177,8 @@ const ProductDetail = () => {
             onWishlist={() => setWishlisted((p) => !p)}
             onShare={async () => {
               const url = window.location.href;
-              if (navigator.share) await navigator.share({ title: product.name, url });
+              if (navigator.share)
+                await navigator.share({ title: product.name, url });
               else await navigator.clipboard.writeText(url);
             }}
             currentStock={currentStock}
@@ -133,7 +191,10 @@ const ProductDetail = () => {
             onCodeChange={setCouponCode}
             onApply={() => {
               if (!couponCode.trim()) return;
-              setCouponMsg({ type: "success", text: "Mã giảm giá không hợp lệ (demo)" });
+              setCouponMsg({
+                type: "success",
+                text: "Mã giảm giá không hợp lệ (demo)",
+              });
             }}
             message={couponMsg}
           />
@@ -142,6 +203,7 @@ const ProductDetail = () => {
 
       <ProductTabs description={product.description} />
       <ReviewList reviews={ratings} />
+    </div>
     </div>
   );
 };

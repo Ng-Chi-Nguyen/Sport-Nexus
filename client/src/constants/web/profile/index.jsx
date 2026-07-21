@@ -1,9 +1,4 @@
-import {
-  FileUser,
-  MapPinHouse,
-  ListOrdered,
-  RotateCcwKey,
-} from "lucide-react";
+import { FileUser, MapPinHouse, ListOrdered, RotateCcwKey } from "lucide-react";
 
 const breadcrumbNameMap = {
   "/tai-khoan": "Tài khoản",

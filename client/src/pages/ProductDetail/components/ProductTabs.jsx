@@ -26,9 +26,13 @@ const TAB_CONTENT = {
           className="mt-2 flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700 bg-white py-1 px-3 border border-blue-200 rounded-full hover:bg-blue-50 transition-all"
         >
           {expanded ? (
-            <>Thu gọn <ChevronUp size={16} /></>
+            <>
+              Thu gọn <ChevronUp size={16} />
+            </>
           ) : (
-            <>Xem thêm <ChevronDown size={16} /></>
+            <>
+              Xem thêm <ChevronDown size={16} />
+            </>
           )}
         </button>
       )}
@@ -37,7 +41,10 @@ const TAB_CONTENT = {
   shipping: () => (
     <div className="text-sm text-slate-600 leading-relaxed space-y-2">
       <p>- Miễn phí giao hàng cho đơn hàng từ 500.000₫</p>
-      <p>- Thời gian giao hàng: 3-7 ngày làm việc (nội thành), 5-10 ngày (ngoại thành)</p>
+      <p>
+        - Thời gian giao hàng: 3-7 ngày làm việc (nội thành), 5-10 ngày (ngoại
+        thành)
+      </p>
       <p>- Giao hàng COD và chuyển khoản đều được hỗ trợ</p>
       <p>- Kiểm tra hàng trước khi thanh toán</p>
     </div>
@@ -59,7 +66,9 @@ const DescriptionTab = ({ description }) => {
 
   useEffect(() => {
     if (textRef.current) {
-      setIsOverflowing(textRef.current.scrollHeight > textRef.current.clientHeight);
+      setIsOverflowing(
+        textRef.current.scrollHeight > textRef.current.clientHeight,
+      );
     }
   }, [description]);
 
@@ -79,9 +88,13 @@ const DescriptionTab = ({ description }) => {
           className="mt-2 flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700 bg-white py-1.5 px-4 border border-blue-200 rounded-full hover:bg-blue-50 transition-all shadow-sm"
         >
           {expanded ? (
-            <>Thu gọn <ChevronUp size={16} /></>
+            <>
+              Thu gọn <ChevronUp size={16} />
+            </>
           ) : (
-            <>Xem thêm <ChevronDown size={16} /></>
+            <>
+              Xem thêm <ChevronDown size={16} />
+            </>
           )}
         </button>
       )}

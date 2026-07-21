@@ -1,10 +1,13 @@
 import { Tag } from "lucide-react";
 
 const CouponInput = ({ couponCode, onCodeChange, onApply, message }) => (
-  <div className="pt-2">
+  <div className="py-2">
     <div className="flex items-center gap-2">
       <div className="relative flex-1">
-        <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        <Tag
+          size={16}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+        />
         <input
           type="text"
           value={couponCode}
@@ -22,7 +25,9 @@ const CouponInput = ({ couponCode, onCodeChange, onApply, message }) => (
       </button>
     </div>
     {message && (
-      <p className={`mt-1 text-xs ${message.type === "success" ? "text-green-600" : "text-red-500"}`}>
+      <p
+        className={`mt-1 text-xs ${message.type === "success" ? "text-green-600" : "text-red-500"}`}
+      >
         {message.text}
       </p>
     )}

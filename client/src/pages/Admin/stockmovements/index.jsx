@@ -253,13 +253,16 @@ const StockPage = () => {
           <table className="w-full border-separate border-spacing-0">
             <thead>
               <tr>
-                <th scope="col" className="px-6 py-4 w-[15%]">
+                <th scope="col" className="px-6 py-4 w-[12%]">
                   Mã định danh
                 </th>
-                <th scope="col" className="px-6 py-4 w-[60%] !text-start">
+                <th scope="col" className="px-6 py-4 w-[40%] !text-start">
                   Sản phẩm
                 </th>
-                <th scope="col" className="px-6 py-4 w-[25%] text-center">
+                <th scope="col" className="px-6 py-4 w-[28%] text-center">
+                  Thuộc tính
+                </th>
+                <th scope="col" className="px-6 py-4 w-[20%] text-center">
                   Số lượng tồn
                 </th>
               </tr>
@@ -311,6 +314,32 @@ const StockPage = () => {
                         </div>
                       </td>
 
+                      {/* Cột Thuộc tính biến thể */}
+                      <td className="px-6 py-5 text-center">
+                        {stock.VariableAttributes?.length > 0 ? (
+                          <div className="flex flex-wrap items-center justify-center gap-1.5">
+                            {stock.VariableAttributes.map((attr) => (
+                              <span
+                                key={attr.id}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#111827]/80 border border-slate-800 text-xs text-slate-300"
+                              >
+                                <span className="text-slate-500 text-[10px] uppercase">
+                                  {attr.attributeKey.name}:
+                                </span>
+                                <span className="font-semibold text-sky-400">
+                                  {attr.value} {" - "}
+                                  {attr.attributeKey.unit || ""}
+                                </span>
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-slate-500 text-xs italic">
+                            Mặc định
+                          </span>
+                        )}
+                      </td>
+
                       {/* Cột hiển thị Số lượng Badge phát sáng mờ */}
                       <td className="px-6 py-5 text-center">
                         <div className="flex justify-center">
@@ -327,7 +356,7 @@ const StockPage = () => {
               ) : (
                 <tr>
                   <td
-                    colSpan="3"
+                    colSpan="4"
                     className="px-6 py-12 text-center text-slate-500 italic"
                   >
                     Không tìm thấy dữ liệu tồn kho phù hợp.
