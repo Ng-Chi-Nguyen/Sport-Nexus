@@ -1,34 +1,79 @@
-import { ArrowRight } from "lucide-react";
+import { useEffect, useRef } from "react";
+import logoDefault from "@/assets/images/logodefault.jpg";
 
-export const MiddleBanner = () => {
+export const MiddleBanner = ({ brands = [] }) => {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    let animationId;
+    let pos = 0;
+
+    const scroll = () => {
+      pos -= 0.5;
+      if (pos <= -el.scrollWidth / 2) pos = 0;
+      el.style.transform = `translateX(${pos}px)`;
+      animationId = requestAnimationFrame(scroll);
+    };
+
+    const handleEnter = () => {
+      if (animationId) cancelAnimationFrame(animationId);
+    };
+
+    const handleLeave = () => {
+      animationId = requestAnimationFrame(scroll);
+    };
+
+    el.addEventListener("mouseenter", handleEnter);
+    el.addEventListener("mouseleave", handleLeave);
+
+    animationId = requestAnimationFrame(scroll);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      el.removeEventListener("mouseenter", handleEnter);
+      el.removeEventListener("mouseleave", handleLeave);
+    };
+  }, [brands]);
+
+  if (brands.length === 0) return null;
+
+  const brandItems = brands.map((brand) => (
+    <div
+      key={brand.id}
+      className="inline-flex items-center justify-center mx-8 shrink-0"
+    >
+      <img
+        src={brand.logo || logoDefault}
+        alt={brand.name}
+        className="h-10 md:h-14 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = logoDefault;
+        }}
+      />
+    </div>
+  ));
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
-      <div className="relative h-44 md:h-52 rounded-2xl overflow-hidden group shadow-md">
-        <img
-          src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1400&q=80"
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          alt="World Cup Banner"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-900/85 via-amber-700/60 to-transparent p-7 md:p-10 flex items-center">
-          <div className="space-y-2 max-w-lg">
-            <span className="inline-block bg-white/15 text-[10px] font-extrabold uppercase px-2.5 py-1 rounded tracking-widest text-amber-100 backdrop-blur-sm">
-              Ấn phẩm đặc biệt
-            </span>
-            <h2 className="text-xl md:text-3xl font-black text-white tracking-tight leading-tight">
-              ẤN PHẨM WORLD CUP 2026
-              <br />
-              CHÍNH THỨC LỘ DIỆN
-            </h2>
-            <p className="text-[13px] text-amber-100/80 max-w-md line-clamp-1">
-              Khám phá trọn vẹn thông tin, đội hình chiến thuật và các ngôi sao
-              hàng đầu.
-            </p>
-            <div className="flex items-center gap-1.5 text-[12px] font-bold text-amber-300 pt-1 group-hover:gap-2.5 transition-all">
-              Khám phá ngay <ArrowRight size={14} />
-            </div>
+    <div className="max-w-7xl mx-auto px-4 py-10 md:py-14 select-none">
+      <div className="bg-gradient-to-r from-blue-50 via-white to-blue-50 rounded-2xl border border-slate-100 shadow-sm py-8 md:py-10 px-4">
+        <div className="relative overflow-hidden">
+          <div className="flex">
+          <div
+            ref={containerRef}
+            className="flex items-center whitespace-nowrap will-change-transform"
+          >
+            {brandItems}
+            {brandItems}
           </div>
         </div>
       </div>
     </div>
+    </div>
   );
 };
+
+

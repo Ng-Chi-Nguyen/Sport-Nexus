@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { homeLoader } from "./webLoader";
 
 const HomePage = lazy(() => import("@/pages/Home/"));
+const InfoPage = lazy(() => import("@/pages/info"));
 const Index = lazy(() => import("@/pages/profile"));
 const ResetPassword = lazy(() => import("@/pages/profile/resetPassword"));
 const Profile = lazy(() => import("@/pages/profile/profile"));
@@ -17,14 +18,34 @@ export const webRoutes = {
       loader: homeLoader,
     },
     {
-      path: "/profile",
+      path: "he-thong-cua-hang",
+      element: <InfoPage />,
+    },
+    {
+      path: "chinh-sach-bao-hanh",
+      element: <InfoPage />,
+    },
+    {
+      path: "dieu-khoan-su-dung",
+      element: <InfoPage />,
+    },
+    {
+      path: "chinh-sach-bao-mat",
+      element: <InfoPage />,
+    },
+    {
+      path: "tuyen-dung",
+      element: <InfoPage />,
+    },
+    {
+      path: "/tai-khoan",
       element: <Index />,
       children: [
         { index: true, element: <Profile /> },
-        { path: "address", element: <Address /> },
-        { path: "reset-password", element: <ResetPassword /> },
-        { path: "order", element: <Order /> },
-        { path: "edit", element: <EditProfile /> },
+        { path: "dia-chi", element: <Address /> },
+        { path: "dat-lai-mat-khau", element: <ResetPassword /> },
+        { path: "don-hang", element: <Order /> },
+        { path: "chinh-sua-thong-tin-ca-nhan", element: <EditProfile /> },
       ],
     },
   ],

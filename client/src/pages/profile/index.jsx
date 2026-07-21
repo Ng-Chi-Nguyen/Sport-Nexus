@@ -2,11 +2,7 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import logoDefault from "@/assets/images/logodefault.jpg";
 import {
   CircleCheck,
-  FileUser,
-  ListOrdered,
   LogOut,
-  MapPinHouse,
-  RotateCcwKey,
   ShieldOff,
   ChevronRight,
 } from "lucide-react";
@@ -15,38 +11,7 @@ import { useState } from "react";
 import { Confirm } from "@/components/ui/confirm";
 import authApi from "@/api/auth/auth";
 import { toast } from "sonner";
-
-const breadcrumbNameMap = {
-  "/profile": "Tài khoản",
-  "/profile/address": "Địa chỉ",
-  "/profile/order": "Đơn hàng",
-  "/profile/reset-password": "Đổi mật khẩu",
-  "/profile/edit": "Chỉnh sửa thông tin",
-};
-
-const menuProfile = [
-  { name: "Hồ sơ", path: "/profile", exact: true, icon: FileUser },
-  {
-    name: "Địa chỉ",
-    path: "/profile/address",
-    exact: false,
-    icon: MapPinHouse,
-  },
-  { name: "Đơn hàng", path: "/profile/order", exact: false, icon: ListOrdered },
-  {
-    name: "Đổi mật khẩu",
-    path: "/profile/reset-password",
-    exact: false,
-    icon: RotateCcwKey,
-  },
-];
-
-const menuIcons = {
-  "Hồ sơ": "from-blue-500 to-cyan-400",
-  "Địa chỉ": "from-orange-400 to-rose-400",
-  "Đơn hàng": "from-purple-500 to-pink-400",
-  "Đổi mật khẩu": "from-emerald-500 to-teal-400",
-};
+import { breadcrumbNameMap, menuProfile, menuIcons } from "@/constants/web/profile";
 
 const ProfilePage = () => {
   const location = useLocation();
@@ -58,11 +23,11 @@ const ProfilePage = () => {
   const currentPath = location.pathname;
 
   let breadcrumbsData = [...base];
-  if (currentPath === "/profile") {
+  if (currentPath === "/tai-khoan") {
     breadcrumbsData.push({ title: "Tài khoản", route: "" });
   } else if (breadcrumbNameMap[currentPath]) {
     breadcrumbsData.push(
-      { title: "Tài khoản", route: "/profile" },
+      { title: "Tài khoản", route: "/tai-khoan" },
       { title: breadcrumbNameMap[currentPath], route: "" },
     );
   }

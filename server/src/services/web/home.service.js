@@ -63,7 +63,7 @@ const homeService = {
         };
     },
 
-    getNewestProducts: async (limit = 8) => {
+    getNewestProducts: async (limit = 6) => {
         const products = await prisma.Products.findMany({
             where: { is_active: true, deleted_at: ACTIVE },
             orderBy: { created_at: "desc" },
@@ -88,7 +88,7 @@ const homeService = {
         });
     },
 
-    getBestSellers: async (limit = 8) => {
+    getBestSellers: async (limit = 6) => {
         const topVariants = await prisma.OrderItems.groupBy({
             by: ["product_variant_id"],
             _sum: { quantity: true },
@@ -119,7 +119,7 @@ const homeService = {
             .map((v) => mapProduct(v.product));
     },
 
-    getTopRated: async (limit = 8) => {
+    getTopRated: async (limit = 6) => {
         const products = await prisma.Products.findMany({
             where: { is_active: true, deleted_at: ACTIVE, Reviews: { some: {} } },
             select: productSelect,
@@ -131,7 +131,7 @@ const homeService = {
             .slice(0, limit);
     },
 
-    getProductsByCategory: async (limit = 8, maxCategories = 5) => {
+    getProductsByCategory: async (limit = 5, maxCategories = 5) => {
         const categories = await prisma.Categories.findMany({
             where: { is_active: true, deleted_at: ACTIVE },
             take: maxCategories,

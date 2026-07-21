@@ -23,8 +23,8 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
-      <div className="relative bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
+    <div className="max-w-2xl">
+      <div className="relative bg-white rounded-2xl p-3 shadow-sm">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <button
@@ -36,8 +36,12 @@ const EditProfile = () => {
             <ArrowLeft size={16} />
           </button>
           <div>
-            <h2 className="text-xl font-black text-gray-900 tracking-tight">Chỉnh sửa thông tin</h2>
-            <p className="text-[11px] text-gray-400 font-medium mt-0.5">Cập nhật hồ sơ của bạn</p>
+            <h2 className="text-xl font-black text-gray-900 tracking-tight">
+              Chỉnh sửa thông tin
+            </h2>
+            <p className="text-[11px] text-gray-400 font-medium mt-0.5">
+              Cập nhật hồ sơ của bạn
+            </p>
           </div>
         </div>
 
@@ -48,34 +52,76 @@ const EditProfile = () => {
               <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-500 via-purple-500 to-orange-500 p-[3px]">
                 <div className="w-full h-full rounded-2xl bg-white flex items-center justify-center overflow-hidden">
                   {avatar ? (
-                    <img src={URL.createObjectURL(avatar)} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={URL.createObjectURL(avatar)}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                   ) : user?.avatar ? (
-                    <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={user.avatar}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
                     <User size={36} className="text-gray-300" />
                   )}
                 </div>
               </div>
-              <label className="absolute -bottom-1 -right-1 w-8 h-8 rounded-xl bg-gradient-to-br from-orange-500 to-rose-500
+              <label
+                className="absolute -bottom-1 -right-1 w-8 h-8 rounded-xl bg-gradient-to-br from-orange-500 to-rose-500
                                 flex items-center justify-center cursor-pointer shadow-md
                                 hover:scale-105 active:scale-95 transition-transform"
               >
-                <input type="file" accept="image/*" className="hidden" onChange={(e) => setAvatar(e.target.files[0])} />
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => setAvatar(e.target.files[0])}
+                />
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                   <polyline points="17 8 12 3 7 8" />
                   <line x1="12" y1="3" x2="12" y2="15" />
                 </svg>
               </label>
             </div>
-            <p className="text-[10px] text-gray-400 font-medium mt-3 uppercase tracking-wider">Ảnh đại diện</p>
+            <p className="text-[10px] text-gray-400 font-medium mt-3 uppercase tracking-wider">
+              Ảnh đại diện
+            </p>
           </div>
 
           {/* Form Fields */}
           <div className="space-y-4">
-            <FloatingInput id="full_name" label="Họ tên" light defaultValue={user?.full_name || ""} />
-            <FloatingInput id="email" label="Email" type="email" light defaultValue={user?.email || ""} />
-            <FloatingInput id="phone" label="Số điện thoại" type="tel" light defaultValue={user?.phone_number || ""} />
+            <FloatingInput
+              id="full_name"
+              label="Họ tên"
+              light
+              defaultValue={user?.full_name || ""}
+            />
+            <FloatingInput
+              id="email"
+              label="Email"
+              type="email"
+              light
+              defaultValue={user?.email || ""}
+            />
+            <FloatingInput
+              id="phone"
+              label="Số điện thoại"
+              type="tel"
+              light
+              defaultValue={user?.phone_number || ""}
+            />
           </div>
 
           {/* Actions */}

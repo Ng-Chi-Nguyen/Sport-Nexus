@@ -1,16 +1,6 @@
 import { Clock } from "lucide-react";
-import { formatCurrency } from "@/utils/formatters";
-
-const GRADIENTS = [
-  "from-blue-500 to-cyan-500",
-  "from-rose-500 to-orange-500",
-  "from-emerald-500 to-teal-500",
-  "from-violet-500 to-purple-500",
-  "from-amber-500 to-yellow-500",
-  "from-pink-500 to-rose-500",
-  "from-sky-500 to-indigo-500",
-  "from-lime-500 to-green-500",
-];
+import { ProductCard } from "@/components/ui/card";
+import SeeMore from "@/components/ui/seeMore";
 
 export const NewArrivals = ({ products }) => {
   return (
@@ -24,43 +14,17 @@ export const NewArrivals = ({ products }) => {
             <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">
               New Arrivals
             </span>
-            <h3 className="text-lg font-black text-slate-900">
-              Hàng mới về
-            </h3>
+            <h3 className="text-lg font-black text-slate-900">Hàng mới về</h3>
           </div>
         </div>
         <div className="p-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
             {products.map((p, idx) => (
-              <div
-                key={p.id}
-                className="group bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
-              >
-                <div className="relative aspect-square rounded-t-xl overflow-hidden bg-slate-50">
-                  <img
-                    src={p.thumbnail || `https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=300&q=80&sig=${p.id}`}
-                    alt={p.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  {!p.thumbnail && (
-                    <div className={`absolute inset-0 bg-gradient-to-br ${GRADIENTS[idx % GRADIENTS.length]} flex items-center justify-center`}>
-                      <span className="text-white/30 font-black text-6xl select-none">
-                        {p.name.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <div className="p-3 space-y-2">
-                  <h4 className="text-[13px] font-medium text-slate-700 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
-                    {p.name}
-                  </h4>
-                  <p className="text-sm font-black text-blue-600">
-                    {formatCurrency(p.min_price)}
-                  </p>
-                </div>
-              </div>
+              <ProductCard key={p.id} product={p} index={idx} />
             ))}
           </div>
+
+          <SeeMore />
         </div>
       </div>
     </div>

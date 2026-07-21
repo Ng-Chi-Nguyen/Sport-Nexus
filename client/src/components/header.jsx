@@ -60,7 +60,7 @@ const Header = ({ isScrolled, categories }) => {
 
           {user ? (
             <Link
-              to="/profile"
+              to="/tai-khoan"
               className="flex items-center gap-2.5 px-2 py-2 rounded-full border border-gray-200 text-gray-700 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200 min-w-[140px]"
             >
               <div className="w-10 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold shrink-0">

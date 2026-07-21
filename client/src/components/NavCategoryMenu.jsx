@@ -10,7 +10,7 @@ import {
   ArrowRight,
   Grid,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const chunkArray = (arr, size) => {
   const result = [];
@@ -23,6 +23,7 @@ const chunkArray = (arr, size) => {
 export const NavCategoryMenu = ({ isScrolled, compact, categories = [] }) => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const menuRef = useRef(null);
+  const { pathname } = useLocation();
 
   const infoLinks = [
     {
@@ -36,8 +37,13 @@ export const NavCategoryMenu = ({ isScrolled, compact, categories = [] }) => {
       icon: <ShieldCheck size={15} />,
     },
     {
-      name: "Tư vấn mua hàng",
-      to: "/tu-van-mua-hang",
+      name: "Điều khoản sữ dụng",
+      to: "/dieu-khoan-su-dung",
+      icon: <PhoneCall size={15} />,
+    },
+    {
+      name: "Chính sách bảo mật",
+      to: "/chinh-sach-bao-mat",
       icon: <PhoneCall size={15} />,
     },
     { name: "Tuyển dụng", to: "/tuyen-dung", icon: <Users size={15} /> },
@@ -98,18 +104,25 @@ export const NavCategoryMenu = ({ isScrolled, compact, categories = [] }) => {
               </button>
 
               <nav className="hidden md:flex items-center h-full gap-1">
-                {infoLinks.map((link, idx) => (
-                  <Link
-                    key={idx}
-                    to={link.to}
-                    className="h-9 px-3.5 flex items-center gap-2 text-[13px] font-medium text-slate-300 hover:text-white rounded-md hover:bg-slate-800 transition-all"
-                  >
-                    <span className="text-slate-400 group-hover:text-white">
-                      {link.icon}
-                    </span>
-                    <span>{link.name}</span>
-                  </Link>
-                ))}
+                {infoLinks.map((link, idx) => {
+                  const isActive = pathname === link.to;
+                  return (
+                    <Link
+                      key={idx}
+                      to={link.to}
+                      className={`h-9 px-3.5 flex items-center gap-2 text-[13px] font-medium rounded-md transition-all ${
+                        isActive
+                          ? "bg-blue-600 text-white shadow-sm"
+                          : "text-slate-300 hover:text-white hover:bg-slate-800"
+                      }`}
+                    >
+                      <span className={isActive ? "text-white" : "text-slate-400"}>
+                        {link.icon}
+                      </span>
+                      <span>{link.name}</span>
+                    </Link>
+                  );
+                })}
               </nav>
             </div>
 
