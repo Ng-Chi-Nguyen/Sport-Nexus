@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { LogOut, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import logoSvg from "@/assets/images/logo-sportnexus-light.svg";
 import {
   SIDEBAR_MENU_STRUCTURE,
   USER_SETTINGS_POPOVER,
@@ -89,7 +90,7 @@ const AdminLayout = () => {
       return {};
     }
   }, []);
-  console.log(localUser);
+  // console.log(localUser);
   // Đóng Popover khi click ra ngoài vùng chỉ định
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -119,31 +120,26 @@ const AdminLayout = () => {
         <div className="flex flex-col flex-1 min-h-0">
           {/* Cụm Logo & Tên thương hiệu */}
           <div
-            className={`flex items-center px-2 py-4 mb-4 select-none shrink-0 ${isCollapsed ? "justify-center" : "gap-3.5"}`}
+            className={`flex items-center mb-4 select-none shrink-0 ${isCollapsed ? "justify-center" : ""}`}
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(37,99,235,0.35)] shrink-0">
-              <span className="font-black text-base tracking-tighter italic">
-                SP
-              </span>
-            </div>
-
-            {/* Ẩn chữ khi Sidebar co nhỏ */}
-            {!isCollapsed && (
-              <div className="flex flex-col gap-0.5 leading-none animate-in fade-in duration-200">
-                <Link
-                  to="/"
-                  className="font-extrabold text-xl tracking-wide flex items-center"
-                >
-                  <span className="text-white">SPORT</span>
-                  <span className="text-sky-400 drop-shadow-[0_0_10px_rgba(56,189,248,0.25)] ml-0.5">
-                    NEXUS
+            <Link
+              to="/"
+              className={`flex items-center no-underline ${isCollapsed ? "" : "gap-3"}`}
+            >
+              {isCollapsed ? (
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(37,99,235,0.35)] shrink-0">
+                  <span className="font-black text-base tracking-tighter italic">
+                    SN
                   </span>
-                </Link>
-                <span className="text-[10px] text-slate-500 font-bold tracking-[0.22em] uppercase block">
-                  Admin Console
-                </span>
-              </div>
-            )}
+                </div>
+              ) : (
+                <img
+                  src={logoSvg}
+                  alt="SportNexus"
+                  className="h-12 md:h-14 w-auto object-contain shrink-0"
+                />
+              )}
+            </Link>
           </div>
 
           {/* Vùng cuộn chứa danh sách Menu điều hướng hệ thống */}
