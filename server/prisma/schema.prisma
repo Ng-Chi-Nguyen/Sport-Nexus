@@ -320,6 +320,7 @@ model CartItems {
     cart_id            Int
     cart               Carts           @relation(fields: [cart_id], references: [id], onDelete: Cascade)
 
+    @@unique([cart_id, product_variant_id])
     @@map("cartitems")
 }
 

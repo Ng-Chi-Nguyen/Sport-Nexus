@@ -20,6 +20,7 @@ import webProductRoute from "./web/product.route.js";
 import permissionRoute from "./management/permission.route.js";
 import logRoute from "./management/log.route.js";
 import productAttributeKeyRoute from "./management/productAttributeKey.route.js";
+import cartRoute from "./customer/cart.route.js";
 import sendEmailRoute from "./email/sendEmail.route.js";
 
 const Routes = (app) => {
@@ -41,6 +42,7 @@ const Routes = (app) => {
     // Customer - Khách hàng
     app.use(`${api_prefix_v1}customer/user-address/`, userAddressRoute)
     app.use(`${api_prefix_v1}customer/cart-item/`, cartItemRoute)
+    app.use(`${api_prefix_v1}customer/cart/`, cartRoute)
     app.use(`${api_prefix_v1}customer/order/`, orderRoute)
     app.use(`${api_prefix_v1}customer/review/`, reviewRoute)
 

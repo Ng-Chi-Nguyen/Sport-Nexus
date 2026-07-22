@@ -7,7 +7,7 @@ const productSelect = {
     category: { select: { id: true, name: true, slug: true } },
     brand: { select: { id: true, name: true, logo: true } },
     ProductVariants: {
-        select: { price: true },
+        select: { id: true, price: true },
         orderBy: { price: "asc" },
         take: 1,
     },
@@ -36,6 +36,7 @@ const mapProduct = (p) => {
         category: p.category,
         brand: p.brand,
         min_price: Number(p.ProductVariants[0]?.price) || Number(p.base_price),
+        first_variant_id: p.ProductVariants[0]?.id || null,
         avg_rating: avgRating,
         total_reviews: ratings.length,
     };

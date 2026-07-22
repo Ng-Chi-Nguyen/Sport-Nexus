@@ -25,7 +25,7 @@ const cartItemController = {
         try {
             let cartItem = await cartItemService.getCartItemById(cartItemId);
 
-            if (!cartItems || cartItems.length === 0) {
+            if (!cartItem) {
                 return res.status(404).json({
                     success: false,
                     message: "Không tìm thấy sản phẩm này trong giỏ hàng."
