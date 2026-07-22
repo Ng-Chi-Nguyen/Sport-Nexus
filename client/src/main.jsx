@@ -6,9 +6,12 @@ import router from "./routes/index.jsx";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/react-query";
+import { CartProvider } from "@/contexts/CartContext";
 
 createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
-    <RouterProvider router={router} fallbackElement={<LoadingSpinner />} />
+    <CartProvider>
+      <RouterProvider router={router} fallbackElement={<LoadingSpinner />} />
+    </CartProvider>
   </QueryClientProvider>
 );
