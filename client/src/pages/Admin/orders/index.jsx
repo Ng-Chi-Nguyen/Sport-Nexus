@@ -1,9 +1,10 @@
-import { LayoutDashboard, ChevronDown, Filter } from "lucide-react";
-import { useLoaderData, useSearchParams } from "react-router-dom";
+import { LayoutDashboard, ChevronDown, Filter, RefreshCw } from "lucide-react";
+import { useLoaderData, useSearchParams, useRevalidator } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
+import { queryClient } from "@/lib/react-query";
 import { SearchTable } from "@/components/ui/search";
 import Pagination from "@/components/ui/pagination";
 import Badge from "@/components/ui/badge";
@@ -31,6 +32,7 @@ import { getOrderStatusClass, getPaymentStatusClass } from "@/utils/statusStyles
 const OrderPage = () => {
   const responses = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
+  const revalidator = useRevalidator();
   const orders = responses?.data?.orders || [];
 
   const [showFilters, setShowFilters] = useState(false);
@@ -60,6 +62,11 @@ const OrderPage = () => {
     currentDateTo ||
     currentAmountMin ||
     currentAmountMax;
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["orders"] });
+    setTimeout(() => revalidator.revalidate(), 0);
+  };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -271,9 +278,19 @@ const OrderPage = () => {
 
       {/* KHỐI BẢNG CONTAINER TỐI CHỦ ĐẠO */}
       <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <h2 className="section-title">
-          Danh sách đơn hàng
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="section-title">
+            Danh sách đơn hàng
+          </h2>
+          <button
+            onClick={handleRefresh}
+            disabled={revalidator.state === "loading"}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Tải lại"
+          >
+            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+          </button>
+        </div>
 
         {/* BẢNG ĐƠN HÀNG */}
         <div className="table-retro">

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
-import { LayoutDashboard } from "lucide-react";
-import { Link, useLoaderData } from "react-router-dom";
+import { LayoutDashboard, RefreshCw } from "lucide-react";
+import { Link, useLoaderData, useRevalidator } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd } from "@/components/ui/button";
 import { CountrySelect } from "@/components/ui/select";
@@ -21,6 +22,8 @@ const breadcrumbData = [
 
 const BrandPage = () => {
   const responses = useLoaderData();
+  const revalidator = useRevalidator();
+  const queryClient = useQueryClient();
   const { brands, pagination } = responses?.data || {};
   const {
     searchInput,
@@ -43,6 +46,11 @@ const BrandPage = () => {
     if (!brands) return [];
     return Array.isArray(brands) ? brands : Object.values(brands).flat();
   }, [brands]);
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["brands"] });
+    setTimeout(() => revalidator.revalidate(), 0);
+  };
 
   const handlePageChange = (newPage) => {
     const params = new URLSearchParams(searchParams);
@@ -79,6 +87,14 @@ const BrandPage = () => {
           <h2 className="text-sm font-bold text-slate-200 tracking-wide uppercase">
             Danh sách thương hiệu
           </h2>
+          <button
+            onClick={handleRefresh}
+            disabled={revalidator.state === "loading"}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Tải lại"
+          >
+            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+          </button>
           <div>
             {allBrands.length > 0 && (
               <Badge>{pagination.totalItems || 0} thương hiệu</Badge>

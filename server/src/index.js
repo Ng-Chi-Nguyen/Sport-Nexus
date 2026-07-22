@@ -14,7 +14,7 @@ const port = process.env.APP_PORT || 8080;
 configViewEngine(app);
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'https://ng-chi-nguyen.github.io'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));

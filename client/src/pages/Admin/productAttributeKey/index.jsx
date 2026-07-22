@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, RefreshCw } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import Badge from "@/components/ui/badge";
 import { SelectPro } from "@/components/ui/select";
@@ -26,11 +26,12 @@ const ProductAttributeKey = () => {
     const [products, setProducts] = useState([]);
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [deleteTarget, setDeleteTarget] = useState({ id: "", name: "" });
+    const [refreshKey, setRefreshKey] = useState(0);
 
     const currentPage = parseInt(searchParams.get("page")) || 1;
     const currentProductId = searchParams.get("product_id") || "";
 
-    useEffect(() => {
+    const fetchData = useCallback(() => {
         Promise.all([
             LoaderProductAttributeKey.getAll({ page: currentPage, product_id: currentProductId }).catch(() => ({ success: true, data: { data: [], pagination: { totalPages: 1, currentPage: 1 } } })),
             LoaderProduct.getProductsDropdown().catch(() => ({ success: true, data: [] })),
@@ -42,6 +43,15 @@ const ProductAttributeKey = () => {
             if (prodRes?.data) setProducts(prodRes.data);
         });
     }, [currentPage, currentProductId]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData, refreshKey]);
+
+    const handleRefresh = () => {
+        queryClient.invalidateQueries({ queryKey: ["product-attribute-keys"] });
+        setRefreshKey(k => k + 1);
+    };
 
     const openConfirm = (id, name) => {
         setDeleteTarget({ id, name });
@@ -101,7 +111,16 @@ const ProductAttributeKey = () => {
                 />
             </div>
             <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-                <h2 className="section-title">Danh sách thuộc tính sản phẩm</h2>
+                <div className="flex items-center justify-between">
+                    <h2 className="section-title">Danh sách thuộc tính sản phẩm</h2>
+                    <button
+                        onClick={handleRefresh}
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                        title="Tải lại"
+                    >
+                        <RefreshCw size={18} />
+                    </button>
+                </div>
                 <div className="table-retro">
                     <table className="w-full border-separate border-spacing-0">
                         <thead>
