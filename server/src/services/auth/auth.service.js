@@ -247,6 +247,90 @@ const authService = {
         return { user, accessToken };
     },
 
+    facebookLogin: async (accessToken) => {
+        const appToken = `${process.env.FACEBOOK_APP_ID}|${process.env.FACEBOOK_APP_SECRET}`;
+
+        const verifyRes = await fetch(
+            `https://graph.facebook.com/debug_token?input_token=${accessToken}&access_token=${appToken}`
+        );
+        const verifyData = await verifyRes.json();
+
+        if (!verifyData.data || !verifyData.data.is_valid) {
+            const error = new Error("Token Facebook không hợp lệ");
+            error.status = 401;
+            throw error;
+        }
+
+        const userRes = await fetch(
+            `https://graph.facebook.com/me?fields=id,name,email,picture&access_token=${accessToken}`
+        );
+        const fbUser = await userRes.json();
+
+        const fbEmail = fbUser.email || `fb_${fbUser.id}@facebook.com`;
+
+        let user = await prisma.Users.findFirst({
+            where: { email: fbEmail, deleted_at: ACTIVE },
+            include: { role: true }
+        });
+
+        if (!user) {
+            const customerRole = await prisma.Roles.findUnique({
+                where: { slug: "customer" }
+            });
+
+            if (!customerRole) {
+                const error = new Error("Không tìm thấy vai trò mặc định");
+                error.status = 500;
+                throw error;
+            }
+
+            const fakePassword = bcrypt.hashSync(crypto.randomBytes(16).toString("hex"), 10);
+            const avatar = fbUser.picture?.data?.url || null;
+
+            user = await prisma.Users.create({
+                data: {
+                    full_name: fbUser.name || fbEmail.split("@")[0],
+                    email: fbEmail,
+                    password: fakePassword,
+                    avatar,
+                    role_id: customerRole.id,
+                    is_verified: true,
+                    status: true,
+                },
+                include: { role: true }
+            });
+        }
+
+        if (user.status === false) {
+            const error = new Error("Tài khoản đã bị khóa");
+            error.status = 403;
+            throw error;
+        }
+
+        const accessTokenJwt = jwt.sign(
+            { id: user.id, role: user.role.slug, email: user.email },
+            process.env.JWT_ACCESS_SECRET,
+            { expiresIn: "15m" }
+        );
+
+        const refresh_token = jwt.sign(
+            { id: user.id },
+            process.env.JWT_REFRESH_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        await prisma.Users.update({
+            where: { id: user.id },
+            data: { refresh_token }
+        });
+
+        delete user.password;
+        delete user.verification_token;
+        user.refresh_token = refresh_token;
+
+        return { user, accessToken: accessTokenJwt };
+    },
+
     refreshToken: async (refreshToken) => {
         if (!refreshToken) {
             throw { status: 401, message: "Không có Refresh Token" };

@@ -13,6 +13,7 @@ authRoute
     .post("/register", validate(userSchema.createUser), userController.createUser)
     .post("/login", validate(authSchema.login), authController.login)
     .post("/google", authController.googleLogin)
+    .post("/facebook", authController.facebookLogin)
     .post("/logout/:id", authController.logout)
     .post("/refresh-token", authController.refreshToken)
     .get("/token/:token", authController.verifyAccount)

@@ -35,16 +35,20 @@ const LoginForm = () => {
     }
   };
 
+  const handleSocialSuccess = (userData) => {
+    const { accessToken, user } = userData;
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", user.refresh_token);
+    localStorage.setItem("user", JSON.stringify(user));
+    ShowToast("success", "Chào mừng " + user.full_name);
+    navigate("/");
+  };
+
   const handleGoogleSuccess = async (tokenResponse) => {
     try {
       const response = await authApi.googleLogin(tokenResponse.access_token);
       if (response.data.success) {
-        const { accessToken, user } = response.data.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", user.refresh_token);
-        localStorage.setItem("user", JSON.stringify(user));
-        ShowToast("success", "Chào mừng " + user.full_name);
-        navigate("/");
+        handleSocialSuccess(response.data.data);
       }
     } catch (error) {
       ShowToast("error", error.response?.data?.message || "Đăng nhập Google thất bại");
@@ -55,6 +59,14 @@ const LoginForm = () => {
     onSuccess: handleGoogleSuccess,
     onError: () => ShowToast("error", "Đăng nhập Google thất bại"),
   });
+
+  const FACEBOOK_APP_ID = import.meta.env.VITE_FACEBOOK_APP_ID;
+
+  const handleFacebookClick = () => {
+    const redirectUri = `${window.location.origin}/auth/facebook/callback`;
+    const url = `https://www.facebook.com/v22.0/dialog/oauth?client_id=${FACEBOOK_APP_ID}&redirect_uri=${redirectUri}&scope=public_profile&response_type=token`;
+    window.location.href = url;
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -111,6 +123,7 @@ const LoginForm = () => {
       <div className="flex justify-center gap-3">
         <button
           type="button"
+          onClick={handleFacebookClick}
           className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider
                      bg-[#1877F2] text-white hover:bg-[#166fe5]
                      shadow-sm hover:shadow-md

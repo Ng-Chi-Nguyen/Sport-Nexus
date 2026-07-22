@@ -14,6 +14,10 @@ const authApi = {
     const url = `${api_prefix_v1}/auth/google/`;
     return axios.post(url, { access_token: accessToken });
   },
+  facebookLogin: (accessToken) => {
+    const url = `${api_prefix_v1}/auth/facebook/`;
+    return axios.post(url, { access_token: accessToken });
+  },
   logout: (userId) => {
     const url = `/auth/logout/${userId}`;
     return axiosClient.post(url);

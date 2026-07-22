@@ -139,6 +139,29 @@ const authController = {
         }
     },
 
+    facebookLogin: async (req, res) => {
+        try {
+            const { access_token } = req.body;
+            if (!access_token) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Thiếu token đăng nhập Facebook"
+                });
+            }
+            const result = await authService.facebookLogin(access_token);
+            return res.status(200).json({
+                success: true,
+                message: "Đăng nhập bằng Facebook thành công",
+                data: result
+            });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    },
+
     refreshToken: async (req, res) => {
         try {
             const { refreshToken } = req.body;

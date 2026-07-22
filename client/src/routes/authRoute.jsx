@@ -3,6 +3,7 @@ const RegisterPage = lazy(() => import("@/pages/auth/register"));
 const LoginPage = lazy(() => import("@/pages/auth/login"));
 const ForgotPasswordPage = lazy(() => import("@/pages/auth/forgotPassword"));
 const ResetForgotPasswordPage = lazy(() => import("@/pages/auth/resetForgotPassword"));
+const FacebookCallback = lazy(() => import("@/pages/auth/facebookCallback"));
 import AuthLayout from "@/layouts/AuthLayout";
 export const authRoutes = {
   children: [
@@ -16,5 +17,6 @@ export const authRoutes = {
         { path: "dat-lai-mat-khau/:token", element: <ResetForgotPasswordPage /> },
       ],
     },
+    { path: "auth/facebook/callback", element: <FacebookCallback /> },
   ],
 };
