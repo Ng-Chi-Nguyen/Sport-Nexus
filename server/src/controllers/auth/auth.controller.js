@@ -116,6 +116,29 @@ const authController = {
         }
     },
 
+    googleLogin: async (req, res) => {
+        try {
+            const { access_token } = req.body;
+            if (!access_token) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Thiếu token đăng nhập Google"
+                });
+            }
+            const result = await authService.googleLogin(access_token);
+            return res.status(200).json({
+                success: true,
+                message: "Đăng nhập bằng Google thành công",
+                data: result
+            });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    },
+
     refreshToken: async (req, res) => {
         try {
             const { refreshToken } = req.body;

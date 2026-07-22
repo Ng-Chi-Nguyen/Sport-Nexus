@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import emailService from "../email/email.service.js";
 import { ACTIVE } from "../../utils/prisma.js";
+import { OAuth2Client } from "google-auth-library";
 
 const authService = {
     login: async (dataLogin) => {
@@ -167,6 +168,83 @@ const authService = {
                 updated_at: new Date(),
             },
         });
+    },
+
+    googleLogin: async (token) => {
+        const client = new OAuth2Client();
+        client.setCredentials({ access_token: token });
+        const userInfoRes = await client.request({
+            url: "https://www.googleapis.com/oauth2/v3/userinfo"
+        });
+
+        const { email, name, picture } = userInfoRes.data;
+
+        if (!email) {
+            const error = new Error("Không thể lấy email từ tài khoản Google");
+            error.status = 400;
+            throw error;
+        }
+
+        let user = await prisma.Users.findFirst({
+            where: { email, deleted_at: ACTIVE },
+            include: { role: true }
+        });
+
+        if (!user) {
+            const customerRole = await prisma.Roles.findUnique({
+                where: { slug: "customer" }
+            });
+
+            if (!customerRole) {
+                const error = new Error("Không tìm thấy vai trò mặc định");
+                error.status = 500;
+                throw error;
+            }
+
+            const fakePassword = bcrypt.hashSync(crypto.randomBytes(16).toString("hex"), 10);
+
+            user = await prisma.Users.create({
+                data: {
+                    full_name: name || email.split("@")[0],
+                    email,
+                    password: fakePassword,
+                    avatar: picture || null,
+                    role_id: customerRole.id,
+                    is_verified: true,
+                    status: true,
+                },
+                include: { role: true }
+            });
+        }
+
+        if (user.status === false) {
+            const error = new Error("Tài khoản đã bị khóa");
+            error.status = 403;
+            throw error;
+        }
+
+        const accessToken = jwt.sign(
+            { id: user.id, role: user.role.slug, email: user.email },
+            process.env.JWT_ACCESS_SECRET,
+            { expiresIn: "15m" }
+        );
+
+        const refresh_token = jwt.sign(
+            { id: user.id },
+            process.env.JWT_REFRESH_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        await prisma.Users.update({
+            where: { id: user.id },
+            data: { refresh_token }
+        });
+
+        delete user.password;
+        delete user.verification_token;
+        user.refresh_token = refresh_token;
+
+        return { user, accessToken };
     },
 
     refreshToken: async (refreshToken) => {

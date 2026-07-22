@@ -6,15 +6,18 @@ import {
   User,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 import { Logo } from "./logo";
 import { NavCategoryMenu } from "./NavCategoryMenu";
 import { useCart } from "@/contexts/CartContext";
+import avatarDefault from "@/assets/images/avatar-default.jpg";
 
 const Header = ({ isScrolled, categories }) => {
   const { count } = useCart();
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
+  const [avatarError, setAvatarError] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white/80 backdrop-blur-md border-b border-gray-200/70 shadow-sm">
@@ -65,12 +68,19 @@ const Header = ({ isScrolled, categories }) => {
               to="/tai-khoan"
               className="flex items-center gap-2.5 px-2 py-2 rounded-full border border-gray-200 text-gray-700 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200 min-w-[140px]"
             >
-              <div className="w-10 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold shrink-0">
-                <img
-                  src={user.avatar}
-                  alt="avatar"
-                  className="w-[150px] h-auto rounded-[50%]"
-                />
+              <div className="w-10 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold shrink-0 overflow-hidden">
+                {user.avatar && !avatarError ? (
+                  <img
+                    src={user.avatar}
+                    alt="avatar"
+                    onError={() => setAvatarError(true)}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-xs font-bold">
+                    {user.full_name?.charAt(0)?.toUpperCase()}
+                  </span>
+                )}
               </div>
               <div className="flex flex-col leading-tight">
                 <span className="text-sm font-medium max-w-[145px] truncate">

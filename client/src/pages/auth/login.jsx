@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { LabelInput } from "@/components/ui/input";
 import { BtnSave } from "@/components/ui/button";
 import ShowToast from "@/components/ui/toast";
+import { useGoogleLogin } from "@react-oauth/google";
 
 import authApi from "@/api/auth/auth";
 
@@ -33,6 +34,27 @@ const LoginForm = () => {
       setLoading(false);
     }
   };
+
+  const handleGoogleSuccess = async (tokenResponse) => {
+    try {
+      const response = await authApi.googleLogin(tokenResponse.access_token);
+      if (response.data.success) {
+        const { accessToken, user } = response.data.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", user.refresh_token);
+        localStorage.setItem("user", JSON.stringify(user));
+        ShowToast("success", "Chào mừng " + user.full_name);
+        navigate("/");
+      }
+    } catch (error) {
+      ShowToast("error", error.response?.data?.message || "Đăng nhập Google thất bại");
+    }
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: handleGoogleSuccess,
+    onError: () => ShowToast("error", "Đăng nhập Google thất bại"),
+  });
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -99,6 +121,7 @@ const LoginForm = () => {
         </button>
         <button
           type="button"
+          onClick={() => googleLogin()}
           className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider
                      bg-white text-gray-600 border border-gray-200
                      hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800
