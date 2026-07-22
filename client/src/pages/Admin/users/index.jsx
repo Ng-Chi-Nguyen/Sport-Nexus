@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useLoaderData, useRevalidator, Link } from "react-router-dom";
-import { LayoutDashboard, ShieldAlert } from "lucide-react";
+import { LayoutDashboard, ShieldAlert, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
@@ -64,6 +64,11 @@ const UserPage = () => {
     const params = new URLSearchParams(searchParams);
     params.set("page", newPage);
     setSearchParams(params);
+  };
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["users"] });
+    setTimeout(() => revalidator.revalidate(), 0);
   };
 
   const openConfirm = (id) => {
@@ -168,7 +173,17 @@ const UserPage = () => {
 
       {/* KHỐI LAYOUT TỐI CHỦ ĐẠO */}
       <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl pt-2 pl-2 shadow-2xl backdrop-blur-md">
-        <h3 className="section-title">Danh sách người dùng</h3>
+        <div className="flex items-center justify-between pr-2">
+          <h3 className="section-title">Danh sách người dùng</h3>
+          <button
+            onClick={handleRefresh}
+            disabled={revalidator.state === "loading"}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Tải lại"
+          >
+            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+          </button>
+        </div>
 
         <div className="mb-2 table-retro">
           <table className="w-full border-separate border-spacing-0">

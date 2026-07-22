@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, RefreshCw } from "lucide-react";
 import {
   useLoaderData,
   useRevalidator,
@@ -103,6 +103,11 @@ const CategoryPage = () => {
     }
   };
 
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["categories"] });
+    setTimeout(() => revalidator.revalidate(), 0);
+  };
+
   const handlePageChange = (newPage) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", newPage);
@@ -151,7 +156,17 @@ const CategoryPage = () => {
         />
       </div>
       <div className="mt-2 bg-[#0D121F]/40 border border-slate-900 rounded-2xl pt-2 pl-2 shadow-2xl backdrop-blur-md">
-        <h2 className="section-title">Danh sách danh mục</h2>
+        <div className="flex items-center justify-between pr-2">
+          <h2 className="section-title">Danh sách danh mục</h2>
+          <button
+            onClick={handleRefresh}
+            disabled={revalidator.state === "loading"}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Tải lại"
+          >
+            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+          </button>
+        </div>
         <div className="mb-2 table-retro">
           <table className="w-full border-separate border-spacing-0">
             <thead>

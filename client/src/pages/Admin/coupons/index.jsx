@@ -2,7 +2,7 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnDelete, BtnEdit } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
 import Badge from "@/components/ui/badge";
-import { LayoutDashboard, ChevronDown, Filter } from "lucide-react";
+import { LayoutDashboard, ChevronDown, Filter, RefreshCw } from "lucide-react";
 import {
   useLoaderData,
   useRevalidator,
@@ -84,6 +84,11 @@ const CouponPage = () => {
     if (search) params.set("search", search);
     params.set("page", "1");
     setSearchParams(params);
+  };
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["coupons"] });
+    setTimeout(() => revalidator.revalidate(), 0);
   };
 
   const openConfirm = (id) => {
@@ -255,9 +260,19 @@ const CouponPage = () => {
         </div>
       </div>
 
-      <h2 className="text-lg font-bold text-slate-100">
-        Danh sách mã giảm giá
-      </h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold text-slate-100">
+          Danh sách mã giảm giá
+        </h2>
+        <button
+          onClick={handleRefresh}
+          disabled={revalidator.state === "loading"}
+          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Tải lại"
+        >
+          <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+        </button>
+      </div>
       <div className="mt-3 relative bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg overflow-hidden">
         <table className="w-full text-sm text-left text-slate-200">
           <thead className="text-xs uppercase bg-[#161F32] border-b border-slate-800">

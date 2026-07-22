@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, RefreshCw } from "lucide-react";
 import {
   useLoaderData,
   useRevalidator,
@@ -75,6 +75,11 @@ const SupplierPage = () => {
     const params = new URLSearchParams(searchParams);
     params.set("page", newPage);
     setSearchParams(params);
+  };
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["suppliers"] });
+    setTimeout(() => revalidator.revalidate(), 0);
   };
 
   const openConfirm = (supplierId) => {
@@ -162,9 +167,19 @@ const SupplierPage = () => {
       </div>
 
       <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <h2 className="section-title">
-          Danh sách nhà cung cấp
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="section-title">
+            Danh sách nhà cung cấp
+          </h2>
+          <button
+            onClick={handleRefresh}
+            disabled={revalidator.state === "loading"}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Tải lại"
+          >
+            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+          </button>
+        </div>
 
         {/* BẢNG CHUYỂN ĐỔI SANG LAYOUT 5 CỘT TÁCH BIỆT */}
         <div className="table-retro">

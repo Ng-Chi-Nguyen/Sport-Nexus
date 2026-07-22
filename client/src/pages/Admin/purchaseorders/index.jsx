@@ -4,7 +4,7 @@ import { SimpleSelect } from "@/components/ui/select";
 import FilterPanel from "@/components/ui/FilterPanel";
 import RangeInput from "@/components/ui/RangeInput";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, RefreshCw } from "lucide-react";
 import { useLoaderData, useRevalidator } from "react-router-dom";
 import {
   formatDate,
@@ -57,6 +57,11 @@ const PurchaseOrderPage = () => {
   const paginationInfo = responses?.data?.pagination || {
     totalPages: 1,
     currentPage: 1,
+  };
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["purchase-order"] });
+    setTimeout(() => revalidator.revalidate(), 0);
   };
 
   const handlePageChange = (newPage) => {
@@ -147,7 +152,17 @@ const PurchaseOrderPage = () => {
         />
       </FilterPanel>
 
-      <h2 className="my-3">Danh sách nhập hàng</h2>
+      <div className="flex items-center justify-between my-3">
+        <h2>Danh sách nhập hàng</h2>
+        <button
+          onClick={handleRefresh}
+          disabled={revalidator.state === "loading"}
+          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Tải lại"
+        >
+          <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+        </button>
+      </div>
       <div className="table-retro">
         <table className="w-full text-sm text-left text-[#323232] table-retro">
           <thead className="text-sm uppercase bg-primary border-b-2 text-[#fff] border-[#323232]">

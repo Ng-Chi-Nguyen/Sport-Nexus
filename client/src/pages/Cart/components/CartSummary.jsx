@@ -1,4 +1,3 @@
-import { useState } from "react";
 import useCoupon from "@/hooks/useCoupon";
 import { formatCurrency } from "@/utils/formatters";
 

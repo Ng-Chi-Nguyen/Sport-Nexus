@@ -9,6 +9,7 @@ import {
   PackageX,
   Filter,
   ChevronDown,
+  RefreshCw,
 } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
 import {
@@ -122,6 +123,11 @@ const ProductPage = () => {
         "Đã có lỗi xảy ra!";
       toast.error(errorMessage);
     }
+  };
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["products"] });
+    setTimeout(() => revalidator.revalidate(), 0);
   };
 
   const handlePageChange = (newPage) => {
@@ -290,7 +296,17 @@ const ProductPage = () => {
         </div>
       </div>
 
-      <h2 className="text-lg font-bold text-slate-100">Danh sách sản phẩm</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold text-slate-100">Danh sách sản phẩm</h2>
+        <button
+          onClick={handleRefresh}
+          disabled={revalidator.state === "loading"}
+          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Tải lại"
+        >
+          <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+        </button>
+      </div>
       <div className="mt-3 relative bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg overflow-hidden">
         <table className="w-full text-sm text-left text-slate-200">
           <thead className="text-xs uppercase bg-[#161F32] border-b border-slate-800">

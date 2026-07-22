@@ -5,7 +5,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { toast } from "sonner";
-import { LayoutDashboard, HelpCircle } from "lucide-react";
+import { LayoutDashboard, HelpCircle, RefreshCw } from "lucide-react";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
@@ -62,6 +62,11 @@ const PermissionPage = () => {
     if (!permissionsData) return [];
     return Object.values(permissionsData).flat();
   }, [permissionsData]);
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["permissions"] });
+    setTimeout(() => revalidator.revalidate(), 0);
+  };
 
   const handlePageChange = (newPage) => {
     setSearchParams({ page: newPage });
@@ -147,9 +152,19 @@ const PermissionPage = () => {
 
       {/* KHỐI LAYOUT TỐI CHỦ ĐẠO HỆ THỐNG */}
       <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md relative z-10">
-        <h3 className="section-title">
-          Danh sách quyền hạn
-        </h3>
+        <div className="flex items-center justify-between">
+          <h3 className="section-title">
+            Danh sách quyền hạn
+          </h3>
+          <button
+            onClick={handleRefresh}
+            disabled={revalidator.state === "loading"}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Tải lại"
+          >
+            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+          </button>
+        </div>
 
         <div className="table-retro">
           <table className="w-full border-separate border-spacing-0">

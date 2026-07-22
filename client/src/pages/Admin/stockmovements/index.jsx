@@ -4,7 +4,8 @@ import { BtnAdd } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
 import Pagination from "@/components/ui/pagination";
 import { SimpleSelect } from "@/components/ui/select";
-import { LayoutDashboard, Filter, ChevronDown } from "lucide-react";
+import { LayoutDashboard, Filter, ChevronDown, RefreshCw } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   useLoaderData,
   useRevalidator,
@@ -30,6 +31,8 @@ const StockPage = () => {
   const currentStockMax = searchParams.get("stock_max") || "";
   const currentPriceMin = searchParams.get("price_min") || "";
   const currentPriceMax = searchParams.get("price_max") || "";
+
+  const queryClient = useQueryClient();
 
   const [searchInput, setSearchInput] = useState(currentSearch);
   const [showFilters, setShowFilters] = useState(false);
@@ -77,6 +80,11 @@ const StockPage = () => {
   const paginationInfo = response?.data?.pagination || {
     totalPages: 1,
     currentPage: 1,
+  };
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["stocks"] });
+    setTimeout(() => revalidator.revalidate(), 0);
   };
 
   const handlePageChange = (newPage) => {
@@ -207,10 +215,19 @@ const StockPage = () => {
       <div className="\bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
         {/* HEADER TIÊU ĐỀ */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <div>
+          <div className="flex items-center gap-3">
             <h2 className="text-lg font-semibold text-slate-100 tracking-wide">
               Biến động kho
             </h2>
+            <button
+              onClick={handleRefresh}
+              disabled={revalidator.state === "loading"}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Tải lại"
+            >
+              <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+            </button>
+          </div>
 
             {/* Chú thích màu sắc phong cách Cyberpunk tối giản */}
             <div className="flex flex-wrap items-center gap-4 mt-3 text-[11px] font-medium text-slate-400 bg-[#111827]/60 px-4 py-2 rounded-xl border border-slate-900/60 w-fit">

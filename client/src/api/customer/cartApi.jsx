@@ -1,4 +1,4 @@
-import axiosClient from "@/api/axiosClient";
+import axiosClient from "@/lib/axiosClient";
 
 const cartApi = {
     getCart: () => axiosClient.get("/customer/cart/"),
