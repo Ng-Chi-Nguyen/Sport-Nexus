@@ -12,7 +12,6 @@ const productVariantController = {
                 data: newProductVariant
             })
         } catch (error) {
-
             if (error.code === "P2025") {
                 return res.status(409).json({
                     success: false,

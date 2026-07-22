@@ -2,7 +2,7 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { FloatingInput } from "@/components/ui/input";
 import { SelectPro } from "@/components/ui/select";
 import { Submit_GoBack } from "@/components/ui/button";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, PlusCircle, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import productVariantdApi from "@/api/core/productVariantApi";
@@ -25,15 +25,18 @@ const EditProductVariant = () => {
   const products = response.products.data;
   const product_variant = response.product_variant.data;
 
-  // --- KHỞI TẠO STATE TỪ LOADER DATA BIẾN THỂ ---
-  const [selectProdut, setSelectProduct] = useState(product_variant.product_id);
-  const [selectAttributeKey, setSelectAttributeKey] = useState(
-    product_variant.VariableAttributes[0].attributeKey.id,
+  const initialAttrs = (product_variant.VariableAttributes || []).map(
+    (attr) => ({
+      attribute_key_id: attr.attributeKey.id,
+      value: attr.value,
+    }),
   );
+
+  const [selectProdut, setSelectProduct] = useState(product_variant.product_id);
   const [stock, setStock] = useState(product_variant.stock);
   const [price, setPrice] = useState(product_variant.price);
-  const [value, setValue] = useState(
-    product_variant.VariableAttributes[0].value,
+  const [attributes, setAttributes] = useState(
+    initialAttrs.length > 0 ? initialAttrs : [{ attribute_key_id: "", value: "" }],
   );
   const [assignedAttrKeys, setAssignedAttrKeys] = useState([]);
 
@@ -55,40 +58,68 @@ const EditProductVariant = () => {
     [assignedAttrKeys],
   );
 
+  const usedAttrIds = attributes.map((a) => Number(a.attribute_key_id)).filter(Boolean);
+
+  const availableAttrOptions = useMemo(
+    () =>
+      attributeKeyOptions.filter((opt) => !usedAttrIds.includes(opt.id)),
+    [attributeKeyOptions, usedAttrIds],
+  );
+
   useEffect(() => {
     if (!selectProdut) {
       setAssignedAttrKeys([]);
-      setSelectAttributeKey("");
       return;
     }
-    productAttributeKeyApi.getByProduct(selectProdut).then((res) => {
-      if (res.success) {
-        setAssignedAttrKeys(res.data.map((item) => item.attributeKey).filter(Boolean));
-      }
-    }).catch(() => setAssignedAttrKeys([]));
+    productAttributeKeyApi
+      .getByProduct(selectProdut)
+      .then((res) => {
+        if (res.success) {
+          setAssignedAttrKeys(res.data.map((item) => item.attributeKey).filter(Boolean));
+        }
+      })
+      .catch(() => setAssignedAttrKeys([]));
   }, [selectProdut]);
 
   const handleProductChange = (productId) => {
     setSelectProduct(productId);
+    setAttributes([{ attribute_key_id: "", value: "" }]);
   };
 
-  const handleAttrChange = (attrId) => {
-    setSelectAttributeKey(attrId);
+  const addAttributeRow = () => {
+    setAttributes((prev) => [...prev, { attribute_key_id: "", value: "" }]);
+  };
+
+  const removeAttributeRow = (index) => {
+    setAttributes((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateAttribute = (index, field, val) => {
+    setAttributes((prev) =>
+      prev.map((attr, i) => (i === index ? { ...attr, [field]: val } : attr)),
+    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const validAttrs = attributes.filter(
+      (attr) => attr.attribute_key_id && attr.value.trim(),
+    );
+
+    if (validAttrs.length === 0) {
+      toast.error("Vui lòng thêm ít nhất một thuộc tính.");
+      return;
+    }
+
     const dataToSend = {
       stock: Number(stock),
       price: Number(price),
       product_id: Number(selectProdut),
-      attributes: [
-        {
-          attribute_key_id: Number(selectAttributeKey),
-          value: value,
-        },
-      ],
+      attributes: validAttrs.map((attr) => ({
+        attribute_key_id: Number(attr.attribute_key_id),
+        value: attr.value.trim(),
+      })),
     };
 
     try {
@@ -121,7 +152,6 @@ const EditProductVariant = () => {
       </h2>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
-        {/* KHỐI 1: GIÁ & KHO HÀNG (THEME GLASSOS TỐI MỜ) */}
         <div className="col-span-12 lg:col-span-4 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-6 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
           <TitleManagement color="green">Giá & Kho hàng</TitleManagement>
 
@@ -141,38 +171,63 @@ const EditProductVariant = () => {
           </div>
         </div>
 
-        {/* KHỐI 2: CẤU HÌNH THUỘC TÍNH (THEME GLASSOS TỐI MỜ - CHỐNG CHE DROPDOWN) */}
         <div className="col-span-12 lg:col-span-8 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-6 rounded-2xl shadow-2xl backdrop-blur-md relative z-20">
           <TitleManagement color="blue">Cấu hình thuộc tính</TitleManagement>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-            <div className="flex flex-col gap-1">
-              <SelectPro
-                value={selectProdut}
-                options={productOptions}
-                onChange={handleProductChange}
-                label="Sản phẩm"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <SelectPro
-                value={selectAttributeKey}
-                options={attributeKeyOptions}
-                onChange={handleAttrChange}
-                label="Thuộc tính (Kích thước / Màu sắc...)"
-              />
-            </div>
-          </div>
-
-          {/* Ô nhập kéo dài thoải mái, giải phóng khoảng trống bị co hẹp cũ */}
-          <div className="w-full mb-8">
-            <FloatingInput
-              label="Giá trị thuộc tính chi tiết (Ví dụ: M, L, XL, 40, Đỏ...)"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
+          <div className="w-full mb-5">
+            <SelectPro
+              value={selectProdut}
+              options={productOptions}
+              onChange={handleProductChange}
+              label="Sản phẩm"
             />
           </div>
 
-          {/* Đường line mờ phân cách và bộ nút dồn về biên góc phải */}
+          <div className="space-y-3 mb-5">
+            {attributes.map((attr, index) => (
+              <div key={index} className="flex gap-2 items-start">
+                <div className="flex-1">
+                  <SelectPro
+                    value={attr.attribute_key_id}
+                    options={
+                      attr.attribute_key_id
+                        ? attributeKeyOptions
+                        : availableAttrOptions
+                    }
+                    onChange={(val) => updateAttribute(index, "attribute_key_id", val)}
+                    label="Thuộc tính"
+                  />
+                </div>
+                <div className="flex-1">
+                  <FloatingInput
+                    label="Giá trị (VD: Đỏ, XL...)"
+                    value={attr.value}
+                    onChange={(e) => updateAttribute(index, "value", e.target.value)}
+                  />
+                </div>
+                {attributes.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeAttributeRow(index)}
+                    className="mt-2 p-2 text-red-400 hover:text-red-300 transition-colors"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {attributes.length < attributeKeyOptions.length && (
+            <button
+              type="button"
+              onClick={addAttributeRow}
+              className="flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 transition-colors mb-5"
+            >
+              <PlusCircle size={16} />
+              Thêm thuộc tính
+            </button>
+          )}
+
           <div className="flex justify-end border-t border-white/5 pt-5 w-full">
             <Submit_GoBack name="Lưu thay đổi" />
           </div>

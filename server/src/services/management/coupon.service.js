@@ -127,23 +127,25 @@ const couponService = {
             return { message: `Đơn hàng giá tối thiểu là ${coupon.min_order_value}đ mới có hiệu lực` }
         }
 
-        let newAmount = 0;
+        let discount = 0;
 
         if (coupon.discount_type === "CASH") {
-            newAmount = amount - coupon.discount_value
+            discount = coupon.discount_value;
         }
 
         if (coupon.discount_type === "PERCENTAGE") {
-            newAmount = amount * (coupon.discount_value / 100)
-            if (newAmount > coupon.max_discount) {
-                newAmount = coupon.max_discount;
+            discount = amount * (coupon.discount_value / 100);
+            if (discount > coupon.max_discount) {
+                discount = coupon.max_discount;
             }
         }
 
+        const newAmount = amount - discount;
+
         return {
             oldAmount: amount,
-            discount: amount - newAmount,
-            newAmount: newAmount
+            discount,
+            newAmount
         };
     }
 }

@@ -29,6 +29,7 @@ const couponController = {
 
     getCouponById: async (req, res) => {
         let couponId = parseInt(req.params.id);
+        // console.log(couponId)
         try {
             let coupon = await couponService.getCouponById(couponId);
 
@@ -136,6 +137,7 @@ const couponController = {
 
     checkCoupon: async (req, res) => {
         const { amount, code } = req.body;
+        console.log(amount, code)
         try {
             const newAmount = await couponService.checkCoupon(amount, code)
             return res.json({

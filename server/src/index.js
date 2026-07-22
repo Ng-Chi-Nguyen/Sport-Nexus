@@ -1,4 +1,5 @@
 import express from "express";
+import http from "http";
 import dotenv from 'dotenv';
 import { connectDB } from './db/prisma.js';
 import Routes from "./routes/index.route.js";
@@ -8,25 +9,35 @@ import configViewEngine from "./configs/view.config.js";
 dotenv.config();
 
 const app = express();
-const port = process.env.APP_PORT;
+const port = process.env.APP_PORT || 8080;
 
-// Gọi cấu hình View Engine
 configViewEngine(app);
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Cho phép React của bạn
+  origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true // Quan trọng để gửi token/cookie sau này
+  credentials: true
 }));
-// server nhận dữ liệu là json
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-connectDB();
-
 Routes(app);
 
-app.listen(port, () => {
-  console.log(`Server đang chạy tại: http://localhost:${port}`)
-})
+app.get('/api/v1/health', (req, res) => {
+  res.json({ status: 'ok', version: '2.0', email_updated: true });
+});
+
+const server = http.createServer(app);
+
+async function start() {
+  await connectDB();
+  server.listen(port, () => {
+    console.log(`Server đang chạy tại: http://localhost:${port}`)
+  });
+}
+
+start().catch(err => {
+  console.error('[FATAL] Server startup failed:', err);
+  process.exit(1);
+});
 

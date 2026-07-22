@@ -183,11 +183,16 @@ const ProductDetail = () => {
             onAddToCart={() => {}}
             onBuyNow={() => {
               if (hasAttrs && !selectedVariant) return;
+              const theVariant = selectedVariant || variants[0];
               const item = {
-                product_variant_id: selectedVariant?.id || variants[0]?.id,
+                product_variant_id: theVariant?.id,
                 quantity,
                 price_at_purchase: currentPrice,
                 name: product.name,
+                attributes: (theVariant?.VariableAttributes || []).map((va) => ({
+                  name: va.attributeKey?.name,
+                  value: va.value,
+                })),
               };
               navigate("/thanh-toan", { state: { items: [item], email: "" } });
             }}

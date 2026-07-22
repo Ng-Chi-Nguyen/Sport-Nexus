@@ -37,6 +37,51 @@ const emailService = {
             subject: "Đặt lại mật khẩu - Sport Nexus",
             html: html
         });
+    },
+
+    sendOrderConfirmationEmail: async (email, full_name, order, items, payment_method_label, status_label, payment_status_label) => {
+        const templatePath = path.resolve('src/views/emails/order-confirmation.ejs');
+        const formatPrice = (n) => new Intl.NumberFormat('vi-VN').format(Number(n || 0)) + '₫';
+        const html = await ejs.renderFile(templatePath, {
+            full_name,
+            order,
+            items,
+            payment_method: payment_method_label,
+            shipping_address: order.shipping_address,
+            status_label,
+            payment_status_label,
+            payment_status: order.payment_status,
+            formatPrice,
+        });
+        // console.log("OK")
+        return await transporter.sendMail({
+            from: `"Sport Nexus" ${emailAdmin}`,
+            to: email,
+            subject: `Xác nhận đơn hàng #${order.id} - Sport Nexus`,
+            html,
+        });
+    },
+
+    sendOrderStatusUpdateEmail: async (email, full_name, order, old_status_label, new_status_label, payment_method_label, payment_status_label) => {
+        const templatePath = path.resolve('src/views/emails/order-status-update.ejs');
+        const formatPrice = (n) => new Intl.NumberFormat('vi-VN').format(Number(n || 0)) + '₫';
+        const html = await ejs.renderFile(templatePath, {
+            full_name,
+            order,
+            old_status_label,
+            new_status_label,
+            payment_method: payment_method_label,
+            payment_status_label,
+            payment_status: order.payment_status,
+            formatPrice,
+        });
+
+        return await transporter.sendMail({
+            from: `"Sport Nexus" ${emailAdmin}`,
+            to: email,
+            subject: `Cập nhật trạng thái đơn hàng #${order.id} - Sport Nexus`,
+            html,
+        });
     }
 };
 

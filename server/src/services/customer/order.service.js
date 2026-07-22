@@ -4,7 +4,19 @@ const orderService = {
     createOrder: async (orderData) => {
         let { total_amount, status, shipping_address, payment_method,
             payment_status, discount_amount, final_amount, coupon_code, user_email, items } = orderData;
-        // console.log(orderData)
+
+        for (const item of items) {
+            const variant = await prisma.productVariants.findUnique({
+                where: { id: item.product_variant_id },
+                select: { stock: true }
+            })
+            if (!variant || variant.stock < item.quantity) {
+                const err = new Error(`Sản phẩm ID ${item.product_variant_id} không đủ hàng (còn ${variant?.stock ?? 0}, cần ${item.quantity})`)
+                err.code = 'INSUFFICIENT_STOCK'
+                throw err
+            }
+        }
+
         let newOrder = await prisma.Orders.create({
             data: {
                 total_amount: total_amount,
@@ -28,9 +40,36 @@ const orderService = {
                 },
             },
             include: {
-                OrderItems: true
+                OrderItems: {
+                    include: {
+                        product_variant: {
+                            include: {
+                                product: { select: { name: true } },
+                                VariableAttributes: {
+                                    include: {
+                                        attributeKey: { select: { name: true } }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         })
+
+        if (coupon_code) {
+            await prisma.coupons.update({
+                where: { code: coupon_code },
+                data: { usage_count: { increment: 1 } }
+            })
+        }
+
+        for (const item of items) {
+            await prisma.productVariants.update({
+                where: { id: item.product_variant_id },
+                data: { stock: { decrement: item.quantity } }
+            })
+        }
 
         return newOrder;
     },
@@ -69,7 +108,20 @@ const orderService = {
         let order = await prisma.Orders.findUnique({
             where: { id: orderId },
             include: {
-                OrderItems: true
+                OrderItems: {
+                    include: {
+                        product_variant: {
+                            include: {
+                                product: { select: { name: true } },
+                                VariableAttributes: {
+                                    include: {
+                                        attributeKey: { select: { name: true } }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         })
 
@@ -138,9 +190,22 @@ const orderService = {
                 orderBy: {
                     id: 'desc'
                 },
-                include: {
-                    OrderItems: true
+            include: {
+                OrderItems: {
+                    include: {
+                        product_variant: {
+                            include: {
+                                product: { select: { name: true } },
+                                VariableAttributes: {
+                                    include: {
+                                        attributeKey: { select: { name: true } }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
+            }
             }),
             prisma.Orders.count({ where })
         ])
