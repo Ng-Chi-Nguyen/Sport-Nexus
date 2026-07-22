@@ -1,6 +1,6 @@
 import express from "express";
 import { validate } from "../../middlewares/validation.middleware.js";
-import { verifyToken } from "../../middlewares/auth.middleware.js";
+import { verifyToken } from "../../middlewares/verifyToken.middlware.js";
 import cartItemSchema from "../../validators/customer/cartItem.validator.js";
 import cartItemController from "../../controllers/customer/cartItem.controller.js";
 

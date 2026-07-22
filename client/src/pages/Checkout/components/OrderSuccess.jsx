@@ -5,7 +5,7 @@ const OrderSuccess = ({ orderId }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="">
+    <div className="flex flex-col items-center gap-3 text-center">
       <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
         <ShoppingBag size={32} className="text-green-600" />
       </div>
