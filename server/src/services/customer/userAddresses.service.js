@@ -12,7 +12,7 @@ const userAddressService = {
                 let newUserAddress = await prisma.$transaction([
                     prisma.userAddresses.updateMany({
                         where: {
-                            user: { connect: { id: user_id } },
+                            user_id: user_id,
                             is_default: true,
                         },
                         data: {
@@ -72,7 +72,7 @@ const userAddressService = {
     updateUserAddress: async (addressId, dataUpdate) => {
         let currentAddress = await prisma.userAddresses.findUnique({
             where: { id: addressId },
-            select: { location_data: true }
+            select: { location_data: true, user_id: true }
         });
 
         if (!currentAddress) {
@@ -86,11 +86,21 @@ const userAddressService = {
 
             let mergedLocationData = {
                 province: { ...oldLocationData.province, ...dataUpdate.location_data.province },
-                district: { ...oldLocationData.district, ...dataUpdate.location_data.district },
                 ward: { ...oldLocationData.ward, ...dataUpdate.location_data.ward },
             };
 
             dataToUpdate.location_data = mergedLocationData;
+        }
+
+        if (dataUpdate.is_default === true) {
+            await prisma.userAddresses.updateMany({
+                where: {
+                    user_id: currentAddress.user_id,
+                    is_default: true,
+                    id: { not: addressId },
+                },
+                data: { is_default: false },
+            });
         }
 
         let updatedAddress = await prisma.userAddresses.update({

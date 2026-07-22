@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useRef, useState } from "react";
+import { useLoaderData } from "react-router-dom";
 import {
   MapPin,
   Phone,
@@ -11,34 +12,15 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import { formatDate, formatCurrency } from "@/utils/formatters";
-import orderApi from "@/api/customer/orderApi";
 import { toast } from "sonner";
-import axiosClient from "@/lib/axiosClient";
+import userApi from "@/api/customer/userApi";
 import { Link } from "react-router-dom";
 
 const Profile = () => {
-  const [user, setUser] = useState(() => {
-    const userStr = localStorage.getItem("user");
-    return userStr ? JSON.parse(userStr) : null;
-  });
-
-  const [orders, setOrders] = useState([]);
-  const [loadingOrders, setLoadingOrders] = useState(true);
+  const { user, orders, addresses } = useLoaderData();
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const fileInputRef = useRef(null);
 
-  useEffect(() => {
-    if (!user?.email) return;
-    orderApi
-      .getByEmail(user.email)
-      .then((res) => {
-        if (res?.data?.success) setOrders(res.data.data || []);
-      })
-      .catch(() => {})
-      .finally(() => setLoadingOrders(false));
-  }, [user?.email]);
-
-  // Xử lý chọn ảnh & Upload Avatar
   const handleAvatarChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -48,20 +30,13 @@ const Profile = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("avatar", file);
-
     try {
       setUploadingAvatar(true);
-      const res = await axiosClient.post("user/upload-avatar", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
+      const res = await userApi.uploadAvatar(file);
       const newAvatarUrl = res?.data?.data?.avatar || res?.data?.avatar;
 
       if (newAvatarUrl) {
         const updatedUser = { ...user, avatar: newAvatarUrl };
-        setUser(updatedUser);
         localStorage.setItem("user", JSON.stringify(updatedUser));
         toast.success("Cập nhật ảnh đại diện thành công!");
       } else {
@@ -72,6 +47,16 @@ const Profile = () => {
     } finally {
       setUploadingAvatar(false);
     }
+  };
+
+  const defaultAddr = addresses.find((a) => a.is_default);
+
+  const formatAddress = (addr) => {
+    if (!addr) return "";
+    const loc = addr.location_data || {};
+    return [addr.detail_address, loc.ward?.name, loc.province?.name]
+      .filter(Boolean)
+      .join(", ");
   };
 
   if (!user) return null;
@@ -163,15 +148,34 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-md">
+          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-md col-span-2 sm:col-span-1">
             <MapPin size={14} className="text-red-600 shrink-0" />
             <div className="min-w-0">
               <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">
                 Địa chỉ
               </p>
-              <p className="text-xs font-medium text-slate-800 truncate">
-                {user.address || "—"}
-              </p>
+              {defaultAddr ? (
+                <div>
+                  <p className="text-xs font-medium text-slate-800 truncate">
+                    {formatAddress(defaultAddr)}
+                  </p>
+                  <Link
+                    to="/tai-khoan/dia-chi"
+                    className="text-[10px] text-blue-500 hover:underline mt-0.5 inline-block"
+                  >
+                    Quản lý địa chỉ
+                  </Link>
+                </div>
+              ) : (
+                <p className="text-xs font-medium text-slate-800">
+                  <Link
+                    to="/tai-khoan/dia-chi/them"
+                    className="text-blue-500 hover:underline"
+                  >
+                    + Thêm địa chỉ
+                  </Link>
+                </p>
+              )}
             </div>
           </div>
 
@@ -227,11 +231,7 @@ const Profile = () => {
           Đơn hàng của bạn
         </h2>
 
-        {loadingOrders ? (
-          <div className="py-6 text-sm text-slate-400">
-            Đang tải đơn hàng...
-          </div>
-        ) : orders.length === 0 ? (
+        {orders.length === 0 ? (
           <div className="border-t border-b border-slate-200">
             <div className="grid grid-cols-5 py-3 text-sm font-bold text-slate-900">
               <div>Mã đơn hàng</div>

@@ -13,7 +13,6 @@ const userAddressSchema = {
             'string.max': 'Tên thương hiệu không được vượt quá {#limit} ký tự.',
         }).required(),
         location_data: Joi.object({
-            // 1. Dữ liệu Tỉnh/Thành phố
             province: Joi.object({
                 name: Joi.string().required(),
                 code: Joi.number().required(),
@@ -22,15 +21,6 @@ const userAddressSchema = {
                 'object.base': 'Dữ liệu Tỉnh/Thành phố phải là một đối tượng.',
             }),
 
-            // 2. Dữ liệu Quận/Huyện
-            district: Joi.object({
-                name: Joi.string().required(),
-                code: Joi.number().required(),
-            }).required().messages({
-                'any.required': 'Dữ liệu Quận/Huyện là bắt buộc.',
-            }),
-
-            // 3. Dữ liệu Phường/Xã
             ward: Joi.object({
                 name: Joi.string().required(),
                 code: Joi.number().required(),
@@ -39,7 +29,7 @@ const userAddressSchema = {
             }),
 
         }).required().messages({
-            'any.required': 'Dữ liệu hành chính (Tỉnh/Huyện/Xã) là bắt buộc.',
+            'any.required': 'Dữ liệu hành chính (Tỉnh/Xã) là bắt buộc.',
         }),
         type: Joi.string().valid('home', 'office', 'company').messages({
             'any.only': 'Loại giảm giá phải là "home, office" hoặc "company".',
@@ -59,7 +49,6 @@ const userAddressSchema = {
             'string.max': 'Tên thương hiệu không được vượt quá {#limit} ký tự.',
         }),
         location_data: Joi.object({
-            // 1. Dữ liệu Tỉnh/Thành phố
             province: Joi.object({
                 name: Joi.string(),
                 code: Joi.number(),
@@ -67,13 +56,6 @@ const userAddressSchema = {
                 'object.base': 'Dữ liệu Tỉnh/Thành phố phải là một đối tượng.',
             }),
 
-            // 2. Dữ liệu Quận/Huyện
-            district: Joi.object({
-                name: Joi.string(),
-                code: Joi.number(),
-            }),
-
-            // 3. Dữ liệu Phường/Xã
             ward: Joi.object({
                 name: Joi.string(),
                 code: Joi.number(),

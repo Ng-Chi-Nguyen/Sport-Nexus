@@ -2,17 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader2, Camera, User } from "lucide-react";
 import ShowToast from "@/components/ui/toast";
-import axiosClient from "@/lib/axiosClient";
+import userApi from "@/api/customer/userApi";
 
 const EditProfile = () => {
   const navigate = useNavigate();
+  const [avatar, setAvatar] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Lấy dữ liệu user hiện tại từ LocalStorage
   const userStr = localStorage.getItem("user");
   const user = userStr ? JSON.parse(userStr) : null;
 
-  const [avatar, setAvatar] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     full_name: user?.full_name || "",
     email: user?.email || "",
@@ -20,38 +19,25 @@ const EditProfile = () => {
     address: user?.address || "",
   });
 
-  // Xử lý gửi Form cập nhật thông tin
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // 1. Upload Avatar nếu người dùng chọn tệp mới
       let updatedAvatarUrl = user?.avatar;
       if (avatar) {
-        const formDataUpload = new FormData();
-        formDataUpload.append("avatar", avatar);
-        const avatarRes = await axiosClient.post(
-          "user/upload-avatar",
-          formDataUpload,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          },
-        );
+        const avatarRes = await userApi.uploadAvatar(avatar);
         updatedAvatarUrl =
           avatarRes?.data?.data?.avatar ||
           avatarRes?.data?.avatar ||
           updatedAvatarUrl;
       }
 
-      // 2. Gửi thông tin cá nhân cập nhật lên API
-      const res = await axiosClient.put("user/profile", formData);
+      const res = await userApi.updateProfile(formData);
 
       if (res?.data?.success || res?.success) {
-        // Cập nhật lại LocalStorage với thông tin mới
         const updatedUser = { ...user, ...formData, avatar: updatedAvatarUrl };
         localStorage.setItem("user", JSON.stringify(updatedUser));
-
         ShowToast("success", "Cập nhật thông tin thành công!");
         navigate("/tai-khoan");
       } else {
@@ -69,7 +55,6 @@ const EditProfile = () => {
 
   return (
     <div className="max-w-2xl font-sans select-none">
-      {/* Tiêu đề & Nút Quay lại */}
       <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200">
         <button
           type="button"
@@ -90,7 +75,6 @@ const EditProfile = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Upload Ảnh Đại Diện */}
         <div className="flex items-center gap-6">
           <div className="relative group w-20 h-20 rounded-full border border-slate-200 overflow-hidden bg-slate-50 shrink-0">
             {avatar ? (
@@ -135,7 +119,6 @@ const EditProfile = () => {
           </div>
         </div>
 
-        {/* Các Trường Nhập Liệu Tối Giản */}
         <div className="space-y-4 max-w-lg text-sm">
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
@@ -181,7 +164,6 @@ const EditProfile = () => {
           </div>
         </div>
 
-        {/* Nút Nhóm Hành Động */}
         <div className="flex items-center gap-3 pt-4 border-t border-slate-200 max-w-lg">
           <button
             type="submit"

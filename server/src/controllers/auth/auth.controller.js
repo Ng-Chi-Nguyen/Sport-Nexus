@@ -65,6 +65,57 @@ const authController = {
         }
     },
 
+    forgotPassword: async (req, res) => {
+        try {
+            await authService.forgotPassword(req.body.email);
+            return res.status(200).json({
+                success: true,
+                message: "Link đặt lại mật khẩu đã được gửi vào email của bạn!",
+            });
+        } catch (error) {
+            const status = error.status || 500;
+            return res.status(status).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    },
+
+    resetPassword: async (req, res) => {
+        try {
+            const { token } = req.params;
+            await authService.resetPassword(token, req.body);
+            return res.status(200).json({
+                success: true,
+                message: "Đặt lại mật khẩu thành công!",
+            });
+        } catch (error) {
+            const status = error.status || 500;
+            return res.status(status).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    },
+
+    changePassword: async (req, res) => {
+        try {
+            const userId = req.user.id;
+            const result = await authService.changePassword(userId, req.body);
+            return res.status(200).json({
+                success: true,
+                message: "Đổi mật khẩu thành công!",
+                data: result,
+            });
+        } catch (error) {
+            const status = error.status || 500;
+            return res.status(status).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    },
+
     refreshToken: async (req, res) => {
         try {
             const { refreshToken } = req.body;

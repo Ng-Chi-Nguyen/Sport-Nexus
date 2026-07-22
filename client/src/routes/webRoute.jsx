@@ -1,14 +1,24 @@
 import { lazy } from "react";
-import { homeLoader, productDetailLoader } from "./webLoader";
+import {
+  homeLoader,
+  productDetailLoader,
+  addressLoader,
+  addressAction,
+  editAddressLoader,
+  profileLoader,
+} from "./webLoader";
 
 const HomePage = lazy(() => import("@/pages/Home/"));
 const ProductDetail = lazy(() => import("@/pages/ProductDetail"));
+const CheckoutPage = lazy(() => import("@/pages/Checkout"));
 const InfoPage = lazy(() => import("@/pages/info"));
 const Index = lazy(() => import("@/pages/profile"));
 const ResetPassword = lazy(() => import("@/pages/profile/resetPassword"));
 const Profile = lazy(() => import("@/pages/profile/profile"));
 const Order = lazy(() => import("@/pages/profile/order"));
 const Address = lazy(() => import("@/pages/profile/address"));
+const AddAddress = lazy(() => import("@/pages/profile/address/AddAddress"));
+const EditAddress = lazy(() => import("@/pages/profile/address/EditAddress"));
 const EditProfile = lazy(() => import("@/pages/profile/editProfile"));
 
 export const webRoutes = {
@@ -22,6 +32,10 @@ export const webRoutes = {
       path: "san-pham/:slug",
       element: <ProductDetail />,
       loader: productDetailLoader,
+    },
+    {
+      path: "thanh-toan",
+      element: <CheckoutPage />,
     },
     {
       path: "he-thong-cua-hang",
@@ -47,8 +61,10 @@ export const webRoutes = {
       path: "/tai-khoan",
       element: <Index />,
       children: [
-        { index: true, element: <Profile /> },
-        { path: "dia-chi", element: <Address /> },
+        { index: true, element: <Profile />, loader: profileLoader },
+        { path: "dia-chi", element: <Address />, loader: addressLoader, action: addressAction },
+        { path: "dia-chi/them", element: <AddAddress /> },
+        { path: "dia-chi/sua/:id", element: <EditAddress />, loader: editAddressLoader },
         { path: "dat-lai-mat-khau", element: <ResetPassword /> },
         { path: "don-hang", element: <Order /> },
         { path: "chinh-sua-thong-tin-ca-nhan", element: <EditProfile /> },

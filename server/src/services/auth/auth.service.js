@@ -1,6 +1,8 @@
 import prisma from "../../db/prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import emailService from "../email/email.service.js";
 import { ACTIVE } from "../../utils/prisma.js";
 
 const authService = {
@@ -93,6 +95,78 @@ const authService = {
         })
 
         return updatedUser;
+    },
+
+    forgotPassword: async (email) => {
+        const user = await prisma.Users.findFirst({
+            where: { email, deleted_at: ACTIVE },
+        });
+
+        if (!user) {
+            const error = new Error("Email không tồn tại trong hệ thống");
+            error.status = 404;
+            throw error;
+        }
+
+        const token = crypto.randomBytes(32).toString("hex");
+
+        await prisma.Users.update({
+            where: { id: user.id },
+            data: { verification_token: token },
+        });
+
+        await emailService.sendResetPasswordEmail(user.email, user.full_name, token);
+    },
+
+    resetPassword: async (token, { password }) => {
+        const user = await prisma.Users.findFirst({
+            where: { verification_token: token, deleted_at: ACTIVE },
+        });
+
+        if (!user) {
+            const error = new Error("Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn");
+            error.status = 400;
+            throw error;
+        }
+
+        const password_hash = await bcrypt.hash(password, 10);
+
+        await prisma.Users.update({
+            where: { id: user.id },
+            data: {
+                password: password_hash,
+                verification_token: null,
+            },
+        });
+    },
+
+    changePassword: async (userId, { current_password, new_password }) => {
+        const user = await prisma.Users.findUnique({
+            where: { id: Number(userId) },
+        });
+
+        if (!user) {
+            const error = new Error("Tài khoản không tồn tại");
+            error.status = 404;
+            throw error;
+        }
+
+        const isMatch = bcrypt.compareSync(current_password, user.password);
+        if (!isMatch) {
+            const error = new Error("Mật khẩu hiện tại không chính xác");
+            error.status = 400;
+            throw error;
+        }
+
+        const password_hash = await bcrypt.hash(new_password, 10);
+
+        await prisma.Users.update({
+            where: { id: Number(userId) },
+            data: {
+                password: password_hash,
+                updated_at: new Date(),
+            },
+        });
     },
 
     refreshToken: async (refreshToken) => {

@@ -168,10 +168,35 @@ const FloatingInputPassword = ({ label, id, light, ...props }) => {
   );
 };
 
+// 6. INPUT CÓ LABEL PHÍA TRÊN (kiểu AddressForm)
+const LabelInput = ({ label, required, id, className = "", rightElement, ...props }) => (
+  <div>
+    {label && (
+      <label htmlFor={id} className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+    )}
+    <div className="relative">
+      <input
+        id={id}
+        required={required}
+        className={`w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-blue-600 text-slate-800 text-sm ${rightElement ? "pr-10" : ""} ${className}`}
+        {...props}
+      />
+      {rightElement && (
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400">
+          {rightElement}
+        </div>
+      )}
+    </div>
+  </div>
+);
+
 export {
   InputFrom,
   InputPassword,
   InputFile,
   FloatingInput,
   FloatingInputPassword,
+  LabelInput,
 };

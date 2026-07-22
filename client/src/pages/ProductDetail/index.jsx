@@ -7,7 +7,6 @@ import ProductImages from "./components/ProductImages";
 import ProductInfo from "./components/ProductInfo";
 import VariantSelector from "./components/VariantSelector";
 import ActionBar from "./components/ActionBar";
-import CouponInput from "./components/CouponInput";
 import ProductTabs from "./components/ProductTabs";
 import ReviewList from "./components/ReviewList";
 
@@ -18,8 +17,6 @@ const ProductDetail = () => {
   const [selectedAttrs, setSelectedAttrs] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [wishlisted, setWishlisted] = useState(false);
-  const [couponCode, setCouponCode] = useState("");
-  const [couponMsg, setCouponMsg] = useState(null);
 
   if (!loaderData?.success || !loaderData?.data) {
     return (
@@ -157,6 +154,7 @@ const ProductDetail = () => {
             avgRating={avgRating}
             totalReviews={ratings.length}
             currentPrice={currentPrice}
+            quantity={quantity}
           />
 
           <VariantSelector
@@ -183,21 +181,19 @@ const ProductDetail = () => {
             }}
             currentStock={currentStock}
             onAddToCart={() => {}}
-            onBuyNow={() => {}}
+            onBuyNow={() => {
+              if (hasAttrs && !selectedVariant) return;
+              const item = {
+                product_variant_id: selectedVariant?.id || variants[0]?.id,
+                quantity,
+                price_at_purchase: currentPrice,
+                name: product.name,
+              };
+              navigate("/thanh-toan", { state: { items: [item], email: "" } });
+            }}
           />
 
-          <CouponInput
-            couponCode={couponCode}
-            onCodeChange={setCouponCode}
-            onApply={() => {
-              if (!couponCode.trim()) return;
-              setCouponMsg({
-                type: "success",
-                text: "Mã giảm giá không hợp lệ (demo)",
-              });
-            }}
-            message={couponMsg}
-          />
+
         </div>
       </div>
 

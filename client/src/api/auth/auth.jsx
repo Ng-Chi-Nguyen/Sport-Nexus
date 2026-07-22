@@ -11,9 +11,18 @@ const authApi = {
     return axios.post(url, data);
   },
   logout: (userId) => {
-    // console.log(userId);
     const url = `/auth/logout/${userId}`;
     return axiosClient.post(url);
+  },
+
+  forgotPassword: (email) => {
+    const url = "auth/forgot-password";
+    return axiosClient.post(url, { email });
+  },
+
+  resetPassword: (token, data) => {
+    const url = `auth/reset-password/${token}`;
+    return axiosClient.post(url, data);
   },
 };
 

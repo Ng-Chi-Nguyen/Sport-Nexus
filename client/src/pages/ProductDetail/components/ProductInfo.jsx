@@ -6,6 +6,7 @@ const ProductInfo = ({
   avgRating: propAvgRating,
   totalReviews: propTotalReviews,
   currentPrice: propCurrentPrice,
+  quantity,
 }) => {
   if (!product) return null;
 
@@ -87,46 +88,30 @@ const ProductInfo = ({
       )}
 
       {/* Khối Giá bán & Badge phần trăm giảm giá */}
-      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 flex items-baseline gap-3">
-        <p className="text-2xl md:text-3xl font-black text-red-600 tracking-tight">
-          {formatCurrency(currentPrice)}
-        </p>
-
-        {hasDiscount && (
-          <>
-            <p className="text-sm md:text-base text-slate-400 line-through font-medium">
-              {formatCurrency(basePrice)}
-            </p>
-            <span className="ml-auto bg-red-600 text-white text-xs font-black px-2 py-0.5 rounded shadow-sm">
-              TẶNG -{discountPercent}%
-            </span>
-          </>
-        )}
-      </div>
-
-      {/* Thuộc tính sản phẩm */}
-      {product.ProductAttributeKeys?.length > 0 && (
-        <div className="pt-2 border-t border-slate-100">
-          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">
-            Thông tin thuộc tính
+      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80">
+        <div className="flex items-baseline gap-3">
+          <p className="text-2xl md:text-3xl font-black text-red-600 tracking-tight">
+            {formatCurrency(currentPrice)}
           </p>
-          <div className="flex flex-wrap gap-2">
-            {product.ProductAttributeKeys.map((pak) => (
-              <span
-                key={pak.attributeKey?.id || pak.id}
-                className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm"
-              >
-                <span>{pak.attributeKey?.name}</span>
-                {pak.attributeKey?.unit && (
-                  <span className="text-slate-400 font-normal">
-                    ({pak.attributeKey.unit})
-                  </span>
-                )}
+
+          {hasDiscount && (
+            <>
+              <p className="text-sm md:text-base text-slate-400 line-through font-medium">
+                {formatCurrency(basePrice)}
+              </p>
+              <span className="ml-auto bg-red-600 text-white text-xs font-black px-2 py-0.5 rounded shadow-sm">
+                TẶNG -{discountPercent}%
               </span>
-            ))}
-          </div>
+            </>
+          )}
         </div>
-      )}
+        <p className="mt-1 text-sm text-slate-500">
+          Tạm tính:{" "}
+          <span className="font-semibold text-slate-700">
+            {formatCurrency(currentPrice * quantity)}
+          </span>
+        </p>
+      </div>
 
       {/* Cam kết ngắn */}
       <div className="flex items-center gap-2 pt-2 text-[12px] font-medium text-emerald-600">

@@ -1,4 +1,4 @@
-import { ArrowLeft, Edit, Pencil, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Edit, Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 // 1. NÚT THÊM MỚI (Thường nằm trên đầu danh sách)
@@ -158,6 +158,20 @@ const BtnActions = ({ route, id, onDelete }) => {
   );
 };
 
+// 8. NÚT LƯU VỚI TRẠNG THÁI LOADING (dùng trong form địa chỉ, auth)
+const BtnSave = ({ children, loading, loadingText, disabled, icon, className = "", ...props }) => (
+  <button
+    disabled={disabled || loading}
+    type="submit"
+    className={`px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider rounded transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+    {...props}
+  >
+    {loading && <Loader2 size={15} className="animate-spin" />}
+    {!loading && icon}
+    <span>{loading ? (loadingText || "Đang lưu...") : children}</span>
+  </button>
+);
+
 export {
   BtnAdd,
   BtnSubmit,
@@ -166,4 +180,5 @@ export {
   BtnDelete,
   Submit_GoBack,
   BtnActions,
+  BtnSave,
 };

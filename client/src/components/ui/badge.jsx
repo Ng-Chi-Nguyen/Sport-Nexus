@@ -5,6 +5,7 @@ const Badge = ({ children, color = "gray" }) => {
     red: "bg-red-400/10 text-red-400 inset-ring-red-400/20 w-fit",
     yellow: "bg-yellow-400/10 text-yellow-500 inset-ring-yellow-400/20 w-fit",
     green: "bg-green-400/10 text-green-400 inset-ring-green-500/20 w-fit",
+    green_bold: "bg-green-600/10 text-green-600 inset-ring-green-900/20 w-fit",
     blue: "bg-blue-400/10 text-blue-400 inset-ring-blue-400/30 w-fit",
     indigo: "bg-indigo-400/10 text-indigo-400 inset-ring-indigo-400/30 w-fit",
     purple: "bg-purple-400/10 text-purple-400 inset-ring-purple-400/30 w-fit",
