@@ -6,6 +6,8 @@ import {
   addressAction,
   editAddressLoader,
   profileLoader,
+  ordersLoader,
+  orderDetailLoader,
 } from "./webLoader";
 
 const HomePage = lazy(() => import("@/pages/Home/"));
@@ -17,6 +19,7 @@ const Index = lazy(() => import("@/pages/profile"));
 const ResetPassword = lazy(() => import("@/pages/profile/resetPassword"));
 const Profile = lazy(() => import("@/pages/profile/profile"));
 const Order = lazy(() => import("@/pages/profile/order"));
+const OrderDetail = lazy(() => import("@/pages/profile/orderDetail"));
 const Address = lazy(() => import("@/pages/profile/address"));
 const AddAddress = lazy(() => import("@/pages/profile/address/AddAddress"));
 const EditAddress = lazy(() => import("@/pages/profile/address/EditAddress"));
@@ -71,7 +74,8 @@ export const webRoutes = {
         { path: "dia-chi/them", element: <AddAddress /> },
         { path: "dia-chi/sua/:id", element: <EditAddress />, loader: editAddressLoader },
         { path: "dat-lai-mat-khau", element: <ResetPassword /> },
-        { path: "don-hang", element: <Order /> },
+        { path: "don-hang", element: <Order />, loader: ordersLoader },
+        { path: "don-hang/:id", element: <OrderDetail />, loader: orderDetailLoader },
         { path: "chinh-sua-thong-tin-ca-nhan", element: <EditProfile /> },
       ],
     },

@@ -188,7 +188,7 @@ const orderService = {
                 take: limit,
                 skip: skip,
                 orderBy: {
-                    id: 'desc'
+                    created_at: 'desc'
                 },
             include: {
                 OrderItems: {

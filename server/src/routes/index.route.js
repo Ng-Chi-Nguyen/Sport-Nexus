@@ -21,6 +21,7 @@ import permissionRoute from "./management/permission.route.js";
 import logRoute from "./management/log.route.js";
 import productAttributeKeyRoute from "./management/productAttributeKey.route.js";
 import cartRoute from "./customer/cart.route.js";
+import customerUserRoute from "./customer/user.route.js";
 import sendEmailRoute from "./email/sendEmail.route.js";
 
 const Routes = (app) => {
@@ -40,6 +41,7 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}management/product-attribute-key/`, productAttributeKeyRoute)
 
     // Customer - Khách hàng
+    app.use(`${api_prefix_v1}user/`, customerUserRoute)
     app.use(`${api_prefix_v1}customer/user-address/`, userAddressRoute)
     app.use(`${api_prefix_v1}customer/cart-item/`, cartItemRoute)
     app.use(`${api_prefix_v1}customer/cart/`, cartRoute)

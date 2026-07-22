@@ -1,4 +1,4 @@
-import orderApi from "@/api/customer/orderApi";
+import LoaderOrder from "@/loaders/customer/orderLoader";
 import addressApi from "@/api/customer/addressApi";
 
 export async function profileLoader() {
@@ -7,13 +7,13 @@ export async function profileLoader() {
   if (!user) return { user: null, orders: [], addresses: [] };
 
   const [ordersRes, addressesRes] = await Promise.all([
-    orderApi.getByEmail(user.email).catch(() => null),
+    LoaderOrder.getAllOrders({ page: 1, search: user.email }).catch(() => null),
     addressApi.getAll(user.id).catch(() => null),
   ]);
 
   return {
     user,
-    orders: ordersRes?.data?.data || [],
+    orders: ordersRes?.data?.orders || [],
     addresses: addressesRes?.data || [],
   };
 }

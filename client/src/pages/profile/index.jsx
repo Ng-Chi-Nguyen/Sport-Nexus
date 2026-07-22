@@ -96,6 +96,19 @@ const ProfilePage = () => {
 
               <div>
                 <NavLink
+                  to="/tai-khoan/don-hang"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-blue-600 font-bold block"
+                      : "text-slate-700 hover:text-blue-600 transition-colors block"
+                  }
+                >
+                  Đơn hàng
+                </NavLink>
+              </div>
+
+              <div>
+                <NavLink
                   to="/tai-khoan/dat-lai-mat-khau"
                   className={({ isActive }) =>
                     isActive

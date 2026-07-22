@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import {
   MapPin,
   Phone,
@@ -12,12 +12,14 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import { formatDate, formatCurrency } from "@/utils/formatters";
+import { STATUS_LABELS, STATUS_PAYMENT } from "@/constants/order";
+import { STATUS_BADGE, PAYMENT_BADGE } from "@/constants/web/profile";
 import { toast } from "sonner";
 import userApi from "@/api/customer/userApi";
-import { Link } from "react-router-dom";
 
 const Profile = () => {
   const { user, orders, addresses } = useLoaderData();
+  const navigate = useNavigate();
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -227,52 +229,64 @@ const Profile = () => {
 
       {/* Khối Đơn Hàng Của Bạn */}
       <div>
-        <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 mb-4">
-          Đơn hàng của bạn
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900">
+            Đơn hàng của bạn
+          </h2>
+          <Link
+            to="/tai-khoan/don-hang"
+            className="text-sm text-blue-600 hover:underline"
+          >
+            Xem tất cả
+          </Link>
+        </div>
 
         {orders.length === 0 ? (
-          <div className="border-t border-b border-slate-200">
-            <div className="grid grid-cols-5 py-3 text-sm font-bold text-slate-900">
-              <div>Mã đơn hàng</div>
-              <div>Ngày đặt</div>
-              <div>Thành tiền</div>
-              <div>TT thanh toán</div>
-              <div>TT vận chuyển</div>
-            </div>
-            <div className="py-4 border-t border-slate-100 text-sm text-slate-600">
-              Không có đơn hàng nào.
-            </div>
+          <div className="border rounded-lg p-6 text-center text-slate-500">
+            <p className="font-medium mb-1">Chưa có đơn hàng nào</p>
+            <p className="text-xs">Khi bạn đặt hàng, đơn hàng sẽ xuất hiện tại đây</p>
           </div>
         ) : (
-          <div className="overflow-x-auto border-t border-slate-200">
+          <div className="overflow-x-auto border rounded-lg">
             <table className="w-full text-sm text-left">
               <thead>
-                <tr className="border-b border-slate-200 text-slate-900 font-bold">
-                  <th className="py-3">Mã đơn hàng</th>
-                  <th className="py-3">Ngày đặt</th>
-                  <th className="py-3">Thành tiền</th>
-                  <th className="py-3">TT thanh toán</th>
-                  <th className="py-3">TT vận chuyển</th>
+                <tr className="border-b bg-slate-50 text-slate-700 font-semibold">
+                  <th className="py-3 px-4">Mã đơn hàng</th>
+                  <th className="py-3 px-4">Ngày đặt</th>
+                  <th className="py-3 px-4">Thành tiền</th>
+                  <th className="py-3 px-4">Thanh toán</th>
+                  <th className="py-3 px-4">Trạng thái</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
-                {orders.map((order) => (
-                  <tr key={order.id} className="text-slate-700">
-                    <td className="py-3 font-semibold text-slate-900">
-                      #{order.code || order.id}
+              <tbody className="divide-y">
+                {orders.slice(0, 5).map((order) => (
+                  <tr
+                    key={order.id}
+                    onClick={() => navigate(`/tai-khoan/don-hang/${order.id}`)}
+                    className="text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                  >
+                    <td className="py-3 px-4 font-semibold text-blue-600">
+                      #{order.id}
                     </td>
-                    <td className="py-3">
+                    <td className="py-3 px-4">
                       {order.created_at ? formatDate(order.created_at) : "—"}
                     </td>
-                    <td className="py-3 font-medium">
-                      {formatCurrency(order.total_amount)}
+                    <td className="py-3 px-4 font-medium">
+                      {formatCurrency(order.final_amount)}
                     </td>
-                    <td className="py-3">
-                      {order.payment_status || "Chưa thanh toán"}
+                    <td className="py-3 px-4">
+                      <span
+                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium border ${PAYMENT_BADGE[order.payment_status] || ""}`}
+                      >
+                        {STATUS_PAYMENT[order.payment_status] || order.payment_status}
+                      </span>
                     </td>
-                    <td className="py-3">
-                      {order.shipping_status || "Chưa giao"}
+                    <td className="py-3 px-4">
+                      <span
+                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium border ${STATUS_BADGE[order.status] || ""}`}
+                      >
+                        {STATUS_LABELS[order.status] || order.status}
+                      </span>
                     </td>
                   </tr>
                 ))}

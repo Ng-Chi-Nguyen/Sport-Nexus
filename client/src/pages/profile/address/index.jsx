@@ -5,25 +5,11 @@ import {
   Trash2,
   MapPin,
   Check,
-  Home,
-  Building2,
-  Briefcase,
 } from "lucide-react";
 import ShowToast from "@/components/ui/toast";
 import addressApi from "@/api/customer/addressApi";
 import Badge from "@/components/ui/badge";
-
-const TYPE_LABEL = {
-  home: "Nhà riêng",
-  office: "Văn phòng",
-  company: "Công ty",
-};
-
-const TYPE_ICON = {
-  home: Home,
-  office: Building2,
-  company: Briefcase,
-};
+import { TYPE_LABEL, TYPE_ICON } from "@/constants/web/profile";
 
 const AddressList = () => {
   const navigate = useNavigate();
