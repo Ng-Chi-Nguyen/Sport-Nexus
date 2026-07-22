@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from "react";
+import { toast } from "sonner";
 import cartApi from "@/api/customer/cartApi";
 
 const CartContext = createContext(null);
@@ -108,11 +109,14 @@ export const CartProvider = ({ children }) => {
             type: "ADD_ITEM",
             payload: { product_variant_id, quantity, product, variant, cart_item_id: null },
         });
+        toast.success("Đã thêm vào giỏ hàng");
+
         if (user?.id) {
             try {
                 const cartRes = await cartApi.getCart();
-                const cartId = cartRes.data?.id || (await cartApi.getCart()).data?.id;
-                await cartApi.addItem({ product_variant_id, quantity, cart_id: cartId });
+                if (cartRes.data?.id) {
+                    await cartApi.addItem({ product_variant_id, quantity, cart_id: cartRes.data.id });
+                }
             } catch { }
         }
     }, [user?.id]);
@@ -121,20 +125,27 @@ export const CartProvider = ({ children }) => {
         dispatch({ type: "UPDATE_QTY", payload: { product_variant_id, quantity } });
         if (user?.id) {
             try {
-                const item = items.find((i) => i.product_variant_id === product_variant_id);
-                if (item?.cart_item_id) {
-                    await cartApi.updateItem(item.cart_item_id, { quantity });
+                const cartRes = await cartApi.getCart();
+                if (cartRes.data?.id) {
+                    await cartApi.syncCart(items.map((i) => ({
+                        product_variant_id: i.product_variant_id,
+                        quantity: i.product_variant_id === product_variant_id ? quantity : i.quantity,
+                    })));
                 }
             } catch { }
         }
     }, [user?.id, items]);
 
     const removeItem = useCallback(async (product_variant_id) => {
-        const item = items.find((i) => i.product_variant_id === product_variant_id);
         dispatch({ type: "REMOVE_ITEM", payload: product_variant_id });
-        if (user?.id && item?.cart_item_id) {
+        if (user?.id) {
             try {
-                await cartApi.removeItem(item.cart_item_id);
+                await cartApi.syncCart(
+                    items.filter((i) => i.product_variant_id !== product_variant_id).map((i) => ({
+                        product_variant_id: i.product_variant_id,
+                        quantity: i.quantity,
+                    }))
+                );
             } catch { }
         }
     }, [user?.id, items]);
