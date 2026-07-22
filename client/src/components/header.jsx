@@ -9,8 +9,10 @@ import { Link } from "react-router-dom";
 
 import { Logo } from "./logo";
 import { NavCategoryMenu } from "./NavCategoryMenu";
+import { useCart } from "@/contexts/CartContext";
 
 const Header = ({ isScrolled, categories }) => {
+  const { count } = useCart();
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
 
@@ -91,10 +93,17 @@ const Header = ({ isScrolled, categories }) => {
             </Link>
           )}
 
-          <button className="relative p-2.5 rounded-full text-gray-500 hover:text-primary hover:bg-primary/10 transition-all duration-200">
+          <Link
+            to="/gio-hang"
+            className="relative p-2.5 rounded-full text-gray-500 hover:text-primary hover:bg-primary/10 transition-all duration-200"
+          >
             <ShoppingCart size={20} strokeWidth={1.5} />
-            <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white" />
-          </button>
+            {count > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full px-1">
+                {count > 99 ? "99+" : count}
+              </span>
+            )}
+          </Link>
 
           <button className="p-2.5 rounded-full text-gray-500 hover:text-primary hover:bg-primary/10 transition-all duration-200">
             <Settings size={20} strokeWidth={1.5} />

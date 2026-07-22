@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
+import { useCart } from "@/contexts/CartContext";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import ProductImages from "./components/ProductImages";
 import ProductInfo from "./components/ProductInfo";
@@ -12,6 +13,7 @@ import ReviewList from "./components/ReviewList";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
+  const { addItem } = useCart();
   const loaderData = useLoaderData();
 
   const [selectedAttrs, setSelectedAttrs] = useState({});
@@ -180,7 +182,11 @@ const ProductDetail = () => {
               else await navigator.clipboard.writeText(url);
             }}
             currentStock={currentStock}
-            onAddToCart={() => {}}
+            onAddToCart={() => {
+              if (hasAttrs && !selectedVariant) return;
+              const theVariant = selectedVariant || variants[0];
+              addItem(theVariant.id, quantity, product, theVariant);
+            }}
             onBuyNow={() => {
               if (hasAttrs && !selectedVariant) return;
               const theVariant = selectedVariant || variants[0];

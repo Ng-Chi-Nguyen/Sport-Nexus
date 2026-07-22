@@ -2,6 +2,7 @@ import { Earth, ShoppingCart, Eye, Heart, Star } from "lucide-react";
 import Badge from "./badge";
 import { formatCurrency } from "@/utils/formatters";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
 
 const GRADIENTS = [
   "from-blue-500 to-cyan-500",
@@ -81,6 +82,7 @@ const CardBrand = ({ data }) => {
 
 const ProductCard = ({ product, index = 0 }) => {
   const navigate = useNavigate();
+  const { addItem } = useCart();
   const salePrice = product.min_price || product.base_price || 0;
   const originalPrice = product.base_price || 0;
   const hasDiscount = originalPrice > salePrice;
@@ -125,6 +127,12 @@ const ProductCard = ({ product, index = 0 }) => {
             <button
               title="Thêm vào giỏ"
               className="p-2.5 hover:bg-slate-50 text-slate-800 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (product.first_variant_id) {
+                  addItem(product.first_variant_id, 1, product, null);
+                }
+              }}
             >
               <ShoppingCart size={16} />
             </button>
