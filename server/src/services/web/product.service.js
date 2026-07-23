@@ -43,7 +43,7 @@ const mapProduct = (p) => {
 };
 
 const productWebService = {
-    getAllProducts: async ({ page = 1, search, sort, category_id, brand_id, price_min, price_max, limit = 12 } = {}) => {
+    getAllProducts: async ({ page = 1, search, sort, category_id, category_ids, brand_id, brand_ids, price_min, price_max, limit = 12, attr_filter } = {}) => {
         const currentPage = Math.max(1, page);
         const take = Math.min(limit, 50);
         const skip = (currentPage - 1) * take;
@@ -51,10 +51,52 @@ const productWebService = {
 
         const trimmedSearch = search?.trim();
         if (trimmedSearch) where.name = { contains: trimmedSearch, mode: "insensitive" };
-        if (category_id) where.category_id = safeInt(category_id);
-        if (brand_id) where.brand_id = safeInt(brand_id);
+        if (category_ids) {
+            const ids = category_ids.split(',').map(s => safeInt(s.trim())).filter(n => n !== undefined);
+            if (ids.length > 0) where.category_id = { in: ids };
+        } else if (category_id) {
+            where.category_id = safeInt(category_id);
+        }
+        if (brand_ids) {
+            const ids = brand_ids.split(',').map(s => safeInt(s.trim())).filter(n => n !== undefined);
+            if (ids.length > 0) where.brand_id = { in: ids };
+        } else if (brand_id) {
+            where.brand_id = safeInt(brand_id);
+        }
         if (price_min) where.base_price = { ...where.base_price, gte: safeFloat(price_min) };
         if (price_max) where.base_price = { ...where.base_price, lte: safeFloat(price_max) };
+
+        if (attr_filter) {
+            const pairs = attr_filter.split(',').map(p => p.trim()).filter(Boolean);
+            const conditions = [];
+            for (const pair of pairs) {
+                const [keyName, value] = pair.split(':').map(s => s.trim());
+                if (keyName && value) conditions.push({ keyName, value });
+            }
+            if (conditions.length > 0) {
+                const matchingVariants = await prisma.ProductVariants.findMany({
+                    where: {
+                        deleted_at: ACTIVE,
+                        VariableAttributes: {
+                            some: {
+                                value: { in: conditions.map(c => c.value) },
+                                attributeKey: {
+                                    name: { in: conditions.map(c => c.keyName) },
+                                },
+                            },
+                        },
+                    },
+                    select: { product_id: true },
+                    distinct: ['product_id'],
+                });
+                const productIds = [...new Set(matchingVariants.map(v => v.product_id))];
+                if (productIds.length > 0) {
+                    where.id = { in: productIds };
+                } else {
+                    return { products: [], pagination: { totalItems: 0, totalPages: 1, currentPage: safeInt(page) || 1, itemsPerPage: take } };
+                }
+            }
+        }
 
         let orderBy = { created_at: "desc" };
         if (sort === "price-asc") orderBy = { base_price: "asc" };

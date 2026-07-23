@@ -1,7 +1,11 @@
 import { useLoaderData, Link } from "react-router-dom";
 import { formatCurrency, formatFullDateTime } from "@/utils/formatters";
 import { STATUS_LABELS, STATUS_PAYMENT } from "@/constants/order";
-import { STATUS_BADGE, PAYMENT_BADGE, PAYMENT_METHOD_LABELS } from "@/constants/web/profile";
+import {
+  STATUS_BADGE,
+  PAYMENT_BADGE,
+  PAYMENT_METHOD_LABELS,
+} from "@/constants/web/profile";
 import { ArrowLeft } from "lucide-react";
 
 const OrderDetail = () => {
@@ -47,7 +51,9 @@ const OrderDetail = () => {
 
       <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-slate-50 rounded-lg">
         <div>
-          <p className="text-xs text-slate-400 uppercase font-medium">Ngày đặt</p>
+          <p className="text-xs text-slate-400 uppercase font-medium">
+            Ngày đặt
+          </p>
           <p className="text-sm font-medium">
             {order.created_at ? formatFullDateTime(order.created_at) : "—"}
           </p>
@@ -59,7 +65,9 @@ const OrderDetail = () => {
           <p className="text-sm font-medium">{paymentMethodLabel}</p>
         </div>
         <div>
-          <p className="text-xs text-slate-400 uppercase font-medium">Trạng thái thanh toán</p>
+          <p className="text-xs text-slate-400 uppercase font-medium">
+            Trạng thái thanh toán
+          </p>
           <span
             className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium border ${PAYMENT_BADGE[order.payment_status] || ""}`}
           >
@@ -67,8 +75,12 @@ const OrderDetail = () => {
           </span>
         </div>
         <div>
-          <p className="text-xs text-slate-400 uppercase font-medium">Tạm tính</p>
-          <p className="text-sm font-medium">{formatCurrency(order.total_amount)}</p>
+          <p className="text-xs text-slate-400 uppercase font-medium">
+            Tạm tính
+          </p>
+          <p className="text-sm font-medium">
+            {formatCurrency(order.total_amount)}
+          </p>
         </div>
         <div>
           <p className="text-xs text-slate-400 uppercase font-medium">
@@ -78,7 +90,9 @@ const OrderDetail = () => {
         </div>
         {Number(order.discount_amount) > 0 && (
           <div>
-            <p className="text-xs text-slate-400 uppercase font-medium">Giảm giá</p>
+            <p className="text-xs text-slate-400 uppercase font-medium">
+              Giảm giá
+            </p>
             <p className="text-sm font-medium text-green-600">
               -{formatCurrency(order.discount_amount)}
             </p>
@@ -86,12 +100,18 @@ const OrderDetail = () => {
         )}
         {order.coupon_code && (
           <div>
-            <p className="text-xs text-slate-400 uppercase font-medium">Mã giảm giá</p>
-            <p className="text-sm font-medium text-blue-600">{order.coupon_code}</p>
+            <p className="text-xs text-slate-400 uppercase font-medium">
+              Mã giảm giá
+            </p>
+            <p className="text-sm font-medium text-blue-600">
+              {order.coupon_code}
+            </p>
           </div>
         )}
         <div>
-          <p className="text-xs text-slate-400 uppercase font-medium">Tổng cộng</p>
+          <p className="text-xs text-slate-400 uppercase font-medium">
+            Tổng cộng
+          </p>
           <p className="text-sm font-bold text-slate-900">
             {formatCurrency(order.final_amount)}
           </p>

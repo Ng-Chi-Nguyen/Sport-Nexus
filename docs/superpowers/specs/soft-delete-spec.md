@@ -3,6 +3,7 @@
 ## 1. Mục tiêu
 
 Cho phép xoá mềm dữ liệu thay vì xoá cứng (`DELETE FROM`), nhằm:
+
 - Giữ nguyên dữ liệu lịch sử phục vụ thống kê, đối soát
 - Cho phép khôi phục (undo) khi cần
 - Tránh mất dữ liệu tham chiếu (Orders, Reviews, StockMovements...)
@@ -11,15 +12,15 @@ Cho phép xoá mềm dữ liệu thay vì xoá cứng (`DELETE FROM`), nhằm:
 
 Tất cả models có ràng buộc unique hoặc được tham chiếu bởi dữ liệu lịch sử:
 
-| Model | Unique field(s) | Lý do cần soft delete |
-|---|---|---|
-| Users | email, phone_number | Tham chiếu từ Orders, Reviews, SystemLogs |
-| Categories | slug | Sản phẩm tham chiếu category |
-| Products | slug | OrderItems, Reviews tham chiếu |
-| Suppliers | name | PurchaseOrders, Products tham chiếu |
-| Brands | — | Products tham chiếu |
-| Coupons | code | Orders tham chiếu |
-| ProductVariants | (composite) | OrderItems, StockMovements, CartItems tham chiếu |
+| Model           | Unique field(s)     | Lý do cần soft delete                            |
+| --------------- | ------------------- | ------------------------------------------------ |
+| Users           | email, phone_number | Tham chiếu từ Orders, Reviews, SystemLogs        |
+| Categories      | slug                | Sản phẩm tham chiếu category                     |
+| Products        | slug                | OrderItems, Reviews tham chiếu                   |
+| Suppliers       | name                | PurchaseOrders, Products tham chiếu              |
+| Brands          | —                   | Products tham chiếu                              |
+| Coupons         | code                | Orders tham chiếu                                |
+| ProductVariants | (composite)         | OrderItems, StockMovements, CartItems tham chiếu |
 
 Models trung gian (OrderItems, CartItems, StockMovements, VariableAttributes, PurchaseOrderItems, ProductImages) không cần soft delete vì chúng là dữ liệu giao dịch / lịch sử.
 
@@ -32,10 +33,10 @@ Thay vì dùng `NULL` cho active records (dễ bị duplicate do MySQL cho phép
 
 ### Lý do chọn sentinel value
 
-| Approach | Ưu | Nhược |
-|---|---|---|
-| NULL | Đơn giản, query tự nhiên | MySQL cho phép nhiều NULL → duplicate tiềm ẩn ở DB layer |
-| Sentinel value | DB tự đảm bảo unique tuyệt đối | Query hơi verbose hơn |
+| Approach       | Ưu                             | Nhược                                                    |
+| -------------- | ------------------------------ | -------------------------------------------------------- |
+| NULL           | Đơn giản, query tự nhiên       | MySQL cho phép nhiều NULL → duplicate tiềm ẩn ở DB layer |
+| Sentinel value | DB tự đảm bảo unique tuyệt đối | Query hơi verbose hơn                                    |
 
 ## 4. Schema changes (Prisma)
 
@@ -73,6 +74,7 @@ model <ModelName> {
 ### Các model cụ thể
 
 #### Users
+
 ```prisma
 model Users {
   id                 Int             @id @default(autoincrement())
@@ -105,6 +107,7 @@ model Users {
 ```
 
 #### Categories
+
 ```prisma
 model Categories {
   id        Int        @id @default(autoincrement())
@@ -121,6 +124,7 @@ model Categories {
 ```
 
 #### Products
+
 ```prisma
 model Products {
   // ... existing fields (bỏ @unique trên slug)
@@ -133,6 +137,7 @@ model Products {
 ```
 
 #### Suppliers
+
 ```prisma
 model Suppliers {
   // ...
@@ -145,6 +150,7 @@ model Suppliers {
 ```
 
 #### Brands
+
 ```prisma
 model Brands {
   id         Int      @id @default(autoincrement())
@@ -160,6 +166,7 @@ model Brands {
 ```
 
 #### Coupons
+
 ```prisma
 model Coupons {
   // ...
@@ -172,6 +179,7 @@ model Coupons {
 ```
 
 #### ProductVariants
+
 ```prisma
 model ProductVariants {
   // ...
@@ -194,11 +202,12 @@ npx prisma migrate dev --name add_soft_delete
 ## 6. Repository / Service layer patterns
 
 ### Query helper
+
 ```ts
 // server/src/utils/prisma.ts
-export const ACTIVE = new Date('1000-01-01T00:00:00.000Z')
-export const activeWhere = { deleted_at: ACTIVE }
-export const notDeleted = { deleted_at: ACTIVE }
+export const ACTIVE = new Date("1000-01-01T00:00:00.000Z");
+export const activeWhere = { deleted_at: ACTIVE };
+export const notDeleted = { deleted_at: ACTIVE };
 ```
 
 ### CRUD examples
@@ -233,6 +242,7 @@ await prisma.users.create({
 ```
 
 ### Upsert với soft delete
+
 Khi user đã soft-delete đăng ký lại:
 
 ```ts
@@ -264,14 +274,15 @@ Giữ nguyên `onDelete: Cascade` cho các relations hiện tại. Với soft de
 
 ### Existing endpoints cần cập nhật
 
-| Layer | Thay đổi |
-|---|---|
-| Controllers / Services | Thêm `deleted_at: ACTIVE` vào `where` của tất cả `findMany` / `findFirst` |
-| Admin endpoints | Có param `?include_deleted=true` để bỏ filter |
-| DELETE endpoints | Chuyển từ `prisma.delete()` → `prisma.update({ data: { deleted_at: new Date() } })` |
-| GET by id | Kiểm tra deleted_at và trả về 404 nếu record đã deleted (trừ admin) |
+| Layer                  | Thay đổi                                                                            |
+| ---------------------- | ----------------------------------------------------------------------------------- |
+| Controllers / Services | Thêm `deleted_at: ACTIVE` vào `where` của tất cả `findMany` / `findFirst`           |
+| Admin endpoints        | Có param `?include_deleted=true` để bỏ filter                                       |
+| DELETE endpoints       | Chuyển từ `prisma.delete()` → `prisma.update({ data: { deleted_at: new Date() } })` |
+| GET by id              | Kiểm tra deleted_at và trả về 404 nếu record đã deleted (trừ admin)                 |
 
 ### New endpoints (khuyến nghị)
+
 - `GET /api/admin/<entity>/deleted` — danh sách đã xoá
 - `POST /api/admin/<entity>/:id/restore` — khôi phục
 
@@ -279,12 +290,12 @@ Giữ nguyên `onDelete: Cascade` cho các relations hiện tại. Với soft de
 
 Khi tính toán thống kê, quyết định theo use case:
 
-| Use case | deleted_at filter |
-|---|---|
-| Dashboard: tổng user đang hoạt động | `WHERE deleted_at = ACTIVE` |
-| Báo cáo: doanh thu theo tháng | Không filter (giữ nguyên order) |
-| Báo cáo: sản phẩm bán chạy | Không filter (giữ nguyên OrderItems) |
-| Kho: tồn kho hiện tại | `WHERE deleted_at = ACTIVE` |
+| Use case                            | deleted_at filter                    |
+| ----------------------------------- | ------------------------------------ |
+| Dashboard: tổng user đang hoạt động | `WHERE deleted_at = ACTIVE`          |
+| Báo cáo: doanh thu theo tháng       | Không filter (giữ nguyên order)      |
+| Báo cáo: sản phẩm bán chạy          | Không filter (giữ nguyên OrderItems) |
+| Kho: tồn kho hiện tại               | `WHERE deleted_at = ACTIVE`          |
 
 ## 10. Migration script đặc biệt
 

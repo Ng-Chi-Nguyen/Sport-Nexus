@@ -24,7 +24,7 @@ export const ProductSection = ({ title, products = [] }) => {
             </div>
           </div>
           <button
-            onClick={() => navigate(`/san-pham?category_id=${categoryId}`)}
+            onClick={() => navigate(`/san-pham?category_ids=${categoryId}`)}
             className="text-[12px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-0.5 transition-colors shrink-0"
           >
             Xem tất cả <ChevronRight size={14} />
@@ -37,7 +37,7 @@ export const ProductSection = ({ title, products = [] }) => {
             ))}
           </div>
 
-          <SeeMore to={`/san-pham?category_id=${categoryId}`} />
+          <SeeMore to={`/san-pham?category_ids=${categoryId}`} />
         </div>
       </div>
     </div>

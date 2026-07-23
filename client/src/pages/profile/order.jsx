@@ -2,7 +2,7 @@ import { useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 import { formatDate, formatCurrency } from "@/utils/formatters";
 import { STATUS_LABELS, STATUS_PAYMENT } from "@/constants/order";
 import { STATUS_BADGE, PAYMENT_BADGE } from "@/constants/web/profile";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import Pagination from "@/components/ui/pagination";
 
 const Order = () => {
   const { orders, pagination, user } = useLoaderData();
@@ -81,38 +81,13 @@ const Order = () => {
           </div>
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-6">
-              <button
-                onClick={() => goToPage(currentPage - 1)}
-                disabled={currentPage <= 1}
-                className="flex items-center gap-1 px-3 py-1.5 text-sm rounded border disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
-              >
-                <ChevronLeft size={14} />
-                Trước
-              </button>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <button
-                  key={p}
-                  onClick={() => goToPage(p)}
-                  className={`w-8 h-8 text-sm rounded border transition-colors ${
-                    p === currentPage
-                      ? "bg-blue-600 text-white border-blue-600"
-                      : "hover:bg-slate-50"
-                  }`}
-                >
-                  {p}
-                </button>
-              ))}
-
-              <button
-                onClick={() => goToPage(currentPage + 1)}
-                disabled={currentPage >= totalPages}
-                className="flex items-center gap-1 px-3 py-1.5 text-sm rounded border disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
-              >
-                Sau
-                <ChevronRight size={14} />
-              </button>
+            <div className="mt-6">
+              <Pagination
+                variant="light"
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={goToPage}
+              />
             </div>
           )}
         </>

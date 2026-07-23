@@ -11,15 +11,15 @@ Trang `/san-pham` hiển thị danh sách sản phẩm đầy đủ với bộ l
 
 ## Features
 
-| Feature | Mô tả |
-|---------|-------|
-| Tìm kiếm | Input search, debounce 400ms, cập nhật URL params |
-| Lọc danh mục | Dropdown select danh mục |
-| Lọc thương hiệu | Checkbox list thương hiệu |
-| Lọc khoảng giá | 2 input: price_min, price_max |
-| Sắp xếp | Sort dropdown: Mới nhất, Bán chạy, Giá thấp→cao, Giá cao→thấp, Đánh giá |
-| Phân trang | Pagination component, 12 items/page |
-| Product Grid | Grid 3 cột, card có: ảnh, brand, tên, rating (sao + count), giá |
+| Feature         | Mô tả                                                                   |
+| --------------- | ----------------------------------------------------------------------- |
+| Tìm kiếm        | Input search, debounce 400ms, cập nhật URL params                       |
+| Lọc danh mục    | Dropdown select danh mục                                                |
+| Lọc thương hiệu | Checkbox list thương hiệu                                               |
+| Lọc khoảng giá  | 2 input: price_min, price_max                                           |
+| Sắp xếp         | Sort dropdown: Mới nhất, Bán chạy, Giá thấp→cao, Giá cao→thấp, Đánh giá |
+| Phân trang      | Pagination component, 12 items/page                                     |
+| Product Grid    | Grid 3 cột, card có: ảnh, brand, tên, rating (sao + count), giá         |
 
 ## Backend API
 
@@ -28,6 +28,7 @@ Trang `/san-pham` hiển thị danh sách sản phẩm đầy đủ với bộ l
 Tạo service + controller + route mới trong `server/src/services/web/`, `server/src/controllers/web/`, `server/src/routes/web/`.
 
 **Params:**
+
 ```
 page, search, sort, category_id, brand_id, price_min, price_max, limit
 ```
@@ -35,6 +36,7 @@ page, search, sort, category_id, brand_id, price_min, price_max, limit
 **Sort values:** `newest`, `best-selling`, `price-asc`, `price-desc`, `rating`
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -51,28 +53,28 @@ page, search, sort, category_id, brand_id, price_min, price_max, limit
 
 ### New files:
 
-| File | Nhiệm vụ |
-|------|----------|
-| `client/src/pages/Products/index.jsx` | Page chính, state management, layout grid + sidebar |
+| File                                                     | Nhiệm vụ                                                  |
+| -------------------------------------------------------- | --------------------------------------------------------- |
+| `client/src/pages/Products/index.jsx`                    | Page chính, state management, layout grid + sidebar       |
 | `client/src/pages/Products/components/FilterSidebar.jsx` | Search, category, brand, price range, sort, clear filters |
-| `client/src/pages/Products/components/ProductGrid.jsx` | Grid 3 cột ProductCard |
-| `client/src/loaders/web/productsLoader.js` | Fetch API dựa trên URL params |
+| `client/src/pages/Products/components/ProductGrid.jsx`   | Grid 3 cột ProductCard                                    |
+| `client/src/loaders/web/productsLoader.js`               | Fetch API dựa trên URL params                             |
 
 ### Modified files:
 
-| File | Thay đổi |
-|------|----------|
-| `client/src/routes/webRoute.jsx` | Thêm route `"san-pham"` → ProductsPage (lazy) + loader |
-| `client/src/components/ui/seeMore.jsx` | Thêm prop `to` dùng `useNavigate()` hoặc render `<Link>` |
-| `client/src/pages/Home/components/specialSale.jsx` | Pass `to="/san-pham?sort=best-selling"` vào SeeMore |
-| `client/src/pages/Home/components/newArrivals.jsx` | Pass `to="/san-pham?sort=newest"` vào SeeMore |
+| File                                                  | Thay đổi                                                       |
+| ----------------------------------------------------- | -------------------------------------------------------------- |
+| `client/src/routes/webRoute.jsx`                      | Thêm route `"san-pham"` → ProductsPage (lazy) + loader         |
+| `client/src/components/ui/seeMore.jsx`                | Thêm prop `to` dùng `useNavigate()` hoặc render `<Link>`       |
+| `client/src/pages/Home/components/specialSale.jsx`    | Pass `to="/san-pham?sort=best-selling"` vào SeeMore            |
+| `client/src/pages/Home/components/newArrivals.jsx`    | Pass `to="/san-pham?sort=newest"` vào SeeMore                  |
 | `client/src/pages/Home/components/productSection.jsx` | Pass `to="/san-pham?category_id=X"` vào SeeMore + "Xem tất cả" |
 
 ## Data Flow
 
 ```
-User action → URL search params change → React Router re-render → 
-Loader reads params → fetch /api/v1/home/products?params → 
+User action → URL search params change → React Router re-render →
+Loader reads params → fetch /api/v1/home/products?params →
 Parse response → render grid + pagination
 ```
 

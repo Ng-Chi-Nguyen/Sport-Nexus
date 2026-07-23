@@ -1,6 +1,7 @@
 # SystemLogs Feature Design
 
 ## Mục tiêu
+
 Xây dựng hệ thống audit log cho các thao tác quan trọng (CRUD, stock adjustment) trong admin panel, hiển thị dạng activity feed trực quan.
 
 ## Kiến trúc
@@ -14,6 +15,7 @@ Middleware (tự động log CRUD)
 ## Backend
 
 ### Model (đã có)
+
 - `SystemLogs`: id, timestamp, user_id, action_type, entity_type, entity_id, status, ip_address, details (JSON)
 
 ### `details` JSON format
@@ -32,10 +34,10 @@ Với DELETE: `[{ "field": null, "from": { toàn bộ bản ghi } }]` — lưu s
 
 ### API Endpoints
 
-| Method | Path | Chức năng |
-|--------|------|-----------|
-| GET | `/api/v1/management/log/` | Danh sách logs (phân trang + filter) |
-| GET | `/api/v1/management/log/:id` | Chi tiết 1 log |
+| Method | Path                         | Chức năng                            |
+| ------ | ---------------------------- | ------------------------------------ |
+| GET    | `/api/v1/management/log/`    | Danh sách logs (phân trang + filter) |
+| GET    | `/api/v1/management/log/:id` | Chi tiết 1 log                       |
 
 Query params filter: `page`, `user_id`, `action_type`, `entity_type`, `status`, `from`, `to`, `ip_address`, `search` (tìm trong details).
 
@@ -43,14 +45,14 @@ Query params filter: `page`, `user_id`, `action_type`, `entity_type`, `status`, 
 
 ```js
 logService.create({
-  userId,          // req.user.id
-  actionType,      // 'CREATE' | 'UPDATE' | 'DELETE' | 'STOCK_ADJUSTMENT'
-  entityType,      // 'Orders' | 'Products' | 'Users' | ...
-  entityId,        // ID của bản ghi
-  status,          // 'SUCCESS' | 'FAILED'
-  details,         // array changes
-  ipAddress        // req.ip
-})
+  userId, // req.user.id
+  actionType, // 'CREATE' | 'UPDATE' | 'DELETE' | 'STOCK_ADJUSTMENT'
+  entityType, // 'Orders' | 'Products' | 'Users' | ...
+  entityId, // ID của bản ghi
+  status, // 'SUCCESS' | 'FAILED'
+  details, // array changes
+  ipAddress, // req.ip
+});
 ```
 
 ### Log Middleware
@@ -63,6 +65,7 @@ Wrap controller để tự động log:
 ## Frontend
 
 ### Route
+
 - `/admin/logs` — lazy-loaded, protected (role admin)
 
 ### UI: Activity Feed

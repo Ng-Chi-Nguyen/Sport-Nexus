@@ -1,23 +1,33 @@
 import { useLoaderData, useSearchParams } from "react-router-dom";
-import FilterSidebar from "./components/FilterSidebar";
+import { X } from "lucide-react";
+import FilterBar from "./components/FilterSidebar";
 import { ProductCard } from "@/components/ui/card";
 import Pagination from "@/components/ui/pagination";
+
+const SORT_OPTIONS = [
+  { slug: "newest", name: "Mới nhất" },
+  { slug: "best-selling", name: "Bán chạy" },
+  { slug: "price-asc", name: "Giá: Thấp → Cao" },
+  { slug: "price-desc", name: "Giá: Cao → Thấp" },
+  { slug: "rating", name: "Đánh giá cao nhất" },
+];
 
 const ProductsPage = () => {
   const responses = useLoaderData() || {};
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const products = responses?.data?.products || [];
-  const categories = responses?.data?.categories || [];
-  const brands = responses?.data?.brands || [];
-  const pagination = responses?.data?.pagination || { totalPages: 1, currentPage: 1 };
+  const products = responses?.products || [];
+  const categories = responses?.categories || [];
+  const brands = responses?.brands || [];
+  const pagination = responses?.pagination || { totalPages: 1, currentPage: 1 };
 
   const currentSearch = searchParams.get("search") || "";
   const currentSort = searchParams.get("sort") || "newest";
-  const currentCategory = searchParams.get("category_id") || "";
-  const currentBrand = searchParams.get("brand_id") || "";
+  const currentCategoryIds = searchParams.get("category_ids") || "";
+  const currentBrandIds = searchParams.get("brand_ids") || "";
   const currentPriceMin = searchParams.get("price_min") || "";
   const currentPriceMax = searchParams.get("price_max") || "";
+  const currentAttrFilter = searchParams.get("attr_filter") || "";
 
   const setFilter = (key, value) => {
     const params = new URLSearchParams(searchParams);
@@ -41,104 +51,185 @@ const ProductsPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handlePriceRangeChange = (min, max) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", "1");
+    if (min) params.set("price_min", min);
+    else params.delete("price_min");
+    if (max) params.set("price_max", max);
+    else params.delete("price_max");
+    setSearchParams(params);
+  };
+
+  const handleAttrFilterChange = (val) => {
+    setFilter("attr_filter", val);
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans antialiased">
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Breadcrumb */}
         <div className="mb-4">
           <nav className="text-xs text-slate-400 flex items-center gap-1.5">
-            <a href="/" className="hover:text-blue-600 transition-colors">Trang chủ</a>
+            <a href="/" className="hover:text-blue-600 transition-colors">
+              Trang chủ
+            </a>
             <span>/</span>
             <span className="text-slate-700 font-medium">Sản phẩm</span>
           </nav>
         </div>
 
-        <div className="flex gap-6">
-          {/* Sidebar */}
-          <div className="w-64 shrink-0 hidden lg:block">
-            <FilterSidebar
-              search={currentSearch}
-              sort={currentSort}
-              categoryId={currentCategory}
-              brandId={currentBrand}
-              priceMin={currentPriceMin}
-              priceMax={currentPriceMax}
-              categories={categories}
-              brands={brands}
-              onSearchChange={(val) => setFilter("search", val)}
-              onSortChange={(val) => setFilter("sort", val)}
-              onCategoryChange={(val) => setFilter("category_id", val)}
-              onBrandChange={(val) => setFilter("brand_id", val)}
-              onPriceMinChange={(val) => setFilter("price_min", val)}
-              onPriceMaxChange={(val) => setFilter("price_max", val)}
-              onClear={clearAllFilters}
-            />
+        {/* Filter Bar */}
+        <div className="mb-5">
+          <FilterBar
+            search={currentSearch}
+            categoryIds={currentCategoryIds}
+            brandIds={currentBrandIds}
+            priceMin={currentPriceMin}
+            priceMax={currentPriceMax}
+            attrFilter={currentAttrFilter}
+            categories={categories}
+            brands={brands}
+            onSearchChange={(val) => setFilter("search", val)}
+            onCategoryChange={(val) => setFilter("category_ids", val)}
+            onBrandChange={(val) => setFilter("brand_ids", val)}
+            onPriceRangeChange={handlePriceRangeChange}
+            onAttrFilterChange={handleAttrFilterChange}
+            onClear={clearAllFilters}
+          />
+        </div>
+
+        {/* Results bar */}
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-sm text-slate-500">
+            Hiển thị{" "}
+            <span className="font-semibold text-slate-700">
+              {products.length}
+            </span>{" "}
+            /{" "}
+            <span className="font-semibold text-slate-700">
+              {pagination.totalItems || 0}
+            </span>{" "}
+            sản phẩm
+          </p>
+          <div className="flex items-center gap-2">
+            <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              Sắp xếp:
+            </label>
+            <select
+              value={currentSort}
+              onChange={(e) => setFilter("sort", e.target.value)}
+              className="text-[13px] py-1.5 px-3 rounded-lg border border-slate-200 text-slate-700 bg-white outline-none focus:border-blue-400 cursor-pointer"
+            >
+              {SORT_OPTIONS.map((opt) => (
+                <option key={opt.slug} value={opt.slug}>
+                  {opt.name}
+                </option>
+              ))}
+            </select>
           </div>
+        </div>
 
-          {/* Main content */}
-          <div className="flex-1 min-w-0">
-            {/* Results bar */}
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm text-slate-500">
-                Hiển thị <span className="font-semibold text-slate-700">{products.length}</span> /{" "}
-                <span className="font-semibold text-slate-700">{pagination.totalItems || 0}</span> sản phẩm
-              </p>
-              {/* Mobile filter toggle */}
-              <button
-                onClick={() => document.getElementById("mobile-filters")?.classList.toggle("hidden")}
-                className="lg:hidden text-xs font-bold text-blue-600 border border-blue-200 rounded-lg px-3 py-1.5 hover:bg-blue-50 transition-colors cursor-pointer"
-              >
-                Bộ lọc
-              </button>
-            </div>
-
-            {/* Mobile filters */}
-            <div id="mobile-filters" className="hidden mb-4 lg:hidden">
-              <FilterSidebar
-                search={currentSearch}
-                sort={currentSort}
-                categoryId={currentCategory}
-                brandId={currentBrand}
-                priceMin={currentPriceMin}
-                priceMax={currentPriceMax}
-                categories={categories}
-                brands={brands}
-                onSearchChange={(val) => setFilter("search", val)}
-                onSortChange={(val) => setFilter("sort", val)}
-                onCategoryChange={(val) => setFilter("category_id", val)}
-                onBrandChange={(val) => setFilter("brand_id", val)}
-                onPriceMinChange={(val) => setFilter("price_min", val)}
-                onPriceMaxChange={(val) => setFilter("price_max", val)}
-                onClear={clearAllFilters}
-              />
-            </div>
-
-            {/* Product Grid */}
-            {products.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {products.map((p, idx) => (
-                  <ProductCard key={p.id} product={p} index={idx} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-16">
-                <p className="text-slate-400 text-lg font-medium">Không tìm thấy sản phẩm nào</p>
-                <p className="text-slate-400 text-sm mt-1">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
-              </div>
+        {/* Active filters tags */}
+        {(currentSearch ||
+          currentCategoryIds ||
+          currentBrandIds ||
+          currentPriceMin ||
+          currentAttrFilter) && (
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <span className="text-[11px] font-semibold text-slate-400 uppercase">
+              Bộ lọc đang chọn:
+            </span>
+            {currentSearch && (
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-blue-100 text-blue-700 rounded-full px-3 py-1 font-medium">
+                Tìm: "{currentSearch}"
+                <button
+                  onClick={() => setFilter("search", "")}
+                  className="hover:text-blue-900 cursor-pointer"
+                >
+                  <X size={12} />
+                </button>
+              </span>
             )}
+            {currentCategoryIds && (
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-blue-100 text-blue-700 rounded-full px-3 py-1 font-medium">
+                Danh mục ({currentCategoryIds.split(",").length})
+                <button
+                  onClick={() => setFilter("category_ids", "")}
+                  className="hover:text-blue-900 cursor-pointer"
+                >
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+            {currentBrandIds && (
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-blue-100 text-blue-700 rounded-full px-3 py-1 font-medium">
+                Thương hiệu ({currentBrandIds.split(",").length})
+                <button
+                  onClick={() => setFilter("brand_ids", "")}
+                  className="hover:text-blue-900 cursor-pointer"
+                >
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+            {currentPriceMin && (
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-blue-100 text-blue-700 rounded-full px-3 py-1 font-medium">
+                Giá: {Number(currentPriceMin).toLocaleString()}₫{" "}
+                {currentPriceMax
+                  ? `- ${Number(currentPriceMax).toLocaleString()}₫`
+                  : "+"}
+                <button
+                  onClick={() => handlePriceRangeChange("", "")}
+                  className="hover:text-blue-900 cursor-pointer"
+                >
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+            {currentAttrFilter && (
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-blue-100 text-blue-700 rounded-full px-3 py-1 font-medium">
+                Size ({(currentAttrFilter.match(/Size:/g) || []).length})
+                <button
+                  onClick={() => handleAttrFilterChange("")}
+                  className="hover:text-blue-900 cursor-pointer"
+                >
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+          </div>
+        )}
 
-            {/* Pagination */}
-            {pagination.totalPages > 1 && (
-              <div className="mt-8">
+        {/* Product Grid */}
+        {products.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3">
+            {products.map((p, idx) => (
+              <ProductCard key={p.id} product={p} index={idx} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <p className="text-slate-400 text-lg font-medium">
+              Không tìm thấy sản phẩm nào
+            </p>
+            <p className="text-slate-400 text-sm mt-1">
+              Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm
+            </p>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {pagination.totalPages > 1 && (
+          <div className="mt-8">
                 <Pagination
+                  variant="light"
                   totalPages={pagination.totalPages}
                   currentPage={pagination.currentPage}
                   onPageChange={handlePageChange}
                 />
-              </div>
-            )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

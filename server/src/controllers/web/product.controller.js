@@ -52,10 +52,10 @@ const productController = {
     },
     getProducts: async (req, res) => {
         try {
-            const { page, search, sort, category_id, brand_id, price_min, price_max, limit } = req.query;
+            const { page, search, sort, category_id, category_ids, brand_id, brand_ids, price_min, price_max, limit, attr_filter } = req.query;
 
             const [productData, categories, brands] = await Promise.all([
-                productWebService.getAllProducts({ page, search, sort, category_id, brand_id, price_min, price_max, limit }),
+                productWebService.getAllProducts({ page, search, sort, category_id, category_ids, brand_id, brand_ids, price_min, price_max, limit, attr_filter }),
                 productWebService.getAllCategories(),
                 productWebService.getAllBrands(),
             ]);

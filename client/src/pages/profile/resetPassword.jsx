@@ -14,7 +14,11 @@ const ResetPassword = () => {
     new_password: "",
     confirm_password: "",
   });
-  const [show, setShow] = useState({ current: false, new: false, confirm: false });
+  const [show, setShow] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (field) => (e) => {

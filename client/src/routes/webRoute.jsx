@@ -82,12 +82,25 @@ export const webRoutes = {
       element: <Index />,
       children: [
         { index: true, element: <Profile />, loader: profileLoader },
-        { path: "dia-chi", element: <Address />, loader: addressLoader, action: addressAction },
+        {
+          path: "dia-chi",
+          element: <Address />,
+          loader: addressLoader,
+          action: addressAction,
+        },
         { path: "dia-chi/them", element: <AddAddress /> },
-        { path: "dia-chi/sua/:id", element: <EditAddress />, loader: editAddressLoader },
+        {
+          path: "dia-chi/sua/:id",
+          element: <EditAddress />,
+          loader: editAddressLoader,
+        },
         { path: "dat-lai-mat-khau", element: <ResetPassword /> },
         { path: "don-hang", element: <Order />, loader: ordersLoader },
-        { path: "don-hang/:id", element: <OrderDetail />, loader: orderDetailLoader },
+        {
+          path: "don-hang/:id",
+          element: <OrderDetail />,
+          loader: orderDetailLoader,
+        },
         { path: "chinh-sua-thong-tin-ca-nhan", element: <EditProfile /> },
       ],
     },
