@@ -7,3 +7,4 @@ export {
 } from "@/loaders/web/addressLoader";
 export { profileLoader } from "@/loaders/web/profileLoader";
 export { ordersLoader, orderDetailLoader } from "@/loaders/web/orderLoader";
+export { productsLoader } from "@/loaders/web/productsLoader";

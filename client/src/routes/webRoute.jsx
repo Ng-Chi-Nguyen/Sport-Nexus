@@ -8,6 +8,7 @@ import {
   profileLoader,
   ordersLoader,
   orderDetailLoader,
+  productsLoader,
 } from "./webLoader";
 
 const HomePage = lazy(() => import("@/pages/Home/"));
@@ -15,6 +16,7 @@ const ProductDetail = lazy(() => import("@/pages/ProductDetail"));
 const CheckoutPage = lazy(() => import("@/pages/Checkout"));
 const CartPage = lazy(() => import("@/pages/Cart"));
 const SearchPage = lazy(() => import("@/pages/Search"));
+const ProductsPage = lazy(() => import("@/pages/Products"));
 const InfoPage = lazy(() => import("@/pages/info"));
 const Index = lazy(() => import("@/pages/profile"));
 const ResetPassword = lazy(() => import("@/pages/profile/resetPassword"));
@@ -32,6 +34,11 @@ export const webRoutes = {
       path: "",
       element: <HomePage />,
       loader: homeLoader,
+    },
+    {
+      path: "san-pham",
+      element: <ProductsPage />,
+      loader: productsLoader,
     },
     {
       path: "san-pham/:slug",
