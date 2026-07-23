@@ -4,7 +4,7 @@ import { ProductCard } from "@/components/ui/card";
 import Pagination from "@/components/ui/pagination";
 
 const ProductsPage = () => {
-  const responses = useLoaderData();
+  const responses = useLoaderData() || {};
   const [searchParams, setSearchParams] = useSearchParams();
 
   const products = responses?.data?.products || [];
