@@ -1,10 +1,13 @@
 import { ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { ProductCard } from "@/components/ui/card";
 import SeeMore from "@/components/ui/seeMore";
 
 const iconLetter = (name) => name.charAt(0).toUpperCase();
 
 export const ProductSection = ({ title, products = [] }) => {
+  const navigate = useNavigate();
+  const categoryId = products[0]?.category?.id || "";
   return (
     <div className="max-w-7xl mx-auto px-4 py-3">
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
@@ -20,7 +23,10 @@ export const ProductSection = ({ title, products = [] }) => {
               <h3 className="text-lg font-black text-slate-900">{title}</h3>
             </div>
           </div>
-          <button className="text-[12px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-0.5 transition-colors shrink-0">
+          <button
+            onClick={() => navigate(`/san-pham?category_id=${categoryId}`)}
+            className="text-[12px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-0.5 transition-colors shrink-0"
+          >
             Xem tất cả <ChevronRight size={14} />
           </button>
         </div>
@@ -31,7 +37,7 @@ export const ProductSection = ({ title, products = [] }) => {
             ))}
           </div>
 
-          <SeeMore />
+          <SeeMore to={`/san-pham?category_id=${categoryId}`} />
         </div>
       </div>
     </div>

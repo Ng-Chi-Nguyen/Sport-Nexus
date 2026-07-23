@@ -24,7 +24,7 @@ export const NewArrivals = ({ products }) => {
             ))}
           </div>
 
-          <SeeMore />
+          <SeeMore to="/san-pham?sort=newest" />
         </div>
       </div>
     </div>
