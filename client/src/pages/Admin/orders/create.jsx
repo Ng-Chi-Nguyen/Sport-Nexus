@@ -193,9 +193,9 @@ const CreateOrderPage = () => {
         Tạo đơn hàng mới
       </h2>
 
-      <form onSubmit={handleSubmit} className="flex gap-4 items-start w-full">
+      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-4 items-start w-full">
         {/* CỘT TRÁI (THÔNG TIN KHÁCH HÀNG & TỔNG KẾT) */}
-        <div className="w-[30%] flex flex-col gap-4">
+        <div className="w-full lg:w-[30%] flex flex-col gap-4">
           {/* CARD: THÔNG TIN KHÁCH HÀNG */}
           <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
             <TitleManagement color="cyan">Thông tin khách hàng</TitleManagement>
@@ -271,8 +271,8 @@ const CreateOrderPage = () => {
           {/* CARD: THÔNG TIN ĐƠN HÀNG (SELECTS TRẠNG THÁI) */}
           <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md z-20">
             <TitleManagement color="violet">Thông tin đơn hàng</TitleManagement>
-            <div className="flex gap-4 mt-3">
-              <div className="w-1/3">
+            <div className="flex flex-col sm:flex-row gap-4 mt-3">
+              <div className="w-full sm:w-1/3">
                 <SelectPro
                   label="Phương thức thanh toán"
                   options={[
@@ -283,7 +283,7 @@ const CreateOrderPage = () => {
                   onChange={handleMethodChange}
                 />
               </div>
-              <div className="w-1/3">
+              <div className="w-full sm:w-1/3">
                 <SelectPro
                   label="Trạng thái đơn hàng"
                   options={[
@@ -297,7 +297,7 @@ const CreateOrderPage = () => {
                   onChange={handleStatusChange}
                 />
               </div>
-              <div className="w-1/3">
+              <div className="w-full sm:w-1/3">
                 <SelectPro
                   label="Trạng thái thanh toán"
                   options={[

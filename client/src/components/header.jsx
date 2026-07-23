@@ -1,5 +1,6 @@
 import {
   LayoutDashboard,
+  Menu,
   Search,
   Settings,
   ShoppingCart,
@@ -9,11 +10,9 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 import { Logo } from "./logo";
-import { NavCategoryMenu } from "./NavCategoryMenu";
 import { useCart } from "@/contexts/CartContext";
-import avatarDefault from "@/assets/images/avatar-default.jpg";
 
-const Header = ({ isScrolled, categories }) => {
+const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
   const { count } = useCart();
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
@@ -22,17 +21,19 @@ const Header = ({ isScrolled, categories }) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white/80 backdrop-blur-md border-b border-gray-200/70 shadow-sm">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4 lg:gap-8">
-        <div className="flex items-center gap-3">
-          <Logo />
-          <div
-            className={`transition-all duration-300 ${
-              isScrolled
-                ? "opacity-100 pointer-events-auto"
-                : "opacity-0 pointer-events-none"
+        <div className="flex items-center gap-1 sm:gap-3">
+          <button
+            id="menu-toggle-btn"
+            onClick={() => setIsOpenMenu((prev) => !prev)}
+            className={`p-2 rounded-lg transition-colors ${
+              isOpenMenu
+                ? "bg-primary/10 text-primary"
+                : "text-gray-600 hover:bg-gray-100"
             }`}
           >
-            <NavCategoryMenu compact categories={categories} />
-          </div>
+            <Menu size={20} />
+          </button>
+          <Logo />
         </div>
 
         <div className="flex-1 max-w-2xl hidden sm:block">
@@ -66,9 +67,9 @@ const Header = ({ isScrolled, categories }) => {
           {user ? (
             <Link
               to="/tai-khoan"
-              className="flex items-center gap-2.5 px-2 py-2 rounded-full border border-gray-200 text-gray-700 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200 min-w-[140px]"
+              className="flex items-center gap-2.5 px-2 py-2 rounded-full border border-gray-200 text-gray-700 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200 min-w-0 sm:min-w-[140px]"
             >
-              <div className="w-10 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold shrink-0 overflow-hidden">
+              <div className="w-8 h-7 sm:w-10 sm:h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold shrink-0 overflow-hidden">
                 {user.avatar && !avatarError ? (
                   <img
                     src={user.avatar}
@@ -77,13 +78,13 @@ const Header = ({ isScrolled, categories }) => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-xs font-bold">
+                  <span className="text-[10px] sm:text-xs font-bold">
                     {user.full_name?.charAt(0)?.toUpperCase()}
                   </span>
                 )}
               </div>
-              <div className="flex flex-col leading-tight">
-                <span className="text-sm font-medium max-w-[145px] truncate">
+              <div className="flex-col leading-tight hidden sm:flex">
+                <span className="text-sm font-medium max-w-[100px] sm:max-w-[145px] truncate">
                   {user.full_name}
                 </span>
                 <span className="text-[10px] text-gray-400 hidden md:block">

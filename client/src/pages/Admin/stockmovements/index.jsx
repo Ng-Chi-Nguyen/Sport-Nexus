@@ -152,7 +152,7 @@ const StockPage = () => {
               />
             </div>
 
-            <div className="w-[220px] shrink-0">
+            <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                 Tồn kho
               </label>
@@ -175,7 +175,7 @@ const StockPage = () => {
               </div>
             </div>
 
-            <div className="w-[220px] shrink-0">
+            <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                 Khoảng giá
               </label>
@@ -268,7 +268,8 @@ const StockPage = () => {
 
         {/* BẢNG DỮ LIỆU CHUẨN ĐƯỜNG KẺ TRẮNG MỜ BIÊN DƯỚI */}
         <div className="mb-2 table-retro">
-          <table className="w-full border-separate border-spacing-0">
+          <div className="overflow-x-auto">
+          <table className="w-full border-separate border-spacing-0 min-w-[600px]">
             <thead>
               <tr>
                 <th scope="col" className="px-6 py-4 w-[12%]">
@@ -383,6 +384,7 @@ const StockPage = () => {
               )}
             </tbody>
           </table>
+          </div>
         </div>
         <Pagination
           totalPages={paginationInfo.totalPages}

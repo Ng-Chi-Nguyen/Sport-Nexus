@@ -135,9 +135,9 @@ const CreatePurchaseOrder = () => {
         Thêm đơn nhập hàng mới
       </h2>
 
-      <form onSubmit={handleSubmit} className="flex gap-4 items-start w-full">
+      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-4 items-start w-full">
         {/* CỘT TRÁI: THÔNG TIN CHUNG (CHIẾM 30% RỘNG - relative z-30 để dropdown đè nổi lên trên) */}
-        <div className="flex flex-col w-[30%] gap-3.5 relative z-30">
+        <div className="flex flex-col w-full lg:w-[30%] gap-3.5 relative z-30">
           {/* CONTAINER DUY NHẤT: Giảm padding từ p-5 xuống p-4, nén gap dọc bằng space-y-3.5 */}
           <div className="bg-[#0D121F]/40 border border-slate-900 p-4 rounded-xl shadow-xl backdrop-blur-md space-y-3.5">
             {/* PHẦN 1: NHÀ CUNG CẤP (Bỏ bớt margin-bottom dư thừa) */}

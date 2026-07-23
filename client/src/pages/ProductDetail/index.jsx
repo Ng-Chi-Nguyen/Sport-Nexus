@@ -1,6 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
+import { useCart } from "@/contexts/CartContext";
 
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import ProductImages from "./components/ProductImages";
@@ -14,6 +16,7 @@ import ReviewList from "./components/ReviewList";
 const ProductDetail = () => {
   const navigate = useNavigate();
   const loaderData = useLoaderData();
+  const { addItem } = useCart();
 
   const [selectedAttrs, setSelectedAttrs] = useState({});
   const [quantity, setQuantity] = useState(1);
@@ -21,24 +24,9 @@ const ProductDetail = () => {
   const [couponCode, setCouponCode] = useState("");
   const [couponMsg, setCouponMsg] = useState(null);
 
-  if (!loaderData?.success || !loaderData?.data) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <p className="text-slate-500 text-lg">Không tìm thấy sản phẩm</p>
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
-        >
-          <ArrowLeft size={18} />
-          Quay lại
-        </button>
-      </div>
-    );
-  }
-
-  const product = loaderData.data;
-  const variants = product.ProductVariants || [];
-  const ratings = product.Reviews || [];
+  const product = loaderData?.success ? loaderData.data : null;
+  const variants = product?.ProductVariants || [];
+  const ratings = product?.Reviews || [];
   const avgRating =
     ratings.length > 0
       ? ratings.reduce((a, b) => a + b.rating, 0) / ratings.length
@@ -75,10 +63,62 @@ const ProductDetail = () => {
     ? Number(selectedVariant.price)
     : variants.length > 0
       ? Math.min(...variants.map((v) => Number(v.price)))
-      : Number(product.base_price);
+      : product ? Number(product.base_price) : 0;
 
   const currentStock = selectedVariant?.stock ?? null;
   const maxStock = currentStock ?? 999;
+
+  const handleAddToCart = useCallback(() => {
+    if (attrKeys.length > 0 && !selectedVariant) {
+      toast.warning("Vui lòng chọn đầy đủ phân loại");
+      return;
+    }
+    const variantId = selectedVariant?.id || variants[0]?.id;
+    if (!variantId) {
+      toast.error("Sản phẩm không có biến thể");
+      return;
+    }
+    addItem(variantId, quantity, product, selectedVariant || variants[0]);
+  }, [attrKeys.length, selectedVariant, variants, quantity, addItem, product]);
+
+  const handleBuyNow = useCallback(() => {
+    if (attrKeys.length > 0 && !selectedVariant) {
+      toast.warning("Vui lòng chọn đầy đủ phân loại");
+      return;
+    }
+    const variantId = selectedVariant?.id || variants[0]?.id;
+    if (!variantId) {
+      toast.error("Sản phẩm không có biến thể");
+      return;
+    }
+    const variant = selectedVariant || variants[0];
+    navigate("/thanh-toan", {
+      state: {
+        items: [{
+          product_variant_id: variantId,
+          quantity,
+          price_at_purchase: Number(variant.price),
+          product,
+          variant,
+        }],
+      },
+    });
+  }, [attrKeys.length, selectedVariant, variants, quantity, product, navigate]);
+
+  if (!loaderData?.success || !loaderData?.data) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        <p className="text-slate-500 text-lg">Không tìm thấy sản phẩm</p>
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
+        >
+          <ArrowLeft size={18} />
+          Quay lại
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen py-2 md:py-6">
@@ -133,8 +173,8 @@ const ProductDetail = () => {
               else await navigator.clipboard.writeText(url);
             }}
             currentStock={currentStock}
-            onAddToCart={() => {}}
-            onBuyNow={() => {}}
+            onAddToCart={handleAddToCart}
+            onBuyNow={handleBuyNow}
           />
 
           <CouponInput

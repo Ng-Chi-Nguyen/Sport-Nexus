@@ -104,12 +104,12 @@ export const CartProvider = ({ children }) => {
         }
     }, [items, user?.id]);
 
-    const addItem = useCallback(async (product_variant_id, quantity = 1, product, variant) => {
+    const addItem = useCallback(async (product_variant_id, quantity = 1, product, variant, suppressToast = false) => {
         dispatch({
             type: "ADD_ITEM",
             payload: { product_variant_id, quantity, product, variant, cart_item_id: null },
         });
-        toast.success("Đã thêm vào giỏ hàng");
+        if (!suppressToast) toast.success("Đã thêm vào giỏ hàng");
 
         if (user?.id) {
             try {

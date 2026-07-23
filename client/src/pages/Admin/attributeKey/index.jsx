@@ -148,7 +148,8 @@ const AttributeKey = () => {
           </button>
         </div>
         <div className="table-retro">
-          <table className="w-full border-separate border-spacing-0">
+          <div className="overflow-x-auto">
+          <table className="w-full border-separate border-spacing-0 min-w-[600px]">
             <thead>
               <tr>
                 <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
@@ -196,6 +197,7 @@ const AttributeKey = () => {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
       <div className="mt-2">

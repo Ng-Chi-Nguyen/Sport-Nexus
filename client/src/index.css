@@ -21,7 +21,7 @@
 @layer components {
   /* Khung bọc bảng Dark Theme */
   .table-retro {
-    @apply w-full border border-slate-900 rounded-xl overflow-hidden 
+    @apply w-full border border-slate-900 rounded-xl overflow-x-auto
            bg-[#0D121F] shadow-2xl;
   }
 
@@ -176,4 +176,28 @@ input[type="number"] {
   .custom-scrollbar:hover {
     scrollbar-color: #4facf3 transparent !important;
   }
+}
+
+/* Ẩn scrollbar cho bottom nav */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Horizontal scrollbar cho bảng responsive */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
+}
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }

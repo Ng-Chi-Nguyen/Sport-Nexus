@@ -168,7 +168,8 @@ const CategoryPage = () => {
           </button>
         </div>
         <div className="mb-2 table-retro">
-          <table className="w-full border-separate border-spacing-0">
+          <div className="overflow-x-auto">
+          <table className="w-full border-separate border-spacing-0 min-w-[600px]">
             <thead>
               <tr>
                 <th
@@ -259,6 +260,7 @@ const CategoryPage = () => {
               )}
             </tbody>
           </table>
+          </div>
         </div>
         <Pagination
           totalPages={pagination?.totalPages || 1}

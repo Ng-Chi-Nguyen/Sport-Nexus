@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   ChevronRight,
-  X,
-  Menu,
+  Search,
   MapPin,
   ShieldCheck,
   PhoneCall,
@@ -20,8 +19,7 @@ const chunkArray = (arr, size) => {
   return result;
 };
 
-export const NavCategoryMenu = ({ isScrolled, compact, categories = [] }) => {
-  const [isOpenMenu, setIsOpenMenu] = useState(false);
+export const NavCategoryMenu = ({ isScrolled, categories = [], isOpenMenu, setIsOpenMenu }) => {
   const menuRef = useRef(null);
   const { pathname } = useLocation();
 
@@ -52,101 +50,85 @@ export const NavCategoryMenu = ({ isScrolled, compact, categories = [] }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsOpenMenu(false);
+        const toggleBtn = document.getElementById("menu-toggle-btn");
+        if (!toggleBtn || !toggleBtn.contains(event.target)) {
+          setIsOpenMenu(false);
+        }
       }
     };
     if (isOpenMenu) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpenMenu]);
+  }, [isOpenMenu, setIsOpenMenu]);
 
   const featured = categories.slice(0, 5);
   const grid = chunkArray(categories, 6);
 
   return (
     <div
-      className={`font-sans select-none transition-all duration-300 ${
-        compact ? "relative" : "w-full sticky top-16 z-40 mt-16"
-      } ${
-        compact
-          ? ""
-          : isScrolled
-            ? "-translate-y-full opacity-0 pointer-events-none"
-            : "translate-y-0 opacity-100"
+      className={`font-sans select-none transition-all duration-300 w-full sticky top-16 z-40 mt-16 ${
+        isScrolled
+          ? "-translate-y-full opacity-0 pointer-events-none"
+          : "translate-y-0 opacity-100"
       }`}
       ref={menuRef}
     >
-      {compact ? (
-        <button
-          onClick={() => setIsOpenMenu(!isOpenMenu)}
-          className={`flex items-center gap-1.5 h-9 px-4 rounded-full text-sm font-medium transition-all duration-200 ${
-            isOpenMenu
-              ? "bg-primary/10 text-primary"
-              : "text-gray-600 hover:bg-gray-100"
-          }`}
-        >
-          <Menu size={16} />
-          <span>Danh mục</span>
-        </button>
-      ) : (
-        <div className="w-full bg-slate-900 text-white border-b border-slate-800 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 flex items-center h-14 justify-between">
-            <div className="flex items-center h-full gap-2">
-              <button
-                onClick={() => setIsOpenMenu(!isOpenMenu)}
-                className={`h-full px-5 flex items-center gap-2.5 font-bold text-[13px] uppercase tracking-wider transition-all duration-200 ${
-                  isOpenMenu
-                    ? "bg-blue-600 text-white"
-                    : "bg-transparent text-slate-200 hover:text-white hover:bg-slate-800"
-                }`}
-              >
-                {isOpenMenu ? <X size={16} /> : <Menu size={16} />}
-                <span>Danh mục sản phẩm</span>
-              </button>
-
-              <nav className="hidden md:flex items-center h-full gap-1">
-                {infoLinks.map((link, idx) => {
-                  const isActive = pathname === link.to;
-                  return (
-                    <Link
-                      key={idx}
-                      to={link.to}
-                      className={`h-9 px-3.5 flex items-center gap-2 text-[13px] font-medium rounded-md transition-all ${
-                        isActive
-                          ? "bg-blue-600 text-white shadow-sm"
-                          : "text-slate-300 hover:text-white hover:bg-slate-800"
-                      }`}
-                    >
-                      <span className={isActive ? "text-white" : "text-slate-400"}>
-                        {link.icon}
-                      </span>
-                      <span>{link.name}</span>
-                    </Link>
-                  );
-                })}
-              </nav>
+      <div className="w-full bg-slate-900 text-white border-b border-slate-800 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 flex items-center h-14 justify-between">
+          <div className="flex items-center h-full gap-2 flex-1">
+            <div className="flex-1 max-w-xl sm:hidden">
+              <div className="relative flex items-center">
+                <Search
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+                  strokeWidth={2}
+                />
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm sản phẩm..."
+                  className="w-full h-9 pl-10 pr-24 bg-slate-800 border border-slate-700 rounded-full text-sm outline-none transition-all duration-200 placeholder:text-slate-500 focus:bg-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 text-white"
+                />
+                <button className="absolute right-1 top-1/2 -translate-y-1/2 h-7 px-4 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-full transition-colors duration-200">
+                  Tìm kiếm
+                </button>
+              </div>
             </div>
 
-            <div className="text-[13px] font-medium text-slate-400 hidden lg:block">
-              Hotline hỗ trợ:{" "}
-              <span className="text-blue-500 font-bold">0812312831</span>
-            </div>
+            <nav className="hidden md:flex items-center h-full gap-1">
+              {infoLinks.map((link, idx) => {
+                const isActive = pathname === link.to;
+                return (
+                  <Link
+                    key={idx}
+                    to={link.to}
+                    className={`h-9 px-3.5 flex items-center gap-2 text-[13px] font-medium rounded-md transition-all ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-sm"
+                        : "text-slate-300 hover:text-white hover:bg-slate-800"
+                    }`}
+                  >
+                    <span className={isActive ? "text-white" : "text-slate-400"}>
+                      {link.icon}
+                    </span>
+                    <span>{link.name}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+
+          <div className="text-[13px] font-medium text-slate-400 hidden lg:block">
+            Hotline hỗ trợ:{" "}
+            <span className="text-blue-500 font-bold">0812312831</span>
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Menu thả xuống tinh chỉnh tinh tế */}
+      {/* Menu thả xuống */}
       {isOpenMenu && (
-        <div
-          className={`${
-            compact
-              ? "fixed top-16 left-0 w-full"
-              : "absolute top-full left-0 w-full"
-          } bg-white border-b border-slate-200 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200 max-h-[calc(100vh-4rem)] overflow-y-auto z-50`}
-        >
-          <div className="max-w-7xl mx-auto grid grid-cols-12 gap-8 p-8">
+        <div className="absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200 max-h-[calc(100vh-4rem)] overflow-y-auto z-50">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 p-4 md:p-8">
             {/* Bên trái: Lưới danh mục sản phẩm (Chiếm 8 cột) */}
-            <div className="col-span-8">
-              <div className="flex items-center gap-2 text-slate-400 mb-6 pb-2 border-b border-slate-100">
+            <div className="col-span-1 md:col-span-8">
+              <div className="flex items-center gap-2 text-slate-400 mb-4 md:mb-6 pb-2 border-b border-slate-100">
                 <Grid size={14} />
                 <span className="text-[11px] font-bold uppercase tracking-widest">
                   Tất cả ngành hàng thể thao
@@ -158,7 +140,7 @@ export const NavCategoryMenu = ({ isScrolled, compact, categories = [] }) => {
                   Chưa có danh mục nào
                 </div>
               ) : (
-                <div className="grid grid-cols-4 gap-x-8 gap-y-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-3 md:gap-y-4">
                   {grid.map((group, gi) => (
                     <div key={gi} className="flex flex-col gap-2.5">
                       {group.map((cat) => (
@@ -178,7 +160,7 @@ export const NavCategoryMenu = ({ isScrolled, compact, categories = [] }) => {
             </div>
 
             {/* Bên phải: Khối điều hướng phụ & Tiện ích (Chiếm 4 cột) */}
-            <div className="col-span-4 grid grid-cols-1 gap-4 border-l border-slate-100 pl-8">
+            <div className="col-span-1 md:col-span-4 grid grid-cols-1 gap-4 md:border-l border-slate-100 md:pl-8">
               {/* Thẻ Banner thiết kế tối giản, sang trọng */}
               <div className="rounded-xl bg-slate-900 p-5 text-white flex flex-col justify-between min-h-[140px] relative overflow-hidden shadow-sm">
                 <div className="space-y-1">

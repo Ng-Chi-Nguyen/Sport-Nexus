@@ -81,7 +81,7 @@ const CreateCouponPage = () => {
     <>
       <Breadcrumbs data={breadcrumbData} />
       <h2>Thêm mã khuyến mãi</h2>
-      <form onSubmit={handleSubmit} className="flex gap-3 mt-2">
+      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-3 mt-2">
         <div className="flex flex-col gap-3">
           <div className="border border-gray-200 rounded-[5px] p-3">
             <TitleManagement color="emerald">Cấu hình giảm giá</TitleManagement>
@@ -91,7 +91,7 @@ const CreateCouponPage = () => {
               value={discountType}
               onChange={(val) => setDiscountType(val)}
             />
-            <div className="flex gap-3 my-4">
+            <div className="flex flex-col sm:flex-row gap-3 my-4">
               <FloatingInput
                 label="Giá trị giảm"
                 type="number"
@@ -108,8 +108,8 @@ const CreateCouponPage = () => {
           </div>
           <div className="border border-gray-200 rounded-[5px] p-3">
             <TitleManagement>Thông tin mã</TitleManagement>
-            <div className="flex gap-4">
-              <div className="w-1/2">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="w-full sm:w-1/2">
                 <FloatingInput
                   label="Mã code"
                   value={code}
@@ -130,7 +130,7 @@ const CreateCouponPage = () => {
         <div className="flex flex-col gap-3">
           <div className="border border-gray-200 rounded-[5px] p-3">
             <TitleManagement color="orange">Khung thời gian</TitleManagement>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <FloatingInput
                 label="Ngày bắt đầu"
                 type="date"
@@ -147,7 +147,7 @@ const CreateCouponPage = () => {
           </div>
           <div className="border border-gray-200 rounded-[5px] p-3">
             <TitleManagement color="red">Điều kiện sữ dụng</TitleManagement>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <FloatingInput
                 label="Đơn hàng tối thiểu"
                 type="number"

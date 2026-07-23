@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sport Nexus - Preview Logo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    .container {
+      text-align: center;
+    }
+    .logo-wrapper {
+      width: 120px;
+      height: 110px;
+      margin: 0 auto 24px;
+    }
+    .logo-wrapper svg {
+      width: 100%;
+      height: 100%;
+    }
+    .brand-name {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #38bdf8;
+      text-transform: uppercase;
+    }
+    .brand-name span {
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-wrapper">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 110" width="100%" height="100%">
+        <defs>
+          <filter id="blue-glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#3B82F6" flood-opacity="0.6" />
+          </filter>
+          <style>
+            .sn-icon { fill: #38BDF8; }
+            .sn-icon-accent { fill: #FFFFFF; }
+          </style>
+        </defs>
+        <g filter="url(#blue-glow)">
+          <path class="sn-icon" d="M 25 70 C 5 45 15 15 50 8 C 85 0 105 25 100 50 C 98 60 90 68 80 73 C 78 70 75 67 72 65 C 82 60 88 52 90 44 C 94 22 75 8 50 14 C 25 20 16 42 28 62 C 32 68 38 73 45 76 L 38 84 C 32 80 28 75 25 70 Z" />
+          <path class="sn-icon" d="M 55 5 L 67 35 L 98 20 L 78 48 L 108 62 L 72 68 L 82 98 L 56 72 L 38 102 L 42 68 L 10 70 L 42 52 L 18 28 L 48 42 Z" />
+        </g>
+        <path class="sn-icon-accent" d="M 55 22 L 63 42 L 82 32 L 68 50 L 88 60 L 65 64 L 72 84 L 56 67 L 44 88 L 47 64 L 26 65 L 47 52 L 30 36 L 50 45 Z" />
+      </svg>
+    </div>
+    <div class="brand-name">Sport <span>Nexus</span></div>
+  </div>
+</body>
+</html>

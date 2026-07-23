@@ -163,7 +163,7 @@ const CouponPage = () => {
         <div className="p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
           <div className="flex flex-wrap items-end gap-4">
             {/* 1. Trạng thái */}
-            <div className="w-[230px] shrink-0">
+            <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[230px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                 Trạng thái
               </label>
@@ -273,8 +273,9 @@ const CouponPage = () => {
           <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
         </button>
       </div>
-      <div className="mt-3 relative bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg overflow-hidden">
-        <table className="w-full text-sm text-left text-slate-200">
+      <div className="mt-3 relative bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm text-left text-slate-200 min-w-[600px]">
           <thead className="text-xs uppercase bg-[#161F32] border-b border-slate-800">
             <tr>
               <th className="px-6 py-4 font-black text-center text-slate-400">
@@ -366,6 +367,7 @@ const CouponPage = () => {
             )}
           </tbody>
         </table>
+        </div>
         <ConfirmDelete
           isOpen={isConfirmOpen}
           title="Xóa mã giảm giá"

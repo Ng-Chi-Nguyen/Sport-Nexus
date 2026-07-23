@@ -165,12 +165,12 @@ const CreateProductPage = () => {
     <div className="">
       <Breadcrumbs data={breadcrumbData} />
       <h2>Thêm mới sản phẩm</h2>
-      <form onSubmit={handleSubmit} className="flex gap-3 mt-2">
-        <div className="w-1/2 flex flex-col gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-3 mt-2">
+        <div className="w-full lg:w-1/2 flex flex-col gap-3">
           <div className="border border-gray-200 rounded-[5px] p-3">
             <TitleManagement color="amber">Phân loại hệ thống</TitleManagement>
-            <div className="flex gap-2 mb-2">
-              <div className="w-1/2">
+            <div className="flex flex-col sm:flex-row gap-2 mb-2">
+              <div className="w-full sm:w-1/2">
                 <SelectPro
                   value={selectBrand}
                   options={brandsOptions}
@@ -178,7 +178,7 @@ const CreateProductPage = () => {
                   label="Chọn thương hiệu"
                 />
               </div>
-              <div className="w-1/2">
+              <div className="w-full sm:w-1/2">
                 <SelectPro
                   value={selectSupplier}
                   options={suppliersOptions}

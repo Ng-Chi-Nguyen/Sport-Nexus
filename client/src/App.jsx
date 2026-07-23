@@ -11,6 +11,7 @@ import { HeroBanner } from "@/pages/Home/components/heroBanner";
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
   const location = useLocation();
   const loaderData = useLoaderData();
   const categories = loaderData?.data || [];
@@ -32,8 +33,8 @@ function App() {
       <Toaster position="top-right" richColors />
       {!isManagementView && (
         <>
-          <Header isScrolled={isScrolled} categories={categories} />
-          <NavCategoryMenu isScrolled={isScrolled} categories={categories} />
+          <Header isScrolled={isScrolled} categories={categories} isOpenMenu={isOpenMenu} setIsOpenMenu={setIsOpenMenu} />
+          <NavCategoryMenu isScrolled={isScrolled} categories={categories} isOpenMenu={isOpenMenu} setIsOpenMenu={setIsOpenMenu} />
         </>
       )}
       {!isManagementView && location.pathname === "/" && (

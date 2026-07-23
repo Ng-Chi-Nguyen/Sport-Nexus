@@ -186,7 +186,8 @@ const UserPage = () => {
         </div>
 
         <div className="mb-2 table-retro">
-          <table className="w-full border-separate border-spacing-0">
+          <div className="overflow-x-auto">
+          <table className="w-full border-separate border-spacing-0 min-w-[600px]">
             <thead>
               <tr>
                 <th scope="col" className="px-6 py-4 w-[35%] !text-start">
@@ -312,6 +313,7 @@ const UserPage = () => {
               )}
             </tbody>
           </table>
+          </div>
         </div>
 
         <Pagination

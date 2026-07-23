@@ -294,7 +294,8 @@ const OrderPage = () => {
 
         {/* BẢNG ĐƠN HÀNG */}
         <div className="table-retro">
-          <table className="w-full border-separate border-spacing-0">
+          <div className="overflow-x-auto">
+          <table className="w-full border-separate border-spacing-0 min-w-[600px]">
             <thead>
               <tr>
                 <th scope="col" className="px-6 py-4 w-[32%] !text-start">
@@ -416,6 +417,7 @@ const OrderPage = () => {
                 ))}
             </tbody>
           </table>
+          </div>
         </div>
 
         {/* Trạng thái trống */}

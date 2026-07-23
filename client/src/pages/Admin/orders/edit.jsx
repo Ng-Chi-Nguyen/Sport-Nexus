@@ -160,9 +160,9 @@ const EditOrderPage = () => {
         </span>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-4 items-start w-full">
+      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-4 items-start w-full">
         {/* CỘT TRÁI: THÔNG TIN KHÁCH HÀNG & DÒNG TIỀN (30% CHIỀU RỘNG) */}
-        <div className="w-[30%] flex flex-col gap-4">
+        <div className="w-full lg:w-[30%] flex flex-col gap-4">
           {/* CARD: KHÁCH HÀNG */}
           <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
             <TitleManagement color="cyan">Khách hàng</TitleManagement>

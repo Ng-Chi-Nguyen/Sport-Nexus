@@ -183,7 +183,8 @@ const SupplierPage = () => {
 
         {/* BẢNG CHUYỂN ĐỔI SANG LAYOUT 5 CỘT TÁCH BIỆT */}
         <div className="table-retro">
-          <table className="w-full border-separate border-spacing-0">
+          <div className="overflow-x-auto">
+          <table className="w-full border-separate border-spacing-0 min-w-[600px]">
             <thead>
               <tr>
                 <th scope="col" className="px-6 py-4 w-[30%] !text-start">
@@ -279,6 +280,7 @@ const SupplierPage = () => {
               )}
             </tbody>
           </table>
+          </div>
         </div>
 
         <ConfirmDelete

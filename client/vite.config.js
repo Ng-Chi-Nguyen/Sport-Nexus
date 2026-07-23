@@ -5,22 +5,23 @@ import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-export default defineConfig({
-  base: '/Sport-Nexus/',
-  plugins: [react()],
-  resolve: {
-    alias: {
-      // Giữ cái này để dùng cho các thư mục khác (ví dụ: @/services)
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false,
+export default defineConfig(({ mode }) => {
+  return {
+    base: mode === 'production' ? '/Sport-Nexus/' : '/',
+    plugins: [react()],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
       },
     },
-  },
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+          secure: false,
+        },
+      },
+    },
+  }
 })

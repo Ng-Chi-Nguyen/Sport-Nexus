@@ -2,7 +2,7 @@ import prisma from "../../db/prisma.js";
 
 const cartService = {
     getOrCreateCart: async (userId) => {
-        let cart = await prisma.Carts.findUnique({
+        let cart = await prisma.Carts.findFirst({
             where: { user_id: userId },
         });
         if (!cart) {
@@ -14,7 +14,7 @@ const cartService = {
     },
 
     getCartWithItems: async (userId) => {
-        const cart = await prisma.Carts.findUnique({
+        const cart = await prisma.Carts.findFirst({
             where: { user_id: userId },
             include: {
                 CartItems: {

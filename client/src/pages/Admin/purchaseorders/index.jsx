@@ -164,7 +164,8 @@ const PurchaseOrderPage = () => {
         </button>
       </div>
       <div className="table-retro">
-        <table className="w-full text-sm text-left text-[#323232] table-retro">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm text-left text-[#323232] table-retro min-w-[600px]">
           <thead className="text-sm uppercase bg-primary border-b-2 text-[#fff] border-[#323232]">
             <tr>
               <th>Mã nhập hàng</th>
@@ -245,6 +246,7 @@ const PurchaseOrderPage = () => {
             )}
           </tbody>
         </table>
+        </div>
         <div className="border-t-2 border-[#323232] bg-[#f8f9fa]">
           <Pagination
             totalPages={paginationInfo.totalPages}
