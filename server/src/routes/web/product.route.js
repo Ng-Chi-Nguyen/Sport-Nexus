@@ -6,6 +6,6 @@ const webProductRoute = express.Router();
 webProductRoute
     .get("/products", productController.getProducts)
     .get("/search", productController.searchProducts)
-    .get("/slug/:slug", productController.getProductBySlug)
+    .get("/slug/:slug", productController.getProductBySlug);
 
 export default webProductRoute;

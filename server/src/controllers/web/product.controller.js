@@ -72,8 +72,7 @@ const productController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ.",
-                error: error.message,
+                message: error.message,
             });
         }
     },
