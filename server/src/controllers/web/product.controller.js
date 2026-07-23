@@ -1,4 +1,5 @@
 import productService from "../../services/core/product.service.js";
+import productWebService from "../../services/web/product.service.js";
 
 const productController = {
     getProductBySlug: async (req, res) => {
@@ -46,6 +47,33 @@ const productController = {
             return res.status(500).json({
                 success: false,
                 message: error.message,
+            });
+        }
+    },
+    getProducts: async (req, res) => {
+        try {
+            const { page, search, sort, category_id, brand_id, price_min, price_max, limit } = req.query;
+
+            const [productData, categories, brands] = await Promise.all([
+                productWebService.getAllProducts({ page, search, sort, category_id, brand_id, price_min, price_max, limit }),
+                productWebService.getAllCategories(),
+                productWebService.getAllBrands(),
+            ]);
+
+            return res.status(200).json({
+                success: true,
+                data: {
+                    products: productData.products,
+                    pagination: productData.pagination,
+                    categories,
+                    brands,
+                },
+            });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server nội bộ.",
+                error: error.message,
             });
         }
     },
