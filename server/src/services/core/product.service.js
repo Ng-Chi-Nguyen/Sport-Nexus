@@ -168,6 +168,44 @@ const productService = {
         };
     },
 
+    searchProducts: async ({ q, limit = 12, page = 1 } = {}) => {
+        const currentPage = Math.max(1, page);
+        const skip = (currentPage - 1) * limit;
+        const where = {
+            deleted_at: ACTIVE,
+            is_active: true,
+        };
+        if (q) where.name = { contains: q, mode: 'insensitive' };
+
+        let [products, totalItems] = await Promise.all([
+            prisma.Products.findMany({
+                where,
+                take: limit,
+                skip,
+                select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                    base_price: true,
+                    thumbnail: true,
+                    brand: { select: { name: true } },
+                },
+                orderBy: { id: 'desc' },
+            }),
+            prisma.Products.count({ where }),
+        ]);
+
+        return {
+            products,
+            pagination: {
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+                currentPage,
+                itemsPerPage: limit,
+            },
+        };
+    },
+
     getAllProductsDropdown: async () => {
         let products = await prisma.Products.findMany({
             where: { deleted_at: ACTIVE },

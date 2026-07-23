@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { Outlet, useLocation, useLoaderData } from "react-router-dom";
 
 import Header from "@/components/header";
 import "./App.css";
 import { Toaster } from "sonner";
 import { Footer } from "@/components/footer";
+import LoadingSpinner from "@/components/ui/loadingSpinner";
 
 import { NavCategoryMenu } from "./components/NavCategoryMenu";
 import { HeroBanner } from "@/pages/Home/components/heroBanner";
@@ -46,10 +47,14 @@ function App() {
       <main className="flex-1">
         {!isManagementView ? (
           <div className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8">
-            <Outlet />
+            <Suspense fallback={<LoadingSpinner />}>
+              <Outlet />
+            </Suspense>
           </div>
         ) : (
-          <Outlet />
+          <Suspense fallback={<LoadingSpinner />}>
+            <Outlet />
+          </Suspense>
         )}
       </main>
 

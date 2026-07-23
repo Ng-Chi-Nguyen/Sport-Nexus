@@ -1,0 +1,143 @@
+import { useSearchParams, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { Search } from "lucide-react";
+import searchApi from "@/api/web/searchApi";
+import Breadcrumbs from "@/components/ui/breadcrumbs";
+import LoadingSpinner from "@/components/ui/loadingSpinner";
+
+const ITEMS_PER_PAGE = 12;
+
+const SearchPage = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const q = searchParams.get("q") || "";
+    const page = parseInt(searchParams.get("page")) || 1;
+
+    const { data, isLoading } = useQuery({
+        queryKey: ["search", q, page],
+        queryFn: () => searchApi.searchProducts({ q, limit: ITEMS_PER_PAGE, page }),
+        enabled: !!q,
+    });
+
+    const products = data?.success ? data.data.products : [];
+    const pagination = data?.success ? data.data.pagination : null;
+
+    const handlePageChange = (newPage) => {
+        setSearchParams({ q, page: String(newPage) });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    if (!q) {
+        return (
+            <div className="min-h-screen py-8">
+                <div className="mx-auto max-w-5xl text-center py-20">
+                    <Search size={48} className="mx-auto text-gray-300 mb-4" />
+                    <h2 className="text-xl font-semibold text-gray-800 mb-2">Tìm kiếm sản phẩm</h2>
+                    <p className="text-gray-500">Nhập từ khóa vào ô tìm kiếm phía trên.</p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen py-4 md:py-8">
+            <div className="mx-auto max-w-5xl">
+                <Breadcrumbs
+                    data={[
+                        { title: "Trang chủ", route: "/" },
+                        { title: `Tìm kiếm: "${q}"`, route: "" },
+                    ]}
+                />
+
+                <h1 className="text-xl md:text-2xl font-bold text-slate-800 mt-4 mb-2">
+                    Kết quả tìm kiếm cho &ldquo;{q}&rdquo;
+                </h1>
+                {pagination && (
+                    <p className="text-sm text-gray-500 mb-6">
+                        {pagination.totalItems} kết quả
+                    </p>
+                )}
+
+                {isLoading ? (
+                    <div className="py-20 flex justify-center">
+                        <LoadingSpinner />
+                    </div>
+                ) : products.length === 0 ? (
+                    <div className="text-center py-20">
+                        <Search size={48} className="mx-auto text-gray-300 mb-4" />
+                        <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                            Không tìm thấy sản phẩm
+                        </h2>
+                        <p className="text-gray-500">
+                            Thử tìm kiếm với từ khóa khác bạn nhé.
+                        </p>
+                    </div>
+                ) : (
+                    <>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {products.map((product) => (
+                                <Link
+                                    key={product.id}
+                                    to={`/san-pham/${product.slug}`}
+                                    className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow"
+                                >
+                                    <div className="aspect-square bg-gray-50 overflow-hidden">
+                                        {product.thumbnail ? (
+                                            <img
+                                                src={product.thumbnail}
+                                                alt={product.name}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                                <Search size={32} />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="p-3">
+                                        <p className="text-xs text-gray-500 mb-1">{product.brand?.name}</p>
+                                        <h3 className="text-sm font-medium text-gray-800 line-clamp-2 mb-2">
+                                            {product.name}
+                                        </h3>
+                                        <p className="text-sm font-bold text-primary">
+                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.base_price)}
+                                        </p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+
+                        {pagination && pagination.totalPages > 1 && (
+                            <div className="flex justify-center items-center gap-2 mt-8">
+                                <button
+                                    onClick={() => handlePageChange(page - 1)}
+                                    disabled={page <= 1}
+                                    className="px-3 py-2 text-sm rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                                >
+                                    Trước
+                                </button>
+                                {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((p) => (
+                                    <button
+                                        key={p}
+                                        onClick={() => handlePageChange(p)}
+                                        className={`px-3 py-2 text-sm rounded-lg border ${p === page ? "bg-primary text-white border-primary" : "border-gray-200 hover:bg-gray-50"}`}
+                                    >
+                                        {p}
+                                    </button>
+                                ))}
+                                <button
+                                    onClick={() => handlePageChange(page + 1)}
+                                    disabled={page >= pagination.totalPages}
+                                    className="px-3 py-2 text-sm rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                                >
+                                    Sau
+                                </button>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default SearchPage;

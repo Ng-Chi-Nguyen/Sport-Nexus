@@ -1,6 +1,9 @@
 import prisma from "../../db/prisma.js";
 import { ACTIVE } from "../../utils/prisma.js";
 
+const safeInt = (val) => { const n = parseInt(val); return isNaN(n) ? undefined : n; };
+const safeFloat = (val) => { const n = parseFloat(val); return isNaN(n) ? undefined : n; };
+
 const productSelect = {
     id: true, name: true, slug: true,
     base_price: true, thumbnail: true, created_at: true,
@@ -13,7 +16,6 @@ const productSelect = {
     },
     Reviews: {
         select: { rating: true },
-        take: 20,
     },
 };
 
@@ -47,11 +49,12 @@ const productWebService = {
         const skip = (currentPage - 1) * take;
         const where = { is_active: true, deleted_at: ACTIVE };
 
-        if (search) where.name = { contains: search };
-        if (category_id) where.category_id = parseInt(category_id);
-        if (brand_id) where.brand_id = parseInt(brand_id);
-        if (price_min) where.base_price = { ...where.base_price, gte: parseFloat(price_min) };
-        if (price_max) where.base_price = { ...where.base_price, lte: parseFloat(price_max) };
+        const trimmedSearch = search?.trim();
+        if (trimmedSearch) where.name = { contains: trimmedSearch, mode: "insensitive" };
+        if (category_id) where.category_id = safeInt(category_id);
+        if (brand_id) where.brand_id = safeInt(brand_id);
+        if (price_min) where.base_price = { ...where.base_price, gte: safeFloat(price_min) };
+        if (price_max) where.base_price = { ...where.base_price, lte: safeFloat(price_max) };
 
         let orderBy = { created_at: "desc" };
         if (sort === "price-asc") orderBy = { base_price: "asc" };

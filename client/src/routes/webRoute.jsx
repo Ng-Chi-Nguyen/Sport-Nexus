@@ -14,6 +14,7 @@ const HomePage = lazy(() => import("@/pages/Home/"));
 const ProductDetail = lazy(() => import("@/pages/ProductDetail"));
 const CheckoutPage = lazy(() => import("@/pages/Checkout"));
 const CartPage = lazy(() => import("@/pages/Cart"));
+const SearchPage = lazy(() => import("@/pages/Search"));
 const InfoPage = lazy(() => import("@/pages/info"));
 const Index = lazy(() => import("@/pages/profile"));
 const ResetPassword = lazy(() => import("@/pages/profile/resetPassword"));
@@ -36,6 +37,10 @@ export const webRoutes = {
       path: "san-pham/:slug",
       element: <ProductDetail />,
       loader: productDetailLoader,
+    },
+    {
+      path: "tim-kiem",
+      element: <SearchPage />,
     },
     {
       path: "gio-hang",

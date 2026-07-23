@@ -1,7 +1,6 @@
 import {
   LayoutDashboard,
   Menu,
-  Search,
   Settings,
   ShoppingCart,
   User,
@@ -10,6 +9,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 import { Logo } from "./logo";
+import SearchBar from "@/components/search/SearchBar";
 import { useCart } from "@/contexts/CartContext";
 
 const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
@@ -36,22 +36,7 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
           <Logo />
         </div>
 
-        <div className="flex-1 max-w-2xl hidden sm:block">
-          <div className="relative flex items-center">
-            <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
-              strokeWidth={2}
-            />
-            <input
-              type="text"
-              placeholder="Tìm kiếm sản phẩm..."
-              className="w-full h-10 pl-10 pr-24 bg-gray-50 border border-gray-200 rounded-full text-sm outline-none transition-all duration-200 placeholder:text-gray-400 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/30"
-            />
-            <button className="absolute right-1 top-1/2 -translate-y-1/2 h-8 px-4 bg-primary hover:bg-blue-600 text-white text-sm font-medium rounded-full transition-colors duration-200">
-              Tìm kiếm
-            </button>
-          </div>
-        </div>
+        <SearchBar />
 
         <div className="flex items-center gap-1 sm:gap-2">
           {user && user.role.slug !== "customer" && (
