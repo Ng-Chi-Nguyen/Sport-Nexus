@@ -9,6 +9,7 @@ import { category } from "./category.js";
 import { productAttributeKey } from "./productAttributeKey.js";
 import { products } from "./products.js";
 import { productVariants } from "./productVariants.js";
+import { coupons } from "./coupons.js";
 import { purchaseOrder } from "./purchaseOrder.js";
 
 export const moduleConfigs = {
@@ -21,5 +22,6 @@ export const moduleConfigs = {
   productAttributeKey,
   products,
   productVariants,
+  coupons,
   purchaseOrder,
 };

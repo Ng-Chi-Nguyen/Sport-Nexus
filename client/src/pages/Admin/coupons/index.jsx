@@ -11,10 +11,11 @@ import {
 import { formatDate, formatCurrency } from "@/utils/formatters";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import Pagination from "@/components/ui/pagination";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { queryClient } from "@/lib/react-query";
 import { toast } from "sonner";
 import couponApi from "@/api/management/couponApi";
+import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 
 // Import component SimpleSelect mới từ thư mục chứa ui components của bạn
 import { SimpleSelect } from "@/components/ui/select";
@@ -152,6 +153,16 @@ const CouponPage = () => {
           />
         </button>
 
+        <ExcelCrudActions
+          basePath="/management/coupon"
+          title="Import / Export mã giảm giá"
+          templateFileName="template-ma-giam-gia.xlsx"
+          exportFileName="ma-giam-gia.xlsx"
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: ["coupons"] });
+            revalidator.revalidate();
+          }}
+        />
         <BtnAdd route="/management/coupons/create" name="Thêm khuyến mãi" />
       </div>
 

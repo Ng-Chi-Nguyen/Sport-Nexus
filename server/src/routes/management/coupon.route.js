@@ -6,8 +6,11 @@ import { checkPermission, verifyToken } from "../../middlewares/verifyToken.midd
 import { logAction } from "../../middlewares/log.middleware.js";
 import { createDetails, updateDetails, deleteDetails, fetchEntity } from "../../middlewares/log.helpers.js";
 import couponService from "../../services/management/coupon.service.js";
+import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js";
 
 const couponRoute = express.Router()
+
+attachExcelCrudImportRoutes(couponRoute, { moduleKey: "coupons", importPermission: "them-ma-giam-gia" });
 
 couponRoute
 
