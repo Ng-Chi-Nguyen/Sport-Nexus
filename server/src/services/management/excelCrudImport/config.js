@@ -158,6 +158,7 @@ const buildSingleSheetModule = ({
     return [{ name: sheetName, columns, rows: [] }];
   },
   async exportSheets(db) {
+    const quoteSheetName = (name) => /[^\w]/.test(name) ? `'${name}'` : name;
     const rows = await exportAll(db);
     return [{ name: sheetName, columns, rows }];
   },
@@ -214,6 +215,7 @@ const buildDualSheetModule = ({
     ];
   },
   async exportSheets(db) {
+    const quoteSheetName = (name) => /[^\w]/.test(name) ? `'${name}'` : name;
     const { parentRows, childRows } = await exportAll(db);
 
     // Build hyperlinks from child ref_code cells to parent rows
@@ -260,7 +262,7 @@ const buildDualSheetModule = ({
           if (targetRow) {
             row[childRefKey] = {
               text: String(refValue),
-              hyperlink: '#' + parentSheetName + '!' + parentColLetter + targetRow,
+              hyperlink: '#' + quoteSheetName(parentSheetName) + '!' + parentColLetter + targetRow,
             };
           }
         }
@@ -275,7 +277,7 @@ const buildDualSheetModule = ({
           if (targetRow) {
             row[parentRefKey] = {
               text: String(refValue),
-              hyperlink: '#' + childSheetName + '!' + childColLetter + targetRow,
+              hyperlink: '#' + quoteSheetName(childSheetName) + '!' + childColLetter + targetRow,
             };
           }
         }
@@ -492,9 +494,9 @@ const moduleConfigs = {
   }),
 
   orders: buildDualSheetModule({
-    parentSheetName: 'Orders',
-    childSheetName: 'OrderItems',
-    fileName: 'orders.xlsx',
+    parentSheetName: 'Đơn hàng',
+    childSheetName: 'Chi tiết đơn',
+    fileName: 'don-hang.xlsx',
     parentColumns: orderColumns,
     childColumns: orderItemColumns,
     exportAll: async (db) => {
