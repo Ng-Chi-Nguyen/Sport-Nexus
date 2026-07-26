@@ -5,8 +5,11 @@ import orderController from "../../controllers/customer/order.controller.js";
 import { logAction } from "../../middlewares/log.middleware.js";
 import { createDetails, updateDetails, deleteDetails, fetchEntity } from "../../middlewares/log.helpers.js";
 import orderService from "../../services/customer/order.service.js";
+import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js";
 
 const orderRoute = express.Router();
+
+attachExcelCrudImportRoutes(orderRoute, { moduleKey: "orders" });
 
 orderRoute
 

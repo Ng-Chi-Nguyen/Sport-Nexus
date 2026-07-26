@@ -7,8 +7,11 @@ import { checkPermission, verifyToken } from "../../middlewares/verifyToken.midd
 import { logAction } from "../../middlewares/log.middleware.js";
 import { createDetails, updateDetails, deleteDetails, fetchEntity } from "../../middlewares/log.helpers.js";
 import supplierService from "../../services/management/supplier.service.js";
+import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js";
 
 const supplierRoute = express.Router();
+
+attachExcelCrudImportRoutes(supplierRoute, { moduleKey: "suppliers", importPermission: "them-nha-cung-cap" });
 
 supplierRoute
 

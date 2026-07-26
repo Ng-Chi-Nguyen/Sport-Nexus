@@ -2,8 +2,11 @@ import express from "express";
 import { validate } from "../../middlewares/validation.middleware.js";
 import productAttributeKeySchema from "../../validators/management/productAttributeKey.validator.js";
 import productAttributeKeyController from "../../controllers/management/productAttributeKey.controller.js";
+import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js";
 
 const productAttributeKeyRoute = express.Router();
+
+attachExcelCrudImportRoutes(productAttributeKeyRoute, { moduleKey: "productAttributeKey" });
 
 productAttributeKeyRoute
     .post("/", validate(productAttributeKeySchema.create), productAttributeKeyController.create)

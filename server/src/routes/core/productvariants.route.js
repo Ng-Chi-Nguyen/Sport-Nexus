@@ -5,8 +5,11 @@ import { validate } from "../../middlewares/validation.middleware.js";
 import { logAction } from "../../middlewares/log.middleware.js";
 import { createDetails, updateDetails, deleteDetails, fetchEntity } from "../../middlewares/log.helpers.js";
 import productVariantsService from "../../services/core/productvariants.service.js";
+import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js";
 
 const productVariantRoute = express.Router();
+
+attachExcelCrudImportRoutes(productVariantRoute, { moduleKey: "productVariants" });
 
 productVariantRoute
 

@@ -7,8 +7,11 @@ import { checkPermission, verifyToken } from "../../middlewares/verifyToken.midd
 import { logAction } from "../../middlewares/log.middleware.js";
 import { createDetails, updateDetails, deleteDetails, fetchEntity } from "../../middlewares/log.helpers.js";
 import productService from "../../services/core/product.service.js";
+import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js";
 
 const productRoute = express.Router();
+
+attachExcelCrudImportRoutes(productRoute, { moduleKey: "products", importPermission: "them-san-pham" });
 
 productRoute
 

@@ -7,8 +7,11 @@ import { verifyToken, checkPermission, isAdmin } from '../../middlewares/verifyT
 import { logAction } from '../../middlewares/log.middleware.js';
 import { createDetails, updateDetails, deleteDetails, fetchEntity } from '../../middlewares/log.helpers.js';
 import userService from '../../services/management/user.service.js';
+import { attachExcelCrudImportRoutes } from '../helpers/excelCrudImport.route.js';
 
 const userRoute = express.Router();
+
+attachExcelCrudImportRoutes(userRoute, { moduleKey: "users", importPermission: "them-nguoi-dung" });
 
 userRoute
 
