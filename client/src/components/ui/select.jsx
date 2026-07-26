@@ -202,8 +202,15 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
         }`}
       >
         <span
-          className={`truncate mr-2 ${value ? "text-slate-200" : "text-slate-600"}`}
+          className={`truncate mr-2 inline-flex items-center gap-2 ${value ? "text-slate-200" : "text-slate-600"}`}
         >
+          {value && (
+            <img
+              src={`https://flagcdn.com/24x18/${countryData.find((c) => c.name === value)?.code?.toLowerCase()}.png`}
+              className="inline-block w-5 h-3.5 object-cover rounded-sm"
+              alt=""
+            />
+          )}
           {selectedName}
         </span>
         <ChevronDown
@@ -228,12 +235,17 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
               onChange(country.name);
               setIsOpen(false);
             }}
-            className={`rounded-lg p-[8px_12px] text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
+            className={`rounded-lg p-[8px_12px] text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap inline-flex items-center gap-2 ${
               value === country.name
                 ? "text-sky-400 font-bold bg-sky-500/10 border border-sky-500/20"
                 : "text-slate-400 hover:bg-[#161F32] hover:text-slate-100"
             }`}
           >
+            <img
+              src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
+              className="inline-block w-5 h-3.5 object-cover rounded-sm"
+              alt=""
+            />
             {country.name}
           </div>
         ))}

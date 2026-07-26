@@ -11,14 +11,13 @@ export const buildSingleSheetModule = ({
   exportAll,
   parseRow,
   importRow,
+  templateSheets,
 }) => ({
   kind: 'single',
   sheetName,
   fileName,
   columns,
-  templateSheets() {
-    return [{ name: sheetName, columns, rows: [] }];
-  },
+  templateSheets: templateSheets || (() => Promise.resolve([{ name: sheetName, columns, rows: [] }])),
   async exportSheets(db) {
     const quoteSheetName = (name) => /[^\w]/.test(name) ? `'${name}'` : name;
     const rows = await exportAll(db);
@@ -47,6 +46,9 @@ export const buildSingleSheetModule = ({
       const imported = await importRow(db, row);
       if (imported.action === 'update') result.updated.push(imported.record);
       else if (imported.action === 'create') result.created.push(imported.record);
+      else if (imported.action === 'error' && imported.errors) {
+        result.errors.push(...imported.errors.map((error) => ({ row: row.rowNumber, ...error })));
+      }
     }
 
     return result;

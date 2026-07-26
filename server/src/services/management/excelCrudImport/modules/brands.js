@@ -1,58 +1,78 @@
 // @ts-nocheck
-import { trimText, toText, toInt, rowHasOwnData } from "../helpers.js";
+import { toText, rowHasOwnData } from "../helpers.js";
 import { buildSingleSheetModule } from "../builders.js";
 import { brandColumns } from "../columns.js";
 import { ACTIVE } from "../../../../utils/prisma.js";
+import { readFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const countriesPath = resolve(__dirname, '../../../../../../client/src/assets/data/countries.json');
+const COUNTRIES = JSON.parse(readFileSync(countriesPath, 'utf-8'));
+
+const stripFlag = (value) => {
+  if (!value) return '';
+  return value.replace(/^\[[A-Z]{2}\]\s*/u, '');
+};
+
+const escapeListItems = (items) =>
+  items.map((item) => (item.includes(',') || item.includes('"') ? `"${item.replace(/"/g, '""')}"` : item)).join(',');
 
 export const brands = buildSingleSheetModule({
-  sheetName: "Brands",
-  fileName: "brands.xlsx",
+  sheetName: 'Thương hiệu',
+  fileName: 'brands.xlsx',
   columns: brandColumns,
+  templateSheets: async () => {
+    const originOptions = COUNTRIES.map((c) => `[${c.code}] ${c.name}`);
+
+    const columns = brandColumns.map((col) => {
+      if (col.key === 'origin') {
+        return { ...col, validation: { type: 'list', formulae: [`"${escapeListItems(originOptions)}"`], allowBlank: true } };
+      }
+      return col;
+    });
+
+    return [{ name: 'Thương hiệu', columns, rows: [] }];
+  },
   exportAll: async (db) => {
     const rows = await db.Brands.findMany({
       where: { deleted_at: ACTIVE },
-      orderBy: { id: "asc" },
+      orderBy: { id: 'asc' },
     });
 
-    return rows.map((item) => ({
-      id: item.id,
-      name: item.name || "",
-      origin: item.origin || "",
-      logo: item.logo || "",
-    }));
+    return rows.map((item) => {
+      const country = COUNTRIES.find((c) => c.name === item.origin);
+      return {
+        name: item.name || '',
+        origin: country ? `[${country.code}] ${item.origin}` : (item.origin || ''),
+      };
+    });
   },
   parseRow: ({ values }) => {
     if (!rowHasOwnData(values)) {
       return { values, rawValues: values, errors: [] };
     }
 
-    const id = toInt(values[0]);
-    const name = toText(values[1]);
-    const origin = toText(values[2]);
-    const logo = toText(values[3]);
+    const name = toText(values[0]);
+    const origin = stripFlag(toText(values[1]));
     const errors = [];
 
-    if (!name) errors.push({ field: "name", message: "Tên thương hiệu không được để trống" });
+    if (!name) errors.push({ field: 'name', message: 'Tên thương hiệu không được để trống' });
 
     return {
       values,
       rawValues: values,
-      id,
       data: {
         name: name || undefined,
         origin: origin || undefined,
-        logo: logo || undefined,
       },
       errors,
     };
   },
   importRow: async (db, row) => {
     const data = Object.fromEntries(Object.entries(row.data).filter(([, value]) => value !== undefined));
-    if (row.id) {
-      const record = await db.Brands.update({ where: { id: row.id }, data });
-      return { action: "update", record };
-    }
     const record = await db.Brands.create({ data });
-    return { action: "create", record };
+    return { action: 'create', record };
   },
 });

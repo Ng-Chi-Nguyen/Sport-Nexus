@@ -15,7 +15,8 @@ const toSummary = (result) => ({
 export const createExcelCrudImportService = ({ db = prisma } = {}) => ({
   async generateTemplate(moduleKey) {
     const moduleConfig = getExcelCrudModuleConfig(moduleKey);
-    return buildWorkbookBuffer(moduleConfig.templateSheets());
+    const sheets = await moduleConfig.templateSheets(db);
+    return buildWorkbookBuffer(sheets);
   },
 
   async generateExport(moduleKey) {
