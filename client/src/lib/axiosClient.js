@@ -24,6 +24,15 @@ axiosClient.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        if (error.response?.data instanceof Blob) {
+            const text = await error.response.data.text();
+            try {
+                error.response.data = JSON.parse(text);
+            } catch {
+                error.message = text || error.message;
+            }
+        }
+
         if (error.response && error.response.status === 403) {
             // Lấy tin nhắn từ server ("Bạn không có quyền này!")
             const message = error.response.data?.message || "Bạn không có quyền thực hiện hành động này";

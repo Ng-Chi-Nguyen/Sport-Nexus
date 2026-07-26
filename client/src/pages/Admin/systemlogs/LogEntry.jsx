@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, Pencil, XCircle } from "lucide-react";
 import { actionConfig, entityNames } from "@/constants/management/log";
 import { formatFullDateTime } from "@/utils/formatters";
 

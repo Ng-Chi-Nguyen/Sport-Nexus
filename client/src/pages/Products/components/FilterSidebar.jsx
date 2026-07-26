@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, X, ChevronDown, ChevronUp } from "lucide-react";
 
 const PRICE_RANGES = [
@@ -54,6 +54,10 @@ const FilterBar = ({
   const [searchInput, setSearchInput] = useState(search || "");
   const [debounceTimer, setDebounceTimer] = useState(null);
 
+  useEffect(() => {
+    setSearchInput(search || "");
+  }, [search]);
+
   const handleSearchInput = (val) => {
     setSearchInput(val);
     if (debounceTimer) clearTimeout(debounceTimer);
@@ -78,6 +82,8 @@ const FilterBar = ({
       onAttrFilterChange(existing.join(","));
     }
   };
+
+  const hasFilters = search || categoryIds || brandIds || priceMin || priceMax || attrFilter;
 
   const selectedCategoryIds = categoryIds ? categoryIds.split(",").filter(Boolean) : [];
   const selectedBrandIds = brandIds ? brandIds.split(",").filter(Boolean) : [];
@@ -127,12 +133,14 @@ const FilterBar = ({
               </button>
             )}
           </div>
-          <button
-            onClick={onClear}
-            className="text-[12px] font-semibold text-blue-600 hover:text-blue-700 border border-blue-200 hover:border-blue-300 rounded-lg px-3 py-1.5 transition-colors cursor-pointer"
-          >
-            Xóa bộ lọc
-          </button>
+          {hasFilters && (
+            <button
+              onClick={onClear}
+              className="text-[12px] font-semibold text-blue-600 hover:text-blue-700 border border-blue-200 hover:border-blue-300 rounded-lg px-3 py-1.5 transition-colors cursor-pointer"
+            >
+              Xóa bộ lọc
+            </button>
+          )}
         </div>
       </div>
 
