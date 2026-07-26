@@ -11,8 +11,11 @@ import {
   useRevalidator,
   useSearchParams,
 } from "react-router-dom";
+import { toast } from "sonner";
+import { Download, Loader2 } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
 import { getStockBadgeClass } from "@/utils/statusStyles";
+import excelCrudImportApi from "@/api/management/excelCrudImportApi";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -36,6 +39,7 @@ const StockPage = () => {
 
   const [searchInput, setSearchInput] = useState(currentSearch);
   const [showFilters, setShowFilters] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
   const isFirstRender = useRef(true);
 
   useEffect(() => {
@@ -82,6 +86,24 @@ const StockPage = () => {
     currentPage: 1,
   };
 
+  const handleExport = async () => {
+    setExportLoading(true);
+    try {
+      const res = await excelCrudImportApi.export("/management/stock");
+      const url = window.URL.createObjectURL(res);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ton-kho.xlsx";
+      a.click();
+      window.URL.revokeObjectURL(url);
+      toast.success("Export thành công");
+    } catch (err) {
+      toast.error(err?.message || "Export thất bại");
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
   const handleRefresh = () => {
     queryClient.invalidateQueries({ queryKey: ["stocks"] });
     setTimeout(() => revalidator.revalidate(), 0);
@@ -123,6 +145,10 @@ const StockPage = () => {
             size={14}
             className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
           />
+        </button>
+        <button onClick={handleExport} disabled={exportLoading} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded-xl hover:bg-emerald-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          {exportLoading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+          {exportLoading ? "Đang xuất..." : "Export"}
         </button>
         <BtnAdd route={"/management/stocks/create"} name="Tạo biến động kho" />
       </div>

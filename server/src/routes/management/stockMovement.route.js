@@ -6,8 +6,11 @@ import { checkPermission, verifyToken } from "../../middlewares/verifyToken.midd
 import { logAction } from "../../middlewares/log.middleware.js";
 import { createDetails, updateDetails, deleteDetails, fetchEntity } from "../../middlewares/log.helpers.js";
 import stockMovementService from "../../services/management/stockMovement.service.js";
+import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js";
 
 const stockMovementRoute = express.Router();
+
+attachExcelCrudImportRoutes(stockMovementRoute, { moduleKey: "stockMovements" });
 
 stockMovementRoute
 

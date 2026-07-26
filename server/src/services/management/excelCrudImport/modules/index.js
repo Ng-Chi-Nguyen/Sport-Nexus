@@ -6,11 +6,11 @@ import { suppliers } from "./suppliers.js";
 import { users } from "./users.js";
 import { attributeKey } from "./attributeKey.js";
 import { category } from "./category.js";
-import { productAttributeKey } from "./productAttributeKey.js";
 import { products } from "./products.js";
 import { productVariants } from "./productVariants.js";
 import { coupons } from "./coupons.js";
 import { purchaseOrder } from "./purchaseOrder.js";
+import { stockMovements } from "./stockMovements.js";
 
 export const moduleConfigs = {
   brands,
@@ -19,9 +19,9 @@ export const moduleConfigs = {
   users,
   attributeKey,
   category,
-  productAttributeKey,
   products,
   productVariants,
   coupons,
   purchaseOrder,
+  stockMovements,
 };
