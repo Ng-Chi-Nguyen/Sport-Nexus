@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { moduleConfigs } from './modules.js';
+import { moduleConfigs } from './modules/index.js';
 
 export const getExcelCrudModuleConfig = (moduleKey) => {
   const config = moduleConfigs[moduleKey];
