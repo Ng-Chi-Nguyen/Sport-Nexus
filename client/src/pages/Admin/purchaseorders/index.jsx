@@ -20,6 +20,7 @@ import { queryClient } from "@/lib/react-query";
 import useTableFilters from "@/hooks/useTableFilters";
 import { PURCHASE_STATUS_OPTIONS } from "@/constants/management/purchaseOrder";
 import { getPurchaseStatusDetails } from "@/utils/statusStyles";
+import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -106,10 +107,19 @@ const PurchaseOrderPage = () => {
         onClearFilters={clearAllFilters}
         searchPlaceholder="Tìm kiếm mã đơn nhập hàng..."
         addButton={
-          <BtnAdd
-            route={"/management/purchase/create"}
-            name="Thêm đơn nhập hàng"
-          />
+          <div className="flex items-center gap-2 flex-wrap justify-end">
+            <ExcelCrudActions
+              basePath="/management/purchase-order"
+              title="Import / Export nhập hàng"
+              templateFileName="template-nhap-hang.xlsx"
+              exportFileName="nhap-hang.xlsx"
+              sheetNote="Workbook gồm 2 sheet: PurchaseOrders và PurchaseOrderItems"
+            />
+            <BtnAdd
+              route={"/management/purchase/create"}
+              name="Thêm đơn nhập hàng"
+            />
+          </div>
         }
       >
         <SimpleSelect

@@ -16,6 +16,7 @@ import LoaderAttr from "@/loaders/core/attributeKey";
 import { queryClient } from "@/lib/react-query";
 import { toast } from "sonner";
 import Pagination from "@/components/ui/pagination";
+import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -125,6 +126,13 @@ const AttributeKey = () => {
             ]}
           />
         </div>
+
+        <ExcelCrudActions
+          basePath="/core/variant-attribute-key"
+          title="Import / Export thuộc tính"
+          templateFileName="template-thuoc-tinh.xlsx"
+          exportFileName="thuoc-tinh.xlsx"
+        />
 
         <BtnAdd
           route={"/management/attribute-key/create"}

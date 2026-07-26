@@ -1,5 +1,9 @@
 import { LayoutDashboard, ChevronDown, Filter, RefreshCw } from "lucide-react";
-import { useLoaderData, useSearchParams, useRevalidator } from "react-router-dom";
+import {
+  useLoaderData,
+  useSearchParams,
+  useRevalidator,
+} from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
@@ -10,6 +14,7 @@ import Pagination from "@/components/ui/pagination";
 import Badge from "@/components/ui/badge";
 import { formatFullDateTime, formatCurrency } from "@/utils/formatters";
 import { SimpleSelect } from "@/components/ui/select";
+import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 
 // IMPORT các hằng số từ file constants.js cùng cấp
 import {
@@ -26,7 +31,10 @@ const breadcrumbData = [
   { title: "Đơn hàng", route: "/management/orders" },
 ];
 
-import { getOrderStatusClass, getPaymentStatusClass } from "@/utils/statusStyles";
+import {
+  getOrderStatusClass,
+  getPaymentStatusClass,
+} from "@/utils/statusStyles";
 
 // --- COMPONENT CHÍNH ---
 const OrderPage = () => {
@@ -154,6 +162,13 @@ const OrderPage = () => {
           />
         </button>
 
+        <ExcelCrudActions
+          basePath="/customer/order"
+          title="Import / Export đơn hàng"
+          templateFileName="template-don-hang.xlsx"
+          exportFileName="don-hang.xlsx"
+          sheetNote="Workbook gồm 2 sheet: Orders và OrderItems"
+        />
         <BtnAdd route={"/management/orders/create"} name="Tạo đơn hàng" />
       </div>
 
@@ -263,15 +278,15 @@ const OrderPage = () => {
             </div>
 
             {/* 7. Nút Xóa bộ lọc nhỏ gọn cùng hàng ngang */}
-            <div className="h-10 flex items-center shrink-0 ml-auto">
+            {hasActiveFilters && (
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="px-2.5 py-1 text-[10px] font-bold rounded border border-slate-800 text-slate-500 hover:bg-slate-800/60 hover:text-slate-300 transition-colors cursor-pointer whitespace-nowrap"
+                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
-                Xóa bộ lọc
+                Xoá bộ lọc
               </button>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -279,144 +294,145 @@ const OrderPage = () => {
       {/* KHỐI BẢNG CONTAINER TỐI CHỦ ĐẠO */}
       <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
         <div className="flex items-center justify-between">
-          <h2 className="section-title">
-            Danh sách đơn hàng
-          </h2>
+          <h2 className="section-title">Danh sách đơn hàng</h2>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
             className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title="Tải lại"
           >
-            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+            <RefreshCw
+              size={18}
+              className={revalidator.state === "loading" ? "animate-spin" : ""}
+            />
           </button>
         </div>
 
         {/* BẢNG ĐƠN HÀNG */}
         <div className="table-retro">
           <div className="overflow-x-auto">
-          <table className="w-full border-separate border-spacing-0 min-w-[600px]">
-            <thead>
-              <tr>
-                <th scope="col" className="px-6 py-4 w-[32%] !text-start">
-                  Thông tin khách hàng
-                </th>
-                <th scope="col" className="px-6 py-4 w-[28%] text-center">
-                  Giá trị đơn
-                </th>
-                <th scope="col" className="px-6 py-4 w-[28%] !text-start">
-                  Trạng thái & Thời gian
-                </th>
-                <th scope="col" className="px-6 py-4 w-[12%] text-center">
-                  Thao tác
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.length > 0 &&
-                orders.map((order) => (
-                  <tr key={order.id}>
-                    <td className="px-6 py-5">
-                      <div className="flex flex-col gap-2">
-                        <div className="flex items-center gap-2">
-                          <Badge color="nexus">Email</Badge>
-                          <span className="font-semibold text-slate-200 text-sm tracking-wide">
-                            {order.user_email || "Khách tại cửa hàng"}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-slate-400">
-                          <Badge color="nexus">Địa chỉ</Badge>
-                          <span
-                            className="truncate max-w-[240px] text-xs text-slate-400"
-                            title={order.shipping_address}
-                          >
-                            {order.shipping_address || "Nhận tại cửa hàng"}
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 pt-0.5">
-                          <Badge color="nexus">Thanh toán</Badge>
-                          <span className="text-slate-300 font-medium font-mono uppercase bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800/60">
-                            {order.payment_method}
-                          </span>
-                          <span
-                            className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase border ${getPaymentStatusClass(order.payment_status)}`}
-                          >
-                            {STATUS_PAYMENT[order.payment_status] ||
-                              order.payment_status}
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-5">
-                      <div className="flex flex-col items-center justify-center gap-2 w-full">
-                        <div className="flex items-center gap-2 w-fit">
-                          <Badge color="slate">Gốc</Badge>
-                          <span className="text-xs font-mono text-slate-400 line-through tracking-wide">
-                            {formatCurrency(order.total_amount)}
-                          </span>
-                        </div>
-                        {Number(order.discount_amount) > 0 ? (
-                          <div className="flex items-center gap-2 w-fit">
-                            <Badge color="error">Giảm</Badge>
-                            <span className="text-xs font-mono font-bold text-rose-400">
-                              -{formatCurrency(order.discount_amount)}
+            <table className="w-full border-separate border-spacing-0 min-w-[600px]">
+              <thead>
+                <tr>
+                  <th scope="col" className="px-6 py-4 w-[32%] !text-start">
+                    Thông tin khách hàng
+                  </th>
+                  <th scope="col" className="px-6 py-4 w-[28%] text-center">
+                    Giá trị đơn
+                  </th>
+                  <th scope="col" className="px-6 py-4 w-[28%] !text-start">
+                    Trạng thái & Thời gian
+                  </th>
+                  <th scope="col" className="px-6 py-4 w-[12%] text-center">
+                    Thao tác
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.length > 0 &&
+                  orders.map((order) => (
+                    <tr key={order.id}>
+                      <td className="px-6 py-5">
+                        <div className="flex flex-col gap-2">
+                          <div className="flex items-center gap-2">
+                            <Badge color="nexus">Email</Badge>
+                            <span className="font-semibold text-slate-200 text-sm tracking-wide">
+                              {order.user_email || "Khách tại cửa hàng"}
                             </span>
                           </div>
-                        ) : (
-                          <div className="h-[20px]"></div>
-                        )}
-                        <div className="flex items-center gap-2 w-fit mt-0.5">
-                          <Badge color="success">Thực thu</Badge>
-                          <span className="text-sm font-black font-mono text-emerald-400 tracking-wide bg-emerald-500/5 px-2.5 py-0.5 rounded-lg border border-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
-                            {formatCurrency(order.final_amount)}
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-5">
-                      <div className="space-y-2 text-xs">
-                        <div className="flex items-center gap-2">
-                          <Badge color="nexus">Lịch sử</Badge>
-                          <span className="text-slate-400 font-mono text-[11px]">
-                            {formatFullDateTime(order.created_at)}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge color="nexus">Vận chuyển</Badge>
-                          <span
-                            className={`inline-flex items-center justify-center min-w-[90px] px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase border ${getOrderStatusClass(order.status)}`}
-                          >
-                            {STATUS_LABELS[order.status] || order.status}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge color="nexus">Khuyến mãi</Badge>
-                          {order.coupon_code ? (
-                            <span className="text-[11px] font-mono font-semibold text-violet-400 bg-violet-500/5 px-2 py-0.5 rounded border border-violet-500/10">
-                              {order.coupon_code}
+                          <div className="flex items-center gap-2 text-slate-400">
+                            <Badge color="nexus">Địa chỉ</Badge>
+                            <span
+                              className="truncate max-w-[240px] text-xs text-slate-400"
+                              title={order.shipping_address}
+                            >
+                              {order.shipping_address || "Nhận tại cửa hàng"}
                             </span>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 pt-0.5">
+                            <Badge color="nexus">Thanh toán</Badge>
+                            <span className="text-slate-300 font-medium font-mono uppercase bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800/60">
+                              {order.payment_method}
+                            </span>
+                            <span
+                              className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase border ${getPaymentStatusClass(order.payment_status)}`}
+                            >
+                              {STATUS_PAYMENT[order.payment_status] ||
+                                order.payment_status}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-5">
+                        <div className="flex flex-col items-center justify-center gap-2 w-full">
+                          <div className="flex items-center gap-2 w-fit">
+                            <Badge color="slate">Gốc</Badge>
+                            <span className="text-xs font-mono text-slate-400 line-through tracking-wide">
+                              {formatCurrency(order.total_amount)}
+                            </span>
+                          </div>
+                          {Number(order.discount_amount) > 0 ? (
+                            <div className="flex items-center gap-2 w-fit">
+                              <Badge color="error">Giảm</Badge>
+                              <span className="text-xs font-mono font-bold text-rose-400">
+                                -{formatCurrency(order.discount_amount)}
+                              </span>
+                            </div>
                           ) : (
-                            <span className="text-slate-600 italic text-[11px]">
-                              Không áp dụng
-                            </span>
+                            <div className="h-[20px]"></div>
                           )}
+                          <div className="flex items-center gap-2 w-fit mt-0.5">
+                            <Badge color="success">Thực thu</Badge>
+                            <span className="text-sm font-black font-mono text-emerald-400 tracking-wide bg-emerald-500/5 px-2.5 py-0.5 rounded-lg border border-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
+                              {formatCurrency(order.final_amount)}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    </td>
+                      </td>
 
-                    <td className="px-6 py-5 text-center">
-                      <BtnActions
-                        id={order.id}
-                        route={`/management/orders/edit/${order.id}`}
-                        onDelete={(id) => console.log("Xóa đơn hàng:", id)}
-                      />
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+                      <td className="px-6 py-5">
+                        <div className="space-y-2 text-xs">
+                          <div className="flex items-center gap-2">
+                            <Badge color="nexus">Lịch sử</Badge>
+                            <span className="text-slate-400 font-mono text-[11px]">
+                              {formatFullDateTime(order.created_at)}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge color="nexus">Vận chuyển</Badge>
+                            <span
+                              className={`inline-flex items-center justify-center min-w-[90px] px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase border ${getOrderStatusClass(order.status)}`}
+                            >
+                              {STATUS_LABELS[order.status] || order.status}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge color="nexus">Khuyến mãi</Badge>
+                            {order.coupon_code ? (
+                              <span className="text-[11px] font-mono font-semibold text-violet-400 bg-violet-500/5 px-2 py-0.5 rounded border border-violet-500/10">
+                                {order.coupon_code}
+                              </span>
+                            ) : (
+                              <span className="text-slate-600 italic text-[11px]">
+                                Không áp dụng
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-5 text-center">
+                        <BtnActions
+                          id={order.id}
+                          route={`/management/orders/edit/${order.id}`}
+                          onDelete={(id) => console.log("Xóa đơn hàng:", id)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
           </div>
         </div>
 

@@ -17,6 +17,7 @@ import supplierdApi from "@/api/management/supplierApi";
 import Pagination from "@/components/ui/pagination";
 //lib
 import { queryClient } from "@/lib/react-query";
+import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -159,6 +160,13 @@ const SupplierPage = () => {
             Xóa bộ lọc
           </button>
         )}
+
+        <ExcelCrudActions
+          basePath="/management/supplier"
+          title="Import / Export nhà cung cấp"
+          templateFileName="template-nha-cung-cap.xlsx"
+          exportFileName="nha-cung-cap.xlsx"
+        />
 
         <BtnAdd
           route={"/management/suppliers/create"}

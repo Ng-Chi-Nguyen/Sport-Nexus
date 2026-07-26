@@ -18,6 +18,7 @@ import {
   USER_STATUS_OPTIONS,
   USER_VERIFIED_OPTIONS,
 } from "@/constants/management/user";
+import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -133,7 +134,15 @@ const UserPage = () => {
         onClearFilters={clearAllFilters}
         searchPlaceholder="Tìm kiếm tên, email, số điện thoại..."
         addButton={
-          <BtnAdd route={"/management/users/create"} name="Thêm người dùng" />
+          <div className="flex items-center gap-2 flex-wrap justify-end">
+            <ExcelCrudActions
+              basePath="/management/user"
+              title="Import / Export người dùng"
+              templateFileName="template-nguoi-dung.xlsx"
+              exportFileName="nguoi-dung.xlsx"
+            />
+            <BtnAdd route={"/management/users/create"} name="Thêm người dùng" />
+          </div>
         }
       >
         {renderSegmented(

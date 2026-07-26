@@ -10,6 +10,7 @@ import FilterPanel from "@/components/ui/FilterPanel";
 import useTableFilters from "@/hooks/useTableFilters";
 import Pagination from "@/components/ui/pagination";
 import Badge from "@/components/ui/badge";
+import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 
 const breadcrumbData = [
   {
@@ -71,7 +72,15 @@ const BrandPage = () => {
         onClearFilters={clearAllFilters}
         searchPlaceholder="Tìm kiếm tên thương hiệu..."
         addButton={
-          <BtnAdd route={"/management/brands/create"} name="Thêm thương hiệu" />
+          <div className="flex items-center gap-2 flex-wrap justify-end">
+            <ExcelCrudActions
+              basePath="/management/brand"
+              title="Import / Export thương hiệu"
+              templateFileName="template-thuong-hieu.xlsx"
+              exportFileName="thuong-hieu.xlsx"
+            />
+            <BtnAdd route={"/management/brands/create"} name="Thêm thương hiệu" />
+          </div>
         }
       >
         <div>

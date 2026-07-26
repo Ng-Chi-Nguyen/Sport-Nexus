@@ -23,6 +23,7 @@ import Pagination from "@/components/ui/pagination";
 import productdApi from "@/api/core/productApi";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query";
+import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 
 const breadcrumbData = [
   {
@@ -175,6 +176,12 @@ const ProductPage = () => {
           />
         </button>
         <BtnAdd route="/management/products/create" name="Thêm sản phẩm" />
+        <ExcelCrudActions
+          basePath="/core/product"
+          title="Import / Export sản phẩm"
+          templateFileName="template-san-pham.xlsx"
+          exportFileName="san-pham.xlsx"
+        />
       </div>
 
       <div
@@ -283,15 +290,15 @@ const ProductPage = () => {
               </div>
             </div>
 
-            <div className="h-10 flex items-center shrink-0">
+            {hasActiveFilters && (
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="px-2.5 py-1 text-[10px] font-bold rounded border border-slate-800 text-slate-500 hover:bg-slate-800/60 hover:text-slate-300 transition-colors cursor-pointer whitespace-nowrap"
+                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
-                Xóa bộ lọc
+                Xoá bộ lọc
               </button>
-            </div>
+            )}
           </div>
         </div>
       </div>

@@ -12,6 +12,7 @@ import LoaderProduct from "@/loaders/core/productLoader";
 import { queryClient } from "@/lib/react-query";
 import { toast } from "sonner";
 import Pagination from "@/components/ui/pagination";
+import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 
 const breadcrumbData = [
     { title: <LayoutDashboard size={20} />, route: "" },
@@ -104,6 +105,12 @@ const ProductAttributeKey = () => {
                         label="Lọc theo sản phẩm"
                     />
                 </div>
+                <ExcelCrudActions
+                    basePath="/management/product-attribute-key"
+                    title="Import / Export gán thuộc tính"
+                    templateFileName="template-gan-thuoc-tinh.xlsx"
+                    exportFileName="gan-thuoc-tinh.xlsx"
+                />
                 <BtnAdd
                     route={"/management/product-attribute-key/create"}
                     className="w-[200px]"

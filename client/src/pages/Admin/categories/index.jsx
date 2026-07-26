@@ -15,6 +15,7 @@ import { BtnDelete, BtnEdit } from "@/components/ui/button";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import categoryApi from "@/api/management/categoryApi";
 import Pagination from "@/components/ui/pagination";
+import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 // lib
 import { queryClient } from "@/lib/react-query";
 
@@ -149,6 +150,16 @@ const CategoryPage = () => {
           })}
         </div>
 
+        <ExcelCrudActions
+          basePath="/management/category"
+          title="Import / Export danh mục"
+          templateFileName="template-danh-muc.xlsx"
+          exportFileName="danh-muc.xlsx"
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: ["categories"] });
+            revalidator.revalidate();
+          }}
+        />
         <BtnAdd
           route={"/management/categories/create"}
           className="w-[30%]"

@@ -17,6 +17,7 @@ import { SimpleSelect } from "@/components/ui/select";
 import Badge from "@/components/ui/badge";
 import Pagination from "@/components/ui/pagination";
 import { ConfirmDelete } from "@/components/ui/confirm";
+import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -159,6 +160,12 @@ const VariantPage = () => {
           route="/management/product-variants/create"
           name="Thêm biến thể"
         />
+        <ExcelCrudActions
+          basePath="/core/product-variant"
+          title="Import / Export biến thể"
+          templateFileName="template-bien-the.xlsx"
+          exportFileName="bien-the.xlsx"
+        />
       </div>
 
       <div
@@ -232,15 +239,15 @@ const VariantPage = () => {
               </div>
             </div>
 
-            <div className="h-10 flex items-center shrink-0 ml-auto">
+            {hasActiveFilters && (
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="px-2.5 py-1 text-[10px] font-bold rounded border border-slate-800 text-slate-500 hover:bg-slate-800/60 hover:text-slate-300 transition-colors cursor-pointer whitespace-nowrap"
+                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
-                Xóa bộ lọc
+                Xoá bộ lọc
               </button>
-            </div>
+            )}
           </div>
         </div>
       </div>

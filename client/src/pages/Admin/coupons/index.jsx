@@ -18,7 +18,10 @@ import couponApi from "@/api/management/couponApi";
 
 // Import component SimpleSelect mới từ thư mục chứa ui components của bạn
 import { SimpleSelect } from "@/components/ui/select";
-import { ACTIVE_TABS, DISCOUNT_TYPE_OPTIONS } from "@/constants/management/coupon";
+import {
+  ACTIVE_TABS,
+  DISCOUNT_TYPE_OPTIONS,
+} from "@/constants/management/coupon";
 
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
@@ -247,15 +250,15 @@ const CouponPage = () => {
             </div>
 
             {/* 6. Nút Xóa bộ lọc nhỏ gọn */}
-            <div className="h-10 flex items-center shrink-0 ml-auto">
+            {hasActiveFilters && (
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="px-2.5 py-1 text-[10px] font-bold rounded border border-slate-800 text-slate-500 hover:bg-slate-800/60 hover:text-slate-300 transition-colors cursor-pointer whitespace-nowrap"
+                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
-                Xóa bộ lọc
+                Xoá bộ lọc
               </button>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -270,103 +273,108 @@ const CouponPage = () => {
           className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           title="Tải lại"
         >
-          <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+          <RefreshCw
+            size={18}
+            className={revalidator.state === "loading" ? "animate-spin" : ""}
+          />
         </button>
       </div>
       <div className="mt-3 relative bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
         <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left text-slate-200 min-w-[600px]">
-          <thead className="text-xs uppercase bg-[#161F32] border-b border-slate-800">
-            <tr>
-              <th className="px-6 py-4 font-black text-center text-slate-400">
-                Mã Code
-              </th>
-              <th className="px-6 py-4 font-black text-center text-slate-400">
-                Hiệu lực
-              </th>
-              <th className="px-6 py-4 font-black text-center text-slate-400">
-                Giới hạn đơn
-              </th>
-              <th className="px-6 py-4 font-black text-center text-slate-400">
-                Sử dụng
-              </th>
-              <th className="px-6 py-4 font-black text-center text-slate-400">
-                Thao tác
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-800">
-            {coupons.length > 0 ? (
-              coupons.map((coupon) => (
-                <tr
-                  key={coupon.id}
-                  className="hover:bg-[#161F32]/40 transition-colors duration-150"
-                >
-                  <td className="px-6 py-4 text-center font-bold text-sky-400">
-                    <Badge color={coupon.is_active ? "blue" : "red"}>
-                      Code: {coupon.code}
-                    </Badge>
-                    {!coupon.is_active && <Badge color="red">Đã hết hạn</Badge>}
-                    <div className="flex items-center justify-center gap-1 mt-1">
-                      <span className="font-bold text-[12px] text-slate-300">
-                        {coupon.discount_type === "CASH"
-                          ? "Giảm tiền mặt"
-                          : "Giảm phần trăm"}
-                      </span>
-                      <span className="text-xs text-emerald-400 font-black">
-                        {coupon.discount_type === "CASH"
-                          ? formatCurrency(coupon.discount_value)
-                          : `${coupon.discount_value}%`}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-center text-[12px]">
-                    <div className="text-slate-400">
-                      Từ: {formatDate(coupon.start_date)}
-                    </div>
-                    <div className="text-rose-400 font-medium">
-                      Đến: {formatDate(coupon.end_date)}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-center text-[12px]">
-                    <div className="text-slate-400 italic">
-                      Đơn tối thiểu: {formatCurrency(coupon.min_order_value)}
-                    </div>
-                    <div className="font-bold text-slate-200">
-                      Tối đa: {formatCurrency(coupon.max_discount)}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <Badge color="green">
-                      {coupon.usage_count} / {coupon.usage_limit}
-                    </Badge>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2 justify-center">
-                      <BtnEdit
-                        route={`/management/coupons/edit/${coupon.id}`}
-                        name="Sửa"
-                      />
-                      <BtnDelete
-                        name="Xóa"
-                        onClick={() => openConfirm(coupon.id)}
-                      />
-                    </div>
+          <table className="w-full text-sm text-left text-slate-200 min-w-[600px]">
+            <thead className="text-xs uppercase bg-[#161F32] border-b border-slate-800">
+              <tr>
+                <th className="px-6 py-4 font-black text-center text-slate-400">
+                  Mã Code
+                </th>
+                <th className="px-6 py-4 font-black text-center text-slate-400">
+                  Hiệu lực
+                </th>
+                <th className="px-6 py-4 font-black text-center text-slate-400">
+                  Giới hạn đơn
+                </th>
+                <th className="px-6 py-4 font-black text-center text-slate-400">
+                  Sử dụng
+                </th>
+                <th className="px-6 py-4 font-black text-center text-slate-400">
+                  Thao tác
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800">
+              {coupons.length > 0 ? (
+                coupons.map((coupon) => (
+                  <tr
+                    key={coupon.id}
+                    className="hover:bg-[#161F32]/40 transition-colors duration-150"
+                  >
+                    <td className="px-6 py-4 text-center font-bold text-sky-400">
+                      <Badge color={coupon.is_active ? "blue" : "red"}>
+                        Code: {coupon.code}
+                      </Badge>
+                      {!coupon.is_active && (
+                        <Badge color="red">Đã hết hạn</Badge>
+                      )}
+                      <div className="flex items-center justify-center gap-1 mt-1">
+                        <span className="font-bold text-[12px] text-slate-300">
+                          {coupon.discount_type === "CASH"
+                            ? "Giảm tiền mặt"
+                            : "Giảm phần trăm"}
+                        </span>
+                        <span className="text-xs text-emerald-400 font-black">
+                          {coupon.discount_type === "CASH"
+                            ? formatCurrency(coupon.discount_value)
+                            : `${coupon.discount_value}%`}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-center text-[12px]">
+                      <div className="text-slate-400">
+                        Từ: {formatDate(coupon.start_date)}
+                      </div>
+                      <div className="text-rose-400 font-medium">
+                        Đến: {formatDate(coupon.end_date)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-center text-[12px]">
+                      <div className="text-slate-400 italic">
+                        Đơn tối thiểu: {formatCurrency(coupon.min_order_value)}
+                      </div>
+                      <div className="font-bold text-slate-200">
+                        Giảm tối đa: {formatCurrency(coupon.max_discount)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <Badge color="green">
+                        {coupon.usage_count} / {coupon.usage_limit}
+                      </Badge>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2 justify-center">
+                        <BtnEdit
+                          route={`/management/coupons/edit/${coupon.id}`}
+                          name="Sửa"
+                        />
+                        <BtnDelete
+                          name="Xóa"
+                          onClick={() => openConfirm(coupon.id)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="px-6 py-10 text-center text-slate-500 italic"
+                  >
+                    Không tìm thấy mã khuyến mãi nào
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan="5"
-                  className="px-6 py-10 text-center text-slate-500 italic"
-                >
-                  Không tìm thấy mã khuyến mãi nào
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
         </div>
         <ConfirmDelete
           isOpen={isConfirmOpen}
