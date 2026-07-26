@@ -156,15 +156,15 @@ const VariantPage = () => {
             className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
           />
         </button>
-        <BtnAdd
-          route="/management/product-variants/create"
-          name="Thêm biến thể"
-        />
         <ExcelCrudActions
           basePath="/core/product-variant"
           title="Import / Export biến thể"
           templateFileName="template-bien-the.xlsx"
           exportFileName="bien-the.xlsx"
+        />
+        <BtnAdd
+          route="/management/product-variants/create"
+          name="Thêm biến thể"
         />
       </div>
 
@@ -260,119 +260,122 @@ const VariantPage = () => {
           className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           title="Tải lại"
         >
-          <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+          <RefreshCw
+            size={18}
+            className={revalidator.state === "loading" ? "animate-spin" : ""}
+          />
         </button>
       </div>
       <div className="mt-3 relative bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
         <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left text-slate-200 min-w-[600px]">
-          <thead className="text-xs uppercase bg-[#161F32] border-b border-slate-800">
-            <tr>
-              <th className="px-6 py-4 font-black text-slate-400 !text-start">
-                Thông tin sản phẩm
-              </th>
-              <th className="px-6 py-4 font-black text-center text-slate-400">
-                Phân loại
-              </th>
-              <th className="px-6 py-4 font-black text-center text-slate-400">
-                Tồn kho
-              </th>
-              <th className="px-6 py-4 font-black text-center text-slate-400">
-                Thao tác
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-800">
-            {variants.length > 0 ? (
-              variants.map((variant) => (
-                <tr
-                  key={variant.id}
-                  className="hover:bg-[#161F32]/40 transition-colors duration-150"
-                >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-[60px] h-[60px] border border-slate-800 rounded-lg overflow-hidden bg-[#111827] flex-shrink-0 p-1">
-                        <img
-                          src={variant.product.thumbnail}
-                          alt={variant.product.name}
-                          className="w-full h-full object-contain mix-blend-screen"
-                        />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="font-semibold text-sm text-slate-100 mb-1 tracking-wide">
-                          {variant.product.name}
-                        </p>
-                        <span className="text-[12px] text-slate-500">
-                          Giá gốc:{" "}
-                          <span className="font-semibold text-emerald-400">
-                            {Number(
-                              variant.product.base_price,
-                            ).toLocaleString()}
-                            đ
+          <table className="w-full text-sm text-left text-slate-200 min-w-[600px]">
+            <thead className="text-xs uppercase bg-[#161F32] border-b border-slate-800">
+              <tr>
+                <th className="px-6 py-4 font-black text-slate-400 !text-start">
+                  Thông tin sản phẩm
+                </th>
+                <th className="px-6 py-4 font-black text-center text-slate-400">
+                  Phân loại
+                </th>
+                <th className="px-6 py-4 font-black text-center text-slate-400">
+                  Tồn kho
+                </th>
+                <th className="px-6 py-4 font-black text-center text-slate-400">
+                  Thao tác
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800">
+              {variants.length > 0 ? (
+                variants.map((variant) => (
+                  <tr
+                    key={variant.id}
+                    className="hover:bg-[#161F32]/40 transition-colors duration-150"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-[60px] h-[60px] border border-slate-800 rounded-lg overflow-hidden bg-[#111827] flex-shrink-0 p-1">
+                          <img
+                            src={variant.product.thumbnail}
+                            alt={variant.product.name}
+                            className="w-full h-full object-contain mix-blend-screen"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold text-sm text-slate-100 mb-1 tracking-wide">
+                            {variant.product.name}
+                          </p>
+                          <span className="text-[12px] text-slate-500">
+                            Giá gốc:{" "}
+                            <span className="font-semibold text-emerald-400">
+                              {Number(
+                                variant.product.base_price,
+                              ).toLocaleString()}
+                              đ
+                            </span>
                           </span>
-                        </span>
-                        <div className="mt-1">
-                          <span className="text-xs text-slate-500">
-                            Giá bán:{" "}
-                          </span>
-                          <span className="text-sm font-semibold text-sky-400">
-                            {Number(variant.price).toLocaleString()}đ
-                          </span>
+                          <div className="mt-1">
+                            <span className="text-xs text-slate-500">
+                              Giá bán:{" "}
+                            </span>
+                            <span className="text-sm font-semibold text-sky-400">
+                              {Number(variant.price).toLocaleString()}đ
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
+                    </td>
 
-                  {/* SỬ DỤNG COMPONENT BADGE MÀU INFO CHO THUỘC TÍNH */}
-                  <td className="px-6 py-4">
-                    <div className="flex flex-col gap-1.5 items-center justify-center">
-                      {variant.VariableAttributes?.length > 0 ? (
-                        variant.VariableAttributes.map((attr) => (
-                          <Badge key={attr.id} color="info">
-                            {attr.attributeKey.name}: {attr.value}{" "}
-                            {attr.attributeKey.unit || ""}
-                          </Badge>
-                        ))
+                    {/* SỬ DỤNG COMPONENT BADGE MÀU INFO CHO THUỘC TÍNH */}
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col gap-1.5 items-center justify-center">
+                        {variant.VariableAttributes?.length > 0 ? (
+                          variant.VariableAttributes.map((attr) => (
+                            <Badge key={attr.id} color="info">
+                              {attr.attributeKey.name}: {attr.value}{" "}
+                              {attr.attributeKey.unit || ""}
+                            </Badge>
+                          ))
+                        ) : (
+                          <span className="text-slate-500 text-xs italic">
+                            Không có phân loại
+                          </span>
+                        )}
+                      </div>
+                    </td>
+
+                    {/* SỬ DỤNG COMPONENT BADGE MÀU SUCCESS / ERROR CHO TỒN KHO */}
+                    <td className="px-6 py-4 text-center">
+                      {variant.stock > 0 ? (
+                        <Badge color="success">Sẵn có: {variant.stock}</Badge>
                       ) : (
-                        <span className="text-slate-500 text-xs italic">
-                          Không có phân loại
-                        </span>
+                        <Badge color="error">Hết hàng</Badge>
                       )}
-                    </div>
-                  </td>
+                    </td>
 
-                  {/* SỬ DỤNG COMPONENT BADGE MÀU SUCCESS / ERROR CHO TỒN KHO */}
-                  <td className="px-6 py-4 text-center">
-                    {variant.stock > 0 ? (
-                      <Badge color="success">Sẵn có: {variant.stock}</Badge>
-                    ) : (
-                      <Badge color="error">Hết hàng</Badge>
-                    )}
-                  </td>
-
-                  <td className="px-6 py-4 text-center">
-                    <BtnActions
-                      route={`/management/product-variants/edit/${variant.id}`}
-                      id={variant.id}
-                      onDelete={() =>
-                        openConfirm(variant.id, variant.product.name)
-                      }
-                    />
+                    <td className="px-6 py-4 text-center">
+                      <BtnActions
+                        route={`/management/product-variants/edit/${variant.id}`}
+                        id={variant.id}
+                        onDelete={() =>
+                          openConfirm(variant.id, variant.product.name)
+                        }
+                      />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="4"
+                    className="px-6 py-12 text-center text-slate-500 italic"
+                  >
+                    Không có biến thể nào được tìm thấy.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan="4"
-                  className="px-6 py-12 text-center text-slate-500 italic"
-                >
-                  Không có biến thể nào được tìm thấy.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
         </div>
         <div className="p-4 border-t border-slate-800">
           <Pagination

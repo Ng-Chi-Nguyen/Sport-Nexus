@@ -142,8 +142,6 @@ const ProductPage = () => {
     currentPage: 1,
   };
 
-
-
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
@@ -175,13 +173,13 @@ const ProductPage = () => {
             className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
           />
         </button>
-        <BtnAdd route="/management/products/create" name="Thêm sản phẩm" />
         <ExcelCrudActions
           basePath="/core/product"
           title="Import / Export sản phẩm"
           templateFileName="template-san-pham.xlsx"
           exportFileName="san-pham.xlsx"
         />
+        <BtnAdd route="/management/products/create" name="Thêm sản phẩm" />
       </div>
 
       <div
@@ -311,109 +309,112 @@ const ProductPage = () => {
           className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           title="Tải lại"
         >
-          <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+          <RefreshCw
+            size={18}
+            className={revalidator.state === "loading" ? "animate-spin" : ""}
+          />
         </button>
       </div>
       <div className="mt-3 relative bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
         <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left text-slate-200 min-w-[600px]">
-          <thead className="text-xs uppercase bg-[#161F32] border-b border-slate-800">
-            <tr>
-              <th className="px-6 py-4 font-black text-slate-400 !text-start">
-                Thông tin sản phẩm
-              </th>
-              <th className="px-6 py-4 font-black text-center text-slate-400">
-                Phân loại
-              </th>
-              <th className="px-6 py-4 font-black text-center text-slate-400">
-                Trạng thái
-              </th>
-              <th className="px-6 py-4 font-black text-center text-slate-400">
-                Thao tác
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-800">
-            {products.length > 0 ? (
-              products.map((product) => (
-                <tr
-                  key={product.id}
-                  className="hover:bg-[#161F32]/40 transition-colors duration-150"
-                >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-[60px] h-[60px] rounded-lg overflow-hidden bg-[#161F32] flex-shrink-0">
-                        <img
-                          src={
-                            product.thumbnail ||
-                            "https://placehold.co/60x60/png?text=No+Img"
-                          }
-                          alt={product.name}
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="font-bold text-sm text-slate-100 truncate">
-                          {product.name}
-                        </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge color="blue">{product.category.name}</Badge>
-                          <span className="text-xs text-emerald-400 font-black">
-                            {formatCurrency(product.base_price)}
-                          </span>
+          <table className="w-full text-sm text-left text-slate-200 min-w-[600px]">
+            <thead className="text-xs uppercase bg-[#161F32] border-b border-slate-800">
+              <tr>
+                <th className="px-6 py-4 font-black text-slate-400 !text-start">
+                  Thông tin sản phẩm
+                </th>
+                <th className="px-6 py-4 font-black text-center text-slate-400">
+                  Phân loại
+                </th>
+                <th className="px-6 py-4 font-black text-center text-slate-400">
+                  Trạng thái
+                </th>
+                <th className="px-6 py-4 font-black text-center text-slate-400">
+                  Thao tác
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800">
+              {products.length > 0 ? (
+                products.map((product) => (
+                  <tr
+                    key={product.id}
+                    className="hover:bg-[#161F32]/40 transition-colors duration-150"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-[60px] h-[60px] rounded-lg overflow-hidden bg-[#161F32] flex-shrink-0">
+                          <img
+                            src={
+                              product.thumbnail ||
+                              "https://placehold.co/60x60/png?text=No+Img"
+                            }
+                            alt={product.name}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-bold text-sm text-slate-100 truncate">
+                            {product.name}
+                          </p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge color="blue">{product.category.name}</Badge>
+                            <span className="text-xs text-emerald-400 font-black">
+                              {formatCurrency(product.base_price)}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <div className="flex flex-col items-center gap-1">
-                      <Badge color="purple">
-                        Thương hiệu: {product.brand.name}
-                      </Badge>
-                      <Badge color="pink">
-                        Nhà cung cấp: {product.supplier.name}
-                      </Badge>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    {product.is_active ? (
-                      <Badge color="green">
-                        <PackageCheck size={14} />{" "}
-                        <span className="ml-1">Còn hàng</span>
-                      </Badge>
-                    ) : (
-                      <Badge color="red">
-                        <PackageX size={14} />
-                        <span className="ml-1">Hết hàng</span>
-                      </Badge>
-                    )}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2 justify-center">
-                      <BtnEdit
-                        route={`/management/products/edit/${product.id}`}
-                        name="Sửa"
-                      />
-                      <BtnDelete
-                        name="Xóa"
-                        onClick={() => openConfirm(product.id, product.name)}
-                      />
-                    </div>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <div className="flex flex-col items-center gap-1">
+                        <Badge color="purple">
+                          Thương hiệu: {product.brand.name}
+                        </Badge>
+                        <Badge color="pink">
+                          Nhà cung cấp: {product.supplier.name}
+                        </Badge>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      {product.is_active ? (
+                        <Badge color="green">
+                          <PackageCheck size={14} />{" "}
+                          <span className="ml-1">Còn hàng</span>
+                        </Badge>
+                      ) : (
+                        <Badge color="red">
+                          <PackageX size={14} />
+                          <span className="ml-1">Hết hàng</span>
+                        </Badge>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2 justify-center">
+                        <BtnEdit
+                          route={`/management/products/edit/${product.id}`}
+                          name="Sửa"
+                        />
+                        <BtnDelete
+                          name="Xóa"
+                          onClick={() => openConfirm(product.id, product.name)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="4"
+                    className="px-6 py-10 text-center text-slate-500 italic"
+                  >
+                    Không có sản phẩm nào
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan="4"
-                  className="px-6 py-10 text-center text-slate-500 italic"
-                >
-                  Không có sản phẩm nào
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
         </div>
         <div className="p-4 border-t border-slate-800">
           <Pagination
