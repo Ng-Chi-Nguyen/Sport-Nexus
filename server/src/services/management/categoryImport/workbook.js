@@ -196,14 +196,13 @@ const buildTemplateWorksheet = (workbook) => {
     return ws;
 };
 
-const buildExportWorksheet = async (workbook, categories, fetchImageBuffer) => {
+const buildExportWorksheet = async (workbook, categories) => {
     const ws = workbook.addWorksheet('Categories', {
         views: [{ showGridLines: true }],
     });
 
     ws.columns = [
         { header: 'Tên danh mục', key: 'name', width: 35 },
-        { header: 'URL ảnh', key: 'image', width: 22 },
         { header: 'Trạng thái', key: 'is_active', width: 18 },
     ];
 
@@ -221,10 +220,8 @@ const buildExportWorksheet = async (workbook, categories, fetchImageBuffer) => {
 
         const row = ws.addRow({
             name: cat.name,
-            image: '',
             is_active: cat.is_active ? 'Hoạt động' : 'Ngừng',
         });
-        row.height = 60;
 
         row.eachCell({ includeEmpty: true }, (cell) => {
             cell.alignment = { vertical: 'middle', horizontal: 'center' };
@@ -239,44 +236,13 @@ const buildExportWorksheet = async (workbook, categories, fetchImageBuffer) => {
             }
         });
 
-        const statusCell = row.getCell(3);
+        const statusCell = row.getCell(2);
         if (cat.is_active) {
             statusCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDCFCE7' } };
             statusCell.font = { bold: true, color: { argb: 'FF15803D' }, size: 11, name: 'Calibri' };
         } else {
             statusCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEE2E2' } };
             statusCell.font = { bold: true, color: { argb: 'FFB91C1C' }, size: 11, name: 'Calibri' };
-        }
-    }
-
-    const exportImageTasks = await Promise.all(
-        categories.map(async (cat, idx) => {
-            if (!cat.image) return null;
-
-            const imgData = await fetchImageBuffer(cat.image);
-            const excelImage = await prepareImageForExcel(imgData);
-            if (!excelImage) return null;
-
-            return {
-                rowIndex: idx + 2,
-                imgData: excelImage,
-            };
-        })
-    );
-
-    for (const item of exportImageTasks.filter(Boolean)) {
-        try {
-            const imgId = workbook.addImage({
-                buffer: item.imgData.buffer,
-                extension: item.imgData.extension,
-            });
-            ws.addImage(imgId, {
-                tl: { col: 1.1, row: item.rowIndex - 0.9 },
-                ext: { width: 80, height: 50 },
-                editAs: 'oneCell',
-            });
-        } catch {
-            ws.getRow(item.rowIndex).getCell(2).value = categories[item.rowIndex - 2].image;
         }
     }
 
@@ -293,11 +259,11 @@ export const buildCategoryTemplateBuffer = async () => {
     return workbook.xlsx.writeBuffer();
 };
 
-export const buildCategoryExportBuffer = async (categories, fetchImageBuffer) => {
+export const buildCategoryExportBuffer = async (categories) => {
     const workbook = new ExcelJS.Workbook();
     workbook.creator = 'SportNexus';
 
-    await buildExportWorksheet(workbook, categories, fetchImageBuffer);
+    await buildExportWorksheet(workbook, categories);
 
     return workbook.xlsx.writeBuffer();
 };

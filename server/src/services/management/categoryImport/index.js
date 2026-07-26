@@ -258,10 +258,10 @@ const categoryImportService = {
     generateExport: async () => {
         const categories = await prisma.categories.findMany({
             where: { deleted_at: ACTIVE },
-            select: { name: true, image: true, is_active: true },
+            select: { name: true, is_active: true },
             orderBy: { id: 'asc' },
         });
-        return buildCategoryExportBuffer(categories, fetchImageBuffer);
+        return buildCategoryExportBuffer(categories);
     },
 
     /**
