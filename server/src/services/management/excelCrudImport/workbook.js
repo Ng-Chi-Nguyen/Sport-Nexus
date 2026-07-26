@@ -21,7 +21,6 @@ const fixInternalHyperlinks = (buffer) => {
     let sheetText = entry.getData().toString("utf-8");
     let sheetModified = false;
 
-    // Collect all matches first
     const matches = [];
     const relRegex = /<Relationship\s+Id="([^"]+)"\s+Type="[^"]*hyper[Ll]ink[^"]*"\s+Target="#([^"]+)"\s+TargetMode="External"\s*\/>/g;
     let match;
@@ -29,17 +28,9 @@ const fixInternalHyperlinks = (buffer) => {
       matches.push({ full: match[0], relId: match[1], loc: match[2] });
     }
 
-    // Apply all fixes after collecting matches
     for (const { full, relId, loc } of matches) {
-      // Remove r:id from sheet XML
       sheetText = sheetText.replace(' r:id="' + relId + '"', "");
-
-      // Fix location value (remove # prefix)
-      const locWithHash = 'location="#' + loc + '"';
-      const locWithoutHash = 'location="' + loc + '"';
-      sheetText = sheetText.replace(locWithHash, locWithoutHash);
-
-      // Remove relationship from rels
+      sheetText = sheetText.replace('location="#' + loc + '"', 'location="' + loc + '"');
       relsText = relsText.replace(full, "");
       sheetModified = true;
       modified = true;
@@ -58,6 +49,43 @@ const fixInternalHyperlinks = (buffer) => {
   return modified ? zip.toBuffer() : buffer;
 };
 
+/**
+ * Auto-fit column widths based on cell content.
+ * For each column, measure the longest text (header + data) and set width accordingly.
+ */
+const autoFitColumns = (ws) => {
+  if (!ws.columns) return;
+
+  ws.columns.forEach((col, colIndex) => {
+    let maxWidth = 0;
+
+    for (let rowIdx = 1; rowIdx <= ws.rowCount; rowIdx++) {
+      const cell = ws.getCell(rowIdx, colIndex + 1);
+      let cellText = "";
+
+      if (cell.value && typeof cell.value === "object") {
+        if (cell.value.text) cellText = String(cell.value.text);
+        else if (cell.value.formula) cellText = "";
+        else cellText = String(cell.value);
+      } else if (cell.value != null) {
+        cellText = String(cell.value);
+      }
+
+      // Estimate width: count chars, with wider chars (Vietnamese, etc.) counting more
+      let width = 0;
+      for (const ch of cellText) {
+        width += ch.charCodeAt(0) > 127 ? 1.8 : 1; // wider for Unicode
+      }
+      width += 2; // padding
+
+      if (width > maxWidth) maxWidth = width;
+    }
+
+    // Set width, with min/max bounds
+    col.width = Math.max(10, Math.min(60, Math.ceil(maxWidth)));
+  });
+};
+
 export const buildWorkbookBuffer = async (sheets, { addBlankRow = false } = {}) => {
   const workbook = new ExcelJS.Workbook();
 
@@ -74,6 +102,7 @@ export const buildWorkbookBuffer = async (sheets, { addBlankRow = false } = {}) 
     if (Array.isArray(sheet.rows) && sheet.rows.length > 0) {
       ws.addRows(sheet.rows);
 
+      // Apply number formatting
       sheet.columns.forEach((col, colIndex) => {
         if (col.numFmt) {
           for (let rowIdx = 2; rowIdx <= ws.rowCount; rowIdx++) {
@@ -91,6 +120,9 @@ export const buildWorkbookBuffer = async (sheets, { addBlankRow = false } = {}) 
         ws.dataValidations.add(colLetter + "2:" + colLetter + "1000", col.validation);
       }
     });
+
+    // Auto-fit column widths after all data is populated
+    autoFitColumns(ws);
   }
 
   const buffer = await workbook.xlsx.writeBuffer();
