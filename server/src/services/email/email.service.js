@@ -5,13 +5,14 @@ import { transporter } from "../../configs/mail.config.js";
 const emailAdmin = process.env.EMAIL_ADMIN;
 
 const frUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+const backendUrl = process.env.BACKEND_URL || "http://localhost:8081";
 
 const emailService = {
     sendWelcomeEmail: async (email, full_name, token) => {
         const templatePath = path.resolve('src/views/emails/welcome.ejs');
         const html = await ejs.renderFile(templatePath, {
             full_name: full_name,
-            verify_url: `http://localhost:8080/api/v1/auth/token/${token}`
+            verify_url: `${backendUrl}/api/v1/auth/token/${token}`
         });
 
         return await transporter.sendMail({

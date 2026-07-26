@@ -8,12 +8,13 @@ import { connectDB } from './db/prisma.js';
 import Routes from "./routes/index.route.js";
 import cors from 'cors';
 import configViewEngine from "./configs/view.config.js";
+import { attachPortConflictHandler } from './utils/serverStartup.utils.js';
 
 dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-const port = process.env.APP_PORT || 8080;
+const port = process.env.APP_PORT || 8081;
 
 configViewEngine(app);
 
@@ -43,6 +44,7 @@ if (fs.existsSync(clientDist)) {
 }
 
 const server = http.createServer(app);
+attachPortConflictHandler(server, port);
 
 async function start() {
   await connectDB();
