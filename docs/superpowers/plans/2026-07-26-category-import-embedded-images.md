@@ -13,20 +13,21 @@
 ### Task 1: Regression coverage for embedded image import
 
 **Files:**
+
 - Create: `server/test/categoryImport.import-images.test.js`
 - Modify: `server/src/configs/supabase.config.js` only if test setup needs a safe stub path
 
 - [ ] **Step 1: Write the failing test**
 
 ```js
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import ExcelJS from 'exceljs';
-import sharp from 'sharp';
-import categoryImportService from '../src/services/management/categoryImport.service.js';
-import { supabase } from '../src/configs/supabase.config.js';
+import test from "node:test";
+import assert from "node:assert/strict";
+import ExcelJS from "exceljs";
+import sharp from "sharp";
+import categoryImportService from "../src/services/management/categoryImport.service.js";
+import { supabase } from "../src/configs/supabase.config.js";
 
-test('parseFile uploads an embedded image from the Categories sheet', async () => {
+test("parseFile uploads an embedded image from the Categories sheet", async () => {
   const originalStorage = supabase.storage;
   const uploads = [];
   supabase.storage = {
@@ -35,30 +36,48 @@ test('parseFile uploads an embedded image from the Categories sheet', async () =
         uploads.push({ fileName, buffer, options });
         return { data: {}, error: null };
       },
-      getPublicUrl: (fileName) => ({ data: { publicUrl: `https://cdn.example/${fileName}` } }),
+      getPublicUrl: (fileName) => ({
+        data: { publicUrl: `https://cdn.example/${fileName}` },
+      }),
     }),
   };
 
   try {
     const workbook = new ExcelJS.Workbook();
-    const ws = workbook.addWorksheet('Categories');
+    const ws = workbook.addWorksheet("Categories");
     ws.columns = [
-      { header: 'Tên danh mục', key: 'name', width: 35 },
-      { header: 'Ảnh', key: 'image', width: 18 },
-      { header: 'Trạng thái', key: 'is_active', width: 18 },
+      { header: "Tên danh mục", key: "name", width: 35 },
+      { header: "Ảnh", key: "image", width: 18 },
+      { header: "Trạng thái", key: "is_active", width: 18 },
     ];
-    ws.addRow({ name: 'Giày chạy bộ', image: '', is_active: 'Hoạt động' });
+    ws.addRow({ name: "Giày chạy bộ", image: "", is_active: "Hoạt động" });
 
     const imageBuffer = await sharp({
-      create: { width: 1, height: 1, channels: 4, background: { r: 0, g: 128, b: 255, alpha: 1 } },
-    }).png().toBuffer();
+      create: {
+        width: 1,
+        height: 1,
+        channels: 4,
+        background: { r: 0, g: 128, b: 255, alpha: 1 },
+      },
+    })
+      .png()
+      .toBuffer();
 
-    const imageId = workbook.addImage({ buffer: imageBuffer, extension: 'png' });
-    ws.addImage(imageId, { tl: { col: 1.05, row: 1.05 }, ext: { width: 40, height: 40 }, editAs: 'oneCell' });
+    const imageId = workbook.addImage({
+      buffer: imageBuffer,
+      extension: "png",
+    });
+    ws.addImage(imageId, {
+      tl: { col: 1.05, row: 1.05 },
+      ext: { width: 40, height: 40 },
+      editAs: "oneCell",
+    });
 
-    const parsed = await categoryImportService.parseFile(await workbook.xlsx.writeBuffer());
+    const parsed = await categoryImportService.parseFile(
+      await workbook.xlsx.writeBuffer(),
+    );
 
-    assert.equal(parsed[0].image, 'https://cdn.example/excel_import');
+    assert.equal(parsed[0].image, "https://cdn.example/excel_import");
     assert.equal(uploads.length, 1);
     assert.equal(parsed[0].errors.length, 0);
   } finally {
@@ -75,7 +94,7 @@ Expected: FAIL because `parseFile` still needs cleanup/import support for the em
 - [ ] **Step 3: Write minimal implementation**
 
 ```js
-import ExcelJS from 'exceljs';
+import ExcelJS from "exceljs";
 
 // keep existing embedded-image extraction, but make row mapping stable for sheet images in column B
 ```
@@ -95,23 +114,29 @@ git commit -m "fix: import embedded category images"
 ### Task 2: Template and guidance update
 
 **Files:**
+
 - Modify: `server/src/services/management/categoryImport.workbook.js`
 - Modify: `server/src/services/management/categoryImport.service.js`
 
 - [ ] **Step 1: Write the failing test**
 
 ```js
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import ExcelJS from 'exceljs';
-import { buildCategoryTemplateBuffer } from '../src/services/management/categoryImport.workbook.js';
+import test from "node:test";
+import assert from "node:assert/strict";
+import ExcelJS from "exceljs";
+import { buildCategoryTemplateBuffer } from "../src/services/management/categoryImport.workbook.js";
 
-test('template instructs users to insert images directly into the sheet', async () => {
+test("template instructs users to insert images directly into the sheet", async () => {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.load(await buildCategoryTemplateBuffer());
 
-  const ws = workbook.getWorksheet('Hướng dẫn');
-  const text = [ws.getCell('A3').value, ws.getCell('B3').value, ws.getCell('A6').value, ws.getCell('B6').value].join(' ');
+  const ws = workbook.getWorksheet("Hướng dẫn");
+  const text = [
+    ws.getCell("A3").value,
+    ws.getCell("B3").value,
+    ws.getCell("A6").value,
+    ws.getCell("B6").value,
+  ].join(" ");
   assert.match(text, /ảnh/i);
   assert.doesNotMatch(text, /URL ảnh/i);
 });
@@ -143,6 +168,7 @@ git commit -m "chore: update category import template guidance"
 ### Task 3: Full backend verification
 
 **Files:**
+
 - Modify: any files changed above only
 
 - [ ] **Step 1: Run the server test suite**

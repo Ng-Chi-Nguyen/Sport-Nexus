@@ -13,6 +13,7 @@
 ### Task 1: Create shared menu config
 
 **Files:**
+
 - Create: `client/src/constants/adminMenuConfig.jsx`
 - Modify: none yet
 
@@ -21,7 +22,10 @@
 Extract the `iconMap` object and `sidebarSections` logic from `AdminLayout.jsx` into a reusable config. This provides a single source of truth for all three navigation components.
 
 ```jsx
-import { SIDEBAR_MENU_STRUCTURE, USER_SETTINGS_POPOVER } from "@/constants/menu";
+import {
+  SIDEBAR_MENU_STRUCTURE,
+  USER_SETTINGS_POPOVER,
+} from "@/constants/menu";
 import * as Icons from "lucide-react";
 
 const prefix_path = "/management";
@@ -74,6 +78,7 @@ Expected: Build succeeds (no syntax errors).
 ### Task 2: Create `useResponsive` hook
 
 **Files:**
+
 - Create: `client/src/hooks/useResponsive.js`
 
 - [ ] **Step 1: Create useResponsive hook**
@@ -130,6 +135,7 @@ Expected: Build succeeds.
 ### Task 3: Create `BottomNav` component
 
 **Files:**
+
 - Create: `client/src/components/admin/BottomNav.jsx`
 
 - [ ] **Step 1: Create BottomNav component**
@@ -151,7 +157,7 @@ const PRIMARY_KEYS = [
 const BottomNav = () => {
   const allItems = mainNavItems();
   const primaryItems = allItems.filter((item) =>
-    PRIMARY_KEYS.includes(item.path)
+    PRIMARY_KEYS.includes(item.path),
   );
 
   return (
@@ -193,6 +199,7 @@ Expected: Build succeeds.
 ### Task 4: Create `SidebarCollapsed` component
 
 **Files:**
+
 - Create: `client/src/components/admin/SidebarCollapsed.jsx`
 
 - [ ] **Step 1: Create SidebarCollapsed component**
@@ -220,7 +227,10 @@ const SidebarCollapsed = () => {
       <div className="flex-1 flex flex-col items-center gap-1 overflow-y-auto custom-scrollbar w-full px-2">
         {sections.map((section) =>
           section.items.map((item) => (
-            <div key={item.path} className="relative w-full flex justify-center">
+            <div
+              key={item.path}
+              className="relative w-full flex justify-center"
+            >
               <NavLink
                 to={item.path}
                 onPointerEnter={() => setTooltip(item.label)}
@@ -243,7 +253,7 @@ const SidebarCollapsed = () => {
                 </div>
               )}
             </div>
-          ))
+          )),
         )}
       </div>
     </div>
@@ -263,6 +273,7 @@ Expected: Build succeeds.
 ### Task 5: Refactor `AdminLayout` for responsive layout
 
 **Files:**
+
 - Modify: `client/src/layouts/AdminLayout.jsx`
 
 - [ ] **Step 1: Update imports and integrate responsive hook**
@@ -270,9 +281,17 @@ Expected: Build succeeds.
 Replace current imports to use `useResponsive` and the new components.
 
 Old imports at the top:
+
 ```jsx
 import { useState, useEffect, useRef, useMemo } from "react";
-import { LogOut, Settings, ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
+import {
+  LogOut,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  Menu,
+  X,
+} from "lucide-react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import logoSvg from "@/assets/images/logo-sportnexus-light.svg";
 import {
@@ -283,12 +302,23 @@ import * as Icons from "lucide-react";
 ```
 
 New imports:
+
 ```jsx
 import { useState, useEffect, useRef, useMemo } from "react";
-import { LogOut, Settings, ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
+import {
+  LogOut,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  Menu,
+  X,
+} from "lucide-react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import logoSvg from "@/assets/images/logo-sportnexus-light.svg";
-import { SIDEBAR_MENU_STRUCTURE, USER_SETTINGS_POPOVER } from "@/constants/menu";
+import {
+  SIDEBAR_MENU_STRUCTURE,
+  USER_SETTINGS_POPOVER,
+} from "@/constants/menu";
 import * as Icons from "lucide-react";
 import useResponsive from "@/hooks/useResponsive";
 import SidebarCollapsed from "@/components/admin/SidebarCollapsed";
@@ -310,6 +340,7 @@ const { isDesktop, isTablet, isMobile } = useResponsive();
 - [ ] **Step 4: Update the JSX container classes**
 
 Change the root `className` on the flex container:
+
 ```jsx
 // Old:
 <div className="flex h-screen w-full bg-[#0B0F19] text-slate-400 font-sans antialiased overflow-hidden">
@@ -323,144 +354,199 @@ Change the root `className` on the flex container:
 Find the sidebar div with `className` starting with `fixed lg:relative z-50 h-full...` (lines 132-324) and REPLACE it with:
 
 ```jsx
-{/* Desktop: full sidebar */}
-{isDesktop && (
-  <div
-    className={`relative z-50 h-full bg-[#0D121F] border-r border-slate-900 flex flex-col justify-between p-4 selection:bg-sky-500/30 transition-all duration-300 ease-in-out
+{
+  /* Desktop: full sidebar */
+}
+{
+  isDesktop && (
+    <div
+      className={`relative z-50 h-full bg-[#0D121F] border-r border-slate-900 flex flex-col justify-between p-4 selection:bg-sky-500/30 transition-all duration-300 ease-in-out
                ${isCollapsed ? "w-[78px]" : "w-[260px]"}`}
-  >
-    {/* Nút đóng sidebar trên mobile - ẩn trên desktop */}
-    {/* VÙNG ĐỈNH: LOGO & MENU */}
-    <div className="flex flex-col flex-1 min-h-0">
-      {/* Logo */}
-      <div className={`flex items-center mb-4 select-none shrink-0 ${isCollapsed ? "justify-center" : ""}`}>
-        <Link to="/" className={`flex items-center no-underline ${isCollapsed ? "" : "gap-3"}`}>
-          {isCollapsed ? (
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(37,99,235,0.35)] shrink-0">
-              <span className="font-black text-base tracking-tighter italic">SN</span>
-            </div>
-          ) : (
-            <img src={logoSvg} alt="SportNexus" className="h-12 md:h-14 w-auto object-contain shrink-0" />
-          )}
-        </Link>
-      </div>
-
-      {/* Menu */}
-      <div className="flex-1 space-y-6 overflow-y-auto pr-1 custom-scrollbar pb-6 overflow-x-hidden">
-        {sidebarSections.map((section, index) => (
-          <div key={index} className="space-y-1.5">
+    >
+      {/* Nút đóng sidebar trên mobile - ẩn trên desktop */}
+      {/* VÙNG ĐỈNH: LOGO & MENU */}
+      <div className="flex flex-col flex-1 min-h-0">
+        {/* Logo */}
+        <div
+          className={`flex items-center mb-4 select-none shrink-0 ${isCollapsed ? "justify-center" : ""}`}
+        >
+          <Link
+            to="/"
+            className={`flex items-center no-underline ${isCollapsed ? "" : "gap-3"}`}
+          >
             {isCollapsed ? (
-              <div className="border-t border-slate-800/60 my-2 mx-2"></div>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(37,99,235,0.35)] shrink-0">
+                <span className="font-black text-base tracking-tighter italic">
+                  SN
+                </span>
+              </div>
             ) : (
-              <p className="text-[10px] font-bold text-slate-600 tracking-widest uppercase px-2 truncate animate-in fade-in duration-200">
-                {section.title}
-              </p>
+              <img
+                src={logoSvg}
+                alt="SportNexus"
+                className="h-12 md:h-14 w-auto object-contain shrink-0"
+              />
             )}
-            <ul className="space-y-0.5">
-              {section.items.map((item) => (
-                <li key={item.path}>
-                  <NavLink
-                    to={item.path}
-                    onClick={() => setIsMobileOpen(false)}
-                    className={({ isActive }) => `
+          </Link>
+        </div>
+
+        {/* Menu */}
+        <div className="flex-1 space-y-6 overflow-y-auto pr-1 custom-scrollbar pb-6 overflow-x-hidden">
+          {sidebarSections.map((section, index) => (
+            <div key={index} className="space-y-1.5">
+              {isCollapsed ? (
+                <div className="border-t border-slate-800/60 my-2 mx-2"></div>
+              ) : (
+                <p className="text-[10px] font-bold text-slate-600 tracking-widest uppercase px-2 truncate animate-in fade-in duration-200">
+                  {section.title}
+                </p>
+              )}
+              <ul className="space-y-0.5">
+                {section.items.map((item) => (
+                  <li key={item.path}>
+                    <NavLink
+                      to={item.path}
+                      onClick={() => setIsMobileOpen(false)}
+                      className={({ isActive }) => `
                       flex items-center py-2 rounded-lg text-[13px] font-medium transition-all duration-150 group
                       ${isCollapsed ? "justify-center px-0" : "px-3 gap-3"}
-                      ${isActive
-                        ? "bg-[#161F32] text-sky-400 font-semibold shadow-inner border-l-2 border-sky-500 rounded-l-none"
-                        : "hover:bg-[#111827] hover:text-slate-200"
+                      ${
+                        isActive
+                          ? "bg-[#161F32] text-sky-400 font-semibold shadow-inner border-l-2 border-sky-500 rounded-l-none"
+                          : "hover:bg-[#111827] hover:text-slate-200"
                       }
                     `}
-                  >
-                    <span className="transition-colors duration-150 text-slate-500 group-hover:text-slate-300 group-[.active]:text-sky-400 shrink-0">
-                      {item.icon}
-                    </span>
-                    {!isCollapsed && (
-                      <span className="truncate animate-in fade-in duration-200">{item.label}</span>
-                    )}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    {/* Profile area */}
-    <div className="pt-4 border-t border-slate-900 space-y-3 shrink-0 relative" ref={settingsRef}>
-      {isOpenSettings && (
-        <div
-          className={`absolute bottom-full left-0 mb-2 bg-[#0D121F]/95 border border-slate-800 rounded-xl shadow-2xl backdrop-blur-xl p-2 z-50 flex flex-col gap-0.5 animate-in fade-in slide-in-from-bottom-2 duration-150
-                      ${isCollapsed ? "w-[180px]" : "w-full"}`}
-        >
-          {!isCollapsed && (
-            <div className="px-3 py-2 border-b border-white/5 mb-1 select-none">
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Tra cứu hệ thống</p>
+                    >
+                      <span className="transition-colors duration-150 text-slate-500 group-hover:text-slate-300 group-[.active]:text-sky-400 shrink-0">
+                        {item.icon}
+                      </span>
+                      {!isCollapsed && (
+                        <span className="truncate animate-in fade-in duration-200">
+                          {item.label}
+                        </span>
+                      )}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
             </div>
-          )}
-          <button
-            type="button"
-            onClick={() => { setIsCollapsed(!isCollapsed); setIsOpenSettings(false); }}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-sky-400 bg-sky-500/5 border border-sky-500/10 hover:bg-sky-500/10 transition-all text-left"
-          >
-            {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-            <span>{isCollapsed ? "Mở rộng thanh" : "Thu nhỏ thanh"}</span>
-          </button>
-          <div className="border-t border-white/5 my-1"></div>
-          {popoverItems.map((item, idx) => {
-            if (item.type === "logout") {
-              return (
-                <div key={idx}>
-                  <div className="border-t border-white/5 my-1"></div>
-                  <button type="button" onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-rose-500/90 hover:bg-rose-950/20 hover:text-rose-400 transition-all text-left"
-                  >
-                    {item.icon}<span>{item.label}</span>
-                  </button>
-                </div>
-              );
-            }
-            return (
-              <button key={idx} type="button"
-                onClick={() => { if (item.targetPath) { navigate(`${prefix_path}${item.targetPath}`); setIsOpenSettings(false); } }}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition-all text-left"
-              >
-                {item.icon}<span>{item.label}</span>
-              </button>
-            );
-          })}
+          ))}
         </div>
-      )}
+      </div>
 
-      <div onClick={() => setIsOpenSettings(!isOpenSettings)}
-        className={`flex items-center rounded-xl border select-none cursor-pointer transition-all duration-150 group
-                   ${isCollapsed ? "justify-center p-2" : "p-2.5 gap-3"}
-                   ${isOpenSettings ? "bg-sky-500/10 border-sky-500/30 text-sky-400" : "bg-[#111827]/60 border-slate-900 hover:bg-[#162035]/80 hover:border-slate-800"}`}
+      {/* Profile area */}
+      <div
+        className="pt-4 border-t border-slate-900 space-y-3 shrink-0 relative"
+        ref={settingsRef}
       >
-        <img src={localUser.avatar} className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-800 shrink-0" />
-        {!isCollapsed && (
-          <div className="flex-1 min-w-0 leading-normal py-0.5 animate-in fade-in duration-200">
-            <p className="text-[12px] font-bold text-slate-200 truncate tracking-wide">{localUser.full_name}</p>
-            <p className="text-[10px] text-slate-500 font-mono truncate mt-0.5 opacity-90">{localUser.email}</p>
+        {isOpenSettings && (
+          <div
+            className={`absolute bottom-full left-0 mb-2 bg-[#0D121F]/95 border border-slate-800 rounded-xl shadow-2xl backdrop-blur-xl p-2 z-50 flex flex-col gap-0.5 animate-in fade-in slide-in-from-bottom-2 duration-150
+                      ${isCollapsed ? "w-[180px]" : "w-full"}`}
+          >
+            {!isCollapsed && (
+              <div className="px-3 py-2 border-b border-white/5 mb-1 select-none">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                  Tra cứu hệ thống
+                </p>
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setIsCollapsed(!isCollapsed);
+                setIsOpenSettings(false);
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-sky-400 bg-sky-500/5 border border-sky-500/10 hover:bg-sky-500/10 transition-all text-left"
+            >
+              {isCollapsed ? (
+                <ChevronRight size={16} />
+              ) : (
+                <ChevronLeft size={16} />
+              )}
+              <span>{isCollapsed ? "Mở rộng thanh" : "Thu nhỏ thanh"}</span>
+            </button>
+            <div className="border-t border-white/5 my-1"></div>
+            {popoverItems.map((item, idx) => {
+              if (item.type === "logout") {
+                return (
+                  <div key={idx}>
+                    <div className="border-t border-white/5 my-1"></div>
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-rose-500/90 hover:bg-rose-950/20 hover:text-rose-400 transition-all text-left"
+                    >
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </button>
+                  </div>
+                );
+              }
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    if (item.targetPath) {
+                      navigate(`${prefix_path}${item.targetPath}`);
+                      setIsOpenSettings(false);
+                    }
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition-all text-left"
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
           </div>
         )}
+
+        <div
+          onClick={() => setIsOpenSettings(!isOpenSettings)}
+          className={`flex items-center rounded-xl border select-none cursor-pointer transition-all duration-150 group
+                   ${isCollapsed ? "justify-center p-2" : "p-2.5 gap-3"}
+                   ${isOpenSettings ? "bg-sky-500/10 border-sky-500/30 text-sky-400" : "bg-[#111827]/60 border-slate-900 hover:bg-[#162035]/80 hover:border-slate-800"}`}
+        >
+          <img
+            src={localUser.avatar}
+            className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-800 shrink-0"
+          />
+          {!isCollapsed && (
+            <div className="flex-1 min-w-0 leading-normal py-0.5 animate-in fade-in duration-200">
+              <p className="text-[12px] font-bold text-slate-200 truncate tracking-wide">
+                {localUser.full_name}
+              </p>
+              <p className="text-[10px] text-slate-500 font-mono truncate mt-0.5 opacity-90">
+                {localUser.email}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-)}
+  );
+}
 
-{/* Tablet: collapsed sidebar */}
-{isTablet && <SidebarCollapsed />}
+{
+  /* Tablet: collapsed sidebar */
+}
+{
+  isTablet && <SidebarCollapsed />;
+}
 ```
 
 - [ ] **Step 6: Update content area — mobile padding**
 
 Find the main content div:
+
 ```jsx
 <div className="flex-1 flex flex-col h-full bg-[#080C14] overflow-hidden">
 ```
 
 Update the `main` tag inside it to add bottom padding on mobile:
+
 ```jsx
 {/* Old */}
 <main className="flex-1 overflow-y-auto p-4 lg:p-6 custom-scrollbar">
@@ -470,9 +556,14 @@ Update the `main` tag inside it to add bottom padding on mobile:
 ```
 
 Also, after the content `</div>` (closing the content column), add BottomNav for mobile:
+
 ```jsx
-{/* Mobile: bottom navigation */}
-{isMobile && <BottomNav />}
+{
+  /* Mobile: bottom navigation */
+}
+{
+  isMobile && <BottomNav />;
+}
 ```
 
 Place it right before the final `</div>` of the root container.
@@ -487,6 +578,7 @@ Expected: Build succeeds.
 ### Task 6: Make tables responsive — all list pages (overflow-x-auto)
 
 **Files:**
+
 - Modify: All 18 admin list pages (see list below)
 
 **Pattern:** Find `<table className="w-full...">` or `.table-retro` containing `<table>` and wrap it with `<div className="overflow-x-auto">`.
@@ -515,12 +607,14 @@ Expected: Build succeeds.
 **Example edit for `products/index.jsx`:**
 
 Old (line 310):
+
 ```jsx
 <div className="mt-3 relative bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg overflow-hidden">
   <table className="w-full text-sm text-left text-slate-200">
 ```
 
 New:
+
 ```jsx
 <div className="mt-3 relative bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg overflow-hidden">
   <div className="overflow-x-auto">
@@ -530,12 +624,14 @@ New:
 **Example for `categories/index.jsx`:**
 
 Old (lines 170-171):
+
 ```jsx
 <div className="mb-2 table-retro">
   <table className="w-full border-separate border-spacing-0">
 ```
 
 New:
+
 ```jsx
 <div className="mb-2 table-retro">
   <div className="overflow-x-auto">
@@ -570,6 +666,7 @@ Expected: Build succeeds.
 ### Task 7: Make filter panels responsive
 
 **Files:**
+
 - Modify: All admin list pages that have filter panels
 
 **Pattern:** Find `flex flex-wrap items-end gap-4` (or similar filter row) and replace fixed widths (`w-[230px]`, `w-[220px]`, etc.) with responsive widths.
@@ -577,18 +674,21 @@ Expected: Build succeeds.
 **Example for `products/index.jsx`:**
 
 Old (line 188):
+
 ```jsx
 <div className="flex flex-wrap items-end gap-4">
   <div className="w-[230px] shrink-0">
 ```
 
 New:
+
 ```jsx
 <div className="flex flex-wrap items-end gap-4">
   <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[230px] shrink-0">
 ```
 
 And for the price range (line 263):
+
 ```jsx
 <div className="w-full sm:w-[250px] lg:w-[220px] shrink-0">
 ```
@@ -605,6 +705,7 @@ Expected: Build succeeds.
 ### Task 8: Make form grids responsive
 
 **Files:**
+
 - Modify: All admin create/edit pages
 
 **Pattern:** Change `w-1/2`, `w-1/3`, `grid-cols-12` fixed layouts to use responsive classes.
@@ -612,24 +713,28 @@ Expected: Build succeeds.
 **Example for `products/create.jsx`:**
 
 Old (line 152-153):
+
 ```jsx
 <form onSubmit={handleSubmit} className="flex gap-3 mt-2">
   <div className="w-1/2 flex flex-col gap-3">
 ```
 
 New:
+
 ```jsx
 <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-3 mt-2">
   <div className="w-full lg:w-1/2 flex flex-col gap-3">
 ```
 
 For grid sections like `flex gap-2 mb-2` with `w-1/2` children (line 156-157):
+
 ```jsx
 <div className="flex flex-col sm:flex-row gap-2 mb-2">
   <div className="w-full sm:w-1/2">
 ```
 
 **Affected files (apply same pattern):**
+
 - `client/src/pages/Admin/products/create.jsx`
 - `client/src/pages/Admin/products/edit.jsx`
 - `client/src/pages/Admin/categories/create.jsx`
@@ -652,6 +757,7 @@ For grid sections like `flex gap-2 mb-2` with `w-1/2` children (line 156-157):
 - `client/src/pages/Admin/stockmovements/edit.jsx`
 
 **General rule:** Each fixed-width layout class (`w-1/2`, `w-1/3`, `w-2/3`, `grid-cols-12`, `flex gap-3` on forms) should be replaced:
+
 - Single column on mobile (`w-full`, `flex-col`)
 - Multi column from sm/md up (`sm:w-1/2`, `md:grid-cols-2`)
 
@@ -675,6 +781,7 @@ Expected: Build succeeds.
 ### Task 9: Update `table-retro` CSS for native scrollbar style
 
 **Files:**
+
 - Modify: `client/src/index.css`
 
 - [ ] **Step 1: Add custom scrollbar style for `.overflow-x-auto` inside tables**
@@ -705,6 +812,7 @@ Expected: Build succeeds.
 ### Task 10: Remove unused `isMobileOpen` state from `AdminLayout`
 
 **Files:**
+
 - Modify: `client/src/layouts/AdminLayout.jsx`
 
 After the refactor, the `isMobileOpen` overlay sidebar is no longer needed (mobile uses BottomNav now).
@@ -712,6 +820,7 @@ After the refactor, the `isMobileOpen` overlay sidebar is no longer needed (mobi
 - [ ] **Step 1: Remove `isMobileOpen` state and related code**
 
 Delete:
+
 - `const [isMobileOpen, setIsMobileOpen] = useState(false);`
 - The `handleResize` useEffect (lines 108-114)
 - The mobile backdrop div (lines 124-129)

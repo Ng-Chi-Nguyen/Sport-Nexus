@@ -13,6 +13,7 @@
 ### Task 1: Rewrite Header Component
 
 **Files:**
+
 - Rewrite: `client/src/components/header.jsx`
 
 - [ ] **Step 1: Replace header.jsx content**
@@ -44,7 +45,10 @@ const Header = () => {
         {/* Search */}
         <div className="flex-1 max-w-2xl hidden sm:block">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" strokeWidth={2} />
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+              strokeWidth={2}
+            />
             <input
               type="text"
               placeholder="Tìm kiếm sản phẩm..."
@@ -111,8 +115,11 @@ export default Header;
 Check `client/src/App.jsx` — the old header had `h-[65px]` passed as className. The new header is `h-16` (64px) and fixed position, so the layout may need a padding-top on the main content.
 
 Current App.jsx:
+
 ```jsx
-{!isManagementView && <Header className="h-[65px] shrink-0" />}
+{
+  !isManagementView && <Header className="h-[65px] shrink-0" />;
+}
 ```
 
 The fixed header no longer takes flow space, so add `pt-16` to the main content wrapper:

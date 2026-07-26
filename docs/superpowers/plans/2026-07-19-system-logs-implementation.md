@@ -13,6 +13,7 @@
 ### Task 1: Log Service
 
 **Files:**
+
 - Create: `server/src/services/management/log.service.js`
 
 - [ ] **Step 1: Create log service**
@@ -21,7 +22,15 @@
 import prisma from "../../db/prisma.js";
 
 const logService = {
-  create: async ({ userId, actionType, entityType, entityId, status, details, ipAddress }) => {
+  create: async ({
+    userId,
+    actionType,
+    entityType,
+    entityId,
+    status,
+    details,
+    ipAddress,
+  }) => {
     return prisma.SystemLogs.create({
       data: {
         user_id: userId,
@@ -40,7 +49,18 @@ const logService = {
     });
   },
 
-  getAll: async ({ page = 1, limit = 20, userId, actionType, entityType, status, from, to, ipAddress, search } = {}) => {
+  getAll: async ({
+    page = 1,
+    limit = 20,
+    userId,
+    actionType,
+    entityType,
+    status,
+    from,
+    to,
+    ipAddress,
+    search,
+  } = {}) => {
     const where = {};
     if (userId) where.user_id = parseInt(userId);
     if (actionType) where.action_type = actionType;
@@ -104,6 +124,7 @@ Run: `Test-Path server/src/services/management/log.service.js`
 ### Task 2: Log Controller
 
 **Files:**
+
 - Create: `server/src/controllers/management/log.controller.js`
 
 - [ ] **Step 1: Create log controller**
@@ -114,7 +135,17 @@ import logService from "../../services/management/log.service.js";
 const logController = {
   getAll: async (req, res) => {
     try {
-      const { page, user_id, action_type, entity_type, status, from, to, ip_address, search } = req.query;
+      const {
+        page,
+        user_id,
+        action_type,
+        entity_type,
+        status,
+        from,
+        to,
+        ip_address,
+        search,
+      } = req.query;
       const result = await logService.getAll({
         page: parseInt(page || 1),
         userId: user_id,
@@ -141,7 +172,9 @@ const logController = {
     try {
       const log = await logService.getById(req.params.id);
       if (!log) {
-        return res.status(404).json({ success: false, message: "Không tìm thấy log." });
+        return res
+          .status(404)
+          .json({ success: false, message: "Không tìm thấy log." });
       }
       return res.status(200).json({ success: true, data: log });
     } catch (error) {
@@ -166,6 +199,7 @@ Run: `Test-Path server/src/controllers/management/log.controller.js`
 ### Task 3: Log Route
 
 **Files:**
+
 - Create: `server/src/routes/management/log.route.js`
 
 - [ ] **Step 1: Create log route**
@@ -173,7 +207,10 @@ Run: `Test-Path server/src/controllers/management/log.controller.js`
 ```js
 import express from "express";
 import logController from "../../controllers/management/log.controller.js";
-import { verifyToken, isAdmin } from "../../middlewares/verifyToken.middlware.js";
+import {
+  verifyToken,
+  isAdmin,
+} from "../../middlewares/verifyToken.middlware.js";
 
 const logRoute = express.Router();
 
@@ -195,7 +232,7 @@ import logRoute from "./management/log.route.js";
 Add after the permission route line:
 
 ```js
-app.use(`${api_prefix_v1}management/log/`, logRoute)
+app.use(`${api_prefix_v1}management/log/`, logRoute);
 ```
 
 - [ ] **Step 3: Verify files**
@@ -205,6 +242,7 @@ app.use(`${api_prefix_v1}management/log/`, logRoute)
 ### Task 4: Log Middleware (Auto-log CRUD)
 
 **Files:**
+
 - Create: `server/src/middlewares/log.middleware.js`
 
 - [ ] **Step 1: Create log middleware**
@@ -212,14 +250,24 @@ app.use(`${api_prefix_v1}management/log/`, logRoute)
 ```js
 import logService from "../services/management/log.service.js";
 
-export const logAction = ({ actionType, entityType, getEntityId, getDetails }) => {
+export const logAction = ({
+  actionType,
+  entityType,
+  getEntityId,
+  getDetails,
+}) => {
   return async (req, res, next) => {
     const originalJson = res.json.bind(res);
 
     res.json = async function (body) {
       try {
-        const status = res.statusCode >= 200 && res.statusCode < 300 ? "SUCCESS" : "FAILED";
-        const entityId = getEntityId ? getEntityId(req, body) : req.params.id ? parseInt(req.params.id) : null;
+        const status =
+          res.statusCode >= 200 && res.statusCode < 300 ? "SUCCESS" : "FAILED";
+        const entityId = getEntityId
+          ? getEntityId(req, body)
+          : req.params.id
+            ? parseInt(req.params.id)
+            : null;
         const details = getDetails ? getDetails(req, body) : [];
         const ipAddress = req.ip || req.headers["x-forwarded-for"] || null;
 
@@ -229,7 +277,10 @@ export const logAction = ({ actionType, entityType, getEntityId, getDetails }) =
           entityType,
           entityId,
           status,
-          details: status === "FAILED" ? [{ error: body?.message || "Unknown error" }] : details,
+          details:
+            status === "FAILED"
+              ? [{ error: body?.message || "Unknown error" }]
+              : details,
           ipAddress,
         });
       } catch (err) {
@@ -251,6 +302,7 @@ export const logAction = ({ actionType, entityType, getEntityId, getDetails }) =
 ### Task 5: Log Loader (Frontend API)
 
 **Files:**
+
 - Create: `client/src/loaders/management/logLoader.jsx`
 
 - [ ] **Step 1: Create log loader**
@@ -259,7 +311,15 @@ export const logAction = ({ actionType, entityType, getEntityId, getDetails }) =
 import axiosClient from "@/lib/axiosClient";
 
 const LoaderLog = {
-  getAllLogs: async ({ page = 1, action_type, entity_type, status, from, to, user_id } = {}) => {
+  getAllLogs: async ({
+    page = 1,
+    action_type,
+    entity_type,
+    status,
+    from,
+    to,
+    user_id,
+  } = {}) => {
     const params = new URLSearchParams();
     params.set("page", page);
     if (action_type) params.set("action_type", action_type);
@@ -269,11 +329,16 @@ const LoaderLog = {
     if (to) params.set("to", to);
     if (user_id) params.set("user_id", user_id);
     try {
-      const response = await axiosClient.get(`management/log?${params.toString()}`);
+      const response = await axiosClient.get(
+        `management/log?${params.toString()}`,
+      );
       return response;
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        return { success: true, data: { data: [], pagination: { totalPages: 1, currentPage: 1 } } };
+        return {
+          success: true,
+          data: { data: [], pagination: { totalPages: 1, currentPage: 1 } },
+        };
       }
       throw error;
     }
@@ -295,6 +360,7 @@ export default LoaderLog;
 ### Task 6: Log Admin Loader (React Router)
 
 **Files:**
+
 - Modify: `client/src/routes/adminLoader.jsx`
 
 - [ ] **Step 1: Add import and loader function**
@@ -308,19 +374,29 @@ import LoaderLog from "@/loaders/management/logLoader";
 Add export:
 
 ```js
-const getSearchParam = (request, key) => new URL(request.url).searchParams.get(key) || "";
+const getSearchParam = (request, key) =>
+  new URL(request.url).searchParams.get(key) || "";
 
 export const logsLoader = async ({ request }) => {
   return queryClient.fetchQuery({
-    queryKey: ["system-logs", getPage(request), getSearchParam(request, "action_type"), getSearchParam(request, "entity_type"), getSearchParam(request, "status"), getSearchParam(request, "from"), getSearchParam(request, "to")],
-    queryFn: () => LoaderLog.getAllLogs({
-      page: getPage(request),
-      action_type: getSearchParam(request, "action_type"),
-      entity_type: getSearchParam(request, "entity_type"),
-      status: getSearchParam(request, "status"),
-      from: getSearchParam(request, "from"),
-      to: getSearchParam(request, "to"),
-    }),
+    queryKey: [
+      "system-logs",
+      getPage(request),
+      getSearchParam(request, "action_type"),
+      getSearchParam(request, "entity_type"),
+      getSearchParam(request, "status"),
+      getSearchParam(request, "from"),
+      getSearchParam(request, "to"),
+    ],
+    queryFn: () =>
+      LoaderLog.getAllLogs({
+        page: getPage(request),
+        action_type: getSearchParam(request, "action_type"),
+        entity_type: getSearchParam(request, "entity_type"),
+        status: getSearchParam(request, "status"),
+        from: getSearchParam(request, "from"),
+        to: getSearchParam(request, "to"),
+      }),
   });
 };
 ```
@@ -328,6 +404,7 @@ export const logsLoader = async ({ request }) => {
 - [ ] **Step 2: Add loader to admin routes**
 
 In `adminRoutes.jsx`:
+
 ```js
 { path: "logs", element: <LogPage />, loader: RouteLoaders.logsLoader },
 ```
@@ -337,6 +414,7 @@ In `adminRoutes.jsx`:
 ### Task 7: Log Page Component
 
 **Files:**
+
 - Modify: `client/src/pages/Admin/systemlogs/index.jsx`
 
 - [ ] **Step 1: Write the complete LogPage component**
@@ -497,6 +575,7 @@ Import `SimpleSelect` from `@/components/ui/select`. The component uses `slug` a
 ### Task 8: LogEntry Component
 
 **Files:**
+
 - Create: `client/src/pages/Admin/systemlogs/LogEntry.jsx`
 
 - [ ] **Step 1: Create LogEntry component**
@@ -517,7 +596,11 @@ const actionConfig = {
   CREATE: { icon: PlusCircle, label: "đã thêm", color: "text-emerald-400" },
   UPDATE: { icon: Pencil, label: "đã cập nhật", color: "text-sky-400" },
   DELETE: { icon: Trash2, label: "đã xoá", color: "text-rose-400" },
-  STOCK_ADJUSTMENT: { icon: Package, label: "đã điều chỉnh tồn kho", color: "text-amber-400" },
+  STOCK_ADJUSTMENT: {
+    icon: Package,
+    label: "đã điều chỉnh tồn kho",
+    color: "text-amber-400",
+  },
 };
 
 const entityLinks = {
@@ -546,10 +629,16 @@ const entityNames = {
 
 const LogEntry = ({ log }) => {
   const [expanded, setExpanded] = useState(false);
-  const config = actionConfig[log.action_type] || { icon: Pencil, label: "đã tác động", color: "text-slate-400" };
+  const config = actionConfig[log.action_type] || {
+    icon: Pencil,
+    label: "đã tác động",
+    color: "text-slate-400",
+  };
   const ActionIcon = config.icon;
   const isDelete = log.action_type === "DELETE";
-  const entityLink = isDelete ? null : entityLinks[log.entity_type]?.(log.entity_id);
+  const entityLink = isDelete
+    ? null
+    : entityLinks[log.entity_type]?.(log.entity_id);
   const entityName = entityNames[log.entity_type] || log.entity_type;
   const displayId = log.entity_id ? `#${log.entity_id}` : "";
 
@@ -577,11 +666,15 @@ const LogEntry = ({ log }) => {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 text-sm flex-wrap">
-          <span className="text-slate-500 text-xs font-mono shrink-0">{time}</span>
+          <span className="text-slate-500 text-xs font-mono shrink-0">
+            {time}
+          </span>
           <span className="text-slate-300 font-medium truncate">
             {log.user?.full_name || log.user?.email || "Hệ thống"}
           </span>
-          <span className={`text-xs font-medium ${config.color}`}>{config.label}</span>
+          <span className={`text-xs font-medium ${config.color}`}>
+            {config.label}
+          </span>
           <span className="text-slate-400">{entityName}</span>
           {entityLink ? (
             <Link
@@ -654,7 +747,9 @@ function renderDetails(log) {
         <div key={i} className="flex items-center gap-2 text-slate-400">
           <span className="text-slate-500">{change.field}:</span>
           {change.from !== undefined && (
-            <span className="line-through text-rose-400/70">{String(change.from)}</span>
+            <span className="line-through text-rose-400/70">
+              {String(change.from)}
+            </span>
           )}
           {change.from !== undefined && change.to !== undefined && (
             <span className="text-slate-600">→</span>

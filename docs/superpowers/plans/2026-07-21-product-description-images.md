@@ -13,6 +13,7 @@
 ### Task 1: Frontend API for Product Images
 
 **Files:**
+
 - Create: `client/src/api/core/productImageApi.jsx`
 
 - [ ] **Create `productImageApi.jsx`**
@@ -52,11 +53,13 @@ export default productImageApi;
 ### Task 2: MultiFileUpload Component
 
 **Files:**
+
 - Create: `client/src/components/ui/MultiFileUpload.jsx`
 
 - [ ] **Create `MultiFileUpload.jsx`**
 
 A reusable component that:
+
 - Accepts `files` (array of File objects for new uploads or string URLs for existing images)
 - `onChange` callback with the updated array
 - `maxFiles` prop (default 10)
@@ -65,6 +68,7 @@ A reusable component that:
 - Follows the dark glassmorphism style of the project
 
 Key states:
+
 - Empty: show upload prompt with `ImagePlus` icon
 - Has files: show grid of previews with X button
 - Loading: show spinner (optional, not needed for this task)
@@ -84,27 +88,32 @@ const MultiFileUpload = ({ label, value = [], onChange, maxFiles = 10 }) => {
       return null;
     });
     setPreviews(urls.filter(Boolean));
-    return () => urls.forEach((u) => { if (u?.startsWith?.("blob:")) URL.revokeObjectURL(u); });
+    return () =>
+      urls.forEach((u) => {
+        if (u?.startsWith?.("blob:")) URL.revokeObjectURL(u);
+      });
   }, [value]);
 
   const handleFileSelect = useCallback(
     (e) => {
       const newFiles = Array.from(e.target.files || []);
-      const remaining = maxFiles - value.filter((v) => v instanceof File || typeof v === "string").length;
+      const remaining =
+        maxFiles -
+        value.filter((v) => v instanceof File || typeof v === "string").length;
       if (newFiles.length > remaining) {
         newFiles.splice(remaining);
       }
       onChange([...value, ...newFiles]);
       e.target.value = "";
     },
-    [value, onChange, maxFiles]
+    [value, onChange, maxFiles],
   );
 
   const handleRemove = useCallback(
     (index) => {
       onChange(value.filter((_, i) => i !== index));
     },
-    [value, onChange]
+    [value, onChange],
   );
 
   const canAdd = value.length < maxFiles;
@@ -120,12 +129,17 @@ const MultiFileUpload = ({ label, value = [], onChange, maxFiles = 10 }) => {
 
       <div className="grid grid-cols-4 gap-3">
         {previews.map((src, idx) => (
-          <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden border border-slate-800 bg-[#0D121F]">
+          <div
+            key={idx}
+            className="relative group aspect-square rounded-lg overflow-hidden border border-slate-800 bg-[#0D121F]"
+          >
             <img
               src={src}
               alt={`Ảnh ${idx + 1}`}
               className="w-full h-full object-cover"
-              onError={(e) => { e.target.style.display = "none"; }}
+              onError={(e) => {
+                e.target.style.display = "none";
+              }}
             />
             <button
               type="button"
@@ -147,7 +161,9 @@ const MultiFileUpload = ({ label, value = [], onChange, maxFiles = 10 }) => {
               onChange={handleFileSelect}
             />
             <ImagePlus size={24} className="text-slate-500" />
-            <span className="text-[10px] text-slate-500 font-medium">Thêm ảnh</span>
+            <span className="text-[10px] text-slate-500 font-medium">
+              Thêm ảnh
+            </span>
           </label>
         )}
       </div>
@@ -161,31 +177,32 @@ export default MultiFileUpload;
 ### Task 3: Add Images Section to Create Product Page
 
 **Files:**
+
 - Modify: `client/src/pages/Admin/products/create.jsx`
 
 - [ ] **Modify `create.jsx`**
 
 Add import for `productImageApi` and `MultiFileUpload`:
+
 ```jsx
 import MultiFileUpload from "@/components/ui/MultiFileUpload";
 import productImageApi from "@/api/core/productImageApi";
 ```
 
 Add state for product images:
+
 ```jsx
 const [productImages, setProductImages] = useState([]);
 ```
 
 Replace the existing thumbnail section to include both thumbnail and description images:
+
 ```jsx
 <div className="w-1/2 flex flex-col gap-3">
   {/* existing category/brand/supplier section */}
   <div className="border border-gray-200 p-3 rounded-[5px]">
     <TitleManagement color="cyan">Ảnh đại diện</TitleManagement>
-    <InputFile
-      value={thumbnail}
-      onChange={(file) => setThumbnail(file)}
-    />
+    <InputFile value={thumbnail} onChange={(file) => setThumbnail(file)} />
   </div>
   <div className="border border-gray-200 p-3 rounded-[5px]">
     <MultiFileUpload
@@ -199,6 +216,7 @@ Replace the existing thumbnail section to include both thumbnail and description
 ```
 
 Update the submit handler to upload images after product creation:
+
 ```jsx
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -247,23 +265,27 @@ const handleSubmit = async (e) => {
 ### Task 4: Add Images Section to Edit Product Page
 
 **Files:**
+
 - Modify: `client/src/pages/Admin/products/edit.jsx`
 
 - [ ] **Modify `edit.jsx`**
 
 Add imports:
+
 ```jsx
 import MultiFileUpload from "@/components/ui/MultiFileUpload";
 import productImageApi from "@/api/core/productImageApi";
 ```
 
 Add state:
+
 ```jsx
 const [productImages, setProductImages] = useState([]);
 const [existingImageIds, setExistingImageIds] = useState([]);
 ```
 
 Load existing images on mount:
+
 ```jsx
 useEffect(() => {
   const loadImages = async () => {
@@ -271,7 +293,12 @@ useEffect(() => {
       const res = await productImageApi.getByProduct(product.data.id);
       if (res.success) {
         setProductImages(res.data || []);
-        setExistingImageIds((res.data || []).map(img => ({ id: img.id, is_primary: img.is_primary })));
+        setExistingImageIds(
+          (res.data || []).map((img) => ({
+            id: img.id,
+            is_primary: img.is_primary,
+          })),
+        );
       }
     } catch {
       // Không có ảnh hoặc lỗi
@@ -282,6 +309,7 @@ useEffect(() => {
 ```
 
 Add section to the left column (after thumbnail section):
+
 ```jsx
 <div className="border border-gray-200 p-3 rounded-[5px]">
   <MultiFileUpload
@@ -294,6 +322,7 @@ Add section to the left column (after thumbnail section):
 ```
 
 Update submit handler:
+
 ```jsx
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -319,10 +348,16 @@ const handleSubmit = async (e) => {
         .filter((img) => !(img instanceof File))
         .map((img) => ({ id: img.id, is_primary: img.is_primary || false }));
 
-      if (newFiles.length > 0 || currentImageIds.length !== existingImageIds.length) {
+      if (
+        newFiles.length > 0 ||
+        currentImageIds.length !== existingImageIds.length
+      ) {
         const imageFormData = new FormData();
         newFiles.forEach((file) => imageFormData.append("url", file));
-        imageFormData.append("current_image_ids", JSON.stringify(currentImageIds));
+        imageFormData.append(
+          "current_image_ids",
+          JSON.stringify(currentImageIds),
+        );
         await productImageApi.update(product.data.id, imageFormData);
       }
 

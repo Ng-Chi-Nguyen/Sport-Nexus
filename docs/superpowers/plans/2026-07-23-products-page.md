@@ -13,6 +13,7 @@
 ### Task 1: Backend — Create web product service
 
 **Files:**
+
 - Create: `server/src/services/web/product.service.js`
 
 - [ ] **Step 1: Create product service with getAllProducts, getAllCategoriesWithCount, getAllBrandsWithCount**
@@ -24,121 +25,141 @@ import prisma from "../../db/prisma.js";
 import { ACTIVE } from "../../utils/prisma.js";
 
 const productSelect = {
-    id: true, name: true, slug: true,
-    base_price: true, thumbnail: true, created_at: true,
-    category: { select: { id: true, name: true, slug: true } },
-    brand: { select: { id: true, name: true, logo: true } },
-    ProductVariants: {
-        select: { id: true, price: true },
-        orderBy: { price: "asc" },
-        take: 1,
-    },
-    Reviews: {
-        select: { rating: true },
-        take: 20,
-    },
+  id: true,
+  name: true,
+  slug: true,
+  base_price: true,
+  thumbnail: true,
+  created_at: true,
+  category: { select: { id: true, name: true, slug: true } },
+  brand: { select: { id: true, name: true, logo: true } },
+  ProductVariants: {
+    select: { id: true, price: true },
+    orderBy: { price: "asc" },
+    take: 1,
+  },
+  Reviews: {
+    select: { rating: true },
+    take: 20,
+  },
 };
 
 const mapProduct = (p) => {
-    const ratings = p.Reviews.map((r) => r.rating);
-    const avgRating =
-        ratings.length > 0
-            ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) / 10
-            : 0;
+  const ratings = p.Reviews.map((r) => r.rating);
+  const avgRating =
+    ratings.length > 0
+      ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) /
+        10
+      : 0;
 
-    return {
-        id: p.id,
-        name: p.name,
-        slug: p.slug,
-        base_price: p.base_price,
-        thumbnail: p.thumbnail,
-        created_at: p.created_at,
-        category: p.category,
-        brand: p.brand,
-        min_price: Number(p.ProductVariants[0]?.price) || Number(p.base_price),
-        first_variant_id: p.ProductVariants[0]?.id || null,
-        avg_rating: avgRating,
-        total_reviews: ratings.length,
-    };
+  return {
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    base_price: p.base_price,
+    thumbnail: p.thumbnail,
+    created_at: p.created_at,
+    category: p.category,
+    brand: p.brand,
+    min_price: Number(p.ProductVariants[0]?.price) || Number(p.base_price),
+    first_variant_id: p.ProductVariants[0]?.id || null,
+    avg_rating: avgRating,
+    total_reviews: ratings.length,
+  };
 };
 
 const productWebService = {
-    getAllProducts: async ({ page = 1, search, sort, category_id, brand_id, price_min, price_max, limit = 12 } = {}) => {
-        const currentPage = Math.max(1, page);
-        const take = Math.min(limit, 50);
-        const skip = (currentPage - 1) * take;
-        const where = { is_active: true, deleted_at: ACTIVE };
+  getAllProducts: async ({
+    page = 1,
+    search,
+    sort,
+    category_id,
+    brand_id,
+    price_min,
+    price_max,
+    limit = 12,
+  } = {}) => {
+    const currentPage = Math.max(1, page);
+    const take = Math.min(limit, 50);
+    const skip = (currentPage - 1) * take;
+    const where = { is_active: true, deleted_at: ACTIVE };
 
-        if (search) where.name = { contains: search };
-        if (category_id) where.category_id = parseInt(category_id);
-        if (brand_id) where.brand_id = parseInt(brand_id);
-        if (price_min) where.base_price = { ...where.base_price, gte: parseFloat(price_min) };
-        if (price_max) where.base_price = { ...where.base_price, lte: parseFloat(price_max) };
+    if (search) where.name = { contains: search };
+    if (category_id) where.category_id = parseInt(category_id);
+    if (brand_id) where.brand_id = parseInt(brand_id);
+    if (price_min)
+      where.base_price = { ...where.base_price, gte: parseFloat(price_min) };
+    if (price_max)
+      where.base_price = { ...where.base_price, lte: parseFloat(price_max) };
 
-        let orderBy = { created_at: "desc" };
-        if (sort === "price-asc") orderBy = { base_price: "asc" };
-        if (sort === "price-desc") orderBy = { base_price: "desc" };
-        if (sort === "newest") orderBy = { created_at: "desc" };
+    let orderBy = { created_at: "desc" };
+    if (sort === "price-asc") orderBy = { base_price: "asc" };
+    if (sort === "price-desc") orderBy = { base_price: "desc" };
+    if (sort === "newest") orderBy = { created_at: "desc" };
 
-        let [products, totalItems] = await Promise.all([
-            prisma.Products.findMany({
-                where,
-                orderBy,
-                take,
-                skip,
-                select: productSelect,
-            }),
-            prisma.Products.count({ where }),
-        ]);
+    let [products, totalItems] = await Promise.all([
+      prisma.Products.findMany({
+        where,
+        orderBy,
+        take,
+        skip,
+        select: productSelect,
+      }),
+      prisma.Products.count({ where }),
+    ]);
 
-        let mapped = products.map(mapProduct);
+    let mapped = products.map(mapProduct);
 
-        if (sort === "best-selling") {
-            const topVariantIds = (await prisma.OrderItems.groupBy({
-                by: ["product_variant_id"],
-                _sum: { quantity: true },
-                orderBy: { _sum: { quantity: "desc" } },
-                take: 200,
-            })).map(v => v.product_variant_id);
+    if (sort === "best-selling") {
+      const topVariantIds = (
+        await prisma.OrderItems.groupBy({
+          by: ["product_variant_id"],
+          _sum: { quantity: true },
+          orderBy: { _sum: { quantity: "desc" } },
+          take: 200,
+        })
+      ).map((v) => v.product_variant_id);
 
-            if (topVariantIds.length > 0) {
-                const variants = await prisma.ProductVariants.findMany({
-                    where: { id: { in: topVariantIds }, deleted_at: ACTIVE },
-                    select: { product_id: true },
-                });
-                const topProductIds = [...new Set(variants.map(v => v.product_id))];
-                mapped.sort((a, b) => topProductIds.indexOf(a.id) - topProductIds.indexOf(b.id));
-            }
-        }
-
-        if (sort === "rating") {
-            mapped.sort((a, b) => b.avg_rating - a.avg_rating);
-        }
-
-        return {
-            products: mapped,
-            pagination: {
-                totalItems,
-                totalPages: Math.ceil(totalItems / take),
-                currentPage,
-                itemsPerPage: take,
-            },
-        };
-    },
-
-    getAllCategories: async () => {
-        return prisma.Categories.findMany({
-            where: { is_active: true, deleted_at: ACTIVE },
-            select: { id: true, name: true, slug: true, image: true },
+      if (topVariantIds.length > 0) {
+        const variants = await prisma.ProductVariants.findMany({
+          where: { id: { in: topVariantIds }, deleted_at: ACTIVE },
+          select: { product_id: true },
         });
-    },
+        const topProductIds = [...new Set(variants.map((v) => v.product_id))];
+        mapped.sort(
+          (a, b) => topProductIds.indexOf(a.id) - topProductIds.indexOf(b.id),
+        );
+      }
+    }
 
-    getAllBrands: async () => {
-        return prisma.Brands.findMany({
-            where: { deleted_at: ACTIVE },
-            select: { id: true, name: true, logo: true },
-        });
-    },
+    if (sort === "rating") {
+      mapped.sort((a, b) => b.avg_rating - a.avg_rating);
+    }
+
+    return {
+      products: mapped,
+      pagination: {
+        totalItems,
+        totalPages: Math.ceil(totalItems / take),
+        currentPage,
+        itemsPerPage: take,
+      },
+    };
+  },
+
+  getAllCategories: async () => {
+    return prisma.Categories.findMany({
+      where: { is_active: true, deleted_at: ACTIVE },
+      select: { id: true, name: true, slug: true, image: true },
+    });
+  },
+
+  getAllBrands: async () => {
+    return prisma.Brands.findMany({
+      where: { deleted_at: ACTIVE },
+      select: { id: true, name: true, logo: true },
+    });
+  },
 };
 
 export default productWebService;
@@ -160,6 +181,7 @@ git commit -m "feat(server): add web product service with listing, filters, sort
 ### Task 2: Backend — Create web product controller + route
 
 **Files:**
+
 - Modify: `server/src/controllers/web/product.controller.js`
 - Modify: `server/src/routes/web/product.route.js`
 
@@ -172,37 +194,55 @@ import productService from "../../services/core/product.service.js";
 import productWebService from "../../services/web/product.service.js";
 
 const productController = {
-    getProductBySlug: async (req, res) => {
-        // ... existing code unchanged ...
-    },
+  getProductBySlug: async (req, res) => {
+    // ... existing code unchanged ...
+  },
 
-    getProducts: async (req, res) => {
-        try {
-            const { page, search, sort, category_id, brand_id, price_min, price_max, limit } = req.query;
+  getProducts: async (req, res) => {
+    try {
+      const {
+        page,
+        search,
+        sort,
+        category_id,
+        brand_id,
+        price_min,
+        price_max,
+        limit,
+      } = req.query;
 
-            const [productData, categories, brands] = await Promise.all([
-                productWebService.getAllProducts({ page, search, sort, category_id, brand_id, price_min, price_max, limit }),
-                productWebService.getAllCategories(),
-                productWebService.getAllBrands(),
-            ]);
+      const [productData, categories, brands] = await Promise.all([
+        productWebService.getAllProducts({
+          page,
+          search,
+          sort,
+          category_id,
+          brand_id,
+          price_min,
+          price_max,
+          limit,
+        }),
+        productWebService.getAllCategories(),
+        productWebService.getAllBrands(),
+      ]);
 
-            return res.status(200).json({
-                success: true,
-                data: {
-                    products: productData.products,
-                    pagination: productData.pagination,
-                    categories,
-                    brands,
-                },
-            });
-        } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: "Lỗi server nội bộ.",
-                error: error.message,
-            });
-        }
-    },
+      return res.status(200).json({
+        success: true,
+        data: {
+          products: productData.products,
+          pagination: productData.pagination,
+          categories,
+          brands,
+        },
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Lỗi server nội bộ.",
+        error: error.message,
+      });
+    }
+  },
 };
 
 export default productController;
@@ -220,8 +260,8 @@ const webProductRoute = express.Router();
 
 webProductRoute
 
-    .get("/products", productController.getProducts)
-    .get("/slug/:slug", productController.getProductBySlug)
+  .get("/products", productController.getProducts)
+  .get("/slug/:slug", productController.getProductBySlug);
 
 export default webProductRoute;
 ```
@@ -244,6 +284,7 @@ git commit -m "feat(server): add GET /home/product/products endpoint"
 ### Task 3: Frontend — Create products page components
 
 **Files:**
+
 - Create: `client/src/loaders/web/productsLoader.js`
 - Create: `client/src/pages/Products/index.jsx`
 - Create: `client/src/pages/Products/components/FilterSidebar.jsx`
@@ -298,15 +339,23 @@ const FilterSelect = ({ value, onChange, placeholder, options }) => {
         onClick={() => setOpen(!open)}
         className="flex items-center justify-between w-full h-10 px-3 text-sm rounded-lg border border-slate-200 bg-white text-slate-700 cursor-pointer hover:border-slate-300 transition-colors"
       >
-        <span className={selected ? "text-slate-700" : "text-slate-400"}>{selected ? selected.name : placeholder}</span>
-        <ChevronDown size={14} className={`text-slate-400 transition-transform ${open ? "rotate-180" : ""}`} />
+        <span className={selected ? "text-slate-700" : "text-slate-400"}>
+          {selected ? selected.name : placeholder}
+        </span>
+        <ChevronDown
+          size={14}
+          className={`text-slate-400 transition-transform ${open ? "rotate-180" : ""}`}
+        />
       </div>
       {open && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
           {options.map((opt) => (
             <div
               key={opt.slug}
-              onClick={() => { onChange(opt.slug); setOpen(false); }}
+              onClick={() => {
+                onChange(opt.slug);
+                setOpen(false);
+              }}
               className={`px-3 py-2 text-sm cursor-pointer transition-colors ${value === opt.slug ? "text-blue-600 font-semibold bg-blue-50" : "text-slate-600 hover:bg-slate-50"}`}
             >
               {opt.name}
@@ -318,7 +367,23 @@ const FilterSelect = ({ value, onChange, placeholder, options }) => {
   );
 };
 
-const FilterSidebar = ({ search, sort, categoryId, brandId, priceMin, priceMax, categories, brands, onSearchChange, onSortChange, onCategoryChange, onBrandChange, onPriceMinChange, onPriceMaxChange, onClear }) => {
+const FilterSidebar = ({
+  search,
+  sort,
+  categoryId,
+  brandId,
+  priceMin,
+  priceMax,
+  categories,
+  brands,
+  onSearchChange,
+  onSortChange,
+  onCategoryChange,
+  onBrandChange,
+  onPriceMinChange,
+  onPriceMaxChange,
+  onClear,
+}) => {
   const [searchInput, setSearchInput] = useState(search || "");
   const isFirstRender = useRef(true);
 
@@ -347,7 +412,10 @@ const FilterSidebar = ({ search, sort, categoryId, brandId, priceMin, priceMax, 
           Tìm kiếm
         </label>
         <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search
+            size={14}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+          />
           <input
             type="text"
             value={searchInput}
@@ -357,7 +425,10 @@ const FilterSidebar = ({ search, sort, categoryId, brandId, priceMin, priceMax, 
           />
           {searchInput && (
             <button
-              onClick={() => { setSearchInput(""); onSearchChange(""); }}
+              onClick={() => {
+                setSearchInput("");
+                onSearchChange("");
+              }}
               className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
             >
               <X size={14} />
@@ -377,7 +448,10 @@ const FilterSidebar = ({ search, sort, categoryId, brandId, priceMin, priceMax, 
           placeholder="Tất cả danh mục"
           options={[
             { slug: "", name: "Tất cả" },
-            ...(categories || []).map((c) => ({ slug: String(c.id), name: c.name })),
+            ...(categories || []).map((c) => ({
+              slug: String(c.id),
+              name: c.name,
+            })),
           ]}
         />
       </div>
@@ -393,7 +467,10 @@ const FilterSidebar = ({ search, sort, categoryId, brandId, priceMin, priceMax, 
           placeholder="Tất cả thương hiệu"
           options={[
             { slug: "", name: "Tất cả" },
-            ...(brands || []).map((b) => ({ slug: String(b.id), name: b.name })),
+            ...(brands || []).map((b) => ({
+              slug: String(b.id),
+              name: b.name,
+            })),
           ]}
         />
       </div>
@@ -467,7 +544,10 @@ const ProductsPage = () => {
   const products = responses?.data?.products || [];
   const categories = responses?.data?.categories || [];
   const brands = responses?.data?.brands || [];
-  const pagination = responses?.data?.pagination || { totalPages: 1, currentPage: 1 };
+  const pagination = responses?.data?.pagination || {
+    totalPages: 1,
+    currentPage: 1,
+  };
 
   const currentSearch = searchParams.get("search") || "";
   const currentSort = searchParams.get("sort") || "newest";
@@ -505,7 +585,9 @@ const ProductsPage = () => {
         {/* Breadcrumb */}
         <div className="mb-4">
           <nav className="text-xs text-slate-400 flex items-center gap-1.5">
-            <a href="/" className="hover:text-blue-600 transition-colors">Trang chủ</a>
+            <a href="/" className="hover:text-blue-600 transition-colors">
+              Trang chủ
+            </a>
             <span>/</span>
             <span className="text-slate-700 font-medium">Sản phẩm</span>
           </nav>
@@ -538,12 +620,23 @@ const ProductsPage = () => {
             {/* Results bar */}
             <div className="flex items-center justify-between mb-4">
               <p className="text-sm text-slate-500">
-                Hiển thị <span className="font-semibold text-slate-700">{products.length}</span> /{" "}
-                <span className="font-semibold text-slate-700">{pagination.totalItems || 0}</span> sản phẩm
+                Hiển thị{" "}
+                <span className="font-semibold text-slate-700">
+                  {products.length}
+                </span>{" "}
+                /{" "}
+                <span className="font-semibold text-slate-700">
+                  {pagination.totalItems || 0}
+                </span>{" "}
+                sản phẩm
               </p>
               {/* Mobile filter toggle */}
               <button
-                onClick={() => document.getElementById("mobile-filters")?.classList.toggle("hidden")}
+                onClick={() =>
+                  document
+                    .getElementById("mobile-filters")
+                    ?.classList.toggle("hidden")
+                }
                 className="lg:hidden text-xs font-bold text-blue-600 border border-blue-200 rounded-lg px-3 py-1.5 hover:bg-blue-50 transition-colors"
               >
                 Bộ lọc
@@ -580,8 +673,12 @@ const ProductsPage = () => {
               </div>
             ) : (
               <div className="text-center py-16">
-                <p className="text-slate-400 text-lg font-medium">Không tìm thấy sản phẩm nào</p>
-                <p className="text-slate-400 text-sm mt-1">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+                <p className="text-slate-400 text-lg font-medium">
+                  Không tìm thấy sản phẩm nào
+                </p>
+                <p className="text-slate-400 text-sm mt-1">
+                  Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm
+                </p>
               </div>
             )}
 
@@ -617,6 +714,7 @@ git commit -m "feat(client): add Products page with FilterSidebar and grid"
 ### Task 4: Frontend — Add /san-pham route
 
 **Files:**
+
 - Modify: `client/src/routes/webRoute.jsx`
 
 - [ ] **Step 1: Add route entry**
@@ -624,16 +722,19 @@ git commit -m "feat(client): add Products page with FilterSidebar and grid"
 In `client/src/routes/webRoute.jsx`:
 
 Add import at top:
+
 ```js
 import { productsLoader } from "./webLoader";
 ```
 
 Add lazy import:
+
 ```js
 const ProductsPage = lazy(() => import("@/pages/Products"));
 ```
 
 Add route after the home route (`""`):
+
 ```js
 {
   path: "san-pham",
@@ -643,6 +744,7 @@ Add route after the home route (`""`):
 ```
 
 Update the `webLoader` exports in the loader barrel file. If `client/src/routes/webLoader.jsx` is the barrel file, add:
+
 ```js
 export { productsLoader } from "@/loaders/web/productsLoader";
 ```
@@ -659,6 +761,7 @@ git commit -m "feat(client): add /san-pham route with lazy-loaded ProductsPage"
 ### Task 5: Frontend — Update SeeMore and Home components
 
 **Files:**
+
 - Modify: `client/src/components/ui/seeMore.jsx`
 - Modify: `client/src/pages/Home/components/specialSale.jsx`
 - Modify: `client/src/pages/Home/components/newArrivals.jsx`
@@ -699,6 +802,7 @@ export default SeeMore;
 - [ ] **Step 2: Update SpecialSale**
 
 In `client/src/pages/Home/components/specialSale.jsx`, change:
+
 ```jsx
 <SeeMore to="/san-pham?sort=best-selling" />
 ```
@@ -706,6 +810,7 @@ In `client/src/pages/Home/components/specialSale.jsx`, change:
 - [ ] **Step 3: Update NewArrivals**
 
 In `client/src/pages/Home/components/newArrivals.jsx`, change:
+
 ```jsx
 <SeeMore to="/san-pham?sort=newest" />
 ```
@@ -713,18 +818,24 @@ In `client/src/pages/Home/components/newArrivals.jsx`, change:
 - [ ] **Step 4: Update ProductSection**
 
 In `client/src/pages/Home/components/productSection.jsx`:
+
 - Add import: `import { useNavigate } from "react-router-dom";`
 - Add inside component: `const navigate = useNavigate();`
 - Change "Xem tất cả" button:
+
 ```jsx
 <button
-  onClick={() => navigate(`/san-pham?category_id=${products[0]?.category?.id || ""}`)}
+  onClick={() =>
+    navigate(`/san-pham?category_id=${products[0]?.category?.id || ""}`)
+  }
   className="text-[12px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-0.5 transition-colors shrink-0"
 >
   Xem tất cả <ChevronRight size={14} />
 </button>
 ```
+
 - Change SeeMore:
+
 ```jsx
 <SeeMore to={`/san-pham?category_id=${products[0]?.category?.id || ""}`} />
 ```
@@ -734,6 +845,7 @@ In `client/src/pages/Home/components/productSection.jsx`:
 ```bash
 npm run build --prefix client
 ```
+
 Expected: Build succeeds with no errors.
 
 - [ ] **Step 6: Commit**
