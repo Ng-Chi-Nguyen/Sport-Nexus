@@ -32,6 +32,26 @@ const uploadThubnailProduct = upload.single('thumbnail');
 const uploadProductImage = upload.array('url', 10);
 const uploadMediaImage = upload.array('media_urls', 5);
 
+const uploadExcel = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        const allowedMimes = [
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ];
+        const allowedExt = '.xlsx';
+        const ext = '.' + file.originalname.split('.').pop().toLowerCase();
+
+        if (allowedMimes.includes(file.mimetype) && ext === allowedExt) {
+            cb(null, true);
+        } else {
+            cb(new Error('File phải là định dạng .xlsx hợp lệ.'), false);
+        }
+    }
+});
+
+const uploadExcelFile = uploadExcel.single('file');
+
 export {
     uploadImageAvatar,
     uploadImageLogoSupplier,
@@ -39,5 +59,6 @@ export {
     uploadImageCategory,
     uploadThubnailProduct,
     uploadProductImage,
-    uploadMediaImage
+    uploadMediaImage,
+    uploadExcelFile
 };

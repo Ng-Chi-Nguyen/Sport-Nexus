@@ -2,7 +2,7 @@ import express from "express";
 import { validate } from "../../middlewares/validation.middleware.js";
 import categorySchema from "../../validators/management/category.validator.js";
 import categoryController from "../../controllers/management/categories.controller.js";
-import { uploadImageCategory } from "../../middlewares/fileUpload.middleware.js";
+import { uploadImageCategory, uploadExcelFile } from "../../middlewares/fileUpload.middleware.js";
 import { checkPermission, verifyToken } from "../../middlewares/verifyToken.middlware.js";
 import { logAction } from "../../middlewares/log.middleware.js";
 import { createDetails, updateDetails, deleteDetails, fetchEntity } from "../../middlewares/log.helpers.js";
@@ -22,9 +22,19 @@ categoryRoute
       logAction({ actionType: "DELETE", entityType: "Categories", getOldData: fetchEntity(categoryService.getCategoryById), getChanges: deleteDetails }),
       categoryController.deleteCategory)
 
+    .post("/import/preview", verifyToken, checkPermission("them-danh-muc"), uploadExcelFile,
+        categoryController.previewImport)
+    .post("/import", verifyToken, checkPermission("them-danh-muc"), uploadExcelFile,
+      categoryController.importCategories)
+    .get("/export", verifyToken,
+      categoryController.exportCategories)
+    .get("/template", verifyToken,
+      categoryController.downloadTemplate)
+    .get("/import/error-file/:token",
+      categoryController.downloadErrorFile)
+
     .get("/all", categoryController.getCategoriesDropdown)
     .get("/:id", categoryController.getCategoryById)
     .get("/", categoryController.getAllCategory)
-
 
 export default categoryRoute;
