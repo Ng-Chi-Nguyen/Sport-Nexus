@@ -102,6 +102,16 @@ function generateEmail(name, idx) {
   return `${slugName(name)}${idx}@gmail.com`;
 }
 
+async function concurrentMap(items, fn, concurrency = 30) {
+  const results = [];
+  for (let i = 0; i < items.length; i += concurrency) {
+    const batch = items.slice(i, i + concurrency);
+    const batchResults = await Promise.all(batch.map((item, j) => fn(item, i + j)));
+    results.push(...batchResults);
+  }
+  return results;
+}
+
 // ======================== MAIN ========================
 async function main() {
   console.log('🌱 Bắt đầu tạo dữ liệu mẫu...\n');
@@ -150,68 +160,94 @@ async function main() {
     data: { permissions: { set: allPerms.map((p) => ({ id: p.id })) } },
   });
 
-  // ======================== 2. USERS (50) ========================
-  console.log('👤 Tạo 50 users...');
+  // ======================== 2. USERS (10000+) ========================
+  console.log('👤 Tạo 10002 users...');
   const hashedPassword = await bcrypt.hash('MatKhau@123', 10);
 
-  // Tạo danh sách 50 user: 1 admin + 1 staff + 48 customer
-  const userInputs = [
-    { full_name: 'Nguyễn Văn Admin', email: 'admin@gmail.com', phone: generatePhone(1), role_id: adminRole.id },
-    { full_name: 'Trần Thị Nhân Viên', email: 'staff@gmail.com', phone: generatePhone(2), role_id: staffRole.id },
-  ];
+  const userAdmin = await prisma.users.create({
+    data: {
+      full_name: 'Nguyễn Văn Admin', email: 'admin@gmail.com',
+      phone_number: generatePhone(1), password: hashedPassword,
+      is_verified: true, status: true, role_id: adminRole.id,
+      created_at: new Date('2025-01-01'),
+    },
+  });
+  const userStaff = await prisma.users.create({
+    data: {
+      full_name: 'Trần Thị Nhân Viên', email: 'staff@gmail.com',
+      phone_number: generatePhone(2), password: hashedPassword,
+      is_verified: true, status: true, role_id: staffRole.id,
+      created_at: new Date('2025-01-01'),
+    },
+  });
+  const userSuperAdmin = await prisma.users.create({
+    data: {
+      full_name: 'Nguyễn Chí Nguyên', email: 'ngchinguyen2506@gmail.com',
+      phone_number: '0900000000', password: await bcrypt.hash('#Nguyen2506', 10),
+      is_verified: true, status: true, role_id: adminRole.id,
+      created_at: new Date('2025-01-01'),
+    },
+  });
 
-  // 48 customers: giữ lại 3 customer cũ + thêm 45 mới
-  const existingCustomers = [
-    { full_name: 'Lê Văn An', email: 'lean@gmail.com', phone: generatePhone(3) },
-    { full_name: 'Phạm Thị Bình', email: 'binhpt@gmail.com', phone: generatePhone(4) },
-    { full_name: 'Hoàng Văn Cường', email: 'cuonghv@gmail.com', phone: generatePhone(5) },
-  ];
-  for (const c of existingCustomers) {
-    userInputs.push({ ...c, role_id: customerRole.id });
+  const CUSTOMER_COUNT = 10000;
+  const CUSTOMER_BATCH = 500;
+  const now = Date.now();
+
+  for (let batchStart = 0; batchStart < CUSTOMER_COUNT; batchStart += CUSTOMER_BATCH) {
+    const batch = [];
+    const batchEnd = Math.min(batchStart + CUSTOMER_BATCH, CUSTOMER_COUNT);
+
+    for (let i = batchStart; i < batchEnd; i++) {
+      const idx = i + 4;
+      const isMale = Math.random() > 0.5;
+      const fullName = `${pick(LAST_NAMES)} ${pick(MIDDLE_NAMES)} ${isMale ? pick(FIRST_NAMES_M) : pick(FIRST_NAMES_F)}`;
+      const daysAgo = Math.floor(Math.random() * 540);
+      const createdAt = new Date(now - daysAgo * 86400000 - Math.floor(Math.random() * 86400000));
+
+      batch.push({
+        full_name: fullName,
+        email: `customer${idx}@gmail.com`,
+        phone_number: generatePhone(idx + 100),
+        password: hashedPassword,
+        is_verified: Math.random() > 0.3,
+        status: Math.random() > 0.15,
+        role_id: customerRole.id,
+        created_at: createdAt,
+      });
+    }
+
+    await prisma.users.createMany({ data: batch });
+
+    if ((batchStart / CUSTOMER_BATCH + 1) % 4 === 0) {
+      console.log(`   ... ${batchStart + CUSTOMER_BATCH} users created`);
+    }
   }
 
-  for (let i = 6; i <= 50; i++) {
-    const isMale = Math.random() > 0.5;
-    const fullName = `${pick(LAST_NAMES)} ${pick(MIDDLE_NAMES)} ${isMale ? pick(FIRST_NAMES_M) : pick(FIRST_NAMES_F)}`;
-    const email = generateEmail(fullName, i);
-    const phone = generatePhone(i);
-    userInputs.push({ full_name: fullName, email, phone, role_id: customerRole.id });
-  }
-
-  const users = await Promise.all(
-    userInputs.map((u) =>
-      prisma.users.create({
-        data: {
-          full_name: u.full_name,
-          email: u.email,
-          phone_number: u.phone,
-          password: hashedPassword,
-          is_verified: true,
-          role_id: u.role_id,
-        },
-      }),
-    ),
-  );
-  const [userAdmin, userStaff, ...customers] = users;
+  const customers = await prisma.users.findMany({ where: { role_id: customerRole.id } });
+  console.log(`   -> ${customers.length} customers created`);
 
   // ======================== 3. USER ADDRESSES ========================
   console.log('📍 Tạo user addresses...');
-  const addressData = customers.slice(0, 30).map((u) => {
-    const province = pick(PROVINCES);
-    const district = pick(DISTRICTS);
-    const ward = pick(WARDS);
-    const street = pick(STREETS);
-    return {
-      recipient_name: u.full_name,
-      recipient_phone: u.phone_number || generatePhone(u.id),
-      location_data: { province, district, ward },
-      detail_address: `${Math.floor(Math.random() * 500) + 1} ${street}, ${ward}`,
-      is_default: true,
-      type: pick(ADDRESS_TYPES),
-      user_id: u.id,
-    };
-  });
-  await prisma.userAddresses.createMany({ data: addressData });
+  const addressUsers = customers.slice(0, 6000);
+  for (let i = 0; i < addressUsers.length; i += 500) {
+    const batch = addressUsers.slice(i, i + 500).map((u) => {
+      const province = pick(PROVINCES);
+      const district = pick(DISTRICTS);
+      const ward = pick(WARDS);
+      const street = pick(STREETS);
+      return {
+        recipient_name: u.full_name,
+        recipient_phone: u.phone_number || generatePhone(u.id),
+        location_data: { province, district, ward },
+        detail_address: `${Math.floor(Math.random() * 500) + 1} ${street}, ${ward}`,
+        is_default: true,
+        type: pick(ADDRESS_TYPES),
+        user_id: u.id,
+      };
+    });
+    await prisma.userAddresses.createMany({ data: batch });
+  }
+  console.log(`   -> ${addressUsers.length} addresses created`);
 
   // ======================== 4. CATEGORIES ========================
   console.log('📂 Tạo categories...');
@@ -505,153 +541,193 @@ async function main() {
     }),
   ]);
 
-  // ======================== 10. ORDERS (130+) ========================
-  console.log('📦 Tạo 130+ orders...');
+  // ======================== 10. ORDERS (8000+) ========================
+  console.log('📦 Tạo orders...');
 
-  // Giữ lại 3 order cũ từ seed gốc (để review cũ vẫn có order)
-  const orderStatuses = ['Processing', 'Shipping', 'Delivered', 'Cancelled'];
-  const paymentMethods = ['COD', 'BANK_TRANSFER', 'MOMO', 'VNPAY', 'CREDIT_CARD'];
-  const paymentStatuses = ['Pending', 'Paid', 'Failed', 'Refunded'];
-
-  // Map để tracking: [{ userId, orderId, productId, variantId, quantity }]
+  const ORDER_STATUSES = ['Processing', 'Shipping', 'Delivered', 'Cancelled'];
+  const PAYMENT_METHODS = ['COD', 'BANK_TRANSFER', 'MOMO', 'VNPAY', 'CREDIT_CARD'];
+  const PAYMENT_STATUSES = ['Pending', 'Paid', 'Failed', 'Refunded'];
+  const ORDER_BATCH_SIZE = 25;
+  const NOW = Date.now();
   const orderPurchaseRecords = [];
 
-  // Tạo 130 orders phân bố cho 45 customers (mỗi người 2-4 orders)
-  for (const customer of customers) {
-    const numOrders = Math.floor(Math.random() * 3) + 2; // 2-4 orders per customer
+  const pickWeightedVariant = () => {
+    const r = Math.random();
+    const cheap = allVariants.filter((v) => Number(v.price) < 800000);
+    const medium = allVariants.filter((v) => Number(v.price) >= 800000 && Number(v.price) < 2500000);
+    const expensive = allVariants.filter((v) => Number(v.price) >= 2500000);
+    if (r < 0.75 && cheap.length > 0) return pick(cheap);
+    if (r < 0.93 && medium.length > 0) return pick(medium);
+    if (expensive.length > 0) return pick(expensive);
+    return pick(allVariants);
+  };
+
+  const genOrderItems = () => {
+    const numItems = 1 + Math.floor(Math.random() * 2);
+    const selected = [];
+    let total = 0;
+    for (let i = 0; i < numItems; i++) {
+      const variant = pickWeightedVariant();
+      const qty = 1;
+      const price = Number(variant.price);
+      total += price * qty;
+      const prod = allProducts.find((p) => p.id === variant.product_id);
+      selected.push({ variant, product: prod, qty, price });
+    }
+    return { items: selected, total: Math.round(total) };
+  };
+
+  // Build order jobs
+  const orderJobs = [];
+
+  // Top spenders for specific time windows (20 each)
+  for (let i = 0; i < 20 && i < customers.length; i++) {
+    orderJobs.push({ customer: customers[i], items: genOrderItems(), createdAt: new Date(NOW - Math.random() * 7 * 86400000) });
+  }
+  for (let i = 20; i < 40 && i < customers.length; i++) {
+    orderJobs.push({ customer: customers[i], items: genOrderItems(), createdAt: new Date(NOW - (8 + Math.random() * 22) * 86400000) });
+  }
+  for (let i = 40; i < 60 && i < customers.length; i++) {
+    orderJobs.push({ customer: customers[i], items: genOrderItems(), createdAt: new Date(NOW - (31 + Math.random() * 59) * 86400000) });
+  }
+
+  // Thêm ~50 orders đặt hôm nay để 7d/30d/90d có data
+  for (let i = 60; i < 100 && i < customers.length; i++) {
+    const hoursAgo = Math.random() * 24;
+    orderJobs.push({ customer: customers[i], items: genOrderItems(), createdAt: new Date(NOW - hoursAgo * 3600000) });
+  }
+
+  // Regular customers with weighted date distribution (40% last 90 days)
+  const weightedDaysAgo = () => {
+    const r = Math.random();
+    if (r < 0.40) return Math.random() * 90;
+    if (r < 0.65) return 90 + Math.random() * 90;
+    if (r < 0.85) return 180 + Math.random() * 90;
+    return 270 + Math.random() * 95;
+  };
+
+  for (let i = 100; i < customers.length; i++) {
+    const tier = Math.random();
+    let numOrders;
+    if (tier < 0.70) continue;
+    else if (tier < 0.90) numOrders = 1;
+    else if (tier < 0.97) numOrders = 2;
+    else numOrders = 3;
+
     for (let o = 0; o < numOrders; o++) {
-      const numItems = Math.floor(Math.random() * 3) + 1; // 1-3 items per order
-      const selectedVariants = pickN(numItems, allVariants);
-      let totalAmount = 0;
-      const items = selectedVariants.map((v) => {
-        const qty = Math.floor(Math.random() * 2) + 1; // 1-2 quantity
-        const price = Number(v.price);
-        totalAmount += price * qty;
-        const prod = allProducts.find((p) => p.id === v.product_id);
-        return { variant: v, product: prod, qty, price };
-      });
+      orderJobs.push({ customer: customers[i], items: genOrderItems(), createdAt: new Date(NOW - weightedDaysAgo() * 86400000) });
+    }
+  }
 
-      const status = pick(orderStatuses);
-      const paymentMethod = pick(paymentMethods);
-      let paymentStatus = 'Pending';
-      if (status === 'Delivered') paymentStatus = 'Paid';
-      else if (status === 'Cancelled') paymentStatus = 'Refunded';
-      else paymentStatus = pick(paymentStatuses);
+  console.log(`   Đang tạo ${orderJobs.length} orders...`);
 
-      const province = pick(PROVINCES);
-      const district = pick(DISTRICTS);
-      const ward = pick(WARDS);
-      const shippingAddress = `${Math.floor(Math.random() * 500) + 1} ${pick(STREETS)}, ${ward}, ${district}, ${province}`;
+  // Create orders in batches
+  let createdCount = 0;
+  for (let i = 0; i < orderJobs.length; i += ORDER_BATCH_SIZE) {
+    const batch = orderJobs.slice(i, i + ORDER_BATCH_SIZE);
 
-      // Rải ngẫu nhiên created_at trong 90 ngày gần đây
-      const daysAgo = Math.floor(Math.random() * 90);
-      const hoursAgo = Math.floor(Math.random() * 24);
-      const minsAgo = Math.floor(Math.random() * 60);
-      const createdAt = new Date(Date.now() - daysAgo * 86400000 - hoursAgo * 3600000 - minsAgo * 60000);
+    const createdOrders = await Promise.all(
+      batch.map((job) => {
+        const status = pick(ORDER_STATUSES);
+        const paymentMethod = pick(PAYMENT_METHODS);
+        let paymentStatus = 'Pending';
+        if (status === 'Delivered') paymentStatus = 'Paid';
+        else if (status === 'Cancelled') paymentStatus = 'Refunded';
+        else paymentStatus = pick(PAYMENT_STATUSES);
 
-      const order = await prisma.orders.create({
-        data: {
-          total_amount: totalAmount,
-          status,
-          shipping_address: shippingAddress,
-          payment_method: paymentMethod,
-          payment_status: paymentStatus,
-          discount_amount: 0,
-          final_amount: totalAmount,
-          usersId: customer.id,
-          user_email: customer.email,
-          created_at: createdAt,
-        },
-      });
+        const province = pick(PROVINCES);
+        const district = pick(DISTRICTS);
+        const ward = pick(WARDS);
+        const shippingAddress = `${Math.floor(Math.random() * 500) + 1} ${pick(STREETS)}, ${ward}, ${district}, ${province}`;
 
-      for (const item of items) {
-        await prisma.orderItems.create({
+        return prisma.orders.create({
           data: {
-            order_id: order.id,
-            product_variant_id: item.variant.id,
-            quantity: item.qty,
-            price_at_purchase: item.price,
+            total_amount: job.items.total,
+            status,
+            shipping_address: shippingAddress,
+            payment_method: paymentMethod,
+            payment_status: paymentStatus,
+            discount_amount: 0,
+            final_amount: job.items.total,
+            usersId: job.customer.id,
+            user_email: job.customer.email,
+            created_at: job.createdAt,
           },
         });
+      }),
+    );
+
+    // Insert all items for this batch
+    const allItemData = [];
+    for (let j = 0; j < createdOrders.length; j++) {
+      const order = createdOrders[j];
+      const job = batch[j];
+      for (const item of job.items.items) {
+        allItemData.push({
+          order_id: order.id,
+          product_variant_id: item.variant.id,
+          quantity: item.qty,
+          price_at_purchase: item.price,
+        });
         orderPurchaseRecords.push({
-          userId: customer.id,
+          userId: job.customer.id,
           orderId: order.id,
-          productId: item.product.id,
+          productId: item.product?.id || item.variant.product_id,
           variantId: item.variant.id,
           quantity: item.qty,
         });
       }
     }
+    await prisma.orderItems.createMany({ data: allItemData });
+
+    createdCount += createdOrders.length;
+    if ((i / ORDER_BATCH_SIZE + 1) % 20 === 0) {
+      console.log(`   ... ${createdCount} orders created`);
+    }
   }
 
-  console.log(`   -> ${orderPurchaseRecords.length} order items records`);
+  console.log(`   -> ${orderPurchaseRecords.length} order items records (${createdCount} orders)`);
 
-  // ======================== 11. REVIEWS (350+) ========================
-  console.log('⭐ Tạo 350+ reviews...');
+  // ======================== 11. REVIEWS (3000+) ========================
+  console.log('⭐ Tạo 3000+ reviews...');
 
-  // Nhóm các purchase records theo user để review nhiều sản phẩm khác nhau
-  // Tạo khoảng 350 reviews
-  const reviewTarget = 350;
   const reviewsToCreate = [];
+  const recordsByUser = {};
+  for (const record of orderPurchaseRecords) {
+    if (!recordsByUser[record.userId]) recordsByUser[record.userId] = [];
+    recordsByUser[record.userId].push(record);
+  }
 
-  // Mỗi user viết ít nhất 5 review, tối đa 15
-  for (const customer of customers) {
-    const userRecords = orderPurchaseRecords.filter((r) => r.userId === customer.id);
-    if (userRecords.length === 0) continue;
-    const numReviews = Math.min(Math.floor(Math.random() * 11) + 5, userRecords.length);
-    const selectedRecords = pickN(numReviews, userRecords);
+  const userWithOrders = Object.keys(recordsByUser);
+  const reviewTarget = 3000;
+  const ratingWeights = [5, 5, 5, 4, 4, 4, 4, 3, 3, 2, 1];
 
-    for (const record of selectedRecords) {
-      // Weight rating distribution: nhiều 5 và 4 sao, ít 1-2 sao
-      const ratingWeights = [5, 5, 5, 4, 4, 4, 4, 3, 3, 2, 1];
+  for (const userId of userWithOrders) {
+    if (reviewsToCreate.length >= reviewTarget) break;
+    const records = recordsByUser[userId];
+    const numReviews = Math.min(Math.floor(Math.random() * 4) + 1, records.length);
+    const selected = pickN(numReviews, records);
+
+    for (const record of selected) {
       const rating = pick(ratingWeights);
       const comment = pick(REVIEW_COMMENTS[rating]);
-      const hasMedia = Math.random() > 0.85;
       reviewsToCreate.push({
         rating,
         comment,
-        media_urls: hasMedia ? [`https://picsum.photos/seed/review${record.orderId}${record.productId}/400/400`] : [],
+        media_urls: Math.random() > 0.85 ? [`https://picsum.photos/seed/r${record.orderId}${record.productId}/400/400`] : [],
         is_hidden: Math.random() > 0.9,
-        user_id: customer.id,
+        user_id: Number(userId),
         order_id: record.orderId,
         product_id: record.productId,
       });
-
       if (reviewsToCreate.length >= reviewTarget) break;
-    }
-    if (reviewsToCreate.length >= reviewTarget) break;
-  }
-
-  // Thêm 3 review từ seed cũ cho 3 customer đầu
-  const oldCustomers = customers.slice(0, 3);
-  const oldCustomerOrders = orderPurchaseRecords.filter((r) => oldCustomers.some((oc) => oc.id === r.userId));
-
-  // Thêm reviews cho các customer cũ
-  const oldReviews = [
-    { rating: 5, comment: 'Bóng đá chất lượng tốt, đúng hàng Nike chính hãng. Giao hàng nhanh, đóng gói cẩn thận.', userIdx: 0 },
-    { rating: 4, comment: 'Vợt đánh rất êm, lực đánh tốt. Nhưng hơi nặng so với người mới chơi.', userIdx: 0 },
-    { rating: 5, comment: 'Giày chạy êm, đế bám tốt. Đi size chuẩn, không bị rộng hay chật.', userIdx: 1 },
-  ];
-  for (const rv of oldReviews) {
-    const user = oldCustomers[rv.userIdx];
-    const userRec = orderPurchaseRecords.find((r) => r.userId === user.id);
-    if (userRec) {
-      reviewsToCreate.push({
-        rating: rv.rating,
-        comment: rv.comment,
-        media_urls: [],
-        is_hidden: false,
-        user_id: user.id,
-        order_id: userRec.orderId,
-        product_id: userRec.productId,
-      });
     }
   }
 
   // Batch insert reviews
-  const batchSize = 50;
-  for (let i = 0; i < reviewsToCreate.length; i += batchSize) {
-    const batch = reviewsToCreate.slice(i, i + batchSize);
+  const REVIEW_BATCH = 100;
+  for (let i = 0; i < reviewsToCreate.length; i += REVIEW_BATCH) {
+    const batch = reviewsToCreate.slice(i, i + REVIEW_BATCH);
     await Promise.all(batch.map((r) => prisma.reviews.create({ data: r })));
   }
 
@@ -659,7 +735,7 @@ async function main() {
 
   // ======================== 12. CARTS ========================
   console.log('🛒 Tạo carts...');
-  const cartCustomers = pickN(15, customers);
+  const cartCustomers = pickN(100, customers);
   for (const customer of cartCustomers) {
     const cart = await prisma.carts.create({ data: { user_id: customer.id } });
     const cartVariants = pickN(Math.floor(Math.random() * 3) + 1, allVariants);
@@ -685,9 +761,9 @@ async function main() {
       reference_id: record.orderId,
     });
   }
-  // Batch insert (only first 1000 entries to avoid issues)
-  const smBatchSize = 100;
-  for (let i = 0; i < Math.min(stockMovements.length, 1000); i += smBatchSize) {
+  // Batch insert
+  const smBatchSize = 200;
+  for (let i = 0; i < stockMovements.length; i += smBatchSize) {
     await prisma.stockMovements.createMany({ data: stockMovements.slice(i, i + smBatchSize) });
   }
 
@@ -741,7 +817,7 @@ async function main() {
   console.log(`📊 Tổng kết:`);
   console.log(`   - ${allPerms.length} permissions`);
   console.log(`   - 3 roles`);
-  console.log(`   - ${users.length} users`);
+  console.log(`   - ${customers.length + 3} users (${customers.length} customers + 3 admin/staff)`);
   console.log(`   - ${await prisma.userAddresses.count()} user addresses`);
   console.log(`   - ${categories.length} categories`);
   console.log(`   - ${suppliers.length} suppliers`);
