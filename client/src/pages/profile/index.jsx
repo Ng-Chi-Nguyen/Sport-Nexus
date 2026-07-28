@@ -36,9 +36,7 @@ const ProfilePage = () => {
     } catch (error) {
       console.error("Lỗi API logout:", error);
     } finally {
-      localStorage.removeItem("token");
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("user");
+      localStorage.clear();
       setIsLogoutModalOpen(false);
       window.location.href = "/auth/login";
     }

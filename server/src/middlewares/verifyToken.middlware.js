@@ -44,7 +44,7 @@ export const verifyToken = async (req, res, next) => {
         if (error.name === "TokenExpiredError") {
             // Chỉ trả về đúng mã này để Frontend tự gọi hàm refreshToken của bạn
             return res.status(401).json({
-                message: "Access token expired",
+                message: "Phiên đăng nhập đã hết hạn",
                 code: "TOKEN_EXPIRED"
             });
         }

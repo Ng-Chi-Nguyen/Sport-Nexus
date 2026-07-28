@@ -226,13 +226,13 @@ const authService = {
         const accessToken = jwt.sign(
             { id: user.id, role: user.role.slug, email: user.email },
             process.env.JWT_ACCESS_SECRET,
-            { expiresIn: "15m" }
+            { expiresIn: '15m' }
         );
 
         const refresh_token = jwt.sign(
             { id: user.id },
             process.env.JWT_REFRESH_SECRET,
-            { expiresIn: "7d" }
+            { expiresIn: '7d' }
         );
 
         await prisma.Users.update({
@@ -310,13 +310,13 @@ const authService = {
         const accessTokenJwt = jwt.sign(
             { id: user.id, role: user.role.slug, email: user.email },
             process.env.JWT_ACCESS_SECRET,
-            { expiresIn: "15m" }
+            { expiresIn: '15m' }
         );
 
         const refresh_token = jwt.sign(
             { id: user.id },
             process.env.JWT_REFRESH_SECRET,
-            { expiresIn: "7d" }
+            { expiresIn: '7d' }
         );
 
         await prisma.Users.update({
@@ -357,7 +357,7 @@ const authService = {
                     email: user.email
                 },
                 process.env.JWT_ACCESS_SECRET,
-                { expiresIn: "15m" }
+                { expiresIn: '15m' }
             );
 
             return { accessToken: newAccessToken };

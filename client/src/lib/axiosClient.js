@@ -69,7 +69,8 @@ axiosClient.interceptors.response.use(
                     return axiosClient(originalRequest);
                 }
             } catch (refreshError) {
-                console.error(">>> LỖI KHI ĐANG REFRESH:", refreshError.response);
+                localStorage.clear();
+                window.location.href = "/auth/login";
                 return Promise.reject(refreshError);
             }
         }
