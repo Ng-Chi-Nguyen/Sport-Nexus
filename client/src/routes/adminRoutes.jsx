@@ -2,7 +2,7 @@ import { lazy } from "react";
 import * as RouteLoaders from "./adminLoader.jsx";
 
 // ─── 1. KHAI BÁO LAZY LOAD TƯỜNG MINH (ĐỒNG BỘ 100% CẤU TRÚC THƯ MỤC THỰC TẾ) ───
-const Dashboard = lazy(() => import("@/pages/Admin/Dashboard/dashboard.jsx"));
+const Dashboard = lazy(() => import("@/pages/Admin/Dashboard"));
 
 // Hệ thống User (Thư mục)
 const UserPage = lazy(() => import("@/pages/Admin/users/index.jsx"));
@@ -117,7 +117,7 @@ const EditProductAttributeKey = lazy(
 export const adminRoutes = {
   path: "management",
   children: [
-    { path: "dashboard", element: <Dashboard /> },
+    { path: "dashboard", element: <Dashboard />, loader: RouteLoaders.dashboardLoader },
     { path: "carts", element: <CartPage /> },
     { path: "logs", element: <LogPage />, loader: RouteLoaders.logsLoader },
     { path: "addresses", element: <AddressPage /> },
@@ -294,3 +294,4 @@ export const adminRoutes = {
     },
   ],
 };
+

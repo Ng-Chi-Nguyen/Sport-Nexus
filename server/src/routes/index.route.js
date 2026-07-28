@@ -10,6 +10,7 @@ import userAddressRoute from "./customer/useraddresses.route.js";
 import brandRoute from "./management/brand.route.js";
 import categoryRoute from "./management/category.route.js";
 import couponRoute from "./management/coupon.route.js";
+import dashboardRoute from "./management/dashboard.route.js";
 import purchaseOrderRoute from "./management/purchaseOrder.route.js";
 import roleRoute from "./management/permission.route.js";
 import stockMovementRoute from "./management/stockMovement.route.js";
@@ -28,7 +29,7 @@ const Routes = (app) => {
 
     const api_prefix_v1 = "/api/v1/";
 
-    // Management / Người quản lý - Admin
+    // Management / Ng�?i qu?n l? - Admin
     app.use(`${api_prefix_v1}management/user/`, userRoute)
     app.use(`${api_prefix_v1}management/supplier/`, supplierRoute)
     app.use(`${api_prefix_v1}management/brand/`, brandRoute)
@@ -38,9 +39,10 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}management/purchase-order/`, purchaseOrderRoute)
     app.use(`${api_prefix_v1}management/permission/`, permissionRoute)
     app.use(`${api_prefix_v1}management/log/`, logRoute)
+    app.use(`${api_prefix_v1}management/dashboard/`, dashboardRoute)
     app.use(`${api_prefix_v1}management/product-attribute-key/`, productAttributeKeyRoute)
 
-    // Customer - Khách hàng
+    // Customer - Kh�ch h�ng
     app.use(`${api_prefix_v1}user/`, customerUserRoute)
     app.use(`${api_prefix_v1}customer/user-address/`, userAddressRoute)
     app.use(`${api_prefix_v1}customer/cart-item/`, cartItemRoute)
@@ -48,16 +50,16 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}customer/order/`, orderRoute)
     app.use(`${api_prefix_v1}customer/review/`, reviewRoute)
 
-    // Core - cốt lỗi của hệ thống (Management và Customer)
+    // Core - c?t l?i c?a h? th?ng (Management v� Customer)
     app.use(`${api_prefix_v1}core/product/`, productRoute)
     app.use(`${api_prefix_v1}core/product-image/`, productImageRoute)
     app.use(`${api_prefix_v1}core/product-variant/`, productVariantRoute)
     app.use(`${api_prefix_v1}core/variant-attribute-key/`, attriButeKeyRoute)
 
-    // Auth - Xác thực
+    // Auth - X�c th?c
     app.use(`${api_prefix_v1}auth/`, authRoute)
 
-    // Web - Hiện thì data các trang / Route các trang
+    // Web - Hi?n th? data c�c trang / Route c�c trang
     app.use(`${api_prefix_v1}home/`, homeRoute)
     app.use(`${api_prefix_v1}home/product/`, webProductRoute)
 

@@ -13,6 +13,7 @@ import LoaderCoupon from "@/loaders/management/couponLoadet";
 import LoaderOrder from "@/loaders/customer/orderLoader";
 import LoaderStock from "@/loaders/management/stockMovement";
 import LoaderLog from "@/loaders/management/logLoader";
+import LoaderDashboard from "@/loaders/management/dashboardLoader";
 
 // Hàm tiện ích bóc tách số trang từ URL
 const getPage = (request) => new URL(request.url).searchParams.get("page") || 1;
@@ -414,3 +415,9 @@ export const logsLoader = async ({ request }) => {
     }),
   });
 };
+
+
+export const dashboardLoader = async ({ request }) => {
+  return LoaderDashboard.fromRequest({ request });
+};
+
