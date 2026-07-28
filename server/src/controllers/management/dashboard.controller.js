@@ -1,6 +1,24 @@
 import businessDashboardService from '../../services/management/dashboard.service.js';
 
 export const createDashboardController = ({ dashboardService = businessDashboardService } = {}) => ({
+  getCustomerOverview: async (req, res) => {
+    try {
+      const data = await dashboardService.getCustomerOverview(req.query);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Lấy thống kê khách hàng thành công.',
+        data,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Lỗi khi lấy thống kê khách hàng.',
+        error: error.message,
+      });
+    }
+  },
+
   getBusinessOverview: async (req, res) => {
     try {
       const data = await dashboardService.getBusinessOverview(req.query);

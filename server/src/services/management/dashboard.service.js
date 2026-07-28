@@ -96,6 +96,100 @@ const selectOrderFields = {
 };
 
 export const createBusinessDashboardService = ({ db = prisma } = {}) => ({
+  async getCustomerOverview(query = {}) {
+    const range = normalizeRange({ from: query.from, to: query.to });
+    const groupBy = ['day', 'week', 'month'].includes(String(query.group_by || 'day'))
+      ? String(query.group_by || 'day')
+      : 'day';
+
+    const [
+      totalUsers,
+      verifiedUsers,
+      unverifiedUsers,
+      activeUsers,
+      blockedUsers,
+      ordersWithUsers,
+      rangeUsers,
+    ] = await Promise.all([
+      db.Users.count(),
+      db.Users.count({ where: { is_verified: true } }),
+      db.Users.count({ where: { is_verified: false } }),
+      db.Users.count({ where: { status: true } }),
+      db.Users.count({ where: { status: false } }),
+      db.Orders.groupBy({
+        by: ['usersId'],
+        _sum: { final_amount: true },
+        _count: { id: true },
+        where: {
+          usersId: { not: null },
+          created_at: { gte: range.from, lte: range.to },
+        },
+      }),
+      db.Users.findMany({
+        where: { created_at: { gte: range.from, lte: range.to } },
+        select: { created_at: true },
+      }),
+    ]);
+
+    const usersWithOrders = ordersWithUsers.length;
+    const repeatBuyers = ordersWithUsers.filter((o) => o._count.id > 1).length;
+    const repeatPurchaseRate = percent(repeatBuyers, usersWithOrders);
+    const topCustomerCandidates = ordersWithUsers
+      .map((o) => ({
+        userId: o.usersId,
+        totalSpent: money(o._sum.final_amount),
+        orderCount: o._count.id,
+      }))
+      .sort((a, b) => b.totalSpent - a.totalSpent)
+      .slice(0, 10);
+
+    const topCustomerIds = topCustomerCandidates.map((c) => c.userId);
+    let userDetailMap = {};
+    if (topCustomerIds.length > 0) {
+      const userDetails = await db.Users.findMany({
+        where: { id: { in: topCustomerIds } },
+        select: { id: true, full_name: true, email: true },
+      });
+      for (const u of userDetails) userDetailMap[u.id] = u;
+    }
+    const topCustomers = topCustomerCandidates.map((c) => ({
+      ...c,
+      fullName: userDetailMap[c.userId]?.full_name || 'N/A',
+      email: userDetailMap[c.userId]?.email || '',
+    }));
+
+    const trendMap = new Map();
+    for (const user of rangeUsers) {
+      const period = getPeriodLabel(user.created_at, groupBy);
+      trendMap.set(period, (trendMap.get(period) || 0) + 1);
+    }
+    const newUserTrend = buildPeriodLabels(range.from, range.to, groupBy).map((period) => ({
+      period,
+      count: trendMap.get(period) || 0,
+    }));
+
+    return {
+      summary: {
+        totalUsers,
+        verifiedUsers,
+        unverifiedUsers,
+        activeUsers,
+        blockedUsers,
+        usersWithOrders,
+        repeatBuyers,
+        oneTimeBuyers: usersWithOrders - repeatBuyers,
+        repeatPurchaseRate,
+      },
+      newUserTrend,
+      topCustomers,
+      meta: {
+        from: range.fromLabel,
+        to: range.toLabel,
+        group_by: groupBy,
+      },
+    };
+  },
+
   async getBusinessOverview(query = {}) {
     const baseRange = normalizeRange({ from: query.from, to: query.to });
     const revenueRange = normalizeRange({
