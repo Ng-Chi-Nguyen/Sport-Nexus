@@ -543,6 +543,12 @@ async function main() {
       const ward = pick(WARDS);
       const shippingAddress = `${Math.floor(Math.random() * 500) + 1} ${pick(STREETS)}, ${ward}, ${district}, ${province}`;
 
+      // Rải ngẫu nhiên created_at trong 90 ngày gần đây
+      const daysAgo = Math.floor(Math.random() * 90);
+      const hoursAgo = Math.floor(Math.random() * 24);
+      const minsAgo = Math.floor(Math.random() * 60);
+      const createdAt = new Date(Date.now() - daysAgo * 86400000 - hoursAgo * 3600000 - minsAgo * 60000);
+
       const order = await prisma.orders.create({
         data: {
           total_amount: totalAmount,
@@ -554,6 +560,7 @@ async function main() {
           final_amount: totalAmount,
           usersId: customer.id,
           user_email: customer.email,
+          created_at: createdAt,
         },
       });
 
