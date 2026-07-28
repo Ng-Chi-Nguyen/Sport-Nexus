@@ -1,0 +1,59 @@
+import { KpiCard } from "@/pages/Admin/Dashboard/components/KpiCard";
+import {
+  CircleDollarSign,
+  ShoppingCart,
+  ArrowUpRight,
+  TrendingUp,
+  AlertTriangle,
+  Percent,
+} from "lucide-react";
+import { formatCurrency } from "@/utils/formatters";
+
+export const OverviewCards = ({ summary = {} }) => {
+  const stats = [
+    {
+      label: "Tổng doanh thu",
+      value: formatCurrency(summary.totalRevenue || 0),
+      icon: <CircleDollarSign size={16} />,
+      tone: "from-cyan-500/15 border-cyan-500/20",
+    },
+    {
+      label: "Tổng đơn hàng",
+      value: summary.totalOrders ?? 0,
+      icon: <ShoppingCart size={16} />,
+      tone: "from-violet-500/15 border-violet-500/20",
+    },
+    {
+      label: "Giá trị đơn TB",
+      value: formatCurrency(summary.averageOrderValue || 0),
+      icon: <ArrowUpRight size={16} />,
+      tone: "from-emerald-500/15 border-emerald-500/20",
+    },
+    {
+      label: "Thành công",
+      value: `${summary.successRate ?? 0}%`,
+      icon: <TrendingUp size={16} />,
+      tone: "from-lime-500/15 border-lime-500/20",
+    },
+    {
+      label: "Hủy đơn",
+      value: `${summary.cancelRate ?? 0}%`,
+      icon: <AlertTriangle size={16} />,
+      tone: "from-rose-500/15 border-rose-500/20",
+    },
+    {
+      label: "Hoàn tiền",
+      value: `${summary.refundRate ?? 0}%`,
+      icon: <Percent size={16} />,
+      tone: "from-amber-500/15 border-amber-500/20",
+    },
+  ];
+
+  return (
+    <div className="grid gap-2.5 grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      {stats.map((s, idx) => (
+        <KpiCard key={idx} {...s} />
+      ))}
+    </div>
+  );
+};
