@@ -18,10 +18,9 @@ export const userColumns = [
   { header: 'Email', key: 'email', width: 28 },
   { header: 'Mật khẩu', key: 'password', width: 24 },
   { header: 'Số điện thoại', key: 'phone_number', width: 18 },
-  { header: 'ID vai trò', key: 'role_id', width: 14 },
-  { header: 'Trạng thái', key: 'status', width: 14 },
+  { header: 'Vai trò', key: 'role_name', width: 20 },
+  { header: 'Trạng thái', key: 'status', width: 16 },
   { header: 'Đã xác minh', key: 'is_verified', width: 14 },
-  { header: 'Avatar', key: 'avatar', width: 40 },
 ];
 
 export const attributeKeyColumns = [
@@ -100,9 +99,13 @@ export const orderItemColumns = [
   { header: 'Giá mua', key: 'price_at_purchase', width: 14, numFmt: '#,##0₫' },
 ];
 
+export const PO_STATUS_LABELS = ['Đang chờ', 'Đã nhận', 'Nhận một phần', 'Đã hủy'];
+export const PO_STATUS_MAP = { 'Đang chờ': 'PENDING', 'Đã nhận': 'RECEIVED', 'Nhận một phần': 'PARTIALLY_RECEIVED', 'Đã hủy': 'CANCELLED' };
+export const PO_STATUS_REVERSE_MAP = { PENDING: 'Đang chờ', RECEIVED: 'Đã nhận', PARTIALLY_RECEIVED: 'Nhận một phần', CANCELLED: 'Đã hủy' };
+
 export const purchaseOrderColumns = [
   { header: 'Mã tham chiếu', key: 'ref_code', width: 20 },
-  { header: 'ID nhà cung cấp', key: 'supplier_id', width: 14 },
+  { header: 'Tên nhà cung cấp', key: 'supplier_name', width: 24 },
   { header: 'Ngày giao dự kiến', key: 'expected_delivery_date', width: 18 },
   { header: 'Tổng chi phí', key: 'total_cost', width: 14, numFmt: '#,##0₫' },
   { header: 'Trạng thái', key: 'status', width: 18 },
@@ -110,7 +113,7 @@ export const purchaseOrderColumns = [
 
 export const purchaseOrderItemColumns = [
   { header: 'Mã tham chiếu phiếu', key: 'purchase_order_ref_code', width: 22 },
-  { header: 'ID biến thể', key: 'product_variant_id', width: 14 },
+  { header: 'Biến thể', key: 'product_variant', width: 50 },
   { header: 'Số lượng', key: 'quantity', width: 12 },
   { header: 'Đơn giá nhập', key: 'unit_cost_price', width: 14, numFmt: '#,##0₫' },
 ];

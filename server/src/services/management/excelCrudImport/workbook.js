@@ -1,53 +1,7 @@
 ﻿import ExcelJS from "exceljs";
-import AdmZip from "adm-zip";
 
 const HEADER_BG = "FF1E40AF";
 const HEADER_FG = "FFFFFFFF";
-
-const fixInternalHyperlinks = (buffer) => {
-  const zip = new AdmZip(buffer);
-  const entries = zip.getEntries();
-  let modified = false;
-
-  for (const entry of entries) {
-    const name = entry.entryName;
-    if (!name.startsWith("xl/worksheets/sheet") || !name.endsWith(".xml")) continue;
-
-    const relsName = name.replace("/sheet", "/_rels/sheet").replace(".xml", ".xml.rels");
-    const relsEntry = zip.getEntry(relsName);
-    if (!relsEntry) continue;
-
-    let relsText = relsEntry.getData().toString("utf-8");
-    let sheetText = entry.getData().toString("utf-8");
-    let sheetModified = false;
-
-    const matches = [];
-    const relRegex = /<Relationship\s+Id="([^"]+)"\s+Type="[^"]*hyper[Ll]ink[^"]*"\s+Target="#([^"]+)"\s+TargetMode="External"\s*\/>/g;
-    let match;
-    while ((match = relRegex.exec(relsText)) !== null) {
-      matches.push({ full: match[0], relId: match[1], loc: match[2] });
-    }
-
-    for (const { full, relId, loc } of matches) {
-      sheetText = sheetText.replace(' r:id="' + relId + '"', "");
-      sheetText = sheetText.replace('location="#' + loc + '"', 'location="' + loc + '"');
-      relsText = relsText.replace(full, "");
-      sheetModified = true;
-      modified = true;
-    }
-
-    if (sheetModified) {
-      relsText = relsText.replace(
-        /<Relationships>\s*<\/Relationships>/,
-        '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"/>'
-      );
-      zip.updateFile(relsName, Buffer.from(relsText, "utf-8"));
-      zip.updateFile(name, Buffer.from(sheetText, "utf-8"));
-    }
-  }
-
-  return modified ? zip.toBuffer() : buffer;
-};
 
 /**
  * Auto-fit column widths based on cell content.
@@ -125,8 +79,7 @@ export const buildWorkbookBuffer = async (sheets, { addBlankRow = false } = {}) 
     autoFitColumns(ws);
   }
 
-  const buffer = await workbook.xlsx.writeBuffer();
-  return fixInternalHyperlinks(buffer);
+  return workbook.xlsx.writeBuffer();
 };
 
 export const loadWorkbook = async (buffer) => {
