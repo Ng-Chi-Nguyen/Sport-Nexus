@@ -7,6 +7,7 @@ import {
 } from "@/utils/dashboard.utils";
 
 const PRESETS = [
+  { key: "1d", label: "Hôm nay", days: 1 },
   { key: "7d", label: "7 ngày", days: 7 },
   { key: "30d", label: "30 ngày", days: 30 },
   { key: "90d", label: "90 ngày", days: 90 },

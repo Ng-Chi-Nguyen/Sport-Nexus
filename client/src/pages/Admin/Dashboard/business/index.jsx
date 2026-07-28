@@ -21,7 +21,7 @@ export const BusinessOverview = ({ data = {} }) => {
     <div className="space-y-4">
       <OverviewCards summary={summary} />
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2 items-start">
         <RevenueChart revenueTrend={revenueTrend} />
         <StatusBreakdown
           ordersByStatus={ordersByStatus}

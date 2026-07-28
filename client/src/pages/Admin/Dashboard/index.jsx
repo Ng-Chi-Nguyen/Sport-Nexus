@@ -4,6 +4,7 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { FilterBar } from "./components/FilterBar";
 import { TabNav } from "./components/TabNav";
 import { BusinessOverview } from "./business";
+import { CustomerOverview } from "./customers";
 
 const BREADCRUMBS = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -13,6 +14,7 @@ const BREADCRUMBS = [
 
 const SECTIONS = {
   business: BusinessOverview,
+  customers: CustomerOverview,
 };
 
 const Dashboard = () => {

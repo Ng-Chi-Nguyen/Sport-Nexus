@@ -1,6 +1,18 @@
 import axiosClient from "@/lib/axiosClient";
 
 const dashboardApi = {
+  getCustomerOverview: (params = {}) => {
+    const searchParams = new URLSearchParams();
+    if (params.from) searchParams.set("from", params.from);
+    if (params.to) searchParams.set("to", params.to);
+    if (params.group_by) searchParams.set("group_by", params.group_by);
+    const query = searchParams.toString();
+    const url = query
+      ? `/management/dashboard/customer-overview?${query}`
+      : "/management/dashboard/customer-overview";
+    return axiosClient.get(url);
+  },
+
   getBusinessOverview: (params = {}) => {
     const searchParams = new URLSearchParams();
 
