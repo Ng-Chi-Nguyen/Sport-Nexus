@@ -1,4 +1,4 @@
-﻿﻿// @ts-nocheck
+﻿// @ts-nocheck
 import { trimText, toText, toInt, toNumber, rowHasOwnData, buildVariantAttributeLabel, resolveProductVariant } from "../helpers.js";
 import { buildDualSheetModule } from "../builders.js";
 import { orderColumns, orderItemColumns, STATUS_REVERSE_MAP, STATUS_MAP, PAYMENT_METHOD_REVERSE_MAP, PAYMENT_METHOD_MAP, PAYMENT_STATUS_REVERSE_MAP, PAYMENT_STATUS_MAP } from "../columns.js";

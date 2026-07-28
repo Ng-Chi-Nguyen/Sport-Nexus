@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 
 export const brandColumns = [
   { header: 'Tên thương hiệu', key: 'name', width: 30 },

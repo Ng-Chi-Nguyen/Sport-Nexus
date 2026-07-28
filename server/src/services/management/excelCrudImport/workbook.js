@@ -1,4 +1,4 @@
-﻿import ExcelJS from "exceljs";
+import ExcelJS from "exceljs";
 
 const HEADER_BG = "FF1E40AF";
 const HEADER_FG = "FFFFFFFF";

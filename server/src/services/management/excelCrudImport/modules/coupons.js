@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 import { trimText, toText, toInt, toBoolean, rowHasOwnData } from "../helpers.js";
 import { buildSingleSheetModule } from "../builders.js";
 import { couponColumns, DISCOUNT_TYPE_REVERSE_MAP, DISCOUNT_TYPE_MAP } from "../columns.js";
