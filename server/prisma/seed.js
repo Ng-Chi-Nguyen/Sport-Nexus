@@ -508,6 +508,14 @@ async function main() {
 
   const allProducts = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27];
 
+  // Rải created_at cho sản phẩm trong 12 tháng
+  const productStartTs = new Date('2025-08-01').getTime();
+  const productEndTs = new Date('2026-07-28').getTime();
+  for (const p of allProducts) {
+    const randomTime = productStartTs + Math.random() * (productEndTs - productStartTs);
+    await prisma.products.update({ where: { id: p.id }, data: { created_at: new Date(randomTime) } });
+  }
+
   // ======================== 9. COUPONS ========================
   console.log('🎫 Tạo coupons...');
   await Promise.all([

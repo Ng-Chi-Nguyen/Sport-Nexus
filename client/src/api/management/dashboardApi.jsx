@@ -1,6 +1,38 @@
 import axiosClient from "@/lib/axiosClient";
 
 const dashboardApi = {
+  getCouponOverview: () => axiosClient.get("/management/dashboard/coupon-overview"),
+  getSupplierOverview: () => axiosClient.get("/management/dashboard/supplier-overview"),
+  getReviewOverview: () => axiosClient.get("/management/dashboard/review-overview"),
+  getSystemOverview: () => axiosClient.get("/management/dashboard/system-overview"),
+
+  getOrderOverview: (params = {}) => {
+    const searchParams = new URLSearchParams();
+    if (params.from) searchParams.set("from", params.from);
+    if (params.to) searchParams.set("to", params.to);
+    if (params.group_by) searchParams.set("group_by", params.group_by);
+    const query = searchParams.toString();
+    return axiosClient.get(query ? `/management/dashboard/order-overview?${query}` : "/management/dashboard/order-overview");
+  },
+
+  getInventoryOverview: (params = {}) => {
+    const searchParams = new URLSearchParams();
+    if (params.from) searchParams.set("from", params.from);
+    if (params.to) searchParams.set("to", params.to);
+    if (params.group_by) searchParams.set("group_by", params.group_by);
+    const query = searchParams.toString();
+    return axiosClient.get(query ? `/management/dashboard/inventory-overview?${query}` : "/management/dashboard/inventory-overview");
+  },
+
+  getProductOverview: (params = {}) => {
+    const searchParams = new URLSearchParams();
+    if (params.from) searchParams.set("from", params.from);
+    if (params.to) searchParams.set("to", params.to);
+    if (params.group_by) searchParams.set("group_by", params.group_by);
+    const query = searchParams.toString();
+    return axiosClient.get(query ? `/management/dashboard/product-overview?${query}` : "/management/dashboard/product-overview");
+  },
+
   getCustomerOverview: (params = {}) => {
     const searchParams = new URLSearchParams();
     if (params.from) searchParams.set("from", params.from);

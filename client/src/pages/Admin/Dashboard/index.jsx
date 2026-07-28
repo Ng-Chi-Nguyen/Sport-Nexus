@@ -1,10 +1,17 @@
-﻿import { useLoaderData } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import { LayoutDashboard } from "lucide-react";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { FilterBar } from "./components/FilterBar";
 import { TabNav } from "./components/TabNav";
 import { BusinessOverview } from "./business";
 import { CustomerOverview } from "./customers";
+import { ProductOverview } from "./products";
+import { InventoryOverview } from "./inventory";
+import { OrderOverview } from "./orders";
+import { CouponOverview } from "./promotions";
+import { SupplierOverview } from "./suppliers";
+import { ReviewOverview } from "./reviews";
+import { SystemOverview } from "./system";
 
 const BREADCRUMBS = [
   { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -15,6 +22,13 @@ const BREADCRUMBS = [
 const SECTIONS = {
   business: BusinessOverview,
   customers: CustomerOverview,
+  products: ProductOverview,
+  inventory: InventoryOverview,
+  orders: OrderOverview,
+  promotions: CouponOverview,
+  suppliers: SupplierOverview,
+  reviews: ReviewOverview,
+  system: SystemOverview,
 };
 
 const Dashboard = () => {

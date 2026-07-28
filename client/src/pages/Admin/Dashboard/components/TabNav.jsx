@@ -4,7 +4,7 @@ const TABS = [
   { key: "business", label: "Kinh doanh" },
   { key: "customers", label: "Khách hàng" },
   { key: "products", label: "Sản phẩm" },
-  { key: "inventory", label: "Kho & biến thể" },
+  { key: "inventory", label: "Kho" },
   { key: "orders", label: "Đơn hàng" },
   { key: "promotions", label: "Khuyến mãi" },
   { key: "suppliers", label: "Nhà cung cấp" },
