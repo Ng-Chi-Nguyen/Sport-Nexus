@@ -62,6 +62,7 @@ const Profile = () => {
   };
 
   if (!user) return null;
+  console.log(user.avatar);
 
   return (
     <div className="space-y-8 font-sans">
@@ -244,7 +245,9 @@ const Profile = () => {
         {orders.length === 0 ? (
           <div className="border rounded-lg p-6 text-center text-slate-500">
             <p className="font-medium mb-1">Chưa có đơn hàng nào</p>
-            <p className="text-xs">Khi bạn đặt hàng, đơn hàng sẽ xuất hiện tại đây</p>
+            <p className="text-xs">
+              Khi bạn đặt hàng, đơn hàng sẽ xuất hiện tại đây
+            </p>
           </div>
         ) : (
           <div className="overflow-x-auto border rounded-lg">
@@ -278,7 +281,8 @@ const Profile = () => {
                       <span
                         className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium border ${PAYMENT_BADGE[order.payment_status] || ""}`}
                       >
-                        {STATUS_PAYMENT[order.payment_status] || order.payment_status}
+                        {STATUS_PAYMENT[order.payment_status] ||
+                          order.payment_status}
                       </span>
                     </td>
                     <td className="py-3 px-4">

@@ -24,7 +24,7 @@ const breadcrumbData = [
 const roleOptions = [
   { slug: "admin", name: "Quản trị viên hệ thống" },
   { slug: "warehouse_manager", name: "Quản lý kho" },
-  { slug: "purchasing_staffe", name: "Nhân viên nhập hàng" },
+  { slug: "purchasing_staff", name: "Nhân viên nhập hàng" },
   { slug: "sales_staff", name: "Nhân viên bán hàng" },
   { slug: "customer", name: "Khách hàng" },
 ];
