@@ -11,7 +11,7 @@ import { attachExcelCrudImportRoutes } from '../helpers/excelCrudImport.route.js
 
 const userRoute = express.Router();
 
-attachExcelCrudImportRoutes(userRoute, { moduleKey: "users", importPermission: "them-nguoi-dung" });
+attachExcelCrudImportRoutes(userRoute, { moduleKey: "users", importPermission: "them-nguoi-dung", exportPermission: "xem-nguoi-dung" });
 
 userRoute
 

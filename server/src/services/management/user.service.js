@@ -3,6 +3,25 @@ import bcrypt from "bcrypt";
 import emailService from "../email/email.service.js";
 import { deleteImage } from "../../utils/deleteImage.utils.js";
 import { ACTIVE } from "../../utils/prisma.js";
+import { ROLE_DEFAULT_PERMISSIONS } from "../../config/rolePermissions.js";
+
+const assignDefaultPermissions = async (userId, roleSlug) => {
+    const permissionSlugs = ROLE_DEFAULT_PERMISSIONS[roleSlug];
+    if (!permissionSlugs || permissionSlugs.length === 0) return;
+    const permissions = await prisma.Permissions.findMany({
+        where: { slug: { in: permissionSlugs } },
+        select: { id: true }
+    });
+    if (permissions.length === 0) return;
+    await prisma.users.update({
+        where: { id: userId },
+        data: {
+            permissions: {
+                set: permissions.map(p => ({ id: p.id }))
+            }
+        }
+    });
+};
 
 const userService = {
     createUser: async (userData) => {
@@ -35,6 +54,8 @@ const userService = {
                 role_id: true,
             },
         });
+
+        await assignDefaultPermissions(newUser.id, slug);
 
         emailService.sendWelcomeEmail(email, full_name, vToken);
 
@@ -69,6 +90,10 @@ const userService = {
                 role: { select: { id: true, name: true, slug: true } }
             }
         });
+
+        if (slug) {
+            await assignDefaultPermissions(userId, slug);
+        }
 
         return updatedUser;
     },
@@ -118,7 +143,7 @@ const userService = {
     },
 
     getAllUser: async ({ page, search, status, is_verified, role_id, date_from, date_to, include_deleted } = {}) => {
-        const limit = 5;
+        const limit = 10;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
 

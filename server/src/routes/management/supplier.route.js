@@ -11,7 +11,7 @@ import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js
 
 const supplierRoute = express.Router();
 
-attachExcelCrudImportRoutes(supplierRoute, { moduleKey: "suppliers", importPermission: "them-nha-cung-cap" });
+attachExcelCrudImportRoutes(supplierRoute, { moduleKey: "suppliers", importPermission: "them-nha-cung-cap", exportPermission: "xem-nha-cung-cap" });
 
 supplierRoute
 

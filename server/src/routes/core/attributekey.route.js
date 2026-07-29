@@ -6,7 +6,7 @@ import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js
 
 const attriButeKeyRoute = express.Router();
 
-attachExcelCrudImportRoutes(attriButeKeyRoute, { moduleKey: "attributeKey" });
+attachExcelCrudImportRoutes(attriButeKeyRoute, { moduleKey: "attributeKey", exportPermission: "xem-thuoc-tinh" });
 
 attriButeKeyRoute
 

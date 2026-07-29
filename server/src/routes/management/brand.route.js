@@ -11,7 +11,7 @@ import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js
 
 const brandRoute = express.Router();
 
-attachExcelCrudImportRoutes(brandRoute, { moduleKey: "brands", importPermission: "them-thuong-hieu" });
+attachExcelCrudImportRoutes(brandRoute, { moduleKey: "brands", importPermission: "them-thuong-hieu", exportPermission: "xem-thuong-hieu" });
 
 brandRoute
 

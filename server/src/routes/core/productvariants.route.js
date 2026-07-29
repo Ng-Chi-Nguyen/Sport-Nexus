@@ -9,7 +9,7 @@ import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js
 
 const productVariantRoute = express.Router();
 
-attachExcelCrudImportRoutes(productVariantRoute, { moduleKey: "productVariants" });
+attachExcelCrudImportRoutes(productVariantRoute, { moduleKey: "productVariants", exportPermission: "xem-bien-the-san-pham" });
 
 productVariantRoute
 

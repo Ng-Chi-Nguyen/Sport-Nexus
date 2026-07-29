@@ -10,7 +10,7 @@ import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js
 
 const couponRoute = express.Router()
 
-attachExcelCrudImportRoutes(couponRoute, { moduleKey: "coupons", importPermission: "them-ma-giam-gia" });
+attachExcelCrudImportRoutes(couponRoute, { moduleKey: "coupons", importPermission: "them-ma-giam-gia", exportPermission: "xem-ma-giam-gia" });
 
 couponRoute
 

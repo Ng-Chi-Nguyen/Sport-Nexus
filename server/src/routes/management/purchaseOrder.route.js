@@ -9,7 +9,7 @@ import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js
 
 const purchaseOrderRoute = express.Router()
 
-attachExcelCrudImportRoutes(purchaseOrderRoute, { moduleKey: "purchaseOrder" });
+attachExcelCrudImportRoutes(purchaseOrderRoute, { moduleKey: "purchaseOrder", exportPermission: "xem-phieu-nhap" });
 
 purchaseOrderRoute
 

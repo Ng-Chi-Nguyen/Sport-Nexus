@@ -10,14 +10,14 @@ import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js
 
 const stockMovementRoute = express.Router();
 
-attachExcelCrudImportRoutes(stockMovementRoute, { moduleKey: "stockMovements" });
+attachExcelCrudImportRoutes(stockMovementRoute, { moduleKey: "stockMovements", exportPermission: "xem-kho-hang" });
 
 stockMovementRoute
 
     .post("/import", verifyToken, checkPermission("them-nhap-kho-hang"), validate(stockMovementSchema.createStockMovement),
       logAction({ actionType: "STOCK_ADJUSTMENT", entityType: "StockMovements", getEntityId: (_, body) => body.data?.id, getChanges: createDetails }),
       stockMovementController.import)
-    .post("/export", verifyToken, checkPermission("them-nhap-kho-hang"), validate(stockMovementSchema.createStockMovement),
+    .post("/export", verifyToken, checkPermission("xem-kho-hang"), validate(stockMovementSchema.createStockMovement),
       logAction({ actionType: "STOCK_ADJUSTMENT", entityType: "StockMovements", getEntityId: (_, body) => body.data?.id, getChanges: createDetails }),
       stockMovementController.export)
     .put("/:id", verifyToken, checkPermission("sua-kho-hang"), validate(stockMovementSchema.updateStockMovement),

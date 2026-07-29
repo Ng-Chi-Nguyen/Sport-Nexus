@@ -26,7 +26,7 @@ categoryRoute
         categoryController.previewImport)
     .post("/import", verifyToken, checkPermission("them-danh-muc"), uploadExcelFile,
       categoryController.importCategories)
-    .get("/export", verifyToken,
+    .get("/export", verifyToken, checkPermission("xem-danh-muc"),
       categoryController.exportCategories)
     .get("/template", verifyToken,
       categoryController.downloadTemplate)
