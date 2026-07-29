@@ -2,8 +2,8 @@ import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { getSidebarSections } from "@/constants/adminMenuConfig";
 
-const SidebarCollapsed = () => {
-  const sections = getSidebarSections();
+const SidebarCollapsed = ({ userRole }) => {
+  const sections = getSidebarSections(userRole);
   const [tooltip, setTooltip] = useState(null);
 
   return (

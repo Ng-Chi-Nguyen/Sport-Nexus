@@ -39,13 +39,13 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
         <SearchBar />
 
         <div className="flex items-center gap-1 sm:gap-2">
-          {user && user.role.slug !== "customer" && (
+          {user && user.role?.slug !== "customer" && (
             <Link
-              to="/management/dashboard"
+              to="/management/orders"
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-200 font-medium text-sm"
             >
               <LayoutDashboard size={18} strokeWidth={1.5} />
-              <span className="hidden lg:inline">Dashboard</span>
+              <span className="hidden lg:inline">Quản trị</span>
             </Link>
           )}
 

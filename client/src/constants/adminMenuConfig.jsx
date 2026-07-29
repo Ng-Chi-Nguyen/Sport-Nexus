@@ -24,18 +24,25 @@ export const iconMap = {
   Tags: <Icons.Tags strokeWidth={1.5} size={18} />,
 };
 
-export const getSidebarSections = () => {
+export const getSidebarSections = (userRole = null) => {
   const rawStructure = SIDEBAR_MENU_STRUCTURE(prefix_path);
-  return rawStructure.map((section) => ({
-    ...section,
-    items: section.items.map((item) => ({
-      ...item,
-      icon: iconMap[item.iconName] || <Icons.HelpCircle size={18} />,
-    })),
-  }));
+  return rawStructure
+    .map((section) => ({
+      ...section,
+      items: section.items
+        .filter((item) => {
+          if (!item.roles) return true;
+          return item.roles.includes(userRole);
+        })
+        .map((item) => ({
+          ...item,
+          icon: iconMap[item.iconName] || <Icons.HelpCircle size={18} />,
+        })),
+    }))
+    .filter((section) => section.items.length > 0);
 };
 
-export const mainNavItems = () => {
-  const sections = getSidebarSections();
+export const mainNavItems = (userRole = null) => {
+  const sections = getSidebarSections(userRole);
   return sections.flatMap((s) => s.items);
 };

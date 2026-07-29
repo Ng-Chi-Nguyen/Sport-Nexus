@@ -19,20 +19,25 @@ const AdminLayout = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const settingsRef = useRef(null);
 
-  // Menu sections from shared config
-  const sidebarSections = useMemo(() => getSidebarSections(), []);
-
   // Popover items for settings
   const popoverItems = useMemo(() => {
     const settingsIconMap = {
       Activity: (
-        <Icons.Activity size={16} strokeWidth={1.5} className="text-slate-500" />
+        <Icons.Activity
+          size={16}
+          strokeWidth={1.5}
+          className="text-slate-500"
+        />
       ),
       User: (
         <Icons.User size={16} strokeWidth={1.5} className="text-slate-500" />
       ),
       ShieldCheck: (
-        <Icons.ShieldCheck size={16} strokeWidth={1.5} className="text-slate-500" />
+        <Icons.ShieldCheck
+          size={16}
+          strokeWidth={1.5}
+          className="text-slate-500"
+        />
       ),
       LogOut: <Icons.LogOut size={16} strokeWidth={1.5} />,
     };
@@ -53,6 +58,15 @@ const AdminLayout = () => {
     }
   }, []);
 
+  // User role for menu filtering
+  const userRole = localUser.role?.slug || null;
+
+  // Menu sections from shared config
+  const sidebarSections = useMemo(
+    () => getSidebarSections(userRole),
+    [userRole],
+  );
+
   // Close popover on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -71,6 +85,8 @@ const AdminLayout = () => {
     window.location.href = "/auth/login";
   };
 
+  // console.log(localUser);
+
   return (
     <div className="flex h-screen w-full bg-[#0B0F19] text-slate-400 font-sans antialiased overflow-hidden">
       {/* Desktop: full sidebar */}
@@ -81,18 +97,28 @@ const AdminLayout = () => {
           }`}
         >
           <div className="flex flex-col flex-1 min-h-0">
-            <div className={`flex items-center mb-4 select-none shrink-0 ${isCollapsed ? "justify-center" : ""}`}>
-              <Link to="/" className={`flex items-center no-underline ${isCollapsed ? "" : "gap-3"}`}>
+            <div
+              className={`flex items-center mb-4 select-none shrink-0 ${isCollapsed ? "justify-center" : ""}`}
+            >
+              <Link
+                to="/"
+                className={`flex items-center no-underline ${isCollapsed ? "" : "gap-3"}`}
+              >
                 {isCollapsed ? (
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(37,99,235,0.35)] shrink-0">
-                    <span className="font-black text-base tracking-tighter italic">SN</span>
+                    <span className="font-black text-base tracking-tighter italic">
+                      SN
+                    </span>
                   </div>
                 ) : (
-                  <img src={logoSvg} alt="SportNexus" className="h-12 md:h-14 w-auto object-contain shrink-0" />
+                  <img
+                    src={logoSvg}
+                    alt="SportNexus"
+                    className="h-12 md:h-14 w-auto object-contain shrink-0"
+                  />
                 )}
               </Link>
             </div>
-
             <div className="flex-1 space-y-6 overflow-y-auto pr-1 custom-scrollbar pb-6 overflow-x-hidden">
               {sidebarSections.map((section, index) => (
                 <div key={index} className="space-y-1.5">
@@ -134,7 +160,10 @@ const AdminLayout = () => {
           </div>
 
           {/* Profile area */}
-          <div className="pt-4 border-t border-slate-900 space-y-3 shrink-0 relative" ref={settingsRef}>
+          <div
+            className="pt-4 border-t border-slate-900 space-y-3 shrink-0 relative"
+            ref={settingsRef}
+          >
             {isOpenSettings && (
               <div
                 className={`absolute bottom-full left-0 mb-2 bg-[#0D121F]/95 border border-slate-800 rounded-xl shadow-2xl backdrop-blur-xl p-2 z-50 flex flex-col gap-0.5 ${
@@ -143,15 +172,24 @@ const AdminLayout = () => {
               >
                 {!isCollapsed && (
                   <div className="px-3 py-2 border-b border-white/5 mb-1 select-none">
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Tra cứu hệ thống</p>
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                      Tra cứu hệ thống
+                    </p>
                   </div>
                 )}
                 <button
                   type="button"
-                  onClick={() => { setIsCollapsed(!isCollapsed); setIsOpenSettings(false); }}
+                  onClick={() => {
+                    setIsCollapsed(!isCollapsed);
+                    setIsOpenSettings(false);
+                  }}
                   className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-sky-400 bg-sky-500/5 border border-sky-500/10 hover:bg-sky-500/10 transition-all text-left"
                 >
-                  {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+                  {isCollapsed ? (
+                    <ChevronRight size={16} />
+                  ) : (
+                    <ChevronLeft size={16} />
+                  )}
                   <span>{isCollapsed ? "Mở rộng thanh" : "Thu nhỏ thanh"}</span>
                 </button>
                 <div className="border-t border-white/5 my-1" />
@@ -160,27 +198,39 @@ const AdminLayout = () => {
                     return (
                       <div key={idx}>
                         <div className="border-t border-white/5 my-1" />
-                        <button type="button" onClick={handleLogout}
+                        <button
+                          type="button"
+                          onClick={handleLogout}
                           className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-rose-500/90 hover:bg-rose-950/20 hover:text-rose-400 transition-all text-left"
                         >
-                          {item.icon}<span>{item.label}</span>
+                          {item.icon}
+                          <span>{item.label}</span>
                         </button>
                       </div>
                     );
                   }
                   return (
-                    <button key={idx} type="button"
-                      onClick={() => { if (item.targetPath) { navigate(`${prefix_path}${item.targetPath}`); setIsOpenSettings(false); } }}
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        if (item.targetPath) {
+                          navigate(`${prefix_path}${item.targetPath}`);
+                          setIsOpenSettings(false);
+                        }
+                      }}
                       className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition-all text-left"
                     >
-                      {item.icon}<span>{item.label}</span>
+                      {item.icon}
+                      <span>{item.label}</span>
                     </button>
                   );
                 })}
               </div>
             )}
 
-            <div onClick={() => setIsOpenSettings(!isOpenSettings)}
+            <div
+              onClick={() => setIsOpenSettings(!isOpenSettings)}
               className={`flex items-center rounded-xl border select-none cursor-pointer transition-all duration-150 group ${
                 isCollapsed ? "justify-center p-2" : "p-2.5 gap-3"
               } ${
@@ -189,11 +239,21 @@ const AdminLayout = () => {
                   : "bg-[#111827]/60 border-slate-900 hover:bg-[#162035]/80 hover:border-slate-800"
               }`}
             >
-              <img src={localUser.avatar} className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-800 shrink-0" />
+              <img
+                src={localUser.avatar}
+                className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-800 shrink-0"
+              />
               {!isCollapsed && (
                 <div className="flex-1 min-w-0 leading-normal py-0.5">
-                  <p className="text-[12px] font-bold text-slate-200 truncate tracking-wide">{localUser.full_name}</p>
-                  <p className="text-[10px] text-slate-500 font-mono truncate mt-0.5 opacity-90">{localUser.email}</p>
+                  <p className="text-[10px] text-blue-500 font-mono truncate mt-0.5 opacity-90">
+                    {localUser.role.name}
+                  </p>
+                  <p className="text-[12px] font-bold text-slate-200 truncate tracking-wide">
+                    {localUser.full_name}
+                  </p>
+                  <p className="text-[10px] text-slate-500 font-mono truncate mt-0.5 opacity-90">
+                    {localUser.email}
+                  </p>
                 </div>
               )}
             </div>
@@ -202,7 +262,7 @@ const AdminLayout = () => {
       )}
 
       {/* Tablet: collapsed sidebar */}
-      {isTablet && <SidebarCollapsed />}
+      {isTablet && <SidebarCollapsed userRole={userRole} />}
 
       {/* Content area */}
       <div className="flex-1 flex flex-col h-full bg-[#080C14] overflow-hidden">
@@ -212,7 +272,7 @@ const AdminLayout = () => {
       </div>
 
       {/* Mobile: bottom navigation */}
-      {isMobile && <BottomNav />}
+      {isMobile && <BottomNav userRole={userRole} />}
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { mainNavItems } from "@/constants/adminMenuConfig";
 
-const BottomNav = () => {
-  const allItems = mainNavItems();
+const BottomNav = ({ userRole }) => {
+  const allItems = mainNavItems(userRole);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#0D121F]/95 border-t border-slate-800 backdrop-blur-xl pb-[env(safe-area-inset-bottom)] overflow-x-auto scrollbar-hide">

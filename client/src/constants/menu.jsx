@@ -8,11 +8,13 @@ export const SIDEBAR_MENU_STRUCTURE = (prefix) => [
         path: `${prefix}/dashboard`,
         label: "Tổng quan",
         iconName: "LayoutDashboard",
+        roles: ["admin"],
       },
       {
         path: `${prefix}/logs`,
         label: "Hoạt động",
         iconName: "ClipboardClock",
+        roles: ["admin"],
       },
     ],
   },
@@ -71,16 +73,18 @@ export const SIDEBAR_MENU_STRUCTURE = (prefix) => [
   {
     title: "NGƯỜI DÙNG & ACL",
     items: [
-      { path: `${prefix}/users`, label: "Khách hàng", iconName: "IdCard" },
+      { path: `${prefix}/users`, label: "Khách hàng", iconName: "IdCard", roles: ["admin"] },
       {
         path: `${prefix}/permissions`,
         label: "Phân quyền",
         iconName: "KeySquare",
+        roles: ["admin"],
       },
       {
         path: `${prefix}/addresses`,
         label: "Địa chỉ",
         iconName: "LocateFixed",
+        roles: ["admin"],
       },
     ],
   },
