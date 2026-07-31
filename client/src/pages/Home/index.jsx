@@ -25,6 +25,7 @@ const HomePage = () => {
   // console.log(bestSellers);
   return (
     <div className="min-h-screen text-slate-800 font-sans antialiased selection:bg-blue-500/20">
+      {coupons.length > 0 && <CouponsSection coupons={coupons} />}
       {bestSellers.length > 0 && <SpecialSale products={bestSellers} />}
       {categories.length > 0 && <CategoryBanners categories={categories} />}
       {newestProducts.length > 0 && <NewArrivals products={newestProducts} />}
@@ -36,7 +37,6 @@ const HomePage = () => {
         />
       ))}
       <MiddleBanner brands={brands} />
-      <CouponsSection coupons={coupons} />
     </div>
   );
 };
