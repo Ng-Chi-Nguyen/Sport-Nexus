@@ -22,6 +22,7 @@ import { useEffect, useRef, useState } from "react";
 import { Logo } from "./logo";
 import SearchBar from "@/components/search/SearchBar";
 import { useCart } from "@/contexts/CartContext";
+import { clearAuth } from "@/lib/authStorage";
 
 const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
   const { count } = useCart();
@@ -232,7 +233,7 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
                   </Link>
                   <button
                     onClick={() => {
-                      localStorage.clear();
+                      clearAuth();
                       window.location.href = "/auth/login";
                     }}
                     className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-rose-500 hover:bg-rose-50 transition-all text-left"

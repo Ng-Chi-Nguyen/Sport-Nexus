@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Bookmark, Check, Copy, Shirt, Tag } from "lucide-react";
 import { useCoupons } from "@/contexts/CouponContext";
 import { formatDate, formatCurrency } from "@/utils/formatters";
+import { SportNexusLogoIcon } from "@/components/logo";
 
 const CouponCard = ({ coupon }) => {
   const { isSaved, toggleSave } = useCoupons();
@@ -41,6 +42,7 @@ const CouponCard = ({ coupon }) => {
         <Shirt className="absolute -top-6 -left-4 w-20 h-20 rotate-12" />
         <Tag className="absolute -bottom-6 -right-3 w-24 h-24 -rotate-12" />
       </div>
+      <SportNexusLogoIcon className="pointer-events-none absolute -bottom-4 -left-3 w-28 h-auto rotate-6 opacity-30" aria-hidden="true" />
 
       {statusLabel && (
         <span className="absolute top-2 right-2 z-10 rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold backdrop-blur-sm">
@@ -65,9 +67,10 @@ const CouponCard = ({ coupon }) => {
           </div>
         </div>
 
-        <div className="relative border-l border-dashed border-white/40">
-          <span className="absolute -left-1.5 -top-1.5 w-3 h-3 rounded-full bg-white" />
-          <span className="absolute -left-1.5 -bottom-1.5 w-3 h-3 rounded-full bg-white" />
+        <div className="relative w-3 shrink-0" aria-hidden="true">
+          <span className="absolute top-0 left-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" />
+          <span className="absolute top-3 bottom-3 left-1/2 w-px -translate-x-1/2 border-l border-dashed border-white/60" />
+          <span className="absolute bottom-0 left-1/2 h-2.5 w-2.5 -translate-x-1/2 translate-y-1/2 rounded-full bg-white" />
         </div>
 
         <div className="flex-1 flex flex-col gap-1.5 px-3 py-3">

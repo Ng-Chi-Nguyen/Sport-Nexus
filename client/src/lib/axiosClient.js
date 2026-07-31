@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { clearAuth } from './authStorage';
 
 // 1. Khởi tạo instance
 const axiosClient = axios.create({
@@ -69,7 +70,7 @@ axiosClient.interceptors.response.use(
                     return axiosClient(originalRequest);
                 }
             } catch (refreshError) {
-                localStorage.clear();
+                clearAuth();
                 window.location.href = "/auth/login";
                 return Promise.reject(refreshError);
             }

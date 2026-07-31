@@ -8,6 +8,7 @@ import useResponsive from "@/hooks/useResponsive";
 import SidebarCollapsed from "@/components/admin/SidebarCollapsed";
 import BottomNav from "@/components/admin/BottomNav";
 import * as Icons from "lucide-react";
+import { clearAuth } from "@/lib/authStorage";
 
 const AdminLayout = () => {
   const prefix_path = "/management";
@@ -81,7 +82,7 @@ const AdminLayout = () => {
   }, [isOpenSettings]);
 
   const handleLogout = () => {
-    localStorage.clear();
+    clearAuth();
     window.location.href = "/auth/login";
   };
 

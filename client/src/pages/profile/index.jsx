@@ -5,6 +5,7 @@ import { Confirm } from "@/components/ui/confirm";
 import authApi from "@/api/auth/auth";
 import { toast } from "sonner";
 import { breadcrumbNameMap } from "@/constants/web/profile";
+import { clearAuth } from "@/lib/authStorage";
 
 const ProfilePage = () => {
   const location = useLocation();
@@ -36,7 +37,7 @@ const ProfilePage = () => {
     } catch (error) {
       console.error("Lỗi API logout:", error);
     } finally {
-      localStorage.clear();
+      clearAuth();
       setIsLogoutModalOpen(false);
       window.location.href = "/auth/login";
     }

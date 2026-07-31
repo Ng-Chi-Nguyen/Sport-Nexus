@@ -28,6 +28,7 @@ const AddAddress = lazy(() => import("@/pages/profile/address/AddAddress"));
 const EditAddress = lazy(() => import("@/pages/profile/address/EditAddress"));
 const EditProfile = lazy(() => import("@/pages/profile/editProfile"));
 const FavoritesPage = lazy(() => import("@/pages/favorites"));
+const CouponsPage = lazy(() => import("@/pages/coupons"));
 const ProfilePlaceholder = lazy(() => import("@/pages/profile/placeholder"));
 const Support = lazy(() => import("@/pages/profile/placeholder"));
 
@@ -117,7 +118,7 @@ export const webRoutes = {
     },
     {
       path: "khuyen-mai",
-      element: <ProfilePlaceholder />,
+      element: <CouponsPage />,
     },
     {
       path: "thong-bao",
