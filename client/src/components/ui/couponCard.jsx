@@ -33,83 +33,87 @@ const CouponCard = ({ coupon }) => {
 
   return (
     <div
-      className={`relative overflow-hidden rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-red-700 p-5 shadow-xl text-white flex flex-col gap-3 ${
+      className={`relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 shadow-lg text-white ${
         disabled ? "opacity-60 grayscale pointer-events-none select-none" : ""
       }`}
     >
       <div className="pointer-events-none absolute inset-0 opacity-10" aria-hidden="true">
-        <Shirt className="absolute -top-4 -right-6 w-28 h-28 rotate-12" />
-        <Shirt className="absolute top-1/2 left-1/4 w-24 h-24 -rotate-45 opacity-70" />
-        <Tag className="absolute -bottom-8 -left-6 w-32 h-32 -rotate-12" />
+        <Shirt className="absolute -top-6 -left-4 w-20 h-20 rotate-12" />
+        <Tag className="absolute -bottom-6 -right-3 w-24 h-24 -rotate-12" />
       </div>
 
       {statusLabel && (
-        <span className="absolute top-4 right-4 z-10 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-semibold backdrop-blur-sm">
+        <span className="absolute top-2 right-2 z-10 rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold backdrop-blur-sm">
           {statusLabel}
         </span>
       )}
 
-      <div className="relative flex flex-col gap-3 flex-1">
-        <div className="text-[11px] font-light uppercase tracking-[0.2em] text-white/80">
-          Phiếu giảm giá SportNexus
-        </div>
-
-        <div>
-          <div className="text-4xl font-black leading-none drop-shadow-sm">
+      <div className="relative flex items-stretch">
+        <div className="flex flex-col justify-center gap-0.5 px-4 py-3 min-w-[118px]">
+          <div className="text-[9px] font-light uppercase tracking-[0.18em] text-white/80">
+            Phiếu giảm giá
+          </div>
+          <div className="text-xl font-black leading-none drop-shadow-sm">
             {coupon.discount_type === "PERCENTAGE"
               ? `-${coupon.discount_value}%`
               : formatCurrency(coupon.discount_value)}
           </div>
-          <div className="mt-1 text-[11px] font-light uppercase tracking-wider text-white/80">
+          <div className="text-[9px] font-light uppercase leading-snug text-white/75">
             {coupon.discount_type === "PERCENTAGE"
-              ? `Giảm tối đa ${formatCurrency(coupon.max_discount)}`
-              : "Giảm trực tiếp trên đơn hàng"}
+              ? `Tối đa ${formatCurrency(coupon.max_discount)}`
+              : "Trên đơn hàng"}
           </div>
         </div>
 
-        <div className="relative flex items-center gap-2 rounded-lg bg-white/10 px-2 py-1.5 backdrop-blur-sm">
-          <span className="flex-1 px-2 py-1 font-mono font-bold uppercase tracking-widest text-white">
-            {coupon.code}
-          </span>
+        <div className="relative border-l border-dashed border-white/40">
+          <span className="absolute -left-1.5 -top-1.5 w-3 h-3 rounded-full bg-white" />
+          <span className="absolute -left-1.5 -bottom-1.5 w-3 h-3 rounded-full bg-white" />
+        </div>
+
+        <div className="flex-1 flex flex-col gap-1.5 px-3 py-3">
+          <div className="flex items-center gap-1.5">
+            <span className="flex-1 rounded-md bg-white/15 px-2 py-1 font-mono font-bold uppercase tracking-wider text-white text-[11px]">
+              {coupon.code}
+            </span>
+            <button
+              onClick={handleCopy}
+              disabled={disabled}
+              className="shrink-0 inline-flex items-center gap-1 rounded-md border border-white/70 px-2 py-1 text-[11px] font-semibold text-white hover:bg-white hover:text-blue-600 transition-colors disabled:cursor-not-allowed"
+            >
+              {copiedCode === coupon.code ? (
+                <>
+                  <Check className="w-3 h-3" />
+                  Copy
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3 h-3" />
+                  Copy
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="text-[10px] font-light leading-snug text-white/80">
+            Đơn tối thiểu: {formatCurrency(coupon.min_order_value)}
+          </div>
+          <div className="text-[10px] font-light leading-snug text-white/80">
+            HSD: {formatDate(coupon.end_date)} · {coupon.usage_count}/{coupon.usage_limit}
+          </div>
+
           <button
-            onClick={handleCopy}
+            onClick={() => toggleSave(coupon)}
             disabled={disabled}
-            className="shrink-0 inline-flex items-center gap-1 rounded-md border border-white/70 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-white hover:text-red-600 transition-colors disabled:cursor-not-allowed"
+            className={`mt-auto inline-flex items-center justify-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-colors disabled:cursor-not-allowed ${
+              saved
+                ? "border-white bg-white text-blue-600"
+                : "border-white/50 text-white/80 hover:bg-white/10"
+            }`}
           >
-            {copiedCode === coupon.code ? (
-              <>
-                <Check className="w-3.5 h-3.5" />
-                Đã copy
-              </>
-            ) : (
-              <>
-                <Copy className="w-3.5 h-3.5" />
-                Copy
-              </>
-            )}
+            <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-current" : ""}`} />
+            {saved ? "Đã lưu mã" : "Lưu mã"}
           </button>
         </div>
-
-        <div className="flex flex-col gap-1 text-[11px] font-light text-white/80">
-          <span>Đơn tối thiểu: {formatCurrency(coupon.min_order_value)}</span>
-          <span>Hạn sử dụng: {formatDate(coupon.end_date)}</span>
-          <span>
-            Đã dùng: {coupon.usage_count} / {coupon.usage_limit}
-          </span>
-        </div>
-
-        <button
-          onClick={() => toggleSave(coupon)}
-          disabled={disabled}
-          className={`mt-auto inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed ${
-            saved
-              ? "border-white bg-white text-red-600"
-              : "border-white/50 text-white/80 hover:bg-white/10"
-          }`}
-        >
-          <Bookmark className={`w-4 h-4 ${saved ? "fill-current" : ""}`} />
-          {saved ? "Đã lưu mã" : "Lưu mã"}
-        </button>
       </div>
     </div>
   );
