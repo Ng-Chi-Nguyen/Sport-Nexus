@@ -8,6 +8,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/react-query";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
+import { CouponProvider } from "@/contexts/CouponContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 createRoot(document.getElementById("root")).render(
@@ -15,7 +16,9 @@ createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <CartProvider>
         <WishlistProvider>
-          <RouterProvider router={router} fallbackElement={<LoadingSpinner />} />
+          <CouponProvider>
+            <RouterProvider router={router} fallbackElement={<LoadingSpinner />} />
+          </CouponProvider>
         </WishlistProvider>
       </CartProvider>
     </QueryClientProvider>
