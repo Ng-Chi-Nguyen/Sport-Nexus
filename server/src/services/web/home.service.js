@@ -1,5 +1,6 @@
 import prisma from "../../db/prisma.js";
 import { ACTIVE } from "../../utils/prisma.js";
+import couponWebService from "./coupon.service.js";
 
 const productSelect = {
     id: true, name: true, slug: true,
@@ -44,7 +45,7 @@ const mapProduct = (p) => {
 
 const homeService = {
     getHomePageData: async () => {
-        const [newestProducts, categories, brands, bestSellers, topRated, productsByCategory] =
+        const [newestProducts, categories, brands, bestSellers, topRated, productsByCategory, coupons] =
             await Promise.all([
                 homeService.getNewestProducts(),
                 homeService.getCategories(),
@@ -52,6 +53,7 @@ const homeService = {
                 homeService.getBestSellers(),
                 homeService.getTopRated(),
                 homeService.getProductsByCategory(),
+                couponWebService.getActiveCoupons(),
             ]);
 
         return {
@@ -61,6 +63,7 @@ const homeService = {
             bestSellers,
             topRated,
             productsByCategory,
+            coupons,
         };
     },
 
