@@ -67,4 +67,13 @@ const TitleManagement = (props) => {
   );
 };
 
-export { TitleManagement };
+const SectionTitle = ({ children }) => {
+  return (
+    <div className="mb-6">
+      <h3 className="text-xl md:text-2xl font-bold text-slate-900">{children}</h3>
+      <div className="mt-1.5 h-0.5 w-auto rounded-full bg-blue-600" />
+    </div>
+  );
+};
+
+export { TitleManagement, SectionTitle };

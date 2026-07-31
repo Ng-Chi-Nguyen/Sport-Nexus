@@ -5,15 +5,25 @@ const read = () => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed.filter((t) => typeof t === "string" && t.trim()) : [];
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((item) => {
+        if (typeof item === "string") return { term: item.trim(), ts: 0 };
+        if (item && typeof item.term === "string") {
+          return { term: item.term.trim(), ts: Number(item.ts) || 0 };
+        }
+        return null;
+      })
+      .filter((item) => item && item.term)
+      .slice(0, MAX_ITEMS);
   } catch {
     return [];
   }
 };
 
-const write = (terms) => {
+const write = (items) => {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(terms.slice(0, MAX_ITEMS)));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items.slice(0, MAX_ITEMS)));
   } catch {
     // storage unavailable (private mode / quota)
   }
@@ -24,11 +34,11 @@ export const getSearchHistory = () => read();
 export const addToSearchHistory = (term) => {
   const q = (term || "").trim();
   if (!q) return;
-  write([q, ...read().filter((t) => t !== q)]);
+  write([{ term: q, ts: Date.now() }, ...read().filter((item) => item.term !== q)]);
 };
 
 export const removeFromSearchHistory = (term) => {
-  write(read().filter((t) => t !== term));
+  write(read().filter((item) => item.term !== term));
 };
 
 export const clearSearchHistory = () => {

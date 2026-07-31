@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bookmark, Check, Copy, Shirt, Tag } from "lucide-react";
+import { Bookmark, Check, Copy, Shirt, Tag, Trash2 } from "lucide-react";
 import { useCoupons } from "@/contexts/CouponContext";
 import { formatDate, formatCurrency } from "@/utils/formatters";
 import { SportNexusLogoIcon } from "@/components/logo";
@@ -34,88 +34,129 @@ const CouponCard = ({ coupon }) => {
 
   return (
     <div
-      className={`relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 shadow-lg text-white ${
-        disabled ? "opacity-60 grayscale pointer-events-none select-none" : ""
+      className={`relative h-[152px] w-full overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-blue-600 to-blue-700 shadow-md text-white select-none ${
+        disabled ? "opacity-60 grayscale pointer-events-none" : ""
       }`}
     >
-      <div className="pointer-events-none absolute inset-0 opacity-10" aria-hidden="true">
+      {/* Background Patterns */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-10"
+        aria-hidden="true"
+      >
         <Shirt className="absolute -top-6 -left-4 w-20 h-20 rotate-12" />
         <Tag className="absolute -bottom-6 -right-3 w-24 h-24 -rotate-12" />
       </div>
-      <SportNexusLogoIcon className="pointer-events-none absolute -bottom-4 -left-3 w-28 h-auto rotate-6 opacity-30" aria-hidden="true" />
+      <SportNexusLogoIcon
+        className="pointer-events-none absolute -bottom-4 -left-3 w-28 h-auto rotate-6 opacity-20"
+        aria-hidden="true"
+      />
+      <SportNexusLogoIcon
+        className="pointer-events-none absolute -top-4 right-11 w-28 h-auto rotate-6 opacity-20"
+        aria-hidden="true"
+      />
 
+      {/* Badge Trạng thái */}
       {statusLabel && (
-        <span className="absolute top-2 right-2 z-10 rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold backdrop-blur-sm">
+        <span className="absolute top-1.5 right-2 z-10 rounded-full bg-black/30 px-2 py-0.5 text-[9px] font-semibold backdrop-blur-sm">
           {statusLabel}
         </span>
       )}
 
-      <div className="relative flex items-stretch">
-        <div className="flex flex-col justify-center gap-0.5 px-4 py-3 min-w-[118px]">
-          <div className="text-[9px] font-light uppercase tracking-[0.18em] text-white/80">
+      <div className="relative flex h-full items-stretch">
+        {/* Cột Trái: Giá trị giảm */}
+        <div className="flex w-[120px] shrink-0 flex-col justify-center items-center gap-0.5 px-3 py-2 text-center border-r border-dashed border-white/30">
+          <span className="text-[11px] font-medium uppercase tracking-wider text-white/80">
             Phiếu giảm giá
-          </div>
-          <div className="text-xl font-black leading-none drop-shadow-sm">
+          </span>
+          <span className="text-xl font-black leading-none drop-shadow-sm my-1">
             {coupon.discount_type === "PERCENTAGE"
               ? `-${coupon.discount_value}%`
-              : formatCurrency(coupon.discount_value)}
-          </div>
-          <div className="text-[9px] font-light uppercase leading-snug text-white/75">
-            {coupon.discount_type === "PERCENTAGE"
-              ? `Tối đa ${formatCurrency(coupon.max_discount)}`
-              : "Trên đơn hàng"}
-          </div>
+              : `-${formatCurrency(coupon.discount_value)}`}
+          </span>
+          <span className="text-[11px] font-medium uppercase tracking-tight text-white/80">
+            Trên đơn hàng
+          </span>
         </div>
 
-        <div className="relative w-3 shrink-0" aria-hidden="true">
-          <span className="absolute top-0 left-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" />
-          <span className="absolute top-3 bottom-3 left-1/2 w-px -translate-x-1/2 border-l border-dashed border-white/60" />
-          <span className="absolute bottom-0 left-1/2 h-2.5 w-2.5 -translate-x-1/2 translate-y-1/2 rounded-full bg-white" />
+        {/* Mép xé vé (Răng cưa top/bottom) */}
+        <div className="relative w-0 shrink-0" aria-hidden="true">
+          <span className="absolute top-0 left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" />
+          <span className="absolute bottom-0 left-1/2 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full bg-white" />
         </div>
 
-        <div className="flex-1 flex flex-col gap-1.5 px-3 py-3">
-          <div className="flex items-center gap-1.5">
-            <span className="flex-1 rounded-md bg-white/15 px-2 py-1 font-mono font-bold uppercase tracking-wider text-white text-[11px]">
+        {/* Cột Phải: Thông tin & Hành động */}
+        <div className="flex flex-1 flex-col justify-between p-2.5 pl-3.5">
+          {/* Hàng 1: Code + Copy */}
+          <div className="flex items-center gap-1.5 h-7">
+            <span className="flex-1 truncate rounded bg-white/15 px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white text-center">
               {coupon.code}
             </span>
             <button
               onClick={handleCopy}
               disabled={disabled}
-              className="shrink-0 inline-flex items-center gap-1 rounded-md border border-white/70 px-2 py-1 text-[11px] font-semibold text-white hover:bg-white hover:text-blue-600 transition-colors disabled:cursor-not-allowed"
+              className="shrink-0 inline-flex items-center justify-center gap-1 h-full rounded border border-white/60 px-2 text-[10px] font-semibold text-white hover:bg-white hover:text-blue-600 transition-colors"
             >
               {copiedCode === coupon.code ? (
                 <>
-                  <Check className="w-3 h-3" />
-                  Copy
+                  <Check className="w-3 h-3 text-emerald-400" />
+                  <span>Đã chép</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-3 h-3" />
-                  Copy
+                  <span>Copy</span>
                 </>
               )}
             </button>
           </div>
 
-          <div className="text-[10px] font-light leading-snug text-white/80">
-            Đơn tối thiểu: {formatCurrency(coupon.min_order_value)}
-          </div>
-          <div className="text-[10px] font-light leading-snug text-white/80">
-            HSD: {formatDate(coupon.end_date)} · {coupon.usage_count}/{coupon.usage_limit}
+          {/* Hàng 2: Chi tiết điều kiện */}
+          <div className="flex flex-col gap-0.5 text-[11px] text-white/90 leading-tight my-auto">
+            <p className="truncate">
+              {coupon.discount_type === "PERCENTAGE"
+                ? `Tối đa giảm: ${formatCurrency(coupon.max_discount)}`
+                : "Giảm trực tiếp vào đơn hàng"}
+            </p>
+            <p className="truncate">
+              Đơn tối thiểu: {formatCurrency(coupon.min_order_value)}
+            </p>
+            <p className="truncate">
+              HSD: {formatDate(coupon.end_date)} · {coupon.usage_count}/
+              {coupon.usage_limit}
+            </p>
           </div>
 
-          <button
-            onClick={() => toggleSave(coupon)}
-            disabled={disabled}
-            className={`mt-auto inline-flex items-center justify-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-colors disabled:cursor-not-allowed ${
-              saved
-                ? "border-white bg-white text-blue-600"
-                : "border-white/50 text-white/80 hover:bg-white/10"
-            }`}
-          >
-            <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-current" : ""}`} />
-            {saved ? "Đã lưu mã" : "Lưu mã"}
-          </button>
+          {/* Hàng 3: Nút Lưu / Đã lưu + Xóa (Split Button) */}
+          <div className="h-7 w-full">
+            {saved ? (
+              <div className="flex h-full w-full items-stretch rounded-lg overflow-hidden border border-white shadow-sm">
+                {/* Vùng hiển thị "Đã lưu" */}
+                <div className="flex flex-1 items-center justify-center gap-1 bg-white text-blue-600 px-2 text-[11px] font-bold">
+                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  <span>Đã lưu</span>
+                </div>
+
+                {/* Vùng nút Xóa mã */}
+                <button
+                  onClick={() => toggleSave(coupon)}
+                  disabled={disabled}
+                  title="Xóa khỏi danh sách lưu"
+                  className="flex items-center justify-center bg-blue-600/80 hover:bg-red-600 px-2.5 text-white/90 hover:text-white transition-colors border-l border-blue-400/30"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => toggleSave(coupon)}
+                disabled={disabled}
+                className="h-full w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-white/60 bg-white/5 px-2.5 text-[11px] font-semibold text-white transition-all hover:bg-white/15 disabled:cursor-not-allowed"
+              >
+                <Bookmark className="w-3.5 h-3.5" />
+                <span>Lưu mã</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

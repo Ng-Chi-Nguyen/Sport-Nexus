@@ -29,6 +29,7 @@ const EditAddress = lazy(() => import("@/pages/profile/address/EditAddress"));
 const EditProfile = lazy(() => import("@/pages/profile/editProfile"));
 const FavoritesPage = lazy(() => import("@/pages/favorites"));
 const CouponsPage = lazy(() => import("@/pages/coupons"));
+const SearchHistoryPage = lazy(() => import("@/pages/searchHistory"));
 const ProfilePlaceholder = lazy(() => import("@/pages/profile/placeholder"));
 const Support = lazy(() => import("@/pages/profile/placeholder"));
 
@@ -126,7 +127,7 @@ export const webRoutes = {
     },
     {
       path: "lich-su-tim-kiem",
-      element: <ProfilePlaceholder />,
+      element: <SearchHistoryPage />,
     },
     {
       path: "bao-mat",

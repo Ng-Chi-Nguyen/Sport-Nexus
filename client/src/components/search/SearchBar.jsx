@@ -175,24 +175,24 @@ const SearchBar = () => {
                 Xóa tất cả
               </button>
             </div>
-            {history.map((term) => (
-              <div key={term} className="group flex items-center px-2 hover:bg-gray-50">
+            {history.map((item) => (
+              <div key={item.term} className="group flex items-center px-2 hover:bg-gray-50">
                 <button
                   type="button"
-                  onMouseDown={() => handleSubmit(term)}
+                  onMouseDown={() => handleSubmit(item.term)}
                   className="flex-1 flex items-center gap-3 py-2.5 px-2 text-left outline-none focus:outline-none"
                 >
                   <Clock size={16} className="text-gray-400 shrink-0" />
-                  <span className="text-sm text-gray-700 truncate">{term}</span>
+                  <span className="text-sm text-gray-700 truncate">{item.term}</span>
                 </button>
                 <button
                   type="button"
                   onMouseDown={() => {
-                    removeFromSearchHistory(term);
+                    removeFromSearchHistory(item.term);
                     setHistory(getSearchHistory());
                   }}
                   className="p-1.5 text-gray-300 hover:text-red-500 transition-colors outline-none focus:outline-none"
-                  aria-label={`Xóa ${term} khỏi lịch sử`}
+                  aria-label={`Xóa ${item.term} khỏi lịch sử`}
                 >
                   <X size={14} />
                 </button>
