@@ -30,6 +30,15 @@ export const WishlistProvider = ({ children }) => {
         saveIds(ids);
     }, [ids]);
 
+    useEffect(() => {
+        const handleStorage = (event) => {
+            if (event.key !== STORAGE_KEY) return;
+            setIds(loadIds());
+        };
+        window.addEventListener("storage", handleStorage);
+        return () => window.removeEventListener("storage", handleStorage);
+    }, []);
+
     const isLiked = useCallback((id) => ids.includes(id), [ids]);
 
     const toggleLike = useCallback(
