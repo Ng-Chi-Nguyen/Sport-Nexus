@@ -1,9 +1,10 @@
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import searchApi from "@/api/web/searchApi";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
+import { ProductCard } from "@/components/ui/card";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -40,7 +41,7 @@ const SearchPage = () => {
 
     return (
         <div className="min-h-screen py-4 md:py-8">
-            <div className="mx-auto max-w-5xl">
+            <div className="mx-auto max-w-5xl mt-6 md:mt-8">
                 <Breadcrumbs
                     data={[
                         { title: "Trang chủ", route: "/" },
@@ -75,34 +76,7 @@ const SearchPage = () => {
                     <>
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {products.map((product) => (
-                                <Link
-                                    key={product.id}
-                                    to={`/san-pham/${product.slug}`}
-                                    className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow"
-                                >
-                                    <div className="aspect-square bg-gray-50 overflow-hidden">
-                                        {product.thumbnail ? (
-                                            <img
-                                                src={product.thumbnail}
-                                                alt={product.name}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                                <Search size={32} />
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="p-3">
-                                        <p className="text-xs text-gray-500 mb-1">{product.brand?.name}</p>
-                                        <h3 className="text-sm font-medium text-gray-800 line-clamp-2 mb-2">
-                                            {product.name}
-                                        </h3>
-                                        <p className="text-sm font-bold text-primary">
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.base_price)}
-                                        </p>
-                                    </div>
-                                </Link>
+                                <ProductCard key={product.id} product={product} />
                             ))}
                         </div>
 

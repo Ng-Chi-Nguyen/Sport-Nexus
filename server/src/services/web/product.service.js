@@ -50,7 +50,7 @@ const productWebService = {
         const where = { is_active: true, deleted_at: ACTIVE };
 
         const trimmedSearch = search?.trim();
-        if (trimmedSearch) where.name = { contains: trimmedSearch, mode: "insensitive" };
+        if (trimmedSearch) where.name = { contains: trimmedSearch };
         if (category_ids) {
             const ids = category_ids.split(',').map(s => safeInt(s.trim())).filter(n => n !== undefined);
             if (ids.length > 0) where.category_id = { in: ids };

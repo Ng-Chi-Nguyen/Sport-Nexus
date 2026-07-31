@@ -1,12 +1,23 @@
 import {
+  Bell,
+  Heart,
+  Languages,
   LayoutDashboard,
+  LifeBuoy,
+  LogOut,
   Menu,
+  Moon,
+  Receipt,
+  Search,
   Settings,
+  ShieldCheck,
   ShoppingCart,
+  Sun,
+  TicketPercent,
   User,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Logo } from "./logo";
 import SearchBar from "@/components/search/SearchBar";
@@ -17,6 +28,28 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
   const [avatarError, setAvatarError] = useState(false);
+  const [isOpenSettings, setIsOpenSettings] = useState(false);
+  const [isDark, setIsDark] = useState(
+    () => localStorage.getItem("theme") === "dark",
+  );
+  const settingsRef = useRef(null);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", isDark);
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }, [isDark]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (settingsRef.current && !settingsRef.current.contains(event.target)) {
+        setIsOpenSettings(false);
+      }
+    };
+    if (isOpenSettings) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpenSettings]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white/80 backdrop-blur-md border-b border-gray-200/70 shadow-sm">
@@ -39,22 +72,12 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
         <SearchBar />
 
         <div className="flex items-center gap-1 sm:gap-2">
-          {user && user.role?.slug !== "customer" && (
-            <Link
-              to="/management/orders"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-200 font-medium text-sm"
-            >
-              <LayoutDashboard size={18} strokeWidth={1.5} />
-              <span className="hidden lg:inline">Quản trị</span>
-            </Link>
-          )}
-
           {user ? (
             <Link
               to="/tai-khoan"
-              className="flex items-center gap-2.5 px-2 py-2 rounded-full border border-gray-200 text-gray-700 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200 min-w-0 sm:min-w-[140px]"
+              className="flex items-center gap-2.5 px-2 py-2 border-b-2 border-primary text-gray-700 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200 min-w-0 sm:min-w-[140px]"
             >
-              <div className="w-8 h-7 sm:w-10 sm:h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold shrink-0 overflow-hidden">
+              <div className="w-10 h-7 sm:w-10 sm:h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold shrink-0 overflow-hidden">
                 {user.avatar && !avatarError ? (
                   <img
                     src={user.avatar}
@@ -100,10 +123,127 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
               </span>
             )}
           </Link>
+        </div>
 
-          <button className="p-2.5 rounded-full text-gray-500 hover:text-primary hover:bg-primary/10 transition-all duration-200">
+        <div className="relative" ref={settingsRef}>
+          <button
+            onClick={() => setIsOpenSettings((prev) => !prev)}
+            className="p-2.5 rounded-full text-gray-500 hover:text-primary hover:bg-primary/10 transition-all duration-200"
+          >
             <Settings size={20} strokeWidth={1.5} />
           </button>
+
+          {isOpenSettings && (
+            <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-200 shadow-xl z-50 flex flex-col">
+              <span className="absolute -top-1.5 right-3 w-3 h-3 bg-white border-t border-l border-gray-200 rotate-45" />
+              {user && user.role?.slug !== "customer" && (
+                <Link
+                  to="/management/orders"
+                  onClick={() => setIsOpenSettings(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
+                >
+                  <LayoutDashboard size={18} strokeWidth={1.5} />
+                  <span>Quản trị</span>
+                </Link>
+              )}
+              {user && (
+                <>
+                  <Link
+                    to="/yeu-thich"
+                    onClick={() => setIsOpenSettings(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
+                  >
+                    <Heart size={18} strokeWidth={1.5} />
+                    <span>Sản phẩm đã thích</span>
+                  </Link>
+                  <Link
+                    to="/hoa-don"
+                    onClick={() => setIsOpenSettings(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
+                  >
+                    <Receipt size={18} strokeWidth={1.5} />
+                    <span>Hóa đơn đã thanh toán</span>
+                  </Link>
+                  <Link
+                    to="/khuyen-mai"
+                    onClick={() => setIsOpenSettings(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
+                  >
+                    <TicketPercent size={18} strokeWidth={1.5} />
+                    <span>Mã giảm giá của tôi</span>
+                  </Link>
+                  <Link
+                    to="/thong-bao"
+                    onClick={() => setIsOpenSettings(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
+                  >
+                    <Bell size={18} strokeWidth={1.5} />
+                    <span>Thông báo</span>
+                  </Link>
+                  <Link
+                    to="/lich-su-tim-kiem"
+                    onClick={() => setIsOpenSettings(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
+                  >
+                    <Search size={18} strokeWidth={1.5} />
+                    <span>Lịch sử tìm kiếm</span>
+                  </Link>
+                  <Link
+                    to="/bao-mat"
+                    onClick={() => setIsOpenSettings(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
+                  >
+                    <ShieldCheck size={18} strokeWidth={1.5} />
+                    <span>Bảo mật tài khoản</span>
+                  </Link>
+                  <button
+                    onClick={() => setIsOpenSettings(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100 text-left"
+                  >
+                    <Languages size={18} strokeWidth={1.5} />
+                    <span>Ngôn ngữ</span>
+                  </button>
+                  <Link
+                    to="/ho-tro"
+                    onClick={() => setIsOpenSettings(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
+                  >
+                    <LifeBuoy size={18} strokeWidth={1.5} />
+                    <span>Hỗ trợ / Trợ giúp</span>
+                  </Link>
+                  <button
+                    onClick={() => setIsDark((prev) => !prev)}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100 text-left"
+                  >
+                    {isDark ? (
+                      <Sun size={18} strokeWidth={1.5} />
+                    ) : (
+                      <Moon size={18} strokeWidth={1.5} />
+                    )}
+                    <span>{isDark ? "Chế độ sáng" : "Chế độ tối"}</span>
+                  </button>
+                  <Link
+                    to="/tai-khoan"
+                    onClick={() => setIsOpenSettings(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
+                  >
+                    <User size={18} strokeWidth={1.5} />
+                    <span>Tài khoản</span>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      localStorage.clear();
+                      window.location.href = "/auth/login";
+                    }}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-rose-500 hover:bg-rose-50 transition-all text-left"
+                  >
+                    <LogOut size={18} strokeWidth={1.5} />
+                    <span>Đăng xuất</span>
+                  </button>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </header>

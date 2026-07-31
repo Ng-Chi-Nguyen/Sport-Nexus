@@ -35,7 +35,7 @@ const ProductInfo = ({
     : 0;
 
   return (
-    <div className="space-y-4 font-sans select-none">
+    <div className="space-y-4 font-sans">
       {/* Thương hiệu & Danh mục & Mã SP */}
       <div className="flex gap-2 text-xs">
         <span className="font-extrabold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">
