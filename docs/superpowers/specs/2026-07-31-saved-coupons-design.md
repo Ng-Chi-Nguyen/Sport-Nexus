@@ -16,6 +16,7 @@ Hiện tại khách hàng chỉ có thể xem danh sách mã giảm giá đang h
 
 **Trong scope:**
 - `CouponContext` (localStorage) giống `WishlistContext`, có cross-tab sync.
+- `WishlistContext` bổ sung cross-tab sync (mở rộng từ user).
 - Component `CouponCard` dùng chung (auto-save khi copy + trạng thái disabled).
 - Section mã giảm giá trên trang home.
 - Trang `/khuyen-mai` = danh sách mã đã lưu (bao gồm mã hết hiệu lực, hiển thị disabled).
@@ -36,6 +37,11 @@ Giống `WishlistContext`:
 - `toggleSave` nhận nguyên object coupon nhưng chỉ lưu `code` vào mảng.
 - **Đồng bộ cross-tab**: thêm `window.addEventListener("storage", ...)` — khi tab khác đổi `sportnexus_saved_coupons` thì cập nhật lại `savedCodes` trong state; dọn listener khi unmount.
 - Provider đăng ký trong `main.jsx`, đặt cùng vị trí với `WishlistProvider`.
+
+### 1b. WishlistContext — đồng bộ cross-tab (mở rộng từ user)
+
+- Áp dụng cùng cơ chế `storage` event cho `WishlistContext` (key `sportnexus_wishlist`): khi tab khác đổi wishlist thì `ids` trong state được cập nhật real-time; dọn listener khi unmount.
+- Trang favorites (`/yeu-thich`) nhờ đó tự cập nhật khi đổi tab.
 
 ### 2. Component `CouponCard` (`client/src/components/ui/couponCard.jsx`)
 
@@ -85,11 +91,11 @@ CouponContext <--storage event-->  tab khác (cross-tab sync)
 - Chưa lưu mã nào: trang `/khuyen-mai` hiện empty state, không gọi API.
 - Mã đã lưu bị hết hạn/hết lượt/ngưng hiệu lực: **vẫn hiển thị** nhưng mờ kèm badge tương ứng, không copy/lưu được (khác với mã chưa bao giờ lưu — sẽ không xuất hiện vì không nằm trong `savedCodes`).
 - Copy mã chưa lưu → tự động lưu (auto-save) rồi mới copy.
-- Mở 2 tab: lưu/bỏ lưu ở tab này sẽ sync real-time sang tab kia nhờ `storage` event.
+- Mở 2 tab: lưu/bỏ lưu coupon ở tab này sẽ sync real-time sang tab kia nhờ `storage` event. Cùng cơ chế áp dụng cho wishlist (`/yeu-thich`).
 - Không có coupon active: section home ẩn; `/khuyen-mai` vẫn hiển thị mã đã lưu (kể cả khi hết hiệu lực).
 
 ### Verification
 
 - `npm run build --prefix client` và `npm run lint --prefix client`.
 - Kiểm tra endpoint `GET /home/coupon/list?codes=...` trả mã không lọc active.
-- Kiểm tra thủ công bằng agent-browser: lưu/bỏ lưu mã trên home, copy mã chưa lưu → tự lưu, xem "Mã của tôi" tại `/khuyen-mai` (mã hết hạn hiển thị disabled), refresh kiểm tra persist, mở 2 tab kiểm tra sync.
+- Kiểm tra thủ công bằng agent-browser: lưu/bỏ lưu mã trên home, copy mã chưa lưu → tự lưu, xem "Mã của tôi" tại `/khuyen-mai` (mã hết hạn hiển thị disabled), refresh kiểm tra persist, mở 2 tab kiểm tra sync cho cả coupon lẫn wishlist.
