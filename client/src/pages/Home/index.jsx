@@ -4,6 +4,7 @@ import { CategoryBanners } from "./components/categoryBanners";
 import { NewArrivals } from "./components/newArrivals";
 import { ProductSection } from "./components/productSection";
 import { MiddleBanner } from "./components/middleBanner";
+import { CouponsSection } from "./components/couponsSection";
 
 const HomePage = () => {
   const apiData = useLoaderData();
@@ -15,6 +16,7 @@ const HomePage = () => {
     productsByCategory = [],
     brands = [],
     categories = [],
+    coupons = [],
   } = apiData || {};
 
   const activeCategories = productsByCategory.filter(
@@ -34,6 +36,7 @@ const HomePage = () => {
         />
       ))}
       <MiddleBanner brands={brands} />
+      <CouponsSection coupons={coupons} />
     </div>
   );
 };
