@@ -6,6 +6,12 @@ const breadcrumbNameMap = {
   "/tai-khoan/don-hang": "Đơn hàng",
   "/tai-khoan/dat-lai-mat-khau": "Đổi mật khẩu",
   "/tai-khoan/chinh-sua-thong-tin-ca-nhan": "Chỉnh sửa thông tin",
+  "/tai-khoan/yeu-thich": "Sản phẩm đã thích",
+  "/tai-khoan/hoa-don": "Hóa đơn đã thanh toán",
+  "/tai-khoan/khuyen-mai": "Mã giảm giá của tôi",
+  "/tai-khoan/thong-bao": "Thông báo",
+  "/tai-khoan/lich-su-tim-kiem": "Lịch sử tìm kiếm",
+  "/tai-khoan/bao-mat": "Bảo mật tài khoản",
 };
 
 const menuProfile = [

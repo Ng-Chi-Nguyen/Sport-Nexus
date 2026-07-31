@@ -27,6 +27,9 @@ const Address = lazy(() => import("@/pages/profile/address"));
 const AddAddress = lazy(() => import("@/pages/profile/address/AddAddress"));
 const EditAddress = lazy(() => import("@/pages/profile/address/EditAddress"));
 const EditProfile = lazy(() => import("@/pages/profile/editProfile"));
+const FavoritesPage = lazy(() => import("@/pages/favorites"));
+const ProfilePlaceholder = lazy(() => import("@/pages/profile/placeholder"));
+const Support = lazy(() => import("@/pages/profile/placeholder"));
 
 export const webRoutes = {
   children: [
@@ -103,6 +106,34 @@ export const webRoutes = {
         },
         { path: "chinh-sua-thong-tin-ca-nhan", element: <EditProfile /> },
       ],
+    },
+    {
+      path: "yeu-thich",
+      element: <FavoritesPage />,
+    },
+    {
+      path: "hoa-don",
+      element: <ProfilePlaceholder />,
+    },
+    {
+      path: "khuyen-mai",
+      element: <ProfilePlaceholder />,
+    },
+    {
+      path: "thong-bao",
+      element: <ProfilePlaceholder />,
+    },
+    {
+      path: "lich-su-tim-kiem",
+      element: <ProfilePlaceholder />,
+    },
+    {
+      path: "bao-mat",
+      element: <ProfilePlaceholder />,
+    },
+    {
+      path: "ho-tro",
+      element: <Support />,
     },
   ],
 };
