@@ -175,7 +175,7 @@ const productService = {
             deleted_at: ACTIVE,
             is_active: true,
         };
-        if (q) where.name = { contains: q, mode: 'insensitive' };
+        if (q) where.name = { contains: q };
 
         let [products, totalItems] = await Promise.all([
             prisma.Products.findMany({
@@ -188,12 +188,36 @@ const productService = {
                     slug: true,
                     base_price: true,
                     thumbnail: true,
-                    brand: { select: { name: true } },
+                    brand: { select: { id: true, name: true, logo: true } },
+                    ProductVariants: {
+                        select: { id: true, price: true },
+                        orderBy: { price: 'asc' },
+                        take: 1,
+                    },
+                    Reviews: { select: { rating: true } },
                 },
                 orderBy: { id: 'desc' },
             }),
             prisma.Products.count({ where }),
         ]);
+
+        products = products.map((p) => {
+            const ratings = p.Reviews.map((r) => r.rating);
+            return {
+                id: p.id,
+                name: p.name,
+                slug: p.slug,
+                base_price: p.base_price,
+                thumbnail: p.thumbnail,
+                brand: p.brand,
+                min_price: Number(p.ProductVariants[0]?.price) || Number(p.base_price),
+                first_variant_id: p.ProductVariants[0]?.id || null,
+                avg_rating: ratings.length > 0
+                    ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) / 10
+                    : 0,
+                total_reviews: ratings.length,
+            };
+        });
 
         return {
             products,
@@ -204,6 +228,49 @@ const productService = {
                 itemsPerPage: limit,
             },
         };
+    },
+
+    getProductsByIds: async ({ ids = [] } = {}) => {
+        const cleanIds = ids.map((id) => Number(id)).filter((id) => Number.isInteger(id));
+        if (cleanIds.length === 0) return [];
+        const products = await prisma.Products.findMany({
+            where: {
+                id: { in: cleanIds },
+                deleted_at: ACTIVE,
+                is_active: true,
+            },
+            select: {
+                id: true,
+                name: true,
+                slug: true,
+                base_price: true,
+                thumbnail: true,
+                brand: { select: { id: true, name: true, logo: true } },
+                ProductVariants: {
+                    select: { id: true, price: true },
+                    orderBy: { price: 'asc' },
+                    take: 1,
+                },
+                Reviews: { select: { rating: true } },
+            },
+        });
+        return products.map((p) => {
+            const ratings = p.Reviews.map((r) => r.rating);
+            return {
+                id: p.id,
+                name: p.name,
+                slug: p.slug,
+                base_price: p.base_price,
+                thumbnail: p.thumbnail,
+                brand: p.brand,
+                min_price: Number(p.ProductVariants[0]?.price) || Number(p.base_price),
+                first_variant_id: p.ProductVariants[0]?.id || null,
+                avg_rating: ratings.length > 0
+                    ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) / 10
+                    : 0,
+                total_reviews: ratings.length,
+            };
+        });
     },
 
     getAllProductsDropdown: async () => {

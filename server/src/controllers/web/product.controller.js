@@ -50,6 +50,27 @@ const productController = {
             });
         }
     },
+    getProductsByIds: async (req, res) => {
+        try {
+            const ids = (req.query.ids || '')
+                .split(',')
+                .map((id) => parseInt(id))
+                .filter((id) => Number.isInteger(id));
+
+            const products = await productService.getProductsByIds({ ids });
+
+            return res.status(200).json({
+                success: true,
+                data: { products },
+            });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    },
+
     getProducts: async (req, res) => {
         try {
             const { page, search, sort, category_id, category_ids, brand_id, brand_ids, price_min, price_max, limit, attr_filter } = req.query;

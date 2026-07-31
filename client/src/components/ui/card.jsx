@@ -3,6 +3,7 @@ import Badge from "./badge";
 import { formatCurrency } from "@/utils/formatters";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 
 const GRADIENTS = [
   "from-blue-500 to-cyan-500",
@@ -83,6 +84,8 @@ const CardBrand = ({ data }) => {
 const ProductCard = ({ product, index = 0 }) => {
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const { isLiked, toggleLike } = useWishlist();
+  const liked = isLiked(product.id);
   const salePrice = product.min_price || product.base_price || 0;
   const originalPrice = product.base_price || 0;
   const hasDiscount = originalPrice > salePrice;
@@ -152,8 +155,17 @@ const ProductCard = ({ product, index = 0 }) => {
           <span className="text-[11px] font-bold text-slate-400 tracking-wider uppercase truncate max-w-[80%]">
             {product.brand?.name || "Chưa phân loại"}
           </span>
-          <button className="text-slate-400 hover:text-red-500 transition-colors shrink-0">
-            <Heart size={16} />
+          <button
+            title={liked ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleLike(product.id);
+            }}
+            className={`transition-colors shrink-0 ${
+              liked ? "text-red-500" : "text-slate-400 hover:text-red-500"
+            }`}
+          >
+            <Heart size={16} className={liked ? "fill-red-500" : ""} />
           </button>
         </div>
 

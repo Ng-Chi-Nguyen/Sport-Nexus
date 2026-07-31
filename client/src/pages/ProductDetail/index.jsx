@@ -1,8 +1,14 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
+import {
+  addToSearchHistory,
+  clearLastSearchTerm,
+  getLastSearchTerm,
+} from "@/lib/searchHistory";
 
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import ProductImages from "./components/ProductImages";
@@ -20,11 +26,22 @@ const ProductDetail = () => {
 
   const [selectedAttrs, setSelectedAttrs] = useState({});
   const [quantity, setQuantity] = useState(1);
-  const [wishlisted, setWishlisted] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [couponMsg, setCouponMsg] = useState(null);
 
+  useEffect(() => {
+    const term = getLastSearchTerm();
+    if (!term) return;
+    const timer = setTimeout(() => {
+      addToSearchHistory(term);
+      clearLastSearchTerm();
+    }, 120000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const product = loaderData?.success ? loaderData.data : null;
+  const { isLiked, toggleLike } = useWishlist();
+  const wishlisted = product ? isLiked(product.id) : false;
   const variants = product?.ProductVariants || [];
   const ratings = product?.Reviews || [];
   const avgRating =
@@ -63,7 +80,9 @@ const ProductDetail = () => {
     ? Number(selectedVariant.price)
     : variants.length > 0
       ? Math.min(...variants.map((v) => Number(v.price)))
-      : product ? Number(product.base_price) : 0;
+      : product
+        ? Number(product.base_price)
+        : 0;
 
   const currentStock = selectedVariant?.stock ?? null;
   const maxStock = currentStock ?? 999;
@@ -94,13 +113,15 @@ const ProductDetail = () => {
     const variant = selectedVariant || variants[0];
     navigate("/thanh-toan", {
       state: {
-        items: [{
-          product_variant_id: variantId,
-          quantity,
-          price_at_purchase: Number(variant.price),
-          product,
-          variant,
-        }],
+        items: [
+          {
+            product_variant_id: variantId,
+            quantity,
+            price_at_purchase: Number(variant.price),
+            product,
+            variant,
+          },
+        ],
       },
     });
   }, [attrKeys.length, selectedVariant, variants, quantity, product, navigate]);
@@ -121,7 +142,7 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="min-h-screen py-2 md:py-6">
+    <div className="min-h-screen py-2 md:py-6 mt-10">
       <Breadcrumbs
         data={[
           { title: "Trang chủ", route: "/" },
@@ -165,7 +186,7 @@ const ProductDetail = () => {
             maxStock={maxStock}
             onQtyChange={setQuantity}
             wishlisted={wishlisted}
-            onWishlist={() => setWishlisted((p) => !p)}
+            onWishlist={() => product && toggleLike(product.id)}
             onShare={async () => {
               const url = window.location.href;
               if (navigator.share)
