@@ -84,16 +84,16 @@ const EditUserPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
-      <h2 className="text-xl font-bold text-slate-100 tracking-wide">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide">
         Chỉnh sửa thông tin người dùng
       </h2>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
         {/* KHỐI 1: ẢNH ĐẠI DIỆN (3 CỘT) */}
-        <div className="col-span-12 md:col-span-4 lg:col-span-3 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
+        <div className="col-span-12 md:col-span-4 lg:col-span-3 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-5 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md h-fit transition-colors duration-200">
           <TitleManagement color="cyan">Ảnh đại diện</TitleManagement>
           <div className="flex items-center justify-center w-full py-2">
             <InputFile value={avatar} onChange={(file) => setAvatar(file)} />
@@ -101,9 +101,9 @@ const EditUserPage = () => {
         </div>
 
         {/* KHỐI 2: THÔNG TIN CƠ BẢN (5 CỘT) */}
-        <div className="col-span-12 md:col-span-8 lg:col-span-5 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
+        <div className="col-span-12 md:col-span-8 lg:col-span-5 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-5 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md h-fit transition-colors duration-200">
           <TitleManagement color="green">Thông tin cơ bản</TitleManagement>
-          <div className="space-y-5">
+          <div className="space-y-5 mt-2">
             <FloatingInput
               id="full_name"
               label="Họ tên"
@@ -129,12 +129,12 @@ const EditUserPage = () => {
           </div>
         </div>
 
-        {/* KHỐI 3: TRẠNG THÁI & PHÂN QUYỀN (4 CỘT - relative z-20 chống che dropdown) */}
-        <div className="col-span-12 md:col-span-12 lg:col-span-4 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-2xl backdrop-blur-md relative z-20 h-fit">
+        {/* KHỐI 3: TRẠNG THÁI & PHÂN QUYỀN (4 CỘT) */}
+        <div className="col-span-12 md:col-span-12 lg:col-span-4 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-5 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 h-fit transition-colors duration-200">
           <TitleManagement color="blue">Trạng thái quyền</TitleManagement>
-          {/* Cụm Checkbox tinh chỉnh bo viền công nghệ tối */}
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            <div className="border border-slate-800/80 bg-[#111827]/40 p-3 rounded-xl flex items-center justify-center transition-colors duration-150 hover:border-slate-700">
+
+          <div className="grid grid-cols-2 gap-3 mb-6 mt-2">
+            <div className="border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-[#111827]/40 p-3 rounded-xl flex items-center justify-center transition-colors duration-150 hover:border-slate-300 dark:hover:border-slate-700">
               <AnimatedCheckbox
                 id="is_verified_checkbox"
                 label={isVerified ? "Đã xác thực" : "Chưa xác thực"}
@@ -142,7 +142,7 @@ const EditUserPage = () => {
                 onChange={(e) => handleVerifiedChange(e.target.checked)}
               />
             </div>
-            <div className="border border-slate-800/80 bg-[#111827]/40 p-3 rounded-xl flex items-center justify-center transition-colors duration-150 hover:border-slate-700">
+            <div className="border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-[#111827]/40 p-3 rounded-xl flex items-center justify-center transition-colors duration-150 hover:border-slate-300 dark:hover:border-slate-700">
               <AnimatedCheckbox
                 id="is_active_checkbox"
                 label={status ? "Hoạt động" : "Đã khóa"}
@@ -152,7 +152,7 @@ const EditUserPage = () => {
             </div>
           </div>
 
-          <div className="">
+          <div className="space-y-4">
             <Select
               label="Loại tài khoản"
               options={roleOptions}
@@ -161,8 +161,7 @@ const EditUserPage = () => {
               placeholder="Chọn chức vụ..."
             />
 
-            {/* Thanh nút bấm ngăn cách phẳng mượt biên đáy card */}
-            <div className="border-t border-white/5 flex justify-end w-full">
+            <div className="border-t border-slate-200 dark:border-white/5 pt-4 flex justify-end w-full">
               <Submit_GoBack />
             </div>
           </div>

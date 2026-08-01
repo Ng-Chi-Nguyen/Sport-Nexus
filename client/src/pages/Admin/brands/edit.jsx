@@ -4,7 +4,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { BtnDelete, Submit_GoBack } from "@/components/ui/button";
+import { Submit_GoBack } from "@/components/ui/button";
 import { FloatingInput, InputFile } from "@/components/ui/input";
 import { CountrySelect } from "@/components/ui/select";
 import { ConfirmDelete } from "@/components/ui/confirm";
@@ -28,7 +28,7 @@ const breadcrumbData = [
     route: "management/brands",
   },
   {
-    title: "Chỉnh sữa thương hiệu",
+    title: "Chỉnh sửa thương hiệu",
     route: "",
   },
 ];
@@ -37,30 +37,28 @@ const EditBrandPage = () => {
   const response = useLoaderData();
   const navigate = useNavigate();
   const brand = response.data;
+
   // state data response
   const [name, setName] = useState(brand.name);
   const [logo, setLogo] = useState(brand.logo);
   const [selectedOrigin, setSelectedOrigin] = useState(brand.origin);
-  // starte delete
+
+  // state delete
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
-  // console.log(selectedOrigin);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const fromData = new FormData();
-
+    const formData = new FormData();
     if (logo instanceof File) {
-      // Khi gửi thế này, Multer ở BE sẽ bắt được và tạo ra cái <Buffer ...> bạn cần
-      fromData.append("logo", logo);
+      formData.append("logo", logo);
     }
-
-    fromData.append("name", name);
-    fromData.append("origin", selectedOrigin);
+    formData.append("name", name);
+    formData.append("origin", selectedOrigin);
 
     try {
-      const response = await brandApi.update(brand.id, fromData);
+      const response = await brandApi.update(brand.id, formData);
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["brands"] });
         toast.success(response.message);
@@ -84,10 +82,9 @@ const EditBrandPage = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await brandApi.delete(brand.id); // Gọi API xóa
-      //   revalidator.revalidate(); // Cập nhật UI
+      const response = await brandApi.delete(brand.id);
       if (response.success) {
-        setIsConfirmOpen(false); // Đóng modal
+        setIsConfirmOpen(false);
         await queryClient.invalidateQueries({ queryKey: ["brands"] });
         toast.success(response.message);
         navigate(-1);
@@ -95,12 +92,7 @@ const EditBrandPage = () => {
         toast.success(response.message);
       }
     } catch (error) {
-      // 1. Log để kiểm tra cấu trúc lỗi thực tế trong Console
-      console.log("Cấu trúc error nhận được:", error);
       setIsConfirmOpen(false);
-      // 2. Lấy thông báo lỗi linh hoạt
-      // Nếu có Interceptor: dùng error.message
-      // Nếu không có Interceptor: dùng error.response?.data?.message
       const errorMessage =
         error.message ||
         error.response?.data?.message ||
@@ -112,17 +104,26 @@ const EditBrandPage = () => {
   };
 
   return (
-    <div>
+    <div className="space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
-      <h2>Chỉnh sữa thương hiệu</h2>
-      <form onSubmit={handleSubmit} className="flex w-fit p-4 gap-3">
-        <div className="border border-blue-200 p-3 rounded-[5px]">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide">
+        Chỉnh sửa thương hiệu
+      </h2>
+
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col lg:flex-row gap-4 items-start w-full"
+      >
+        <div className="w-full lg:w-[30%] bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
           <TitleManagement color="cyan">Logo thương hiệu</TitleManagement>
-          <InputFile value={logo} onChange={(file) => setLogo(file)} />
+          <div className="mt-3">
+            <InputFile value={logo} onChange={(file) => setLogo(file)} />
+          </div>
         </div>
-        <div className="border border-blue-200 p-3 rounded-[5px]">
+
+        <div className="w-full lg:flex-1 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200 flex flex-col gap-4">
           <TitleManagement color="blue">Thông tin thương hiệu</TitleManagement>
-          <div className="flex flex-col flex-col-reverse m-3">
+          <div className="mt-2">
             <FloatingInput
               id="name"
               label="Tên thương hiệu"
@@ -131,28 +132,26 @@ const EditBrandPage = () => {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="flex flex-col flex-col-reverse m-3 mb-10">
+          <div>
             <CountrySelect
               value={selectedOrigin}
               onChange={(val) => setSelectedOrigin(val)}
               label="Xuất xứ"
             />
           </div>
-          <div className="flex items-center gap-4 ml-3 mt-5 w-full">
+          <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-white/5 mt-2">
             <Submit_GoBack />
             <button
               type="button"
               onClick={() => openConfirm(brand.name)}
-              className="h-[44px] px-6 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-xl
-               text-sm font-semibold tracking-wide flex items-center justify-center gap-2
-               hover:bg-rose-600 hover:text-white hover:border-rose-600
-               hover:shadow-[0_0_20px_rgba(244,63,94,0.2)] transition-all duration-200 mt-7"
+              className="h-[40px] px-5 bg-rose-500/10 text-rose-500 dark:text-rose-400 border border-rose-500/20 rounded-xl text-xs font-semibold tracking-wide flex items-center justify-center gap-2 hover:bg-rose-600 hover:text-white hover:border-rose-600 hover:shadow-[0_0_20px_rgba(244,63,94,0.2)] transition-all duration-200 cursor-pointer"
             >
               Xóa thương hiệu
             </button>
           </div>
         </div>
       </form>
+
       <ConfirmDelete
         isOpen={isConfirmOpen}
         title="Xóa thương hiệu"

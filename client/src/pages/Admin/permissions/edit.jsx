@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { LayoutDashboard } from "lucide-react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { FloatingInput } from "@/components/ui/input"; // ĐỔI SANG: Dùng FloatingInput chống đè chữ
+import { FloatingInput } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Submit_GoBack } from "@/components/ui/button";
 // api
@@ -26,7 +26,7 @@ const EditPermissionPage = () => {
   const navigate = useNavigate();
   const permissionData = useLoaderData();
 
-  // Dữ liệu gửi đi (Khởi tạo chính xác từ dữ liệu nạp vào của Loader)
+  // Dữ liệu gửi đi
   const [selectedRole, setSelectedRole] = useState(permissionData.module);
   const [selectedAction, setSelectedAction] = useState(permissionData.action);
   const [permissionName, setPermissionName] = useState(permissionData.name);
@@ -69,22 +69,20 @@ const EditPermissionPage = () => {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
-      <h2 className="text-xl font-bold text-slate-100 tracking-wide uppercase mb-3">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide uppercase mb-3">
         Chỉnh sửa quyền hạn
       </h2>
 
-      {/* CHUYỂN ĐỔI: Dùng hệ lưới Grid 12 cột chuẩn hóa cấu trúc GlassOS */}
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
-        {/* CONTAINER CHÍNH: Phủ kính tối mờ xuyên thấu, gán z-20 chống che dropdown */}
-        <div className="col-span-12 lg:col-span-8 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-6 rounded-2xl shadow-2xl backdrop-blur-md relative z-20">
+        <div className="col-span-12 lg:col-span-8 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 transition-colors duration-200">
           <TitleManagement color="violet">
             Cấu hình tham số quyền hạn
           </TitleManagement>
-          {/* Hàng chứa 2 ô SelectPro rộng rãi */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6 mt-2">
             <div className="flex flex-col gap-1">
               <Select
                 label="Chọn chức vụ / Phạm vi"
@@ -106,7 +104,6 @@ const EditPermissionPage = () => {
             </div>
           </div>
 
-          {/* Ô nhập tên quyền: Loại bỏ InputFrom cũ, thay bằng FloatingInput xử lý dứt điểm đè chữ */}
           <div className="w-full mb-8">
             {permissionName !== undefined && (
               <FloatingInput
@@ -119,8 +116,7 @@ const EditPermissionPage = () => {
             )}
           </div>
 
-          {/* THANH ĐIỀU HƯỚNG BIÊN ĐÁY */}
-          <div className="flex justify-end border-t border-white/5 w-full">
+          <div className="flex justify-end border-t border-slate-200 dark:border-white/5 pt-5 w-full">
             <Submit_GoBack />
           </div>
         </div>

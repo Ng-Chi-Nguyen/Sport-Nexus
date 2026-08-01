@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { LayoutDashboard, Filter, ChevronDown, RefreshCw } from "lucide-react";
 import {
   useLoaderData,
@@ -126,7 +126,7 @@ const VariantPage = () => {
   };
 
   return (
-    <>
+    <div className="text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
       <div className="flex items-center gap-3 my-4">
@@ -142,8 +142,8 @@ const VariantPage = () => {
           onClick={() => setShowFilters(!showFilters)}
           className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
             hasActiveFilters
-              ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
-              : "bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200"
+              ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-300 dark:border-sky-500/20"
+              : "bg-white dark:bg-[#111827]/40 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-[#161F32] hover:text-slate-900 dark:hover:text-slate-200"
           }`}
         >
           <Filter size={14} />
@@ -175,7 +175,7 @@ const VariantPage = () => {
             : "max-h-0 opacity-0 overflow-hidden"
         }`}
       >
-        <div className="p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
+        <div className="p-4 bg-white dark:bg-[#0D121F]/80 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg transition-colors duration-200">
           <div className="flex flex-wrap items-end gap-4">
             <div className="flex-1 min-w-[180px]">
               <SimpleSelect
@@ -194,7 +194,7 @@ const VariantPage = () => {
             </div>
 
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Tồn kho
               </label>
               <div className="flex items-center gap-1">
@@ -203,21 +203,23 @@ const VariantPage = () => {
                   placeholder="Tối thiểu"
                   value={currentStockMin}
                   onChange={(e) => setFilter("stock_min", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 />
-                <span className="text-slate-600 shrink-0">–</span>
+                <span className="text-slate-400 dark:text-slate-600 shrink-0">
+                  –
+                </span>
                 <input
                   type="number"
                   placeholder="Tối đa"
                   value={currentStockMax}
                   onChange={(e) => setFilter("stock_max", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 />
               </div>
             </div>
 
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Khoảng giá
               </label>
               <div className="flex items-center gap-1">
@@ -226,15 +228,17 @@ const VariantPage = () => {
                   placeholder="Tối thiểu"
                   value={currentPriceMin}
                   onChange={(e) => setFilter("price_min", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 />
-                <span className="text-slate-600 shrink-0">–</span>
+                <span className="text-slate-400 dark:text-slate-600 shrink-0">
+                  –
+                </span>
                 <input
                   type="number"
                   placeholder="Tối đa"
                   value={currentPriceMax}
                   onChange={(e) => setFilter("price_max", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 />
               </div>
             </div>
@@ -243,7 +247,7 @@ const VariantPage = () => {
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
+                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-500 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
                 Xoá bộ lọc
               </button>
@@ -253,11 +257,13 @@ const VariantPage = () => {
       </div>
 
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-100">Danh sách biến thể</h2>
+        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+          Danh sách biến thể
+        </h2>
         <button
           onClick={handleRefresh}
           disabled={revalidator.state === "loading"}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           title="Tải lại"
         >
           <RefreshCw
@@ -266,35 +272,36 @@ const VariantPage = () => {
           />
         </button>
       </div>
-      <div className="mt-3 relative bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
+
+      <div className="mt-3 relative bg-white dark:bg-[#0D121F]/80 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg transition-colors duration-200">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-slate-200 min-w-[600px]">
-            <thead className="text-xs uppercase bg-[#161F32] border-b border-slate-800">
+          <table className="w-full text-sm text-left text-slate-700 dark:text-slate-200 min-w-[600px]">
+            <thead className="text-xs uppercase bg-slate-100 dark:bg-[#161F32] border-b border-slate-200 dark:border-slate-800">
               <tr>
-                <th className="px-6 py-4 font-black text-slate-400 !text-start">
+                <th className="px-6 py-4 font-black text-slate-600 dark:text-slate-400 !text-start">
                   Thông tin sản phẩm
                 </th>
-                <th className="px-6 py-4 font-black text-center text-slate-400">
+                <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
                   Phân loại
                 </th>
-                <th className="px-6 py-4 font-black text-center text-slate-400">
+                <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
                   Tồn kho
                 </th>
-                <th className="px-6 py-4 font-black text-center text-slate-400">
+                <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
                   Thao tác
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
               {variants.length > 0 ? (
                 variants.map((variant) => (
                   <tr
                     key={variant.id}
-                    className="hover:bg-[#161F32]/40 transition-colors duration-150"
+                    className="hover:bg-slate-50 dark:hover:bg-[#161F32]/40 transition-colors duration-150"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-[60px] h-[60px] border border-slate-800 rounded-lg overflow-hidden bg-[#111827] flex-shrink-0 p-1">
+                        <div className="w-[60px] h-[60px] border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden bg-slate-100 dark:bg-[#111827] flex-shrink-0 p-1">
                           <img
                             src={variant.product.thumbnail}
                             alt={variant.product.name}
@@ -302,12 +309,12 @@ const VariantPage = () => {
                           />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="font-semibold text-sm text-slate-100 mb-1 tracking-wide">
+                          <p className="font-semibold text-sm text-slate-900 dark:text-slate-100 mb-1 tracking-wide">
                             {variant.product.name}
                           </p>
-                          <span className="text-[12px] text-slate-500">
+                          <span className="text-[12px] text-slate-500 dark:text-slate-400">
                             Giá gốc:{" "}
-                            <span className="font-semibold text-emerald-400">
+                            <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                               {Number(
                                 variant.product.base_price,
                               ).toLocaleString()}
@@ -315,10 +322,10 @@ const VariantPage = () => {
                             </span>
                           </span>
                           <div className="mt-1">
-                            <span className="text-xs text-slate-500">
+                            <span className="text-xs text-slate-500 dark:text-slate-400">
                               Giá bán:{" "}
                             </span>
-                            <span className="text-sm font-semibold text-sky-400">
+                            <span className="text-sm font-semibold text-sky-600 dark:text-sky-400">
                               {Number(variant.price).toLocaleString()}đ
                             </span>
                           </div>
@@ -326,7 +333,6 @@ const VariantPage = () => {
                       </div>
                     </td>
 
-                    {/* SỬ DỤNG COMPONENT BADGE MÀU INFO CHO THUỘC TÍNH */}
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1.5 items-center justify-center">
                         {variant.VariableAttributes?.length > 0 ? (
@@ -337,14 +343,13 @@ const VariantPage = () => {
                             </Badge>
                           ))
                         ) : (
-                          <span className="text-slate-500 text-xs italic">
+                          <span className="text-slate-400 dark:text-slate-500 text-xs italic">
                             Không có phân loại
                           </span>
                         )}
                       </div>
                     </td>
 
-                    {/* SỬ DỤNG COMPONENT BADGE MÀU SUCCESS / ERROR CHO TỒN KHO */}
                     <td className="px-6 py-4 text-center">
                       {variant.stock > 0 ? (
                         <Badge color="success">Sẵn có: {variant.stock}</Badge>
@@ -368,7 +373,7 @@ const VariantPage = () => {
                 <tr>
                   <td
                     colSpan="4"
-                    className="px-6 py-12 text-center text-slate-500 italic"
+                    className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
                   >
                     Không có biến thể nào được tìm thấy.
                   </td>
@@ -377,7 +382,7 @@ const VariantPage = () => {
             </tbody>
           </table>
         </div>
-        <div className="p-4 border-t border-slate-800">
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800">
           <Pagination
             totalPages={paginationInfo.totalPages}
             currentPage={paginationInfo.currentPage}
@@ -392,7 +397,7 @@ const VariantPage = () => {
           onCancel={() => setIsConfirmOpen(false)}
         />
       </div>
-    </>
+    </div>
   );
 };
 

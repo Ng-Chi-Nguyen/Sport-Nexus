@@ -35,24 +35,19 @@ const CreateSupplierPage = () => {
   const [detail, setDetail] = useState("");
   const [address, setAddress] = useState("");
 
-  // 2. Hàm callback để nhận dữ liệu từ AddressSelector
   const handleAddressChange = useCallback((addressData) => {
     setProvince(addressData.province);
     setWard(addressData.ward);
-    // Log kiểm tra
-    // console.log("Tỉnh:", addressData.province);
-    // console.log("Xã/Phường:", addressData.ward);
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const fullAddress = `${detail}, ${ward}, ${province}`;
     setAddress(fullAddress);
-    // console.log(fullAddress);
+
     const fromData = new FormData();
 
     if (logo instanceof File) {
-      // Khi gửi thế này, Multer ở BE sẽ bắt được và tạo ra cái <Buffer ...> bạn cần
       fromData.append("logo_url", logo);
     }
 
@@ -68,12 +63,6 @@ const CreateSupplierPage = () => {
     };
     fromData.append("location_data", JSON.stringify(locationObj));
 
-    // --- ĐOẠN LOG KIỂM TRA ---
-    // console.log("=== KIỂM TRA DỮ LIỆU GỬI ĐI ===");
-    // for (let [key, value] of fromData.entries()) {
-    //   console.log(`${key}:`, value);
-    // }
-    // console.log("===============================");
     try {
       let response = await supplierdApi.create(fromData);
 
@@ -95,93 +84,106 @@ const CreateSupplierPage = () => {
   };
 
   return (
-    <>
+    <div className="space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
-      <h2>Thêm mới nhà cung cấp</h2>
-      <div className="flex items-start gap-4">
-        <form onSubmit={handleSubmit} className="flex w-fit p-4 gap-3">
-          {/* PHẦN THÔNG TIN CHI TIẾT */}
-          <div className="flex-1 flex flex-col gap-6">
-            <div className="border border-gray-200 p-3 rounded-[5px]">
-              <TitleManagement color="green">
-                Thông tin người liên hệ mua hàng phẩm
-              </TitleManagement>
-              <div className="flex flex-wrap gap-4">
-                <div className="w-full md:w-[48%]">
-                  <FloatingInput
-                    id="name"
-                    label="Tên nhà cung cấp"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div className="w-full md:w-[48%]">
-                  <FloatingInput
-                    id="contact_person"
-                    label="Tên người đại diện"
-                    required
-                    value={contactPerson}
-                    onChange={(e) => setContactPerson(e.target.value)}
-                  />
-                </div>
-                <div className="w-full md:w-[48%]">
-                  <FloatingInput
-                    id="email"
-                    label="Email liên hệ"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div className="w-full md:w-[48%]">
-                  <FloatingInput
-                    id="phone"
-                    label="Số điện thoại"
-                    required
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-            {/* PHẦN ĐỊA CHỈ */}
-            <div className=" p-4 border border-gray-200 p-3 rounded-[5px]">
-              <TitleManagement color="emerald">
-                Địa chỉ kho/văn phòng nhà cung cấp
-              </TitleManagement>
-              {/* 3. Truyền hàm handleAddressChange vào component con */}
-              <AddressSelector onAddressChange={handleAddressChange} />
+      <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide uppercase">
+        Thêm mới nhà cung cấp
+      </h2>
 
-              {/* Hiển thị kết quả đã chọn (Gọn lại) */}
-              {ward && (
-                <div className="mt-4 text-sm text-[#4facf3] font-medium italic">
-                  Địa chỉ: {ward}, {province}
-                </div>
-              )}
-              <div className="w-full mt-5">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col lg:flex-row gap-4 items-start w-full"
+      >
+        {/* PHẦN THÔNG TIN CHI TIẾT & ĐỊA CHỈ (BÊN TRÁI / CHIẾM PHẦN LỚN) */}
+        <div className="flex-1 flex flex-col gap-4 w-full">
+          <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
+            <TitleManagement color="green">
+              Thông tin người liên hệ mua hàng phẩm
+            </TitleManagement>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+              <div>
                 <FloatingInput
-                  id="specific_address"
-                  label="Địa chỉ chi tiết"
+                  id="name"
+                  label="Tên nhà cung cấp"
                   required
-                  value={detail}
-                  onChange={(e) => setDetail(e.target.value)}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div>
+                <FloatingInput
+                  id="contact_person"
+                  label="Tên người đại diện"
+                  required
+                  value={contactPerson}
+                  onChange={(e) => setContactPerson(e.target.value)}
+                />
+              </div>
+              <div>
+                <FloatingInput
+                  id="email"
+                  label="Email liên hệ"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div>
+                <FloatingInput
+                  id="phone"
+                  label="Số điện thoại"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
             </div>
           </div>
-          <div className="border border-gray-200 p-3 rounded-[5px]">
+
+          <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
+            <TitleManagement color="emerald">
+              Địa chỉ kho/văn phòng nhà cung cấp
+            </TitleManagement>
+
+            <div className="mt-3">
+              <AddressSelector onAddressChange={handleAddressChange} />
+            </div>
+
+            {ward && (
+              <div className="mt-4 text-sm text-sky-600 dark:text-[#4facf3] font-medium italic">
+                Địa chỉ: {ward}, {province}
+              </div>
+            )}
+
+            <div className="w-full mt-4">
+              <FloatingInput
+                id="specific_address"
+                label="Địa chỉ chi tiết"
+                required
+                value={detail}
+                onChange={(e) => setDetail(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* PHẦN LOGO & NÚT SUBMIT (BÊN PHẢI) */}
+        <div className="w-full lg:w-[35%] flex flex-col gap-4">
+          <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
             <TitleManagement color="cyan">
               Logo nhà cung cấp (nếu có)
             </TitleManagement>
-            <InputFile value={logo} onChange={(file) => setLogo(file)} />
-            <div className="mt-10">
-              <Submit_GoBack />
+            <div className="mt-3">
+              <InputFile value={logo} onChange={(file) => setLogo(file)} />
             </div>
           </div>
-        </form>
-      </div>
-    </>
+
+          <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200 flex justify-end">
+            <Submit_GoBack />
+          </div>
+        </div>
+      </form>
+    </div>
   );
 };
 

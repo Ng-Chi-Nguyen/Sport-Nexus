@@ -36,7 +36,9 @@ const EditProductVariant = () => {
   const [stock, setStock] = useState(product_variant.stock);
   const [price, setPrice] = useState(product_variant.price);
   const [attributes, setAttributes] = useState(
-    initialAttrs.length > 0 ? initialAttrs : [{ attribute_key_id: "", value: "" }],
+    initialAttrs.length > 0
+      ? initialAttrs
+      : [{ attribute_key_id: "", value: "" }],
   );
   const [assignedAttrKeys, setAssignedAttrKeys] = useState([]);
 
@@ -58,11 +60,12 @@ const EditProductVariant = () => {
     [assignedAttrKeys],
   );
 
-  const usedAttrIds = attributes.map((a) => Number(a.attribute_key_id)).filter(Boolean);
+  const usedAttrIds = attributes
+    .map((a) => Number(a.attribute_key_id))
+    .filter(Boolean);
 
   const availableAttrOptions = useMemo(
-    () =>
-      attributeKeyOptions.filter((opt) => !usedAttrIds.includes(opt.id)),
+    () => attributeKeyOptions.filter((opt) => !usedAttrIds.includes(opt.id)),
     [attributeKeyOptions, usedAttrIds],
   );
 
@@ -75,7 +78,9 @@ const EditProductVariant = () => {
       .getByProduct(selectProdut)
       .then((res) => {
         if (res.success) {
-          setAssignedAttrKeys(res.data.map((item) => item.attributeKey).filter(Boolean));
+          setAssignedAttrKeys(
+            res.data.map((item) => item.attributeKey).filter(Boolean),
+          );
         }
       })
       .catch(() => setAssignedAttrKeys([]));
@@ -133,7 +138,6 @@ const EditProductVariant = () => {
         navigate(-1);
       }
     } catch (error) {
-      console.log(error.message);
       const errorMessage =
         error.message ||
         error.response?.data?.message ||
@@ -144,18 +148,19 @@ const EditProductVariant = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
-      <h2 className="text-xl font-bold text-slate-100 tracking-wide">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide">
         Chỉnh sửa biến thể sản phẩm
       </h2>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
-        <div className="col-span-12 lg:col-span-4 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-6 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
+        {/* CỘT TRÁI: GIÁ & KHO HÀNG */}
+        <div className="col-span-12 lg:col-span-4 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md h-fit transition-colors duration-200">
           <TitleManagement color="green">Giá & Kho hàng</TitleManagement>
 
-          <div className="space-y-5">
+          <div className="space-y-5 mt-2">
             <FloatingInput
               label="Số lượng tồn kho"
               type="number"
@@ -171,9 +176,10 @@ const EditProductVariant = () => {
           </div>
         </div>
 
-        <div className="col-span-12 lg:col-span-8 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-6 rounded-2xl shadow-2xl backdrop-blur-md relative z-20">
+        {/* CỘT PHẢI: CẤU HÌNH THUỘC TÍNH */}
+        <div className="col-span-12 lg:col-span-8 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 transition-colors duration-200">
           <TitleManagement color="blue">Cấu hình thuộc tính</TitleManagement>
-          <div className="w-full mb-5">
+          <div className="w-full mb-5 mt-2">
             <SelectPro
               value={selectProdut}
               options={productOptions}
@@ -193,7 +199,9 @@ const EditProductVariant = () => {
                         ? attributeKeyOptions
                         : availableAttrOptions
                     }
-                    onChange={(val) => updateAttribute(index, "attribute_key_id", val)}
+                    onChange={(val) =>
+                      updateAttribute(index, "attribute_key_id", val)
+                    }
                     label="Thuộc tính"
                   />
                 </div>
@@ -201,14 +209,16 @@ const EditProductVariant = () => {
                   <FloatingInput
                     label="Giá trị (VD: Đỏ, XL...)"
                     value={attr.value}
-                    onChange={(e) => updateAttribute(index, "value", e.target.value)}
+                    onChange={(e) =>
+                      updateAttribute(index, "value", e.target.value)
+                    }
                   />
                 </div>
                 {attributes.length > 1 && (
                   <button
                     type="button"
                     onClick={() => removeAttributeRow(index)}
-                    className="mt-2 p-2 text-red-400 hover:text-red-300 transition-colors"
+                    className="mt-2 p-2 text-rose-500 dark:text-rose-400 hover:text-rose-600 dark:hover:text-rose-300 transition-colors"
                   >
                     <X size={18} />
                   </button>
@@ -221,14 +231,14 @@ const EditProductVariant = () => {
             <button
               type="button"
               onClick={addAttributeRow}
-              className="flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 transition-colors mb-5"
+              className="flex items-center gap-1 text-sm font-semibold text-sky-600 dark:text-blue-400 hover:text-sky-700 dark:hover:text-blue-300 transition-colors mb-5"
             >
               <PlusCircle size={16} />
               Thêm thuộc tính
             </button>
           )}
 
-          <div className="flex justify-end border-t border-white/5 pt-5 w-full">
+          <div className="flex justify-end border-t border-slate-200 dark:border-white/5 pt-5 w-full">
             <Submit_GoBack name="Lưu thay đổi" />
           </div>
         </div>

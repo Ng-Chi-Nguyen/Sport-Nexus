@@ -116,7 +116,7 @@ const StockPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
       <div className="flex items-center gap-4">
@@ -132,8 +132,8 @@ const StockPage = () => {
           onClick={() => setShowFilters(!showFilters)}
           className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
             hasActiveFilters
-              ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
-              : "bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200"
+              ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-300 dark:border-sky-500/20"
+              : "bg-white dark:bg-[#111827]/40 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-[#161F32] hover:text-slate-900 dark:hover:text-slate-200"
           }`}
         >
           <Filter size={14} />
@@ -146,8 +146,16 @@ const StockPage = () => {
             className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
           />
         </button>
-        <button onClick={handleExport} disabled={exportLoading} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded-xl hover:bg-emerald-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-          {exportLoading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+        <button
+          onClick={handleExport}
+          disabled={exportLoading}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-emerald-600 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded-xl hover:bg-emerald-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        >
+          {exportLoading ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <Download size={16} />
+          )}
           {exportLoading ? "Đang xuất..." : "Export"}
         </button>
         <BtnAdd route={"/management/stocks/create"} name="Tạo biến động kho" />
@@ -160,7 +168,7 @@ const StockPage = () => {
             : "max-h-0 opacity-0 overflow-hidden"
         }`}
       >
-        <div className="p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
+        <div className="p-4 bg-white dark:bg-[#0D121F]/80 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg transition-colors duration-200">
           <div className="flex flex-wrap items-end gap-4">
             <div className="flex-1 min-w-[180px]">
               <SimpleSelect
@@ -179,7 +187,7 @@ const StockPage = () => {
             </div>
 
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Tồn kho
               </label>
               <div className="flex items-center gap-1">
@@ -188,21 +196,23 @@ const StockPage = () => {
                   placeholder="Tối thiểu"
                   value={currentStockMin}
                   onChange={(e) => setFilter("stock_min", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 />
-                <span className="text-slate-600 shrink-0">–</span>
+                <span className="text-slate-400 dark:text-slate-600 shrink-0">
+                  –
+                </span>
                 <input
                   type="number"
                   placeholder="Tối đa"
                   value={currentStockMax}
                   onChange={(e) => setFilter("stock_max", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 />
               </div>
             </div>
 
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Khoảng giá
               </label>
               <div className="flex items-center gap-1">
@@ -211,15 +221,17 @@ const StockPage = () => {
                   placeholder="Tối thiểu"
                   value={currentPriceMin}
                   onChange={(e) => setFilter("price_min", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 />
-                <span className="text-slate-600 shrink-0">–</span>
+                <span className="text-slate-400 dark:text-slate-600 shrink-0">
+                  –
+                </span>
                 <input
                   type="number"
                   placeholder="Tối đa"
                   value={currentPriceMax}
                   onChange={(e) => setFilter("price_max", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 />
               </div>
             </div>
@@ -228,7 +240,7 @@ const StockPage = () => {
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
+                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-500 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
                 Xoá bộ lọc
               </button>
@@ -237,28 +249,33 @@ const StockPage = () => {
         </div>
       </div>
 
-      {/* KHỐI NỀN TỔNG - Chuyển hoàn toàn sang tối mờ GlassOS */}
-      <div className="\bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
+      {/* KHỐI NỀN TỔNG - Hỗ trợ sáng/tối */}
+      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
         {/* HEADER TIÊU ĐỀ */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
             <div className="flex items-center gap-3">
-              <h2 className="text-lg font-semibold text-slate-100 tracking-wide">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 tracking-wide">
                 Biến động kho
               </h2>
               <button
                 onClick={handleRefresh}
                 disabled={revalidator.state === "loading"}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 title="Tải lại"
               >
-                <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+                <RefreshCw
+                  size={18}
+                  className={
+                    revalidator.state === "loading" ? "animate-spin" : ""
+                  }
+                />
               </button>
             </div>
 
-            {/* Chú thích màu sắc phong cách Cyberpunk tối giản */}
-            <div className="flex flex-wrap items-center gap-4 mt-3 text-[11px] font-medium text-slate-400 bg-[#111827]/60 px-4 py-2 rounded-xl border border-slate-900/60 w-fit">
-              <span className="text-slate-500 uppercase tracking-widest font-bold text-[9px]">
+            {/* Chú thích màu sắc */}
+            <div className="flex flex-wrap items-center gap-4 mt-3 text-[11px] font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-[#111827]/60 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-900/60 w-fit">
+              <span className="text-slate-400 dark:text-slate-500 uppercase tracking-widest font-bold text-[9px]">
                 Chú thích:
               </span>
 
@@ -284,139 +301,141 @@ const StockPage = () => {
             </div>
           </div>
 
-          <div className="text-xs bg-[#111827] text-slate-400 border border-slate-800 px-3 py-1.5 rounded-xl font-medium h-fit self-end">
+          <div className="text-xs bg-slate-100 dark:bg-[#111827] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl font-medium h-fit self-end">
             Tổng số mặt hàng:{" "}
-            <span className="text-sky-400 font-bold">
+            <span className="text-sky-600 dark:text-sky-400 font-bold">
               {paginationInfo.totalItems || stocks.length}
             </span>
           </div>
         </div>
 
-        {/* BẢNG DỮ LIỆU CHUẨN ĐƯỜNG KẺ TRẮNG MỜ BIÊN DƯỚI */}
+        {/* BẢNG DỮ LIỆU */}
         <div className="mb-2 table-retro">
           <div className="overflow-x-auto">
-          <table className="w-full border-separate border-spacing-0 min-w-[600px]">
-            <thead>
-              <tr>
-                <th scope="col" className="px-6 py-4 w-[12%]">
-                  Mã định danh
-                </th>
-                <th scope="col" className="px-6 py-4 w-[40%] !text-start">
-                  Sản phẩm
-                </th>
-                <th scope="col" className="px-6 py-4 w-[28%] text-center">
-                  Thuộc tính
-                </th>
-                <th scope="col" className="px-6 py-4 w-[20%] text-center">
-                  Số lượng tồn
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {stocks.length > 0 ? (
-                stocks.map((stock) => {
-                  const product = stock.product;
-                  const thumbnail = product?.thumbnail;
-                  const productName =
-                    product?.name || "Sản phẩm không xác định";
-                  const price = stock.price ? Number(stock.price) : 0;
-                  const currentStock = stock.stock ?? 0;
-
-                  return (
-                    <tr key={stock.id}>
-                      {/* Cột ID biến thể */}
-                      <td className="px-6 py-5 font-mono text-xs text-slate-500 text-center">
-                        #VAR-{stock.id}
-                      </td>
-
-                      {/* Cột Chi tiết sản phẩm */}
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-lg border border-slate-800 bg-[#111827] overflow-hidden flex-shrink-0 p-0.5">
-                            <img
-                              crossOrigin="anonymous"
-                              src={thumbnail || "https://placehold.co/50"}
-                              alt={productName}
-                              className="w-full h-full object-contain mix-blend-screen"
-                              onError={(e) => {
-                                e.target.src = "https://placehold.co/50";
-                              }}
-                            />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="font-semibold text-slate-200 text-sm line-clamp-1 max-w-[400px] tracking-wide">
-                              {productName}
-                            </p>
-
-                            <p className="text-xs text-slate-500 mt-1">
-                              Giá gốc:{" "}
-                              <span className="text-[12px] font-semibold text-emerald-400">
-                                {Number(price).toLocaleString()}
-                              </span>{" "}
-                              đ
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-
-                      {/* Cột Thuộc tính biến thể */}
-                      <td className="px-6 py-5 text-center">
-                        {stock.VariableAttributes?.length > 0 ? (
-                          <div className="flex flex-wrap items-center justify-center gap-1.5">
-                            {stock.VariableAttributes.map((attr) => (
-                              <span
-                                key={attr.id}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#111827]/80 border border-slate-800 text-xs text-slate-300"
-                              >
-                                <span className="text-slate-500 text-[10px] uppercase">
-                                  {attr.attributeKey.name}:
-                                </span>
-                                <span className="font-semibold text-sky-400">
-                                  {attr.value} {" - "}
-                                  {attr.attributeKey.unit || ""}
-                                </span>
-                              </span>
-                            ))}
-                          </div>
-                        ) : (
-                          <span className="text-slate-500 text-xs italic">
-                            Mặc định
-                          </span>
-                        )}
-                      </td>
-
-                      {/* Cột hiển thị Số lượng Badge phát sáng mờ */}
-                      <td className="px-6 py-5 text-center">
-                        <div className="flex justify-center">
-                          <span
-                            className={`inline-flex items-center justify-center min-w-[50px] px-3 py-1 rounded-lg text-sm font-bold border ${getStockBadgeClass(currentStock)}`}
-                          >
-                            {currentStock}
-                          </span>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
+            <table className="w-full border-separate border-spacing-0 min-w-[600px]">
+              <thead>
                 <tr>
-                  <td
-                    colSpan="4"
-                    className="px-6 py-12 text-center text-slate-500 italic"
-                  >
-                    Không tìm thấy dữ liệu tồn kho phù hợp.
-                  </td>
+                  <th scope="col" className="px-6 py-4 w-[12%]">
+                    Mã định danh
+                  </th>
+                  <th scope="col" className="px-6 py-4 w-[40%] !text-start">
+                    Sản phẩm
+                  </th>
+                  <th scope="col" className="px-6 py-4 w-[28%] text-center">
+                    Thuộc tính
+                  </th>
+                  <th scope="col" className="px-6 py-4 w-[20%] text-center">
+                    Số lượng tồn
+                  </th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {stocks.length > 0 ? (
+                  stocks.map((stock) => {
+                    const product = stock.product;
+                    const thumbnail = product?.thumbnail;
+                    const productName =
+                      product?.name || "Sản phẩm không xác định";
+                    const price = stock.price ? Number(stock.price) : 0;
+                    const currentStock = stock.stock ?? 0;
+
+                    return (
+                      <tr key={stock.id}>
+                        {/* Cột ID biến thể */}
+                        <td className="px-6 py-5 font-mono text-xs text-slate-500 dark:text-slate-400 text-center">
+                          #VAR-{stock.id}
+                        </td>
+
+                        {/* Cột Chi tiết sản phẩm */}
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-[#111827] overflow-hidden flex-shrink-0 p-0.5">
+                              <img
+                                crossOrigin="anonymous"
+                                src={thumbnail || "https://placehold.co/50"}
+                                alt={productName}
+                                className="w-full h-full object-contain mix-blend-screen"
+                                onError={(e) => {
+                                  e.target.src = "https://placehold.co/50";
+                                }}
+                              />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm line-clamp-1 max-w-[400px] tracking-wide">
+                                {productName}
+                              </p>
+
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                Giá gốc:{" "}
+                                <span className="text-[12px] font-semibold text-emerald-600 dark:text-emerald-400">
+                                  {Number(price).toLocaleString()}
+                                </span>{" "}
+                                đ
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Cột Thuộc tính biến thể */}
+                        <td className="px-6 py-5 text-center">
+                          {stock.VariableAttributes?.length > 0 ? (
+                            <div className="flex flex-wrap items-center justify-center gap-1.5">
+                              {stock.VariableAttributes.map((attr) => (
+                                <span
+                                  key={attr.id}
+                                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-[#111827]/80 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300"
+                                >
+                                  <span className="text-slate-400 dark:text-slate-500 text-[10px] uppercase">
+                                    {attr.attributeKey.name}:
+                                  </span>
+                                  <span className="font-semibold text-sky-600 dark:text-sky-400">
+                                    {attr.value} {" - "}
+                                    {attr.attributeKey.unit || ""}
+                                  </span>
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-slate-400 dark:text-slate-500 text-xs italic">
+                              Mặc định
+                            </span>
+                          )}
+                        </td>
+
+                        {/* Cột hiển thị Số lượng */}
+                        <td className="px-6 py-5 text-center">
+                          <div className="flex justify-center">
+                            <span
+                              className={`inline-flex items-center justify-center min-w-[50px] px-3 py-1 rounded-lg text-sm font-bold border ${getStockBadgeClass(currentStock)}`}
+                            >
+                              {currentStock}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="4"
+                      className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
+                    >
+                      Không tìm thấy dữ liệu tồn kho phù hợp.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
-        <Pagination
-          totalPages={paginationInfo.totalPages}
-          currentPage={paginationInfo.currentPage}
-          onPageChange={handlePageChange}
-        />
+        <div className="mt-4">
+          <Pagination
+            totalPages={paginationInfo.totalPages}
+            currentPage={paginationInfo.currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
     </div>
   );

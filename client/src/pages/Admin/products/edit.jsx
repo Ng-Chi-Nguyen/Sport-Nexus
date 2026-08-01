@@ -1,11 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import {
-  LayoutDashboard,
-  PlusCircle,
-  PackagePlus,
-  Image as ImageIcon,
-} from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { SelectPro } from "@/components/ui/select";
@@ -24,28 +19,28 @@ import MultiFileUpload from "@/components/ui/MultiFileUpload";
 const breadcrumbData = [
   { title: <LayoutDashboard size={20} />, route: "" },
   { title: "Quản lý sản phẩm", route: "/management/products" },
-  { title: "Chỉnh sữa sản phẩm", route: "" },
+  { title: "Chỉnh sửa sản phẩm", route: "" },
 ];
 
-const CreateProductPage = () => {
+const EditProductPage = () => {
   const { brands, suppliers, categories, product } = useLoaderData();
-
-  // console.log(product);
-
   const navigate = useNavigate();
+
   // state form
-  const [selectBrand, setSelectBrand] = useState(product.data.brand_id);
+  const [selectBrand, setSelectBrand] = useState(product?.data?.brand_id || "");
   const [selectSupplier, setSelectSupplier] = useState(
-    product.data.supplier_id,
+    product?.data?.supplier_id || "",
   );
   const [selectCategory, setSelectCategory] = useState(
-    product.data.category_id,
+    product?.data?.category_id || "",
   );
-  const [name, setName] = useState(product.data.name);
-  const [thumbnail, setThumbnail] = useState(product.data.thumbnail);
-  const [basePrice, setbBasePrice] = useState(product.data.base_price);
-  const [isActive, setIsActive] = useState(product.data.is_active);
-  const [description, setDescription] = useState(product.data.description);
+  const [name, setName] = useState(product?.data?.name || "");
+  const [thumbnail, setThumbnail] = useState(product?.data?.thumbnail || null);
+  const [basePrice, setBasePrice] = useState(product?.data?.base_price || "");
+  const [isActive, setIsActive] = useState(product?.data?.is_active ?? true);
+  const [description, setDescription] = useState(
+    product?.data?.description || "",
+  );
   const [productImages, setProductImages] = useState([]);
 
   useEffect(() => {
@@ -59,41 +54,37 @@ const CreateProductPage = () => {
         // Không có ảnh hoặc lỗi
       }
     };
-    loadImages();
-  }, [product.data.id]);
-
-  // console.log(selectBrand);
+    if (product?.data?.id) {
+      loadImages();
+    }
+  }, [product?.data?.id]);
 
   const brandsOptions = useMemo(
     () =>
-      brands.data.map((brand) => ({
+      brands?.data?.map((brand) => ({
         id: brand.id,
         name: brand.name,
-      })),
-    [brands.data],
+      })) || [],
+    [brands?.data],
   );
-
-  // console.log(categories.data);
 
   const suppliersOptions = useMemo(
     () =>
-      suppliers.data.map((supplier) => ({
+      suppliers?.data?.map((supplier) => ({
         id: supplier.id,
         name: supplier.name,
-      })),
-    [brands.data],
+      })) || [],
+    [suppliers?.data],
   );
 
   const categoriesOptions = useMemo(
     () =>
-      categories.data.map((category) => ({
+      categories?.data?.map((category) => ({
         id: category.id,
         name: category.name,
-      })),
-    [categories.data],
+      })) || [],
+    [categories?.data],
   );
-
-  // console.log(suppliersOptions);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -121,7 +112,10 @@ const CreateProductPage = () => {
         if (newFiles.length > 0) {
           const imageFormData = new FormData();
           newFiles.forEach((file) => imageFormData.append("url", file));
-          imageFormData.append("current_image_ids", JSON.stringify(currentImageIds));
+          imageFormData.append(
+            "current_image_ids",
+            JSON.stringify(currentImageIds),
+          );
           await productImageApi.update(product.data.id, imageFormData);
         }
 
@@ -130,7 +124,6 @@ const CreateProductPage = () => {
         navigate(-1);
       }
     } catch (error) {
-      console.log(error.message);
       const errorMessage =
         error.message ||
         error.response?.data?.message ||
@@ -141,40 +134,27 @@ const CreateProductPage = () => {
     }
   };
 
-  const handleBrandChange = (brandId) => {
-    // console.log("ID thương hiệu đã chọn:", brandId);
-    setSelectBrand(brandId);
-  };
-
-  const handleSupplierChange = (supplierId) => {
-    // console.log("ID NCC đã chọn:", supplierId);
-    setSelectSupplier(supplierId);
-  };
-
-  const handleCategoryChange = (categoryId) => {
-    // console.log("ID loại hàng đã chọn:", categoryId);
-    setSelectCategory(categoryId);
-  };
-
-  const handleStatusChange = (checkedValue) => {
-    setIsActive(checkedValue);
-    // console.log(isActive);
-  };
-
   return (
-    <div className="">
+    <div className="animate-in fade-in duration-500 space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
-      <h2>Thêm mới sản phẩm</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-3 mt-2">
-        <div className="w-full lg:w-1/2 flex flex-col gap-3">
-          <div className="border border-gray-200 rounded-[5px] p-3">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide">
+        Chỉnh sửa sản phẩm
+      </h2>
+
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col lg:flex-row gap-4 items-start w-full"
+      >
+        {/* CỘT TRÁI */}
+        <div className="w-full lg:w-1/2 flex flex-col gap-4">
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="amber">Phân loại hệ thống</TitleManagement>
-            <div className="flex flex-col sm:flex-row gap-2 mb-2">
+            <div className="flex flex-col sm:flex-row gap-3 mt-3 mb-3">
               <div className="w-full sm:w-1/2">
                 <SelectPro
                   value={selectBrand}
                   options={brandsOptions}
-                  onChange={handleBrandChange}
+                  onChange={(val) => setSelectBrand(val)}
                   label="Chọn thương hiệu"
                 />
               </div>
@@ -182,56 +162,68 @@ const CreateProductPage = () => {
                 <SelectPro
                   value={selectSupplier}
                   options={suppliersOptions}
-                  onChange={handleSupplierChange}
-                  label="Chọn thương hiệu"
+                  onChange={(val) => setSelectSupplier(val)}
+                  label="Chọn nhà cung cấp"
                 />
               </div>
             </div>
             <SelectPro
               value={selectCategory}
               options={categoriesOptions}
-              onChange={handleCategoryChange}
+              onChange={(val) => setSelectCategory(val)}
               label="Chọn loại hàng"
             />
           </div>
-          <div className="border border-gray-200 p-3 rounded-[5px]">
+
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="cyan">Ảnh đại diện</TitleManagement>
-            <InputFile
-              value={thumbnail}
-              onChange={(file) => setThumbnail(file)}
-            />
+            <div className="mt-3">
+              <InputFile
+                value={thumbnail}
+                onChange={(file) => setThumbnail(file)}
+              />
+            </div>
           </div>
-          <div className="border border-gray-200 p-3 rounded-[5px]">
-            <MultiFileUpload
-              label="Ảnh mô tả sản phẩm"
-              value={productImages}
-              onChange={setProductImages}
-              maxFiles={10}
-            />
+
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
+            <div className="mt-1">
+              <MultiFileUpload
+                label="Ảnh mô tả sản phẩm"
+                value={productImages}
+                onChange={setProductImages}
+                maxFiles={10}
+              />
+            </div>
           </div>
         </div>
-        <div className="border border-gray-200 w-2/3 p-3 rounded-[5px]">
+
+        {/* CỘT PHẢI */}
+        <div className="w-full lg:w-1/2 rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900 flex flex-col gap-4">
           <TitleManagement color="emerald">Thông tin sản phẩm</TitleManagement>
-          <div className="flex gap-2">
-            <FloatingInput
-              id="name"
-              label="Tên sản phẩm"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <div className="">
+
+          <div className="flex flex-col sm:flex-row gap-3 mt-2">
+            <div className="flex-1">
+              <FloatingInput
+                id="name"
+                label="Tên sản phẩm"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="w-full sm:w-40">
               <FloatingInput
                 id="base_price"
                 label="Giá gốc (vnđ)"
                 required
                 type="number"
                 value={basePrice}
-                onChange={(e) => setbBasePrice(e.target.value)}
+                onChange={(e) => setBasePrice(e.target.value)}
               />
             </div>
           </div>
-          <div className="mt-2">
+
+          <div>
             <FloatingTextarea
               id="product_desc"
               label="Mô tả sản phẩm"
@@ -241,16 +233,17 @@ const CreateProductPage = () => {
               required={true}
             />
           </div>
-          <div className="flex items-center justify-between">
-            <div className="border border-blue-200 w-[40%] p-2 m-2 rounded-[5px]">
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+            <div className="border border-slate-200 dark:border-slate-800 w-full sm:w-[50%] p-3 rounded-lg bg-slate-50/50 dark:bg-[#111827]/40">
               <AnimatedCheckbox
                 id="is_active_checkbox"
                 label={isActive ? "Sản phẩm đang bán" : "Tạm ngưng kinh doanh"}
                 checked={isActive}
-                onChange={(e) => handleStatusChange(e.target.checked)}
+                onChange={(e) => setIsActive(e.target.checked)}
               />
             </div>
-            <Submit_GoBack name="Sữa" />
+            <Submit_GoBack />
           </div>
         </div>
       </form>
@@ -258,4 +251,4 @@ const CreateProductPage = () => {
   );
 };
 
-export default CreateProductPage;
+export default EditProductPage;

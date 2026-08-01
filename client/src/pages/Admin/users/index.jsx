@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState, useMemo } from "react";
 import { useLoaderData, useRevalidator, Link } from "react-router-dom";
 import { LayoutDashboard, ShieldAlert, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
@@ -99,10 +99,10 @@ const UserPage = () => {
 
   const renderSegmented = (filterKey, options, currentValue, label) => (
     <div>
-      <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+      <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
         {label}
       </label>
-      <div className="flex items-center gap-0.5 p-0.5 bg-[#111827]/60 border border-slate-800 rounded-lg h-10">
+      <div className="flex items-center gap-0.5 p-0.5 bg-slate-100 dark:bg-[#111827]/60 border border-slate-200 dark:border-slate-800 rounded-lg h-10">
         {options.map((opt) => (
           <button
             key={opt.slug}
@@ -110,8 +110,8 @@ const UserPage = () => {
             onClick={() => setFilter(filterKey, opt.slug)}
             className={`flex-1 text-center py-1 text-[11px] font-bold rounded-md cursor-pointer transition-colors h-full ${
               currentValue === opt.slug
-                ? "bg-sky-500/10 text-sky-400 border border-sky-500/20"
-                : "text-slate-500 hover:text-slate-300"
+                ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-300 dark:border-sky-500/20"
+                : "text-slate-500 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-300"
             }`}
           >
             {opt.name}
@@ -122,7 +122,7 @@ const UserPage = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
       <FilterPanel
@@ -180,156 +180,178 @@ const UserPage = () => {
         />
       </FilterPanel>
 
-      {/* KHỐI LAYOUT TỐI CHỦ ĐẠO */}
-      <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl pt-2 pl-2 shadow-2xl backdrop-blur-md">
-        <div className="flex items-center justify-between pr-2">
-          <h3 className="section-title">Danh sách người dùng</h3>
+      {/* KHỐI LAYOUT SÁNG/TỐI ĐỒNG BỘ */}
+      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="section-title mb-0">Danh sách người dùng</h3>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title="Tải lại"
           >
-            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+            <RefreshCw
+              size={18}
+              className={revalidator.state === "loading" ? "animate-spin" : ""}
+            />
           </button>
         </div>
 
         <div className="mb-2 table-retro">
           <div className="overflow-x-auto">
-          <table className="w-full border-separate border-spacing-0 min-w-[600px]">
-            <thead>
-              <tr>
-                <th scope="col" className="px-6 py-4 w-[35%] !text-start">
-                  Người dùng
-                </th>
-                <th scope="col" className="px-6 py-4 w-[25%] !text-start">
-                  Liên hệ
-                </th>
-                <th scope="col" className="px-6 py-4 w-[12%] text-center">
-                  Xác thực
-                </th>
-                <th scope="col" className="px-6 py-4 w-[13%] text-center">
-                  Vai trò
-                </th>
-                <th scope="col" className="px-6 py-4 w-[15%] text-center">
-                  Hành động
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {allUsers.length > 0 ? (
-                allUsers.map((user, index) => (
-                  <tr key={user.id || index}>
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-4">
-                        <div
-                          className="rounded-full border border-slate-800 bg-[#111827] overflow-hidden flex-shrink-0 p-0.5"
-                          style={{ width: "64px", height: "64px" }}
-                        >
-                          <img
-                            src={user.avatar || avatarDefault}
-                            alt={user.full_name}
-                            className="w-full h-full object-cover rounded-full"
-                            style={{ width: "100%", height: "100%" }}
+            <table className="w-full border-separate border-spacing-0 min-w-[600px]">
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 w-[35%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Người dùng
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 w-[25%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Liên hệ
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 w-[12%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Xác thực
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 w-[13%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Vai trò
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 w-[15%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Hành động
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                {allUsers.length > 0 ? (
+                  allUsers.map((user, index) => (
+                    <tr
+                      key={user.id || index}
+                      className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors duration-200"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-4">
+                          <div
+                            className="rounded-full border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-[#111827] overflow-hidden flex-shrink-0 p-0.5"
+                            style={{ width: "50px", height: "50px" }}
+                          >
+                            <img
+                              src={user.avatar || avatarDefault}
+                              alt={user.full_name}
+                              className="w-full h-full object-cover rounded-full"
+                            />
+                          </div>
+                          <div className="min-w-0 flex-1 space-y-1">
+                            <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm tracking-wide truncate">
+                              {user.full_name}
+                            </p>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                              Ngày tạo:{" "}
+                              <span className="text-slate-600 dark:text-slate-400">
+                                {formatFullDateTime(user.created_at)}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4 text-start">
+                        <div className="flex flex-col gap-1.5">
+                          <span className="text-xs font-mono text-sky-600 dark:text-sky-400 break-all">
+                            {user.email}
+                          </span>
+                          {user.phone_number ? (
+                            <span className="inline-flex items-center w-fit px-2 py-0.5 rounded-md text-[11px] font-mono font-medium bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-emerald-600 dark:text-emerald-400">
+                              {user.phone_number}
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 dark:text-slate-600 text-[11px] italic">
+                              Chưa có SĐT
+                            </span>
+                          )}
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex justify-center">
+                          {user.is_verified ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/20">
+                              <span>Đã xác thực</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-300 dark:border-rose-500/20">
+                              <span>Chưa xác thực</span>
+                            </span>
+                          )}
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex justify-center">
+                          {user.role_id !== 5 ? (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-300 dark:border-violet-500/20 tracking-wide uppercase">
+                              {user.role?.name || "N/A"}
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-300 dark:border-amber-500/20 tracking-wide uppercase">
+                              {user.role?.name || "Customer"}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex items-center justify-center gap-1.5">
+                          <Link
+                            to={`/management/users/add-role/${user.id}`}
+                            className="p-2 bg-slate-100 dark:bg-[#111827] text-slate-500 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 border border-slate-200 dark:border-slate-800/85 hover:border-violet-300 dark:hover:border-violet-500/40 rounded-lg transition-all duration-150"
+                            title="Phân quyền hạn"
+                          >
+                            <ShieldAlert size={14} strokeWidth={2} />
+                          </Link>
+                          <BtnActions
+                            route={`/management/users/edit/${user.id}`}
+                            id={user.id}
+                            onDelete={() => openConfirm(user.id)}
                           />
                         </div>
-                        <div className="min-w-0 flex-1 space-y-1">
-                          <p className="font-semibold text-slate-100 text-sm tracking-wide truncate">
-                            {user.full_name}
-                          </p>
-                          <p className="text-[11px] text-slate-500">
-                            Ngày tạo:{" "}
-                            <span className="text-slate-400">
-                              {formatFullDateTime(user.created_at)}
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-5 text-start">
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-xs font-mono text-sky-400 break-all">
-                          {user.email}
-                        </span>
-                        {user.phone_number ? (
-                          <span className="inline-flex items-center w-fit px-2 py-0.5 rounded-md text-[11px] font-mono font-medium bg-slate-900 border border-slate-800 text-emerald-400">
-                            {user.phone_number}
-                          </span>
-                        ) : (
-                          <span className="text-slate-600 text-[11px] italic">
-                            Chưa có SĐT
-                          </span>
-                        )}
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-5 text-center">
-                      <div className="flex justify-center">
-                        {user.is_verified ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                            <span>Đã xác thực</span>
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                            <span>Chưa xác thực</span>
-                          </span>
-                        )}
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-5 text-center">
-                      <div className="flex justify-center">
-                        {user.role_id !== 5 ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-violet-500/10 text-violet-400 border border-violet-500/20 tracking-wide uppercase">
-                            {user.role?.name || "N/A"}
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 tracking-wide uppercase">
-                            {user.role?.name || "Customer"}
-                          </span>
-                        )}
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-5 text-center">
-                      <div className="flex items-center justify-center gap-1.5">
-                        <Link
-                          to={`/management/users/add-role/${user.id}`}
-                          className="p-2 bg-[#111827] text-slate-400 hover:text-violet-400 border border-slate-800/80 hover:border-violet-500/40 rounded-lg transition-all duration-150"
-                          title="Phân quyền hạn"
-                        >
-                          <ShieldAlert size={14} strokeWidth={2} />
-                        </Link>
-                        <BtnActions
-                          route={`/management/users/edit/${user.id}`}
-                          id={user.id}
-                          onDelete={() => openConfirm(user.id)}
-                        />
-                      </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
+                    >
+                      Không tìm thấy người dùng nào.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="px-6 py-12 text-center text-slate-500 italic"
-                  >
-                    Không tìm thấy người dùng nào.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <Pagination
-          totalPages={paginationInfo.totalPages}
-          currentPage={paginationInfo.currentPage}
-          onPageChange={handlePageChange}
-        />
+        <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <Pagination
+            totalPages={paginationInfo.totalPages}
+            currentPage={paginationInfo.currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
 
         <ConfirmDelete
           isOpen={isConfirmOpen}

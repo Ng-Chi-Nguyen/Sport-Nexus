@@ -60,7 +60,7 @@ const BrandPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
       <FilterPanel
@@ -79,7 +79,10 @@ const BrandPage = () => {
               templateFileName="template-thuong-hieu.xlsx"
               exportFileName="thuong-hieu.xlsx"
             />
-            <BtnAdd route={"/management/brands/create"} name="Thêm thương hiệu" />
+            <BtnAdd
+              route={"/management/brands/create"}
+              name="Thêm thương hiệu"
+            />
           </div>
         }
       >
@@ -91,23 +94,28 @@ const BrandPage = () => {
         </div>
       </FilterPanel>
 
-      <div className="bg-[#0D121F]/30 border border-slate-900/80 rounded-2xl p-3 shadow-xl">
+      <div className="bg-white dark:bg-[#0D121F]/30 border border-slate-200 dark:border-slate-900/80 rounded-2xl p-4 sm:p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
         <div className="flex items-center gap-3 mb-6 justify-between">
-          <h2 className="text-sm font-bold text-slate-200 tracking-wide uppercase">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-slate-200 tracking-wide uppercase">
             Danh sách thương hiệu
           </h2>
-          <button
-            onClick={handleRefresh}
-            disabled={revalidator.state === "loading"}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Tải lại"
-          >
-            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
-          </button>
-          <div>
+          <div className="flex items-center gap-3">
             {allBrands.length > 0 && (
-              <Badge>{pagination.totalItems || 0} thương hiệu</Badge>
+              <Badge>{pagination?.totalItems || 0} thương hiệu</Badge>
             )}
+            <button
+              onClick={handleRefresh}
+              disabled={revalidator.state === "loading"}
+              className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Tải lại"
+            >
+              <RefreshCw
+                size={18}
+                className={
+                  revalidator.state === "loading" ? "animate-spin" : ""
+                }
+              />
+            </button>
           </div>
         </div>
 
@@ -125,13 +133,13 @@ const BrandPage = () => {
         ) : (
           <div className="py-24 text-center">
             <div className="text-4xl mb-4 opacity-30">🏷️</div>
-            <p className="text-slate-500 italic text-sm">
+            <p className="text-slate-400 dark:text-slate-500 italic text-sm">
               Không tìm thấy thương hiệu nào trên hệ thống.
             </p>
           </div>
         )}
 
-        <div className="mt-6 border-t border-white/[0.03] pt-4">
+        <div className="mt-6 border-t border-slate-200 dark:border-white/[0.03] pt-4">
           <Pagination
             totalPages={paginationInfo.totalPages}
             currentPage={paginationInfo.currentPage}

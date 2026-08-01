@@ -73,16 +73,16 @@ const CreateUserPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
-      <h2 className="text-xl font-bold text-slate-100 tracking-wide uppercase">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide uppercase">
         Thêm người dùng mới
       </h2>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
         {/* KHỐI 1: ẢNH ĐẠI DIỆN (3 CỘT) */}
-        <div className="col-span-12 md:col-span-4 lg:col-span-3 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
+        <div className="col-span-12 md:col-span-4 lg:col-span-3 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-5 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md h-fit transition-colors duration-200">
           <TitleManagement color="cyan">Ảnh đại diện</TitleManagement>
           <div className="flex items-center justify-center w-full py-2">
             <InputFile value={avatar} onChange={(file) => setAvatar(file)} />
@@ -90,9 +90,9 @@ const CreateUserPage = () => {
         </div>
 
         {/* KHỐI 2: THÔNG TIN CƠ BẢN (5 CỘT) */}
-        <div className="col-span-12 md:col-span-8 lg:col-span-5 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-2xl backdrop-blur-md h-fit">
+        <div className="col-span-12 md:col-span-8 lg:col-span-5 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-5 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md h-fit transition-colors duration-200">
           <TitleManagement color="green">Thông tin cơ bản</TitleManagement>
-          <div className="space-y-5">
+          <div className="space-y-5 mt-2">
             <FloatingInput
               id="full_name"
               label="Họ tên"
@@ -125,10 +125,10 @@ const CreateUserPage = () => {
           </div>
         </div>
 
-        {/* KHỐI 3: PHÂN QUYỀN TÀI KHOẢN (4 CỘT - ĐÃ FIX relative z-20) */}
-        <div className="col-span-12 md:col-span-12 lg:col-span-4 flex flex-col bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-2xl backdrop-blur-md relative z-20 h-fit">
+        {/* KHỐI 3: PHÂN QUYỀN TÀI KHOẢN (4 CỘT) */}
+        <div className="col-span-12 md:col-span-12 lg:col-span-4 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-5 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 h-fit transition-colors duration-200">
           <TitleManagement color="blue">Trạng thái quyền</TitleManagement>
-          <div className="space-y-6">
+          <div className="space-y-6 mt-2">
             <Select
               label="Loại tài khoản"
               options={roleOptions}
@@ -137,8 +137,7 @@ const CreateUserPage = () => {
               placeholder="Chọn chức vụ..."
             />
 
-            {/* Thanh nút bấm hành động ngăn cách mượt mà biên đáy */}
-            <div className="border-t border-white/5 pt-5 flex justify-end w-full">
+            <div className="border-t border-slate-200 dark:border-white/5 pt-5 flex justify-end w-full">
               <Submit_GoBack />
             </div>
           </div>

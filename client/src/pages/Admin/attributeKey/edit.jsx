@@ -23,35 +23,28 @@ const breadcrumbData = [
     route: "/management/attribute-key/",
   },
   {
-    title: "Chỉnh sữa",
+    title: "Chỉnh sửa",
     route: "",
   },
 ];
 
 const EditAttributeKey = () => {
   const responseOld = useLoaderData();
-  // console.log(response.data);
   const navigate = useNavigate();
-  const [name, setName] = useState(responseOld.data.name);
-  const [unit, setUnit] = useState(responseOld.data.unit);
+  const [name, setName] = useState(responseOld?.data?.name || "");
+  const [unit, setUnit] = useState(responseOld?.data?.unit || "");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("name", name);
     formData.append("unit", unit);
-    // --- ĐOẠN LOG KIỂM TRA ---
-    // console.log("=== KIỂM TRA DỮ LIỆU GỬI ĐI ===");
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}:`, value);
-    // }
-    // console.log("===============================");
+
     try {
       const response = await attributeKeyApi.update(
         responseOld.data.id,
         formData,
       );
-      // console.log(response);
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["attribute-keys"] });
         toast.success(response.message);
@@ -69,31 +62,35 @@ const EditAttributeKey = () => {
   };
 
   return (
-    <>
+    <div className="space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-2 w-fit border border-gray-200 p-3 rounded-[5px]"
+        className="flex flex-col gap-4 w-full max-w-xl bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200"
       >
-        <TitleManagement color="blue">Thông tin tuộc tính</TitleManagement>
-        <div className="flex gap-2">
-          <FloatingInput
-            label="Tên thuộc tính"
-            value={name}
-            required
-            onChange={(e) => setName(e.target.value)}
-          />
-          <FloatingInput
-            label="Đơn vị"
-            value={unit}
-            onChange={(e) => setUnit(e.target.value)}
-          />
+        <TitleManagement color="blue">Thông tin thuộc tính</TitleManagement>
+        <div className="flex flex-col sm:flex-row gap-4 mt-2">
+          <div className="flex-1">
+            <FloatingInput
+              label="Tên thuộc tính"
+              value={name}
+              required
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="flex-1">
+            <FloatingInput
+              label="Đơn vị"
+              value={unit}
+              onChange={(e) => setUnit(e.target.value)}
+            />
+          </div>
         </div>
-        <div className="ml-auto mr-auto">
+        <div className="flex justify-end pt-4 border-t border-slate-200 dark:border-white/5">
           <Submit_GoBack />
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

@@ -143,7 +143,7 @@ const ProductPage = () => {
   };
 
   return (
-    <>
+    <div className="text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
       <div className="flex items-center gap-3 my-4">
@@ -159,8 +159,8 @@ const ProductPage = () => {
           onClick={() => setShowFilters(!showFilters)}
           className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
             hasActiveFilters
-              ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
-              : "bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200"
+              ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-300 dark:border-sky-500/20"
+              : "bg-white dark:bg-[#111827]/40 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-[#161F32] hover:text-slate-900 dark:hover:text-slate-200"
           }`}
         >
           <Filter size={14} />
@@ -189,13 +189,13 @@ const ProductPage = () => {
             : "max-h-0 opacity-0 overflow-hidden"
         }`}
       >
-        <div className="p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
+        <div className="p-4 bg-white dark:bg-[#0D121F]/80 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg transition-colors duration-200">
           <div className="flex flex-wrap items-end gap-4">
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[230px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Trạng thái
               </label>
-              <div className="flex items-center gap-0.5 p-0.5 bg-[#111827]/60 border border-slate-800 rounded-lg h-10">
+              <div className="flex items-center gap-0.5 p-0.5 bg-slate-100 dark:bg-[#111827]/60 border border-slate-200 dark:border-slate-800 rounded-lg h-10">
                 {[
                   { value: "", label: "Tất cả" },
                   { value: "true", label: "Còn hàng" },
@@ -207,8 +207,8 @@ const ProductPage = () => {
                     onClick={() => setFilter("is_active", tab.value)}
                     className={`flex-1 text-center py-1 text-[11px] font-bold rounded-md cursor-pointer transition-colors h-full ${
                       currentIsActive === tab.value
-                        ? "bg-sky-500/10 text-sky-400 border border-sky-500/20"
-                        : "text-slate-500 hover:text-slate-300"
+                        ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-300 dark:border-sky-500/20"
+                        : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-300"
                     }`}
                   >
                     {tab.label}
@@ -266,7 +266,7 @@ const ProductPage = () => {
             </div>
 
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Khoảng giá
               </label>
               <div className="flex items-center gap-1">
@@ -275,15 +275,17 @@ const ProductPage = () => {
                   placeholder="Tối thiểu"
                   value={currentPriceMin}
                   onChange={(e) => setFilter("price_min", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 />
-                <span className="text-slate-600 shrink-0">–</span>
+                <span className="text-slate-400 dark:text-slate-600 shrink-0">
+                  –
+                </span>
                 <input
                   type="number"
                   placeholder="Tối đa"
                   value={currentPriceMax}
                   onChange={(e) => setFilter("price_max", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 />
               </div>
             </div>
@@ -292,7 +294,7 @@ const ProductPage = () => {
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
+                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-500 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
                 Xoá bộ lọc
               </button>
@@ -302,11 +304,13 @@ const ProductPage = () => {
       </div>
 
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-100">Danh sách sản phẩm</h2>
+        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+          Danh sách sản phẩm
+        </h2>
         <button
           onClick={handleRefresh}
           disabled={revalidator.state === "loading"}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           title="Tải lại"
         >
           <RefreshCw
@@ -315,35 +319,36 @@ const ProductPage = () => {
           />
         </button>
       </div>
-      <div className="mt-3 relative bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
+
+      <div className="mt-3 relative bg-white dark:bg-[#0D121F]/80 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg transition-colors duration-200">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-slate-200 min-w-[600px]">
-            <thead className="text-xs uppercase bg-[#161F32] border-b border-slate-800">
+          <table className="w-full text-sm text-left text-slate-700 dark:text-slate-200 min-w-[600px]">
+            <thead className="text-xs uppercase bg-slate-100 dark:bg-[#161F32] border-b border-slate-200 dark:border-slate-800">
               <tr>
-                <th className="px-6 py-4 font-black text-slate-400 !text-start">
+                <th className="px-6 py-4 font-black text-slate-600 dark:text-slate-400 !text-start">
                   Thông tin sản phẩm
                 </th>
-                <th className="px-6 py-4 font-black text-center text-slate-400">
+                <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
                   Phân loại
                 </th>
-                <th className="px-6 py-4 font-black text-center text-slate-400">
+                <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
                   Trạng thái
                 </th>
-                <th className="px-6 py-4 font-black text-center text-slate-400">
+                <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
                   Thao tác
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
               {products.length > 0 ? (
                 products.map((product) => (
                   <tr
                     key={product.id}
-                    className="hover:bg-[#161F32]/40 transition-colors duration-150"
+                    className="hover:bg-slate-50 dark:hover:bg-[#161F32]/40 transition-colors duration-150"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-[60px] h-[60px] rounded-lg overflow-hidden bg-[#161F32] flex-shrink-0">
+                        <div className="w-[60px] h-[60px] rounded-lg overflow-hidden bg-slate-100 dark:bg-[#161F32] flex-shrink-0">
                           <img
                             src={
                               product.thumbnail ||
@@ -354,12 +359,12 @@ const ProductPage = () => {
                           />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="font-bold text-sm text-slate-100 truncate">
+                          <p className="font-bold text-sm text-slate-900 dark:text-slate-100 truncate">
                             {product.name}
                           </p>
                           <div className="flex items-center gap-2 mt-1">
                             <Badge color="blue">{product.category.name}</Badge>
-                            <span className="text-xs text-emerald-400 font-black">
+                            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-black">
                               {formatCurrency(product.base_price)}
                             </span>
                           </div>
@@ -407,7 +412,7 @@ const ProductPage = () => {
                 <tr>
                   <td
                     colSpan="4"
-                    className="px-6 py-10 text-center text-slate-500 italic"
+                    className="px-6 py-10 text-center text-slate-400 dark:text-slate-500 italic"
                   >
                     Không có sản phẩm nào
                   </td>
@@ -416,7 +421,7 @@ const ProductPage = () => {
             </tbody>
           </table>
         </div>
-        <div className="p-4 border-t border-slate-800">
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800">
           <Pagination
             totalPages={paginationInfo.totalPages}
             currentPage={paginationInfo.currentPage}
@@ -431,7 +436,7 @@ const ProductPage = () => {
           onCancel={() => setIsConfirmOpen(false)}
         />
       </div>
-    </>
+    </div>
   );
 };
 

@@ -41,24 +41,12 @@ const CreateBrandPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // console.log(name);
-    // console.log(logo);
-    // console.log(name);
-
     const formData = new FormData();
     formData.append("name", name);
     formData.append("origin", selectedOrigin);
     if (logo instanceof File) {
-      // Khi gửi thế này, Multer ở BE sẽ bắt được và tạo ra cái <Buffer ...> bạn cần
       formData.append("logo", logo);
     }
-
-    // --- ĐOẠN LOG KIỂM TRA ---
-    // console.log("=== KIỂM TRA DỮ LIỆU GỬI ĐI ===");
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}:`, value);
-    // }
-    // console.log("===============================");
 
     try {
       const response = await brandApi.create(formData);
@@ -79,17 +67,24 @@ const CreateBrandPage = () => {
   };
 
   return (
-    <>
+    <div className="space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
-      <h2>Thêm mới thương hiệu</h2>
-      <form onSubmit={handleSubmit} className="flex w-fit p-4 gap-3">
-        <div className="border border-gray-200 p-3 rounded-[5px]">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide">
+        Thêm mới thương hiệu
+      </h2>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col lg:flex-row gap-4 items-start w-full"
+      >
+        <div className="w-full lg:w-[30%] bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
           <TitleManagement color="cyan">Logo thương hiệu</TitleManagement>
-          <InputFile value={logo} onChange={(file) => setLogo(file)} />
+          <div className="mt-3">
+            <InputFile value={logo} onChange={(file) => setLogo(file)} />
+          </div>
         </div>
-        <div className="border border-gray-200 p-3 rounded-[5px]">
+        <div className="w-full lg:flex-1 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200 flex flex-col gap-4">
           <TitleManagement color="blue">Thông tin thương hiệu</TitleManagement>
-          <div className="flex flex-col flex-col-reverse m-3">
+          <div className="mt-2">
             <FloatingInput
               id="name"
               label="Tên thương hiệu"
@@ -98,17 +93,19 @@ const CreateBrandPage = () => {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="flex flex-col flex-col-reverse m-3 mb-10">
+          <div>
             <CountrySelect
               value={selectedOrigin}
               onChange={(val) => setSelectedOrigin(val)}
               label="Xuất xứ"
             />
           </div>
-          <Submit_GoBack />
+          <div className="flex justify-end pt-4 border-t border-slate-200 dark:border-white/5 mt-2">
+            <Submit_GoBack />
+          </div>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

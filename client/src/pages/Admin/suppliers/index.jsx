@@ -40,7 +40,10 @@ const SupplierPage = () => {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    if (isFirstRender.current) { isFirstRender.current = false; return; }
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     const timer = setTimeout(() => {
       const params = new URLSearchParams(searchParams);
       params.set("page", "1");
@@ -111,7 +114,11 @@ const SupplierPage = () => {
 
   const renderAddress = (locationData) => {
     if (!locationData)
-      return <span className="text-slate-500 italic">Chưa cập nhật</span>;
+      return (
+        <span className="text-slate-400 dark:text-slate-500 italic">
+          Chưa cập nhật
+        </span>
+      );
 
     try {
       const loc =
@@ -122,12 +129,16 @@ const SupplierPage = () => {
       const addressParts = [loc.detail, loc.ward, loc.province].filter(Boolean);
       return addressParts.join(", ");
     } catch (error) {
-      return <span className="text-rose-400">Lỗi định dạng địa chỉ</span>;
+      return (
+        <span className="text-rose-600 dark:text-rose-400">
+          Lỗi định dạng địa chỉ
+        </span>
+      );
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
       {/* THANH TÌM KIẾM & NÚT THÊM */}
@@ -155,7 +166,7 @@ const SupplierPage = () => {
           <button
             type="button"
             onClick={clearAllFilters}
-            className="px-2.5 py-1.5 text-[10px] font-bold rounded border border-slate-800 text-slate-500 hover:bg-slate-800/60 hover:text-slate-300 transition-colors cursor-pointer shrink-0"
+            className="px-2.5 py-1.5 text-[10px] font-bold rounded border border-slate-200 dark:border-slate-800 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer shrink-0"
           >
             Xóa bộ lọc
           </button>
@@ -174,120 +185,139 @@ const SupplierPage = () => {
         />
       </div>
 
-      <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <div className="flex items-center justify-between">
-          <h2 className="section-title">
-            Danh sách nhà cung cấp
-          </h2>
+      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="section-title mb-0">Danh sách nhà cung cấp</h2>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title="Tải lại"
           >
-            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+            <RefreshCw
+              size={18}
+              className={revalidator.state === "loading" ? "animate-spin" : ""}
+            />
           </button>
         </div>
 
         {/* BẢNG CHUYỂN ĐỔI SANG LAYOUT 5 CỘT TÁCH BIỆT */}
         <div className="table-retro">
           <div className="overflow-x-auto">
-          <table className="w-full border-separate border-spacing-0 min-w-[600px]">
-            <thead>
-              <tr>
-                <th scope="col" className="px-6 py-4 w-[30%] !text-start">
-                  Nhà cung cấp
-                </th>
-                <th scope="col" className="px-6 py-4 w-[25%] !text-start">
-                  Địa chỉ
-                </th>
-                <th scope="col" className="px-6 py-4 w-[18%] !text-start">
-                  Email liên hệ
-                </th>
-                <th scope="col" className="px-6 py-4 w-[15%] !text-start">
-                  Số điện thoại
-                </th>
-                <th scope="col" className="px-6 py-4 w-[12%] text-center">
-                  Hành động
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {suppliers.length > 0 ? (
-                suppliers.map((supplier) => (
-                  <tr key={supplier.id}>
-                    {/* CỘT 1: LOGO + TÊN + ĐẠI DIỆN */}
-                    <td className="">
-                      <div className="flex items-start gap-4">
-                        {/* Khung ảnh Logo w-20 h-20 chuẩn lớn */}
-                        <div className="w-[60px] h-[60px] rounded-xl overflow-hidden flex-shrink-0 p-1.5 flex items-center justify-center">
-                          <img
-                            src={
-                              supplier.logo_url ||
-                              "https://placehold.co/200x200/png?text=No+Logo"
-                            }
-                            alt={supplier.name}
-                            className="w-full h-full"
-                          />
-                        </div>
-
-                        {/* Text thông tin cơ bản */}
-                        <div className="min-w-0 flex-1 space-y-1.5 pt-1">
-                          <p className="font-semibold text-slate-100 text-sm tracking-wide">
-                            {supplier.name}
-                          </p>
-                          <p className="text-[12px] text-slate-400">
-                            <span className="text-slate-500">Đại diện:</span>{" "}
-                            <span className="text-green-300 font-medium">
-                              {supplier.contact_person}
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-
-                    {/* CỘT 2: ĐỊA CHỈ CHI TIẾT */}
-                    <td
-                      className=" text-slate-300 align-top"
-                      title={renderAddress(supplier.location_data)}
+            <table className="w-full border-separate border-spacing-0 min-w-[600px]">
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 w-[30%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Nhà cung cấp
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 w-[25%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Địa chỉ
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 w-[18%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Email liên hệ
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 w-[15%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Số điện thoại
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 w-[12%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Hành động
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                {suppliers.length > 0 ? (
+                  suppliers.map((supplier) => (
+                    <tr
+                      key={supplier.id}
+                      className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors duration-200"
                     >
-                      <div className="line-clamp-3 whitespace-normal break-words text-xs leading-relaxed text-slate-400">
-                        {renderAddress(supplier.location_data)}
-                      </div>
-                    </td>
+                      {/* CỘT 1: LOGO + TÊN + ĐẠI DIỆN */}
+                      <td className="px-6 py-4">
+                        <div className="flex items-start gap-4">
+                          <div className="w-[60px] h-[60px] rounded-xl overflow-hidden flex-shrink-0 p-1.5 flex items-center justify-center bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
+                            <img
+                              src={
+                                supplier.logo_url ||
+                                "https://placehold.co/200x200/png?text=No+Logo"
+                              }
+                              alt={supplier.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
 
-                    {/* CỘT 3: EMAIL (Đã tách biệt) */}
-                    <td className=" align-top  text-xs font-mono text-sky-400 break-all pr-4">
-                      {supplier.email}
-                    </td>
+                          <div className="min-w-0 flex-1 space-y-1.5 pt-1">
+                            <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm tracking-wide">
+                              {supplier.name}
+                            </p>
+                            <p className="text-[12px] text-slate-500 dark:text-slate-400">
+                              <span className="text-slate-400 dark:text-slate-500">
+                                Đại diện:
+                              </span>{" "}
+                              <span className="text-emerald-600 dark:text-green-300 font-medium">
+                                {supplier.contact_person}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      </td>
 
-                    {/* CỘT 4: SỐ ĐIỆN THOẠI (Đã tách biệt) */}
-                    <td className="align-top text-xs font-mono text-emerald-400 whitespace-nowrap">
-                      {supplier.phone}
-                    </td>
+                      {/* CỘT 2: ĐỊA CHỈ CHI TIẾT */}
+                      <td
+                        className="px-6 py-4 text-slate-600 dark:text-slate-300 align-top"
+                        title={renderAddress(supplier.location_data)}
+                      >
+                        <div className="line-clamp-3 whitespace-normal break-words text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                          {renderAddress(supplier.location_data)}
+                        </div>
+                      </td>
 
-                    {/* CỘT 5: HÀNH ĐỘNG HỆ THỐNG */}
-                    <td className=" text-center align-top">
-                      <BtnActions
-                        route={`/management/suppliers/edit/${supplier.id}`}
-                        id={supplier.id}
-                        onDelete={() => openConfirm(supplier.id)}
-                      />
+                      {/* CỘT 3: EMAIL */}
+                      <td className="px-6 py-4 align-top text-xs font-mono text-sky-600 dark:text-sky-400 break-all">
+                        {supplier.email}
+                      </td>
+
+                      {/* CỘT 4: SỐ ĐIỆN THOẠI */}
+                      <td className="px-6 py-4 align-top text-xs font-mono text-emerald-600 dark:text-emerald-400 whitespace-nowrap">
+                        {supplier.phone}
+                      </td>
+
+                      {/* CỘT 5: HÀNH ĐỘNG HỆ THỐNG */}
+                      <td className="px-6 py-4 text-center align-top">
+                        <BtnActions
+                          route={`/management/suppliers/edit/${supplier.id}`}
+                          id={supplier.id}
+                          onDelete={() => openConfirm(supplier.id)}
+                        />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
+                    >
+                      Không có nhà cung cấp nào được tìm thấy.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="px-6 py-12 text-center text-slate-500 italic"
-                  >
-                    Không có nhà cung cấp nào được tìm thấy.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -299,7 +329,7 @@ const SupplierPage = () => {
           onCancel={() => setIsConfirmOpen(false)}
         />
 
-        <div className="mt-6">
+        <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800">
           <Pagination
             totalPages={pagination.totalPages}
             currentPage={pagination.currentPage}

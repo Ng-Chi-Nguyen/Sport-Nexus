@@ -24,7 +24,6 @@ const EditPurchaseOrder = () => {
   const navigate = useNavigate();
   const { purchaseId } = useParams();
 
-  // Dữ liệu cũ từ backend
   const purchaseOld = response?.purchase?.data;
 
   // 1. Khởi tạo State thông tin chung
@@ -169,44 +168,54 @@ const EditPurchaseOrder = () => {
   };
 
   return (
-    <div className="animate-in fade-in duration-500 space-y-4">
+    <div className="animate-in fade-in duration-500 space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
-      <h2 className="text-xl font-bold text-slate-100 tracking-wide uppercase">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide uppercase">
         Chỉnh sửa đơn nhập hàng #PO-{purchaseId}
       </h2>
 
-      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-4 items-start w-full">
-        {/* CỘT TRÁI: THÔNG TIN CHUNG (Giao diện Đen) */}
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col lg:flex-row gap-4 items-start w-full"
+      >
+        {/* CỘT TRÁI: THÔNG TIN CHUNG */}
         <div className="flex flex-col w-full lg:w-[30%] gap-3.5 relative z-30">
-          <div className="bg-[#0D121F]/40 border border-slate-900 p-4 rounded-xl shadow-xl backdrop-blur-md space-y-3.5">
+          <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-4 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-md space-y-3.5 transition-colors duration-200">
             {/* PHẦN 1: NHÀ CUNG CẤP */}
             <div>
               <TitleManagement color="blue">Nhà cung cấp</TitleManagement>
-              <SelectPro
-                value={selectSupplier}
-                options={suppliersOptions}
-                onChange={setSelectSupplier}
-                label="Chọn nhà cung cấp"
-              />
+              <div className="mt-1">
+                <SelectPro
+                  value={selectSupplier}
+                  options={suppliersOptions}
+                  onChange={setSelectSupplier}
+                  label="Chọn nhà cung cấp"
+                />
+              </div>
             </div>
 
             {/* PHẦN 2: TRẠNG THÁI */}
-            <div className="border-t border-white/5 pt-3">
+            <div className="border-t border-slate-200 dark:border-white/5 pt-3">
               <TitleManagement color="green">Trạng thái đơn</TitleManagement>
-              <SelectPro
-                value={selectStatus}
-                options={PURCHASE_STATUS_OPTIONS.map(s => ({ id: s.slug, name: s.name }))}
-                onChange={setSelectStatus}
-                label="Trạng thái"
-              />
+              <div className="mt-1">
+                <SelectPro
+                  value={selectStatus}
+                  options={PURCHASE_STATUS_OPTIONS.map((s) => ({
+                    id: s.slug,
+                    name: s.name,
+                  }))}
+                  onChange={setSelectStatus}
+                  label="Trạng thái"
+                />
+              </div>
             </div>
 
             {/* PHẦN 3: THỜI GIAN & CHI PHÍ */}
-            <div className="border-t border-white/5 pt-3">
+            <div className="border-t border-slate-200 dark:border-white/5 pt-3">
               <TitleManagement color="orange">
                 Thời gian & Chi phí
               </TitleManagement>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 mt-2">
                 <FloatingInput
                   label="Ngày dự kiến"
                   type="date"
@@ -215,10 +224,10 @@ const EditPurchaseOrder = () => {
                 />
 
                 <div className="flex justify-between items-center px-1 py-0.5">
-                  <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                  <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider">
                     Tổng tiền (VNĐ):
                   </span>
-                  <span className="text-base font-black text-rose-400 font-mono">
+                  <span className="text-base font-black text-rose-600 dark:text-rose-400 font-mono">
                     {formatCurrency(totalCost)}
                   </span>
                 </div>
@@ -228,14 +237,14 @@ const EditPurchaseOrder = () => {
           <Submit_GoBack name="Sửa" />
         </div>
 
-        {/* CỘT PHẢI: CHI TIẾT MÓN HÀNG (Giao diện Đen) */}
-        <div className="flex-1 bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-xl backdrop-blur-md relative z-20">
+        {/* CỘT PHẢI: CHI TIẾT MÓN HÀNG */}
+        <div className="flex-1 w-full bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-5 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 transition-colors duration-200">
           <div className="flex items-center justify-between mb-6">
             <TitleManagement color="violet">Chi tiết món hàng</TitleManagement>
             <button
               type="button"
               onClick={handleAddItem}
-              className="bg-sky-500/10 text-sky-400 border border-sky-500/20 py-2 px-4 rounded-lg font-bold hover:bg-sky-500/20 shadow-[0_0_15px_rgba(14,165,233,0.05)] transition-all flex items-center gap-2 text-sm"
+              className="bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-300 dark:border-sky-500/20 py-2 px-4 rounded-lg font-bold hover:bg-sky-500/20 shadow-sm transition-all flex items-center gap-2 text-sm cursor-pointer"
             >
               <Plus size={16} strokeWidth={2.5} /> Thêm món hàng
             </button>
@@ -245,10 +254,10 @@ const EditPurchaseOrder = () => {
             {items.map((item, index) => (
               <div
                 key={item.id}
-                className="flex items-center gap-4 p-4 bg-[#111827]/40 border border-slate-800/60 rounded-xl hover:border-slate-700 transition-all duration-150 relative"
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 p-4 bg-slate-50/80 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/60 rounded-xl hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-150 relative"
                 style={{ zIndex: items.length - index }}
               >
-                <div className="w-2/4">
+                <div className="w-full sm:w-2/4">
                   <SelectPro
                     value={item.variantId}
                     options={variantsOptions}
@@ -259,7 +268,7 @@ const EditPurchaseOrder = () => {
                   />
                 </div>
 
-                <div className="w-1/4">
+                <div className="w-full sm:w-1/4">
                   <FloatingInput
                     label="Số lượng"
                     type="number"
@@ -271,7 +280,7 @@ const EditPurchaseOrder = () => {
                   />
                 </div>
 
-                <div className="w-1/4">
+                <div className="w-full sm:w-1/4">
                   <FloatingInput
                     label="Giá nhập"
                     type="number"
@@ -287,7 +296,7 @@ const EditPurchaseOrder = () => {
                   <button
                     type="button"
                     onClick={() => handleRemoveItem(item.id)}
-                    className="p-2 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all"
+                    className="p-2 self-end sm:self-auto text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-all cursor-pointer"
                   >
                     <Trash2 size={18} />
                   </button>

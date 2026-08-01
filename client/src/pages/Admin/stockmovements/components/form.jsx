@@ -172,11 +172,12 @@ const FormStock = (props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-4 w-full items-start">
-      <div className="flex flex-col gap-4 w-2/5 relative z-20">
-        {/* GOM CHUNG VÀO 1 HỘP CONTAINER DUY NHẤT */}
-        <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md space-y-6">
-          {/* PHẦN 1: LOẠI BIẾN ĐỘNG */}
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col lg:flex-row gap-4 w-full items-start text-slate-800 dark:text-slate-100 transition-colors duration-200"
+    >
+      <div className="flex flex-col gap-4 w-full lg:w-2/5 relative z-20">
+        <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-6 transition-colors duration-200">
           <div>
             <TitleManagement color="emerald">Loại biến động</TitleManagement>
             <div className="mt-3">
@@ -193,9 +194,8 @@ const FormStock = (props) => {
             </div>
           </div>
 
-          {/* PHẦN 2: CHI TIẾT ĐƠN THAM CHIẾU */}
           {formData.type !== "ADJUSTMENT" && (
-            <div className="border-t border-white/5 pt-4">
+            <div className="border-t border-slate-200 dark:border-white/5 pt-4">
               <TitleManagement color="violet">Chi tiết</TitleManagement>
               <div className="mt-3">
                 <SelectPro
@@ -218,8 +218,7 @@ const FormStock = (props) => {
         <Submit_GoBack justify="start" />
       </div>
 
-      {/* CỘT PHẢI: CHI TIẾT SẢN PHẨM THAM CHIẾU HOẶC LÝ DO (60% RỘNG - relative z-10) */}
-      <div className="w-3/5 bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md min-h-[420px] relative z-10">
+      <div className="w-full lg:w-3/5 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md min-h-[420px] relative z-10 transition-colors duration-200">
         {formData.type === "ADJUSTMENT" ? (
           <div className="space-y-4">
             <TitleManagement color="blue">Lý do điều chỉnh</TitleManagement>
@@ -243,10 +242,9 @@ const FormStock = (props) => {
               {formData.type === "IN" ? "Đơn Nhập" : "Đơn Bán"})
             </TitleManagement>
 
-            {/* DANH SÁCH SẢN PHẨM CON TỐI MỜ */}
             <div className="mt-4 overflow-y-auto space-y-3 max-h-[500px] pr-1 custom-scrollbar">
               {isLoadingItems ? (
-                <div className="py-20 text-center animate-pulse text-slate-500 font-medium text-sm tracking-wide">
+                <div className="py-20 text-center animate-pulse text-slate-400 dark:text-slate-500 font-medium text-sm tracking-wide">
                   Đang tải chi tiết đơn hàng...
                 </div>
               ) : orderItems.length > 0 ? (
@@ -255,23 +253,22 @@ const FormStock = (props) => {
                   return (
                     <div
                       key={item.id}
-                      className="flex justify-between items-center p-4 bg-[#111827]/40 border border-slate-800/60 rounded-xl hover:border-sky-500/30 hover:bg-[#161F32]/50 transition-all duration-150"
+                      className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 p-4 bg-slate-50/80 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/60 rounded-xl hover:border-sky-500/30 hover:bg-slate-100 dark:hover:bg-[#161F32]/50 transition-all duration-150"
                     >
                       <div className="min-w-0 flex-1 pr-4">
-                        <p className="font-semibold text-slate-200 text-sm truncate">
+                        <p className="font-semibold text-slate-900 dark:text-slate-200 text-sm truncate">
                           {item.product_variant?.product?.name ||
                             "Tên sản phẩm"}
                         </p>
-                        <p className="text-xs text-slate-500 mt-1 font-mono">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono">
                           Tồn kho hiện tại:{" "}
-                          <span className="text-slate-400">
+                          <span className="text-slate-700 dark:text-slate-400">
                             {item.product_variant?.stock ?? 0}
                           </span>
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-4 flex-shrink-0">
-                        {/* Thanh ô gõ số lượng nhập */}
+                      <div className="flex items-center gap-4 flex-shrink-0 justify-between sm:justify-end">
                         <div className="w-24">
                           <FloatingInput
                             label="Số lượng"
@@ -289,13 +286,12 @@ const FormStock = (props) => {
                           />
                         </div>
 
-                        {/* Nhãn thống kê số lượng gốc */}
                         <div className="text-right min-w-[85px] font-medium text-xs space-y-1">
-                          <p className="text-slate-400">
+                          <p className="text-slate-500 dark:text-slate-400">
                             Tổng đơn:{" "}
                             <span className="font-mono">{item.quantity}</span>
                           </p>
-                          <p className="text-amber-400/90 bg-amber-500/5 px-2 py-0.5 rounded border border-amber-500/10 font-semibold tracking-wide text-center">
+                          <p className="text-amber-600 dark:text-amber-400/90 bg-amber-50 dark:bg-amber-500/5 px-2 py-0.5 rounded border border-amber-200 dark:border-amber-500/10 font-semibold tracking-wide text-center">
                             Cần: {rem}
                           </p>
                         </div>
@@ -304,7 +300,7 @@ const FormStock = (props) => {
                   );
                 })
               ) : (
-                <div className="py-24 text-center text-slate-500 italic text-sm tracking-wide">
+                <div className="py-24 text-center text-slate-400 dark:text-slate-500 italic text-sm tracking-wide">
                   {formData.order
                     ? "Đơn hàng này không có sản phẩm tham chiếu."
                     : "Vui lòng chọn đơn hàng bên trái để kiểm tra danh sách."}

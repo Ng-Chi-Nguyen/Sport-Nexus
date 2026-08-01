@@ -1,15 +1,15 @@
+import { useMemo, useState } from "react";
+import { useLoaderData, useNavigate } from "react-router-dom";
+import { LayoutDashboard, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { FloatingInput } from "@/components/ui/input";
 import { SelectPro } from "@/components/ui/select";
 import { Submit_GoBack } from "@/components/ui/button";
-import { LayoutDashboard, Plus, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { TitleManagement } from "@/components/ui/title";
 import { PURCHASE_STATUS_OPTIONS } from "@/constants/management/purchaseOrder";
 import purchaseOrderdApi from "@/api/management/purchaseOrderApi";
 import { queryClient } from "@/lib/react-query";
-import { TitleManagement } from "@/components/ui/title";
 import { formatCurrency } from "@/utils/formatters";
 
 const breadcrumbData = [
@@ -48,21 +48,17 @@ const CreatePurchaseOrder = () => {
   );
 
   const variantsOptions = useMemo(() => {
-    // Phòng trường hợp dữ liệu loader chưa sẵn sàng
     if (!responses?.productVariants?.data) return [];
 
     return responses.productVariants.data.map((v) => {
-      // Kiểm tra xem biến thể này có chứa thuộc tính nào không
       const hasAttributes =
         Array.isArray(v.VariableAttributes) && v.VariableAttributes.length > 0;
 
-      // Lấy thông tin an toàn qua dấu ?.
       const attrName = hasAttributes
         ? v.VariableAttributes[0]?.attributeKey?.name
         : "";
       const attrValue = hasAttributes ? v.VariableAttributes[0]?.value : "";
 
-      // Nếu có biến thể thì hiển thị ghép, không có thì chỉ hiện tên sản phẩm gốc
       const variantLabel = hasAttributes ? ` - ${attrName}: ${attrValue}` : "";
 
       return {
@@ -129,48 +125,56 @@ const CreatePurchaseOrder = () => {
   };
 
   return (
-    <div className="animate-in fade-in duration-500 space-y-4">
+    <div className="animate-in fade-in duration-500 space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
-      <h2 className="text-xl font-bold text-slate-100 tracking-wide uppercase">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide uppercase">
         Thêm đơn nhập hàng mới
       </h2>
 
-      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-4 items-start w-full">
-        {/* CỘT TRÁI: THÔNG TIN CHUNG (CHIẾM 30% RỘNG - relative z-30 để dropdown đè nổi lên trên) */}
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col lg:flex-row gap-4 items-start w-full"
+      >
+        {/* CỘT TRÁI: THÔNG TIN CHUNG */}
         <div className="flex flex-col w-full lg:w-[30%] gap-3.5 relative z-30">
-          {/* CONTAINER DUY NHẤT: Giảm padding từ p-5 xuống p-4, nén gap dọc bằng space-y-3.5 */}
-          <div className="bg-[#0D121F]/40 border border-slate-900 p-4 rounded-xl shadow-xl backdrop-blur-md space-y-3.5">
-            {/* PHẦN 1: NHÀ CUNG CẤP (Bỏ bớt margin-bottom dư thừa) */}
+          <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-4 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-md space-y-3.5 transition-colors duration-200">
+            {/* PHẦN 1: NHÀ CUNG CẤP */}
             <div>
               <TitleManagement color="blue">Nhà cung cấp</TitleManagement>
-              <SelectPro
-                value={selectSupplier}
-                options={suppliersOptions}
-                onChange={setSelectSupplier}
-                label="Chọn nhà cung cấp"
-              />
+              <div className="mt-1">
+                <SelectPro
+                  value={selectSupplier}
+                  options={suppliersOptions}
+                  onChange={setSelectSupplier}
+                  label="Chọn nhà cung cấp"
+                />
+              </div>
             </div>
 
             {/* PHẦN 2: TRẠNG THÁI MẶC ĐỊNH */}
-            <div className="border-t border-white/5 pt-3">
+            <div className="border-t border-slate-200 dark:border-white/5 pt-3">
               <TitleManagement color="green">
                 Trạng thái mặc định
               </TitleManagement>
-              <SelectPro
-                value={selectStatus}
-                options={PURCHASE_STATUS_OPTIONS.map(s => ({ id: s.slug, name: s.name }))}
-                onChange={setSelectStatus}
-                label="Trạng thái"
-              />
+              <div className="mt-1">
+                <SelectPro
+                  value={selectStatus}
+                  options={PURCHASE_STATUS_OPTIONS.map((s) => ({
+                    id: s.slug,
+                    name: s.name,
+                  }))}
+                  onChange={setSelectStatus}
+                  label="Trạng thái"
+                />
+              </div>
             </div>
 
-            {/* PHẦN 3: THỜI GIAN & NGÂN SÁCH (ĐÃ THU GỌN CỰC ĐẠI) */}
-            <div className="border-t border-white/5 pt-3">
+            {/* PHẦN 3: THỜI GIAN & NGÂN SÁCH */}
+            <div className="border-t border-slate-200 dark:border-white/5 pt-3">
               <TitleManagement color="orange">
                 Thời gian & Ngân sách
               </TitleManagement>
-              {/* Nén khoảng cách giữa Input Date và Text hiển thị tiền tiền bằng gap-2 */}
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 mt-2">
                 <FloatingInput
                   label="Ngày nhận hàng dự kiến"
                   type="date"
@@ -178,12 +182,11 @@ const CreatePurchaseOrder = () => {
                   onChange={(e) => setExpectedDate(e.target.value)}
                 />
 
-                {/* ĐÃ SỬA: Loại bỏ hộp bọc viền dầy cũ, chuyển thành dòng chữ phẳng mượt siêu tiết kiệm không gian */}
                 <div className="flex justify-between items-center px-1 py-0.5">
-                  <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                  <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider">
                     Tổng ước tính:
                   </span>
-                  <span className="text-base font-black text-rose-400 font-mono">
+                  <span className="text-base font-black text-rose-600 dark:text-rose-400 font-mono">
                     {formatCurrency(totalCost)}
                   </span>
                 </div>
@@ -194,7 +197,8 @@ const CreatePurchaseOrder = () => {
           <Submit_GoBack />
         </div>
 
-        <div className="flex-1 bg-[#0D121F]/40 border border-slate-900 p-5 rounded-2xl shadow-xl backdrop-blur-md relative z-20">
+        {/* CỘT PHẢI: DANH SÁCH MÓN HÀNG */}
+        <div className="flex-1 w-full bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-5 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 transition-colors duration-200">
           <div className="flex items-center justify-between mb-6">
             <TitleManagement color="violet">
               Danh sách món hàng nhập về
@@ -202,22 +206,21 @@ const CreatePurchaseOrder = () => {
             <button
               type="button"
               onClick={handleAddItem}
-              className="bg-sky-500/10 text-sky-400 border border-sky-500/20 py-2 px-4 rounded-lg font-bold hover:bg-sky-500/20 shadow-[0_0_15px_rgba(14,165,233,0.05)] transition-all flex items-center gap-2 text-sm"
+              className="bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-300 dark:border-sky-500/20 py-2 px-4 rounded-lg font-bold hover:bg-sky-500/20 shadow-sm transition-all flex items-center gap-2 text-sm cursor-pointer"
             >
               <Plus size={16} strokeWidth={2.5} /> Thêm món hàng
             </button>
           </div>
 
-          {/* ĐÃ SỬA: Giữ nguyên max-h-[580px] và overflow-y-auto của bạn nhưng tăng pb-60 để tạo khoảng trống cho ô cuối bung menu */}
           <div className="flex flex-col gap-3 max-h-[580px] overflow-y-auto pr-2 pb-60 custom-scrollbar relative z-30">
             {items.map((item, index) => (
               <div
                 key={item.id}
-                className="flex items-center gap-4 p-4 bg-[#111827]/40 border border-slate-800/60 rounded-xl hover:border-slate-700 transition-all duration-150 relative"
-                style={{ zIndex: items.length - index }} // Giữ nguyên logic tính z-index lùi dần của bạn để dòng trên đè dòng dưới
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 p-4 bg-slate-50/80 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/60 rounded-xl hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-150 relative"
+                style={{ zIndex: items.length - index }}
               >
                 {/* Chọn Biến thể sản phẩm */}
-                <div className="w-2/4">
+                <div className="w-full sm:w-2/4">
                   <SelectPro
                     value={item.variantId}
                     options={variantsOptions}
@@ -229,7 +232,7 @@ const CreatePurchaseOrder = () => {
                 </div>
 
                 {/* Nhập Số lượng */}
-                <div className="w-1/4">
+                <div className="w-full sm:w-1/4">
                   <FloatingInput
                     label="Số lượng"
                     type="number"
@@ -242,7 +245,7 @@ const CreatePurchaseOrder = () => {
                 </div>
 
                 {/* Nhập Giá nhập gốc */}
-                <div className="w-1/4">
+                <div className="w-full sm:w-1/4">
                   <FloatingInput
                     label="Giá nhập"
                     type="number"
@@ -259,7 +262,7 @@ const CreatePurchaseOrder = () => {
                   <button
                     type="button"
                     onClick={() => handleRemoveItem(item.id)}
-                    className="p-2 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all"
+                    className="p-2 self-end sm:self-auto text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-all cursor-pointer"
                     title="Xóa dòng"
                   >
                     <Trash2 size={18} />
@@ -269,7 +272,7 @@ const CreatePurchaseOrder = () => {
             ))}
 
             {items.length === 0 && (
-              <div className="text-center py-20 text-slate-500 italic text-sm border border-dashed border-slate-800 rounded-xl bg-slate-900/10">
+              <div className="text-center py-20 text-slate-400 dark:text-slate-500 italic text-sm border border-dashed border-slate-300 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-900/10">
                 Chưa có món hàng nào được chọn nhập về.
               </div>
             )}

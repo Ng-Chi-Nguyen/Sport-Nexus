@@ -39,7 +39,10 @@ const AttributeKey = () => {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    if (isFirstRender.current) { isFirstRender.current = false; return; }
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     const timer = setTimeout(() => {
       const params = new URLSearchParams(searchParams);
       params.set("page", "1");
@@ -65,7 +68,7 @@ const AttributeKey = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await attributeKeyApi.delete(deleteTarget);
+      const response = await attributeKeyApi.delete(deleteTarget.id);
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["attribute-keys"] });
         revalidator.revalidate();
@@ -100,11 +103,12 @@ const AttributeKey = () => {
   };
 
   const paginationInfo = responses?.data?.pagination || {
-    totalPages: 1, currentPage: 1,
+    totalPages: 1,
+    currentPage: 1,
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
       <div className="flex items-center gap-4 rounded-xl">
@@ -122,7 +126,10 @@ const AttributeKey = () => {
             onChange={(val) => handleUnitClick(val)}
             options={[
               { slug: "", name: "Tất cả" },
-              ...units.map((u) => ({ slug: u || "null", name: u || "Không có" })),
+              ...units.map((u) => ({
+                slug: u || "null",
+                name: u || "Không có",
+              })),
             ]}
           />
         </div>
@@ -141,70 +148,89 @@ const AttributeKey = () => {
         />
       </div>
 
-      <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <div className="flex items-center justify-between">
-          <h2 className="section-title">
-            Danh sách thuộc tính
-          </h2>
+      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="section-title mb-0">Danh sách thuộc tính</h2>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title="Tải lại"
           >
-            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+            <RefreshCw
+              size={18}
+              className={revalidator.state === "loading" ? "animate-spin" : ""}
+            />
           </button>
         </div>
         <div className="table-retro">
           <div className="overflow-x-auto">
-          <table className="w-full border-separate border-spacing-0 min-w-[600px]">
-            <thead>
-              <tr>
-                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                  Tên thuộc tính
-                </th>
-                <th scope="col" className="px-6 py-4 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                  Đơn vị
-                </th>
-                <th scope="col" className="px-6 py-4 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                  Được sử dụng
-                </th>
-                <th scope="col" className="px-6 py-4 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                  Hành động
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {attributes.length > 0 ? (
-                attributes.map((attr) => (
-                  <tr key={attr.id} className="border-t border-slate-800/40 hover:bg-slate-800/20 transition-colors duration-200">
-                    <td className="px-6 py-4 font-medium text-slate-200 whitespace-nowrap">
-                      {attr.name}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <Badge color="blue">{attr.unit || "Không có"}</Badge>
-                    </td>
-                    <td className="px-6 py-4 text-center text-slate-500 text-xs">
-                      20 sản phẩm
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <BtnActions
-                        route={`/management/attribute-key/edit/${attr.id}`}
-                        id={attr.id}
-                        onDelete={() => openConfirm(attr.id, attr.name)}
-                      />
+            <table className="w-full border-separate border-spacing-0 min-w-[600px]">
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Tên thuộc tính
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Đơn vị
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Được sử dụng
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    Hành động
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                {attributes.length > 0 ? (
+                  attributes.map((attr) => (
+                    <tr
+                      key={attr.id}
+                      className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors duration-200"
+                    >
+                      <td className="px-6 py-4 font-medium text-slate-900 dark:text-slate-200 whitespace-nowrap">
+                        {attr.name}
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <Badge color="blue">{attr.unit || "Không có"}</Badge>
+                      </td>
+                      <td className="px-6 py-4 text-center text-slate-500 dark:text-slate-400 text-xs">
+                        20 sản phẩm
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <BtnActions
+                          route={`/management/attribute-key/edit/${attr.id}`}
+                          id={attr.id}
+                          onDelete={() => openConfirm(attr.id, attr.name)}
+                        />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="4"
+                      className="px-6 py-20 text-center text-slate-400 dark:text-slate-500 italic text-sm"
+                    >
+                      Không có thuộc tính nào
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="px-6 py-20 text-center text-slate-500 italic text-sm">
-                    Không có thuộc tính nào
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
