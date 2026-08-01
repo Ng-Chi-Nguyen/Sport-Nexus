@@ -25,6 +25,7 @@ import productAttributeKeyRoute from "./management/productAttributeKey.route.js"
 import cartRoute from "./customer/cart.route.js";
 import customerUserRoute from "./customer/user.route.js";
 import sendEmailRoute from "./email/sendEmail.route.js";
+import paymentRoute from "./customer/payment.route.js";
 
 const Routes = (app) => {
 
@@ -50,6 +51,7 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}customer/cart/`, cartRoute)
     app.use(`${api_prefix_v1}customer/order/`, orderRoute)
     app.use(`${api_prefix_v1}customer/review/`, reviewRoute)
+    app.use(`${api_prefix_v1}customer/payment/`, paymentRoute)
 
     // Core - c?t l?i c?a h? th?ng (Management v� Customer)
     app.use(`${api_prefix_v1}core/product/`, productRoute)
