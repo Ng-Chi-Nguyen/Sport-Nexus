@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle, Pencil, XCircle } from "lucide-react";
-import { actionConfig, entityNames } from "@/constants/management/log";
+import { actionConfig } from "@/constants/management/log";
 import { formatFullDateTime } from "@/utils/formatters";
+import { useTranslation } from "react-i18next";
 
 const entityLinks = {
   Orders: (id) => `/management/orders/edit/${id}`,
@@ -16,18 +17,37 @@ const entityLinks = {
 };
 
 const LogEntry = ({ log }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "systemLog" });
   const [expanded, setExpanded] = useState(false);
   const config = actionConfig[log.action_type] || {
     icon: Pencil,
-    label: "đã tác động",
     color: "text-slate-500 dark:text-slate-400",
   };
   const ActionIcon = config.icon;
+  const actionLabel =
+    {
+      CREATE: t("action_added"),
+      UPDATE: t("action_updated"),
+      DELETE: t("action_deleted"),
+      STOCK_ADJUSTMENT: t("action_stock_adjust"),
+    }[log.action_type] || t("action_default");
   const isDelete = log.action_type === "DELETE";
   const entityLink = isDelete
     ? null
     : entityLinks[log.entity_type]?.(log.entity_id);
-  const entityName = entityNames[log.entity_type] || log.entity_type;
+  const entityName =
+    {
+      Orders: t("entity_orders_ln"),
+      Products: t("entity_products_ln"),
+      Users: t("entity_users_ln"),
+      ProductVariants: t("entity_variants_ln"),
+      Coupons: t("entity_coupons_ln"),
+      Brands: t("entity_brands_ln"),
+      Categories: t("entity_categories_ln"),
+      Suppliers: t("entity_suppliers_ln"),
+      StockMovements: t("entity_stock_movements"),
+      PurchaseOrders: t("entity_purchase_orders"),
+    }[log.entity_type] || log.entity_type;
   const displayId = log.entity_id ? `#${log.entity_id}` : "";
 
   const time = formatFullDateTime(log.timestamp);
@@ -57,10 +77,10 @@ const LogEntry = ({ log }) => {
             {time}
           </span>
           <span className="text-slate-800 dark:text-slate-200 font-medium truncate">
-            {log.user?.full_name || log.user?.email || "Hệ thống"}
+            {log.user?.full_name || log.user?.email || t("system_user")}
           </span>
           <span className={`text-xs font-medium ${config.color}`}>
-            {config.label}
+            {actionLabel}
           </span>
           <span className="text-slate-600 dark:text-slate-400">
             {entityName}
@@ -82,19 +102,19 @@ const LogEntry = ({ log }) => {
 
           {log.status === "FAILED" && (
             <span className="inline-flex items-center gap-1 text-xs text-rose-600 dark:text-rose-400 font-medium">
-              <XCircle size={12} /> Thất bại
+              <XCircle size={12} /> {t("failed_badge")}
             </span>
           )}
           {log.status === "SUCCESS" && (
             <span className="inline-flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-              <CheckCircle size={12} /> Thành công
+              <CheckCircle size={12} /> {t("success_badge")}
             </span>
           )}
         </div>
 
         {expanded && (
           <div className="mt-3 pl-0 space-y-2 border-t pt-2 border-slate-200/60 dark:border-slate-800/60">
-            {renderDetails(log)}
+            {renderDetails(log, t)}
             <div className="text-xs text-slate-500 dark:text-slate-400">
               IP: {log.ip_address || "N/A"}
             </div>
@@ -105,7 +125,7 @@ const LogEntry = ({ log }) => {
   );
 };
 
-function renderDetails(log) {
+function renderDetails(log, t) {
   const details = log.details;
 
   if (!details || (Array.isArray(details) && details.length === 0)) {
@@ -115,7 +135,7 @@ function renderDetails(log) {
   const changes = Array.isArray(details) ? details : [details];
 
   if (log.status === "FAILED") {
-    const errorMsg = changes[0]?.error || "Lỗi không xác định";
+    const errorMsg = changes[0]?.error || t("unknown_error");
     return (
       <div className="text-xs text-rose-700 bg-rose-100/70 border border-rose-200 dark:border-transparent dark:text-rose-300 dark:bg-rose-500/10 rounded-lg p-3 font-mono">
         {errorMsg}
@@ -127,7 +147,7 @@ function renderDetails(log) {
     return (
       <div className="text-xs text-slate-700 bg-slate-100 border border-slate-200 dark:border-transparent dark:text-slate-400 dark:bg-slate-800/30 rounded-lg p-3">
         <div className="font-medium text-slate-800 dark:text-slate-300 mb-1">
-          Dữ liệu đã xoá:
+          {t("deleted_data")}
         </div>
         <pre className="whitespace-pre-wrap overflow-x-auto font-mono text-[11px]">
           {JSON.stringify(changes[0]?.from || changes[0], null, 2)}

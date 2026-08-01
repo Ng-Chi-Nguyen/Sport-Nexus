@@ -13,16 +13,44 @@ import {
   statusOptions,
 } from "@/constants/management/log";
 import LogEntry from "./LogEntry";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Hệ thống", route: "" },
-  { title: "Lịch sử hoạt động", route: "" },
-];
+import { useTranslation } from "react-i18next";
 
 const LogPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "systemLog" });
   const responses = useLoaderData();
   const { data: logs, pagination } = responses?.data || {};
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("system_breadcrumb"), route: "" },
+    { title: t("activity_history_breadcrumb"), route: "" },
+  ];
+
+  const actionOptions = actionTypes.map((o) => ({
+    slug: o.slug,
+    name: o.slug ? t(`action_${o.slug.toLowerCase()}`) : t("action_all"),
+  }));
+
+  const entityOptions = entityTypes.map((o) => {
+    const key =
+      {
+        Orders: "entity_orders",
+        Products: "entity_products",
+        Users: "entity_users",
+        ProductVariants: "entity_variants",
+        Coupons: "entity_coupons",
+        Brands: "entity_brands",
+        Categories: "entity_categories",
+        Suppliers: "entity_suppliers",
+      }[o.slug] || "entity_all";
+    return { slug: o.slug, name: t(key) };
+  });
+
+  const statusOptionsMapped = statusOptions.map((o) => ({
+    slug: o.slug,
+    name: o.slug ? t(`status_${o.slug.toLowerCase()}`) : t("status_all"),
+  }));
+
   const {
     searchParams,
     setSearchParams,
@@ -65,25 +93,25 @@ const LogPage = () => {
         onToggleFilters={() => setShowFilters(!showFilters)}
         hasActiveFilters={hasActiveFilters}
         onClearFilters={clearAllFilters}
-        searchPlaceholder="Tìm kiếm theo IP, user..."
+        searchPlaceholder={t("search_placeholder")}
       >
         <SimpleSelect
           value={searchParams.get("action_type") || ""}
           onChange={(val) => setFilter("action_type", val)}
-          options={actionTypes}
-          placeholder="Hành động"
+          options={actionOptions}
+          placeholder={t("action_placeholder")}
         />
         <SimpleSelect
           value={searchParams.get("entity_type") || ""}
           onChange={(val) => setFilter("entity_type", val)}
-          options={entityTypes}
-          placeholder="Đối tượng"
+          options={entityOptions}
+          placeholder={t("entity_placeholder")}
         />
         <SimpleSelect
           value={searchParams.get("status") || ""}
           onChange={(val) => setFilter("status", val)}
-          options={statusOptions}
-          placeholder="Trạng thái"
+          options={statusOptionsMapped}
+          placeholder={t("status_placeholder")}
         />
 
         {/* Ô chọn ngày Từ (from) */}
@@ -119,7 +147,7 @@ const LogPage = () => {
       >
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
-            Lịch sử hoạt động
+            {t("activity_title")}
           </h2>
           <button
             onClick={handleRefresh}
@@ -128,7 +156,7 @@ const LogPage = () => {
                        text-slate-500 hover:text-slate-900 hover:bg-slate-100
                        dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800
                        disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Tải lại"
+            title={t("reload")}
           >
             <RefreshCw
               size={18}
@@ -145,7 +173,7 @@ const LogPage = () => {
           </div>
         ) : (
           <div className="py-20 text-center text-slate-400 dark:text-slate-500 italic text-sm">
-            Không có hoạt động nào.
+            {t("no_logs")}
           </div>
         )}
 

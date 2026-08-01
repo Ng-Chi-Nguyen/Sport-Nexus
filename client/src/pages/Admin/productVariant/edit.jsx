@@ -10,17 +10,19 @@ import productAttributeKeyApi from "@/api/management/productAttributeKeyApi";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Quản lý sản phẩm & kho", route: "" },
-  { title: "Biến thể sản phẩm", route: "/management/product-variants" },
-  { title: "Chỉnh sửa", route: "#" },
-];
+import { useTranslation } from "react-i18next";
 
 const EditProductVariant = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "productVariant" });
   const response = useLoaderData();
   const navigate = useNavigate();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("product_warehouse_management"), route: "" },
+    { title: t("variant_items"), route: "/management/product-variants" },
+    { title: t("edit_variant_breadcrumb"), route: "#" },
+  ];
 
   const products = response.products.data;
   const product_variant = response.product_variant.data;
@@ -113,7 +115,7 @@ const EditProductVariant = () => {
     );
 
     if (validAttrs.length === 0) {
-      toast.error("Vui lòng thêm ít nhất một thuộc tính.");
+      toast.error(t("add_attribute_error"));
       return;
     }
 
@@ -142,7 +144,7 @@ const EditProductVariant = () => {
         error.message ||
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
-        "Đã có lỗi xảy ra!";
+        t("error_occurred");
       toast.error(errorMessage);
     }
   };
@@ -152,23 +154,23 @@ const EditProductVariant = () => {
       <Breadcrumbs data={breadcrumbData} />
 
       <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide">
-        Chỉnh sửa biến thể sản phẩm
+        {t("edit_variant_heading")}
       </h2>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
         {/* CỘT TRÁI: GIÁ & KHO HÀNG */}
         <div className="col-span-12 lg:col-span-4 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md h-fit transition-colors duration-200">
-          <TitleManagement color="green">Giá & Kho hàng</TitleManagement>
+          <TitleManagement color="green">{t("price_stock_title")}</TitleManagement>
 
           <div className="space-y-5 mt-2">
             <FloatingInput
-              label="Số lượng tồn kho"
+              label={t("stock_quantity_label")}
               type="number"
               value={stock}
               onChange={(e) => setStock(e.target.value)}
             />
             <FloatingInput
-              label="Giá bán biến thể"
+              label={t("variant_price_label")}
               type="number"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
@@ -178,13 +180,13 @@ const EditProductVariant = () => {
 
         {/* CỘT PHẢI: CẤU HÌNH THUỘC TÍNH */}
         <div className="col-span-12 lg:col-span-8 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 transition-colors duration-200">
-          <TitleManagement color="blue">Cấu hình thuộc tính</TitleManagement>
+          <TitleManagement color="blue">{t("config_attributes_title")}</TitleManagement>
           <div className="w-full mb-5 mt-2">
             <SelectPro
               value={selectProdut}
               options={productOptions}
               onChange={handleProductChange}
-              label="Sản phẩm"
+              label={t("product_label")}
             />
           </div>
 
@@ -202,12 +204,12 @@ const EditProductVariant = () => {
                     onChange={(val) =>
                       updateAttribute(index, "attribute_key_id", val)
                     }
-                    label="Thuộc tính"
+                    label={t("attribute_label")}
                   />
                 </div>
                 <div className="flex-1">
                   <FloatingInput
-                    label="Giá trị (VD: Đỏ, XL...)"
+                    label={t("value_label")}
                     value={attr.value}
                     onChange={(e) =>
                       updateAttribute(index, "value", e.target.value)
@@ -234,12 +236,12 @@ const EditProductVariant = () => {
               className="flex items-center gap-1 text-sm font-semibold text-sky-600 dark:text-blue-400 hover:text-sky-700 dark:hover:text-blue-300 transition-colors mb-5"
             >
               <PlusCircle size={16} />
-              Thêm thuộc tính
+              {t("add_attribute_btn")}
             </button>
           )}
 
           <div className="flex justify-end border-t border-slate-200 dark:border-white/5 pt-5 w-full">
-            <Submit_GoBack name="Lưu thay đổi" />
+            <Submit_GoBack name={t("save_changes")} />
           </div>
         </div>
       </form>

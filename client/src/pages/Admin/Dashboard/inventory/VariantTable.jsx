@@ -1,17 +1,22 @@
 import { Card } from "@/pages/Admin/Dashboard/components/Card";
 import { Layers } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-export const VariantTable = ({ data = [] }) => (
-  <Card title="Số biến thể theo sản phẩm" icon={<Layers size={16} />}>
-    {data.length ? (
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs">
-          <thead>
-            <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              <th className="pb-2 pr-2 font-medium">Sản phẩm</th>
-              <th className="pb-2 pr-2 font-medium text-right">Số biến thể</th>
-            </tr>
-          </thead>
+export const VariantTable = ({ data = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
+  return (
+    <Card title={t("variants_per_product")} icon={<Layers size={16} />}>
+      {data.length ? (
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <th className="pb-2 pr-2 font-medium">{t("name_col")}</th>
+                <th className="pb-2 pr-2 font-medium text-right">
+                  {t("variant_count_col")}
+                </th>
+              </tr>
+            </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
             {data.map((item) => (
               <tr
@@ -31,8 +36,9 @@ export const VariantTable = ({ data = [] }) => (
       </div>
     ) : (
       <div className="flex h-[100px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-        Chưa có dữ liệu
+        {t("no_data")}
       </div>
     )}
-  </Card>
-);
+    </Card>
+  );
+};

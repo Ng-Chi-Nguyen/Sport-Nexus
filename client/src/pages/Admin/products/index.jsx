@@ -24,26 +24,28 @@ import productdApi from "@/api/core/productApi";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
-
-const breadcrumbData = [
-  {
-    title: <LayoutDashboard size={20} />,
-    route: "",
-  },
-  {
-    title: "Quản lý sản phẩm & kho",
-    route: "",
-  },
-  {
-    title: "Sản phẩm",
-    route: "",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const ProductPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "product" });
   const responses = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
+
+  const breadcrumbData = [
+    {
+      title: <LayoutDashboard size={20} />,
+      route: "",
+    },
+    {
+      title: t("product_warehouse_management"),
+      route: "",
+    },
+    {
+      title: t("product_management"),
+      route: "",
+    },
+  ];
 
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState({ id: "", name: "" });
@@ -121,7 +123,7 @@ const ProductPage = () => {
         error.message ||
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
-        "Đã có lỗi xảy ra!";
+        t("error_occurred");
       toast.error(errorMessage);
     }
   };
@@ -149,7 +151,7 @@ const ProductPage = () => {
       <div className="flex items-center gap-3 my-4">
         <div className="flex-1">
           <SearchTable
-            placeholder="Tìm kiếm sản phẩm..."
+            placeholder={t("search_product_placeholder")}
             value={searchInput}
             onChange={(val) => setSearchInput(val)}
           />
@@ -164,7 +166,7 @@ const ProductPage = () => {
           }`}
         >
           <Filter size={14} />
-          Bộ lọc
+          {t("filter")}
           {hasActiveFilters && (
             <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
           )}
@@ -175,11 +177,11 @@ const ProductPage = () => {
         </button>
         <ExcelCrudActions
           basePath="/core/product"
-          title="Import / Export sản phẩm"
+          title={t("import_export_product")}
           templateFileName="template-san-pham.xlsx"
           exportFileName="san-pham.xlsx"
         />
-        <BtnAdd route="/management/products/create" name="Thêm sản phẩm" />
+        <BtnAdd route="/management/products/create" name={t("add_product")} />
       </div>
 
       <div
@@ -193,13 +195,13 @@ const ProductPage = () => {
           <div className="flex flex-wrap items-end gap-4">
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[230px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                Trạng thái
+                {t("status")}
               </label>
               <div className="flex items-center gap-0.5 p-0.5 bg-slate-100 dark:bg-[#111827]/60 border border-slate-200 dark:border-slate-800 rounded-lg h-10">
                 {[
-                  { value: "", label: "Tất cả" },
-                  { value: "true", label: "Còn hàng" },
-                  { value: "false", label: "Hết hàng" },
+                  { value: "", label: t("all") },
+                  { value: "true", label: t("in_stock") },
+                  { value: "false", label: t("out_of_stock") },
                 ].map((tab) => (
                   <button
                     key={tab.value}
@@ -219,60 +221,60 @@ const ProductPage = () => {
 
             <div className="flex-1 min-w-[150px]">
               <SimpleSelect
-                label="Danh mục"
+                label={t("category_label")}
                 value={currentCategory}
                 onChange={(val) => setFilter("category_id", val)}
                 options={[
-                  { slug: "", name: "Tất cả" },
+                  { slug: "", name: t("all") },
                   ...(responses.categories || []).map((c) => ({
                     slug: String(c.id),
                     name: c.name,
                   })),
                 ]}
-                placeholder="Tất cả"
+                placeholder={t("all")}
               />
             </div>
 
             <div className="flex-1 min-w-[150px]">
               <SimpleSelect
-                label="Thương hiệu"
+                label={t("brand_label")}
                 value={currentBrand}
                 onChange={(val) => setFilter("brand_id", val)}
                 options={[
-                  { slug: "", name: "Tất cả" },
+                  { slug: "", name: t("all") },
                   ...(responses.brands || []).map((b) => ({
                     slug: String(b.id),
                     name: b.name,
                   })),
                 ]}
-                placeholder="Tất cả"
+                placeholder={t("all")}
               />
             </div>
 
             <div className="flex-1 min-w-[150px]">
               <SimpleSelect
-                label="Nhà cung cấp"
+                label={t("supplier_label")}
                 value={currentSupplier}
                 onChange={(val) => setFilter("supplier_id", val)}
                 options={[
-                  { slug: "", name: "Tất cả" },
+                  { slug: "", name: t("all") },
                   ...(responses.suppliers || []).map((s) => ({
                     slug: String(s.id),
                     name: s.name,
                   })),
                 ]}
-                placeholder="Tất cả"
+                placeholder={t("all")}
               />
             </div>
 
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                Khoảng giá
+                {t("price_range")}
               </label>
               <div className="flex items-center gap-1">
                 <input
                   type="number"
-                  placeholder="Tối thiểu"
+                  placeholder={t("min_price_placeholder")}
                   value={currentPriceMin}
                   onChange={(e) => setFilter("price_min", e.target.value)}
                   className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
@@ -282,7 +284,7 @@ const ProductPage = () => {
                 </span>
                 <input
                   type="number"
-                  placeholder="Tối đa"
+                  placeholder={t("max_price_placeholder")}
                   value={currentPriceMax}
                   onChange={(e) => setFilter("price_max", e.target.value)}
                   className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
@@ -296,7 +298,7 @@ const ProductPage = () => {
                 onClick={clearAllFilters}
                 className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-500 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
-                Xoá bộ lọc
+                {t("clear_filter")}
               </button>
             )}
           </div>
@@ -305,13 +307,13 @@ const ProductPage = () => {
 
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-          Danh sách sản phẩm
+          {t("product_list_title")}
         </h2>
         <button
           onClick={handleRefresh}
           disabled={revalidator.state === "loading"}
           className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          title="Tải lại"
+          title={t("reload")}
         >
           <RefreshCw
             size={18}
@@ -326,16 +328,16 @@ const ProductPage = () => {
             <thead className="text-xs uppercase bg-slate-100 dark:bg-[#161F32] border-b border-slate-200 dark:border-slate-800">
               <tr>
                 <th className="px-6 py-4 font-black text-slate-600 dark:text-slate-400 !text-start">
-                  Thông tin sản phẩm
+                  {t("product_info_col")}
                 </th>
                 <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
-                  Phân loại
+                  {t("category_col")}
                 </th>
                 <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
-                  Trạng thái
+                  {t("status_col")}
                 </th>
                 <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
-                  Thao tác
+                  {t("actions_col")}
                 </th>
               </tr>
             </thead>
@@ -374,10 +376,10 @@ const ProductPage = () => {
                     <td className="px-6 py-4 text-center">
                       <div className="flex flex-col items-center gap-1">
                         <Badge color="purple">
-                          Thương hiệu: {product.brand.name}
+                          {t("brand_col")}: {product.brand.name}
                         </Badge>
                         <Badge color="pink">
-                          Nhà cung cấp: {product.supplier.name}
+                          {t("supplier_col")}: {product.supplier.name}
                         </Badge>
                       </div>
                     </td>
@@ -385,12 +387,12 @@ const ProductPage = () => {
                       {product.is_active ? (
                         <Badge color="green">
                           <PackageCheck size={14} />{" "}
-                          <span className="ml-1">Còn hàng</span>
+                          <span className="ml-1">{t("in_stock")}</span>
                         </Badge>
                       ) : (
                         <Badge color="red">
                           <PackageX size={14} />
-                          <span className="ml-1">Hết hàng</span>
+                          <span className="ml-1">{t("out_of_stock")}</span>
                         </Badge>
                       )}
                     </td>
@@ -398,10 +400,10 @@ const ProductPage = () => {
                       <div className="flex gap-2 justify-center">
                         <BtnEdit
                           route={`/management/products/edit/${product.id}`}
-                          name="Sửa"
+                          name={t("edit_btn")}
                         />
                         <BtnDelete
-                          name="Xóa"
+                          name={t("delete_btn")}
                           onClick={() => openConfirm(product.id, product.name)}
                         />
                       </div>
@@ -414,7 +416,7 @@ const ProductPage = () => {
                     colSpan="4"
                     className="px-6 py-10 text-center text-slate-400 dark:text-slate-500 italic"
                   >
-                    Không có sản phẩm nào
+                    {t("no_products")}
                   </td>
                 </tr>
               )}
@@ -430,8 +432,10 @@ const ProductPage = () => {
         </div>
         <ConfirmDelete
           isOpen={isConfirmOpen}
-          title="Xóa sản phẩm"
-          message={`Bạn đang thực hiện xóa sản phẩm "${deleteTarget.name}".`}
+          title={t("delete_product_title")}
+          message={t("delete_product_message", {
+            name: deleteTarget.name,
+          })}
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmOpen(false)}
         />

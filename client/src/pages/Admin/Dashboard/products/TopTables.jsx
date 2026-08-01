@@ -13,6 +13,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
+import { useTranslation } from "react-i18next";
 
 const LIMITS = [5, 10, 15, 999];
 
@@ -43,23 +44,26 @@ const StarRating = ({ rating }) => {
   );
 };
 
-const LimitToggle = ({ limits = LIMITS, value, onChange }) => (
-  <div className="flex items-center gap-1">
-    {limits.map((l) => (
-      <button
-        key={l}
-        onClick={() => onChange(l)}
-        className={`text-[10px] px-1.5 py-0.5 rounded transition-colors cursor-pointer ${
-          value === l
-            ? "bg-sky-50 text-sky-600 border border-sky-300 font-semibold dark:bg-sky-600/20 dark:text-sky-400 dark:border-sky-700/50"
-            : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 border border-transparent"
-        }`}
-      >
-        {l >= 999 ? "Tất cả" : l}
-      </button>
-    ))}
-  </div>
-);
+const LimitToggle = ({ limits = LIMITS, value, onChange }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
+  return (
+    <div className="flex items-center gap-1">
+      {limits.map((l) => (
+        <button
+          key={l}
+          onClick={() => onChange(l)}
+          className={`text-[10px] px-1.5 py-0.5 rounded transition-colors cursor-pointer ${
+            value === l
+              ? "bg-sky-50 text-sky-600 border border-sky-300 font-semibold dark:bg-sky-600/20 dark:text-sky-400 dark:border-sky-700/50"
+              : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 border border-transparent"
+          }`}
+        >
+          {l >= 999 ? t("all_label") : l}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 const ToggleBtn = ({ label, icon, active, onClick }) => (
   <button
@@ -74,21 +78,25 @@ const ToggleBtn = ({ label, icon, active, onClick }) => (
   </button>
 );
 
-const Placeholder = () => (
-  <div className="flex h-[100px] items-center justify-center rounded-xl border border-dashed border-slate-200 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-    Chưa có dữ liệu
-  </div>
-);
+const Placeholder = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
+  return (
+    <div className="flex h-[100px] items-center justify-center rounded-xl border border-dashed border-slate-200 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
+      {t("no_data")}
+    </div>
+  );
+};
 
 const thCls = "pb-2 pr-2 font-medium";
 const tdCls = "py-1.5 pr-2";
 
 export const TopSellingTable = ({ data = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const [limit, setLimit] = useState(15);
   const visible = limit >= 999 ? data : data.slice(0, limit);
   return (
     <Card
-      title="Bán chạy nhất"
+      title={t("best_selling")}
       icon={<Trophy size={16} />}
       action={<LimitToggle value={limit} onChange={setLimit} />}
     >
@@ -98,9 +106,9 @@ export const TopSellingTable = ({ data = [] }) => {
             <thead>
               <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <th className={thCls} />
-                <th className={thCls}>Sản phẩm</th>
-                <th className={`${thCls} text-right`}>Đã bán</th>
-                <th className={`${thCls} text-right`}>Doanh thu</th>
+                <th className={thCls}>{t("name_col")}</th>
+                <th className={`${thCls} text-right`}>{t("sold_col")}</th>
+                <th className={`${thCls} text-right`}>{t("revenue_col")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
@@ -140,11 +148,12 @@ export const TopSellingTable = ({ data = [] }) => {
 };
 
 export const TopRevenueTable = ({ data = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const [limit, setLimit] = useState(15);
   const visible = limit >= 999 ? data : data.slice(0, limit);
   return (
     <Card
-      title="Doanh thu cao nhất"
+      title={t("top_revenue")}
       icon={<DollarSign size={16} />}
       action={<LimitToggle value={limit} onChange={setLimit} />}
     >
@@ -154,9 +163,9 @@ export const TopRevenueTable = ({ data = [] }) => {
             <thead>
               <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <th className={thCls} />
-                <th className={thCls}>Sản phẩm</th>
-                <th className={`${thCls} text-right`}>Đã bán</th>
-                <th className={`${thCls} text-right`}>Doanh thu</th>
+                <th className={thCls}>{t("name_col")}</th>
+                <th className={`${thCls} text-right`}>{t("sold_col")}</th>
+                <th className={`${thCls} text-right`}>{t("revenue_col")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
@@ -196,11 +205,12 @@ export const TopRevenueTable = ({ data = [] }) => {
 };
 
 export const WorstSellingTable = ({ data = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const [limit, setLimit] = useState(15);
   const visible = limit >= 999 ? data : data.slice(0, limit);
   return (
     <Card
-      title="Bán ít nhất"
+      title={t("worst_selling")}
       icon={<TrendingDown size={16} />}
       action={<LimitToggle value={limit} onChange={setLimit} />}
     >
@@ -210,9 +220,9 @@ export const WorstSellingTable = ({ data = [] }) => {
             <thead>
               <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <th className={thCls} />
-                <th className={thCls}>Sản phẩm</th>
-                <th className={`${thCls} text-right`}>Đã bán</th>
-                <th className={`${thCls} text-right`}>Doanh thu</th>
+                <th className={thCls}>{t("name_col")}</th>
+                <th className={`${thCls} text-right`}>{t("sold_col")}</th>
+                <th className={`${thCls} text-right`}>{t("revenue_col")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
@@ -254,11 +264,12 @@ export const WorstSellingTable = ({ data = [] }) => {
 };
 
 export const LowestRevenueTable = ({ data = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const [limit, setLimit] = useState(15);
   const visible = limit >= 999 ? data : data.slice(0, limit);
   return (
     <Card
-      title="Doanh thu thấp nhất"
+      title={t("lowest_revenue")}
       icon={<ArrowDown size={16} />}
       action={<LimitToggle value={limit} onChange={setLimit} />}
     >
@@ -268,9 +279,9 @@ export const LowestRevenueTable = ({ data = [] }) => {
             <thead>
               <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <th className={thCls} />
-                <th className={thCls}>Sản phẩm</th>
-                <th className={`${thCls} text-right`}>Đã bán</th>
-                <th className={`${thCls} text-right`}>Doanh thu</th>
+                <th className={thCls}>{t("name_col")}</th>
+                <th className={`${thCls} text-right`}>{t("sold_col")}</th>
+                <th className={`${thCls} text-right`}>{t("revenue_col")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
@@ -312,13 +323,14 @@ export const LowestRevenueTable = ({ data = [] }) => {
 };
 
 export const ReviewOverview = ({ most = [], least = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const [showMost, setShowMost] = useState(true);
   const [limit, setLimit] = useState(30);
   const data = showMost ? most : least;
   const visible = limit >= 999 ? data : data.slice(0, limit);
   return (
     <Card
-      title="Đánh giá"
+      title={t("reviews_title")}
       icon={<MessageSquareText size={16} />}
       action={
         <LimitToggle
@@ -330,13 +342,13 @@ export const ReviewOverview = ({ most = [], least = [] }) => {
     >
       <div className="flex rounded-lg border border-slate-200 dark:border-slate-800 overflow-hidden mb-3 w-fit bg-slate-50 dark:bg-transparent">
         <ToggleBtn
-          label="Nhiều nhất"
+          label={t("most_reviewed")}
           icon={<MessageSquareText size={10} />}
           active={showMost}
           onClick={() => setShowMost(true)}
         />
         <ToggleBtn
-          label="Ít nhất"
+          label={t("least_reviewed")}
           icon={<ThumbsDown size={10} />}
           active={!showMost}
           onClick={() => setShowMost(false)}
@@ -348,9 +360,9 @@ export const ReviewOverview = ({ most = [], least = [] }) => {
             <thead>
               <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <th className={thCls} />
-                <th className={thCls}>Sản phẩm</th>
-                <th className={`${thCls} text-right`}>Số review</th>
-                <th className={`${thCls} text-right`}>Điểm TB</th>
+                <th className={thCls}>{t("name_col")}</th>
+                <th className={`${thCls} text-right`}>{t("review_count_col")}</th>
+                <th className={`${thCls} text-right`}>{t("avg_rating_col")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
@@ -398,25 +410,26 @@ export const ReviewOverview = ({ most = [], least = [] }) => {
 };
 
 export const SellingOverview = ({ top = [], worst = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const [showTop, setShowTop] = useState(true);
   const [limit, setLimit] = useState(15);
   const source = showTop ? top : worst;
   const visible = limit >= 999 ? source : source.slice(0, limit);
   return (
     <Card
-      title="Bán hàng"
+      title={t("selling_title")}
       icon={<ShoppingBag size={16} />}
       action={<LimitToggle value={limit} onChange={setLimit} />}
     >
       <div className="flex rounded-lg border border-slate-200 dark:border-slate-800 overflow-hidden mb-3 w-fit bg-slate-50 dark:bg-transparent">
         <ToggleBtn
-          label="Bán chạy"
+          label={t("top_selling_toggle")}
           icon={<Trophy size={10} />}
           active={showTop}
           onClick={() => setShowTop(true)}
         />
         <ToggleBtn
-          label="Bán ít"
+          label={t("least_selling_toggle")}
           icon={<TrendingDown size={10} />}
           active={!showTop}
           onClick={() => setShowTop(false)}
@@ -428,9 +441,9 @@ export const SellingOverview = ({ top = [], worst = [] }) => {
             <thead>
               <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <th className={thCls} />
-                <th className={thCls}>Sản phẩm</th>
-                <th className={`${thCls} text-right`}>Đã bán</th>
-                <th className={`${thCls} text-right`}>Doanh thu</th>
+                <th className={thCls}>{t("name_col")}</th>
+                <th className={`${thCls} text-right`}>{t("sold_col")}</th>
+                <th className={`${thCls} text-right`}>{t("revenue_col")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
@@ -476,25 +489,26 @@ export const SellingOverview = ({ top = [], worst = [] }) => {
 };
 
 export const RevenueOverview = ({ top = [], lowest = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const [showTop, setShowTop] = useState(true);
   const [limit, setLimit] = useState(15);
   const source = showTop ? top : lowest;
   const visible = limit >= 999 ? source : source.slice(0, limit);
   return (
     <Card
-      title="Doanh thu"
+      title={t("revenue_title")}
       icon={<DollarSign size={16} />}
       action={<LimitToggle value={limit} onChange={setLimit} />}
     >
       <div className="flex rounded-lg border border-slate-200 dark:border-slate-800 overflow-hidden mb-3 w-fit bg-slate-50 dark:bg-transparent">
         <ToggleBtn
-          label="Cao nhất"
+          label={t("highest_toggle")}
           icon={<ArrowUp size={10} />}
           active={showTop}
           onClick={() => setShowTop(true)}
         />
         <ToggleBtn
-          label="Thấp nhất"
+          label={t("lowest_toggle")}
           icon={<ArrowDown size={10} />}
           active={!showTop}
           onClick={() => setShowTop(false)}
@@ -506,9 +520,9 @@ export const RevenueOverview = ({ top = [], lowest = [] }) => {
             <thead>
               <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <th className={thCls} />
-                <th className={thCls}>Sản phẩm</th>
-                <th className={`${thCls} text-right`}>Đã bán</th>
-                <th className={`${thCls} text-right`}>Doanh thu</th>
+                <th className={thCls}>{t("name_col")}</th>
+                <th className={`${thCls} text-right`}>{t("sold_col")}</th>
+                <th className={`${thCls} text-right`}>{t("revenue_col")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-900">

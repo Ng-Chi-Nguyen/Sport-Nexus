@@ -1,7 +1,11 @@
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { mainNavItems } from "@/constants/adminMenuConfig";
 
 const BottomNav = ({ userRole }) => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.menu",
+  });
   const allItems = mainNavItems(userRole);
 
   return (
@@ -21,7 +25,7 @@ const BottomNav = ({ userRole }) => {
           >
             <span className="shrink-0">{item.icon}</span>
             <span className="text-[10px] font-semibold truncate max-w-full leading-tight">
-              {item.label}
+              {t(item.label)}
             </span>
           </NavLink>
         ))}

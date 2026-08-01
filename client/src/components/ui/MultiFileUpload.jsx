@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { ImagePlus, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const MultiFileUpload = ({ label, value = [], onChange, maxFiles = 10 }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
   const [previews, setPreviews] = useState([]);
 
   useEffect(() => {
@@ -59,7 +61,7 @@ const MultiFileUpload = ({ label, value = [], onChange, maxFiles = 10 }) => {
           >
             <img
               src={src}
-              alt={`Ảnh ${idx + 1}`}
+              alt={`${t("image")} ${idx + 1}`}
               className="w-full h-full object-cover"
               onError={(e) => {
                 e.target.style.display = "none";
@@ -69,7 +71,7 @@ const MultiFileUpload = ({ label, value = [], onChange, maxFiles = 10 }) => {
               type="button"
               onClick={() => handleRemove(idx)}
               className="absolute top-1 right-1 p-1 bg-rose-500/90 hover:bg-rose-600 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
-              title="Xóa ảnh"
+              title={t("delete_image")}
             >
               <X size={14} />
             </button>
@@ -90,7 +92,7 @@ const MultiFileUpload = ({ label, value = [], onChange, maxFiles = 10 }) => {
               className="text-slate-400 dark:text-slate-500 group-hover:text-sky-500 transition-colors"
             />
             <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
-              Thêm ảnh
+              {t("add_image")}
             </span>
           </label>
         )}

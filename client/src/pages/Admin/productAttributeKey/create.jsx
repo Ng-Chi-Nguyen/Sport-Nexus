@@ -10,19 +10,24 @@ import LoaderAttr from "@/loaders/core/attributeKey";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={20} />, route: "" },
-  { title: "Quản lý sản phẩm & kho", route: "" },
-  {
-    title: "Gán thuộc tính sản phẩm",
-    route: "/management/product-attribute-key/",
-  },
-  { title: "Thêm mới", route: "" },
-];
+import { useTranslation } from "react-i18next";
 
 const CreateProductAttributeKey = () => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "productAttributeKey",
+  });
   const navigate = useNavigate();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={20} />, route: "" },
+    { title: t("product_warehouse_management"), route: "" },
+    {
+      title: t("assignment_title"),
+      route: "/management/product-attribute-key/",
+    },
+    { title: t("add_new_breadcrumb"), route: "" },
+  ];
+
   const [products, setProducts] = useState([]);
   const [attributeKeys, setAttributeKeys] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -67,7 +72,7 @@ const CreateProductAttributeKey = () => {
       }
     } catch (error) {
       toast.error(
-        error.response?.data?.message || error.message || "Đã có lỗi xảy ra!",
+        error.response?.data?.message || error.message || t("error_occurred"),
       );
     }
   };
@@ -79,14 +84,14 @@ const CreateProductAttributeKey = () => {
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 w-full max-w-2xl bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200"
       >
-        <TitleManagement color="blue">Thông tin gán thuộc tính</TitleManagement>
+        <TitleManagement color="blue">{t("create_info_title")}</TitleManagement>
         <div className="flex flex-col sm:flex-row gap-4 mt-2">
           <div className="flex-1">
             <SelectPro
               value={selectedProduct}
               options={productOptions}
               onChange={setSelectedProduct}
-              label="Chọn sản phẩm"
+              label={t("select_product_label")}
             />
           </div>
           <div className="flex-1">
@@ -94,7 +99,7 @@ const CreateProductAttributeKey = () => {
               value={selectedAttributeKey}
               options={attrKeyOptions}
               onChange={setSelectedAttributeKey}
-              label="Chọn thuộc tính"
+              label={t("select_attribute_label")}
             />
           </div>
         </div>

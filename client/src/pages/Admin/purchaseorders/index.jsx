@@ -21,15 +21,19 @@ import useTableFilters from "@/hooks/useTableFilters";
 import { PURCHASE_STATUS_OPTIONS } from "@/constants/management/purchaseOrder";
 import { getPurchaseStatusDetails } from "@/utils/statusStyles";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={20} />, route: "" },
-  { title: "Quản lý chuổi cung ứng", route: "" },
-  { title: "Nhập hàng", route: "" },
-];
+import { useTranslation } from "react-i18next";
 
 const PurchaseOrderPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "purchaseOrder" });
+  const { t: tc } = useTranslation("translation", { keyPrefix: "constants" });
   const responses = useLoaderData();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={20} />, route: "" },
+    { title: t("supply_chain"), route: "" },
+    { title: t("purchase_title"), route: "" },
+  ];
+
   const revalidator = useRevalidator();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState({ id: "", name: "" });
@@ -89,7 +93,7 @@ const PurchaseOrderPage = () => {
         error.message ||
           error.response?.data?.message ||
           error.response?.data?.errors?.[0] ||
-          "Đã có lỗi xảy ra!",
+          t("error_occurred"),
       );
     }
   };
@@ -105,45 +109,48 @@ const PurchaseOrderPage = () => {
         onToggleFilters={() => setShowFilters(!showFilters)}
         hasActiveFilters={hasActiveFilters}
         onClearFilters={clearAllFilters}
-        searchPlaceholder="Tìm kiếm mã đơn nhập hàng..."
+        searchPlaceholder={t("search_placeholder")}
         addButton={
           <div className="flex items-center gap-2 flex-wrap justify-end">
             <ExcelCrudActions
               basePath="/management/purchase-order"
-              title="Import / Export nhập hàng"
+              title={t("import_export_title")}
               templateFileName="template-nhap-hang.xlsx"
               exportFileName="nhap-hang.xlsx"
               sheetNote="Workbook gồm 2 sheet: PurchaseOrders và PurchaseOrderItems"
             />
             <BtnAdd
               route={"/management/purchase/create"}
-              name="Thêm đơn nhập hàng"
+              name={t("add_purchase")}
             />
           </div>
         }
       >
         <SimpleSelect
-          label="Trạng thái"
+          label={t("status_label")}
           value={currentStatus}
           onChange={(val) => setFilter("status", val)}
-          options={PURCHASE_STATUS_OPTIONS}
-          placeholder="Tất cả"
+          options={PURCHASE_STATUS_OPTIONS.map((o) => ({
+            slug: o.slug,
+            name: tc(o.name),
+          }))}
+          placeholder={t("all")}
         />
         <SimpleSelect
-          label="Nhà cung cấp"
+          label={t("supplier_label")}
           value={currentSupplierId}
           onChange={(val) => setFilter("supplier_id", val)}
           options={[
-            { slug: "", name: "Tất cả" },
+            { slug: "", name: t("all") },
             ...(responses.suppliers || []).map((s) => ({
               slug: String(s.id),
               name: s.name,
             })),
           ]}
-          placeholder="Tất cả"
+          placeholder={t("all")}
         />
         <RangeInput
-          label="Ngày đặt hàng"
+          label={t("order_date_label")}
           type="date"
           minValue={currentDateFrom}
           maxValue={currentDateTo}
@@ -151,26 +158,26 @@ const PurchaseOrderPage = () => {
           onMaxChange={(v) => setFilter("date_to", v)}
         />
         <RangeInput
-          label="Tổng tiền"
+          label={t("total_cost_label")}
           type="number"
           minValue={currentCostMin}
           maxValue={currentCostMax}
           onMinChange={(v) => setFilter("cost_min", v)}
           onMaxChange={(v) => setFilter("cost_max", v)}
-          placeholderMin="Tối thiểu"
-          placeholderMax="Tối đa"
+          placeholderMin={t("min_placeholder")}
+          placeholderMax={t("max_placeholder")}
         />
       </FilterPanel>
 
       <div className="flex items-center justify-between my-3">
         <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-          Danh sách nhập hàng
+          {t("list_title")}
         </h2>
         <button
           onClick={handleRefresh}
           disabled={revalidator.state === "loading"}
           className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          title="Tải lại"
+          title={t("reload")}
         >
           <RefreshCw
             size={18}
@@ -189,43 +196,43 @@ const PurchaseOrderPage = () => {
                     scope="col"
                     className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Mã nhập hàng
+                    {t("purchase_code_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Ngày đặt hàng
+                    {t("order_date_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Ngày nhận hàng dự kiến
+                    {t("expected_date_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Giá (Vnđ)
+                    {t("price_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Số lượng món hàng
+                    {t("items_count_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Trạng thái
+                    {t("status_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Hành động
+                    {t("actions_col")}
                   </th>
                 </tr>
               </thead>
@@ -252,7 +259,7 @@ const PurchaseOrderPage = () => {
                       </td>
                       <td className="px-6 py-4 text-center">
                         <Badge color="blue">
-                          {purchase.PurchaseOrderItems.length} món
+                          {purchase.PurchaseOrderItems.length} {t("items_suffix")}
                         </Badge>
                       </td>
                       <td className="px-6 py-4 text-center">
@@ -268,10 +275,10 @@ const PurchaseOrderPage = () => {
                         <div className="flex gap-2 justify-center">
                           <BtnEdit
                             route={`/management/purchase/edit/${purchase.id}`}
-                            name="Sửa"
+                            name={t("edit_btn")}
                           />
                           <BtnDelete
-                            name="Xóa"
+                            name={t("delete_btn")}
                             onClick={() => openConfirm(purchase.id)}
                           />
                         </div>
@@ -284,7 +291,7 @@ const PurchaseOrderPage = () => {
                       colSpan="7"
                       className="px-6 py-20 text-center text-slate-400 dark:text-slate-500 italic text-sm"
                     >
-                      Không có đơn nhập hàng nào được tìm thấy.
+                      {t("no_purchases")}
                     </td>
                   </tr>
                 )}
@@ -303,8 +310,8 @@ const PurchaseOrderPage = () => {
 
         <ConfirmDelete
           isOpen={isConfirmOpen}
-          title="Xóa đơn hàng"
-          message="Bạn đang thực hiện xóa đơn hàng."
+          title={t("delete_title")}
+          message={t("delete_message")}
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmOpen(false)}
         />

@@ -11,18 +11,22 @@ import purchaseOrderApi from "@/api/management/purchaseOrderApi";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
 import { formatCurrency } from "@/utils/formatters";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Quản lý chuỗi cung ứng", route: "" },
-  { title: "Nhập hàng", route: "/management/purchase" },
-  { title: "Chỉnh sửa đơn hàng", route: "" },
-];
+import { useTranslation } from "react-i18next";
 
 const EditPurchaseOrder = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "purchaseOrder" });
+  const { t: tc } = useTranslation("translation", { keyPrefix: "constants" });
   const response = useLoaderData();
   const navigate = useNavigate();
   const { purchaseId } = useParams();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("supply_chain"), route: "" },
+    { title: t("purchase_title"), route: "/management/purchase" },
+    { title: t("edit_breadcrumb"), route: "" },
+  ];
+
 
   const purchaseOld = response?.purchase?.data;
 
@@ -106,7 +110,7 @@ const EditPurchaseOrder = () => {
 
       return {
         id: v.id,
-        name: `${v.product?.name || "Sản phẩm không rõ tên"}${variantLabel}`,
+        name: `${v.product?.name || t("unknown_product")}${variantLabel}`,
       };
     });
   }, [response?.productVariants?.data]);
@@ -115,7 +119,7 @@ const EditPurchaseOrder = () => {
   const handleAddItem = (e) => {
     e.preventDefault();
     if (items.length >= 10) {
-      toast.error("Nếu số lượng lớn hơn 10 món hãy nhập bằng file");
+      toast.error(t("max_items_error"));
       return;
     }
     setItems([
@@ -139,7 +143,7 @@ const EditPurchaseOrder = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectSupplier || !expectedDate) {
-      toast.error("Vui lòng điền đầy đủ thông tin!");
+      toast.error(t("missing_info_error2"));
       return;
     }
 
@@ -163,7 +167,7 @@ const EditPurchaseOrder = () => {
         navigate("/management/purchase");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Lỗi cập nhật!");
+      toast.error(error.response?.data?.message || t("update_error"));
     }
   };
 
@@ -171,7 +175,7 @@ const EditPurchaseOrder = () => {
     <div className="animate-in fade-in duration-500 space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
       <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide uppercase">
-        Chỉnh sửa đơn nhập hàng #PO-{purchaseId}
+        {t("edit_heading", { id: purchaseId })}
       </h2>
 
       <form
@@ -183,29 +187,29 @@ const EditPurchaseOrder = () => {
           <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-4 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-md space-y-3.5 transition-colors duration-200">
             {/* PHẦN 1: NHÀ CUNG CẤP */}
             <div>
-              <TitleManagement color="blue">Nhà cung cấp</TitleManagement>
+              <TitleManagement color="blue">{t("supplier_title")}</TitleManagement>
               <div className="mt-1">
                 <SelectPro
                   value={selectSupplier}
                   options={suppliersOptions}
                   onChange={setSelectSupplier}
-                  label="Chọn nhà cung cấp"
+                  label={t("select_supplier_label")}
                 />
               </div>
             </div>
 
             {/* PHẦN 2: TRẠNG THÁI */}
             <div className="border-t border-slate-200 dark:border-white/5 pt-3">
-              <TitleManagement color="green">Trạng thái đơn</TitleManagement>
+              <TitleManagement color="green">{t("status_order_title")}</TitleManagement>
               <div className="mt-1">
                 <SelectPro
                   value={selectStatus}
                   options={PURCHASE_STATUS_OPTIONS.map((s) => ({
                     id: s.slug,
-                    name: s.name,
+                    name: tc(s.name),
                   }))}
                   onChange={setSelectStatus}
-                  label="Trạng thái"
+                  label={t("status_label")}
                 />
               </div>
             </div>
@@ -213,11 +217,11 @@ const EditPurchaseOrder = () => {
             {/* PHẦN 3: THỜI GIAN & CHI PHÍ */}
             <div className="border-t border-slate-200 dark:border-white/5 pt-3">
               <TitleManagement color="orange">
-                Thời gian & Chi phí
+                {t("time_cost_title")}
               </TitleManagement>
               <div className="flex flex-col gap-2 mt-2">
                 <FloatingInput
-                  label="Ngày dự kiến"
+                  label={t("expected_date_short")}
                   type="date"
                   value={expectedDate}
                   onChange={(e) => setExpectedDate(e.target.value)}
@@ -225,7 +229,7 @@ const EditPurchaseOrder = () => {
 
                 <div className="flex justify-between items-center px-1 py-0.5">
                   <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider">
-                    Tổng tiền (VNĐ):
+                    {t("total_vnd")}
                   </span>
                   <span className="text-base font-black text-rose-600 dark:text-rose-400 font-mono">
                     {formatCurrency(totalCost)}
@@ -234,19 +238,19 @@ const EditPurchaseOrder = () => {
               </div>
             </div>
           </div>
-          <Submit_GoBack name="Sửa" />
+          <Submit_GoBack name={t("save_btn")} />
         </div>
 
         {/* CỘT PHẢI: CHI TIẾT MÓN HÀNG */}
         <div className="flex-1 w-full bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-5 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 transition-colors duration-200">
           <div className="flex items-center justify-between mb-6">
-            <TitleManagement color="violet">Chi tiết món hàng</TitleManagement>
+            <TitleManagement color="violet">{t("items_detail_title")}</TitleManagement>
             <button
               type="button"
               onClick={handleAddItem}
               className="bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-300 dark:border-sky-500/20 py-2 px-4 rounded-lg font-bold hover:bg-sky-500/20 shadow-sm transition-all flex items-center gap-2 text-sm cursor-pointer"
             >
-              <Plus size={16} strokeWidth={2.5} /> Thêm món hàng
+              <Plus size={16} strokeWidth={2.5} /> {t("add_item")}
             </button>
           </div>
 
@@ -264,13 +268,13 @@ const EditPurchaseOrder = () => {
                     onChange={(val) =>
                       handleItemChange(item.id, "variantId", val)
                     }
-                    label="Sản phẩm"
+                    label={t("product_label")}
                   />
                 </div>
 
                 <div className="w-full sm:w-1/4">
                   <FloatingInput
-                    label="Số lượng"
+                    label={t("quantity_label")}
                     type="number"
                     min={1}
                     value={item.quantity}
@@ -282,7 +286,7 @@ const EditPurchaseOrder = () => {
 
                 <div className="w-full sm:w-1/4">
                   <FloatingInput
-                    label="Giá nhập"
+                    label={t("import_price_label")}
                     type="number"
                     min={0}
                     value={item.cost}

@@ -2,66 +2,69 @@ import { useQuery } from "@tanstack/react-query";
 import dashboardApi from "@/api/management/dashboardApi";
 import { Card } from "@/pages/Admin/Dashboard/components/Card";
 import { MessageSquareText, Star, Eye, EyeOff, Loader } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-const SITEMS = [
-  {
-    key: "totalReviews",
-    label: "Tổng đánh giá",
-    icon: <MessageSquareText size={16} />,
-    color: "text-blue-600 dark:text-blue-400",
-    bg: "bg-blue-500/10 dark:bg-blue-500/20",
-  },
-  {
-    key: "avgRating",
-    label: "Điểm TB",
-    icon: <Star size={16} />,
-    color: "text-amber-600 dark:text-amber-400",
-    bg: "bg-amber-500/10 dark:bg-amber-500/20",
-    fmt: (v) => Number(v || 0).toFixed(1),
-  },
-  {
-    key: "visibleReviews",
-    label: "Hiển thị",
-    icon: <Eye size={16} />,
-    color: "text-emerald-600 dark:text-emerald-400",
-    bg: "bg-emerald-500/10 dark:bg-emerald-500/20",
-  },
-  {
-    key: "hiddenReviews",
-    label: "Ẩn",
-    icon: <EyeOff size={16} />,
-    color: "text-rose-600 dark:text-red-400",
-    bg: "bg-rose-500/10 dark:bg-red-500/20",
-  },
-];
-
-const SummaryCards = ({ summary = {} }) => (
-  <div className="grid gap-3 sm:grid-cols-4 items-start">
-    {SITEMS.map((item) => {
-      const val = summary[item.key] ?? 0;
-      const display = item.fmt ? item.fmt(val) : val.toLocaleString();
-      return (
-        <Card key={item.key}>
-          <div className="flex items-center gap-3">
-            <div
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${item.bg} ${item.color}`}
-            >
-              {item.icon}
+const SummaryCards = ({ summary = {} }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
+  const SITEMS = [
+    {
+      key: "totalReviews",
+      label: t("total_reviews"),
+      icon: <MessageSquareText size={16} />,
+      color: "text-blue-600 dark:text-blue-400",
+      bg: "bg-blue-500/10 dark:bg-blue-500/20",
+    },
+    {
+      key: "avgRating",
+      label: t("avg_rating"),
+      icon: <Star size={16} />,
+      color: "text-amber-600 dark:text-amber-400",
+      bg: "bg-amber-500/10 dark:bg-amber-500/20",
+      fmt: (v) => Number(v || 0).toFixed(1),
+    },
+    {
+      key: "visibleReviews",
+      label: t("visible_reviews"),
+      icon: <Eye size={16} />,
+      color: "text-emerald-600 dark:text-emerald-400",
+      bg: "bg-emerald-500/10 dark:bg-emerald-500/20",
+    },
+    {
+      key: "hiddenReviews",
+      label: t("hidden_reviews"),
+      icon: <EyeOff size={16} />,
+      color: "text-rose-600 dark:text-red-400",
+      bg: "bg-rose-500/10 dark:bg-red-500/20",
+    },
+  ];
+  return (
+    <div className="grid gap-3 sm:grid-cols-4 items-start">
+      {SITEMS.map((item) => {
+        const val = summary[item.key] ?? 0;
+        const display = item.fmt ? item.fmt(val) : val.toLocaleString();
+        return (
+          <Card key={item.key}>
+            <div className="flex items-center gap-3">
+              <div
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${item.bg} ${item.color}`}
+              >
+                {item.icon}
+              </div>
+              <div className="min-w-0">
+                <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  {item.label}
+                </p>
+                <p className={`text-lg font-bold truncate ${item.color}`}>
+                  {display}
+                </p>
+              </div>
             </div>
-            <div className="min-w-0">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                {item.label}
-              </p>
-              <p className={`text-lg font-bold truncate ${item.color}`}>
-                {display}
-              </p>
-            </div>
-          </div>
-        </Card>
-      );
-    })}
-  </div>
-);
+          </Card>
+        );
+      })}
+    </div>
+  );
+};
 
 const StarRating = ({ rating }) => (
   <span className="inline-flex items-center gap-0.5 text-amber-500 dark:text-amber-400">
@@ -77,9 +80,10 @@ const StarRating = ({ rating }) => (
 );
 
 const RatingDist = ({ data = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const total = data.reduce((s, d) => s + d.count, 0) || 1;
   return (
-    <Card title="Phân bố đánh giá" icon={<Star size={16} />}>
+    <Card title={t("rating_distribution")} icon={<Star size={16} />}>
       {data.length ? (
         <div className="space-y-2">
           {[5, 4, 3, 2, 1].map((star) => {
@@ -111,66 +115,70 @@ const RatingDist = ({ data = [] }) => {
         </div>
       ) : (
         <div className="flex h-[100px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-          Chưa có dữ liệu
+          {t("no_data")}
         </div>
       )}
     </Card>
   );
 };
 
-const RecentReviewsTable = ({ data = [] }) => (
-  <Card title="Đánh giá gần đây" icon={<MessageSquareText size={16} />}>
-    {data.length ? (
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs">
-          <thead>
-            <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              <th className="pb-2 pr-2 font-medium">Sản phẩm</th>
-              <th className="pb-2 pr-2 font-medium">Đánh giá</th>
-              <th className="pb-2 pr-2 font-medium">Nội dung</th>
-              <th className="pb-2 pr-2 font-medium">Ẩn</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
-            {data.map((r) => (
-              <tr
-                key={r.id}
-                className="hover:bg-slate-50 dark:hover:bg-[#161F32]/30 transition-colors duration-150"
-              >
-                <td className="py-2 pr-2 font-medium text-slate-800 dark:text-slate-200 truncate max-w-[140px]">
-                  {r.productName}
-                </td>
-                <td className="py-2 pr-2">
-                  <StarRating rating={r.rating} />
-                </td>
-                <td className="py-2 pr-2 text-slate-600 dark:text-slate-400 truncate max-w-[200px]">
-                  {r.comment || "—"}
-                </td>
-                <td className="py-2 pr-2">
-                  {r.is_hidden ? (
-                    <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-rose-50 text-rose-600 border-rose-200 dark:bg-red-500/10 dark:text-red-400 dark:border-transparent">
-                      Ẩn
-                    </span>
-                  ) : (
-                    <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-transparent">
-                      Hiện
-                    </span>
-                  )}
-                </td>
+const RecentReviewsTable = ({ data = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
+  return (
+    <Card title={t("recent_reviews")} icon={<MessageSquareText size={16} />}>
+      {data.length ? (
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <th className="pb-2 pr-2 font-medium">{t("name_col")}</th>
+                <th className="pb-2 pr-2 font-medium">{t("rating_col")}</th>
+                <th className="pb-2 pr-2 font-medium">{t("content_col")}</th>
+                <th className="pb-2 pr-2 font-medium">{t("hidden_col")}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    ) : (
-      <div className="flex h-[100px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-        Chưa có dữ liệu
-      </div>
-    )}
-  </Card>
-);
+            </thead>
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
+              {data.map((r) => (
+                <tr
+                  key={r.id}
+                  className="hover:bg-slate-50 dark:hover:bg-[#161F32]/30 transition-colors duration-150"
+                >
+                  <td className="py-2 pr-2 font-medium text-slate-800 dark:text-slate-200 truncate max-w-[140px]">
+                    {r.productName}
+                  </td>
+                  <td className="py-2 pr-2">
+                    <StarRating rating={r.rating} />
+                  </td>
+                  <td className="py-2 pr-2 text-slate-600 dark:text-slate-400 truncate max-w-[200px]">
+                    {r.comment || "—"}
+                  </td>
+                  <td className="py-2 pr-2">
+                    {r.is_hidden ? (
+                      <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-rose-50 text-rose-600 border-rose-200 dark:bg-red-500/10 dark:text-red-400 dark:border-transparent">
+                        {t("hidden")}
+                      </span>
+                    ) : (
+                      <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-transparent">
+                        {t("shown")}
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="flex h-[100px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
+          {t("no_data")}
+        </div>
+      )}
+    </Card>
+  );
+};
 
 export const ReviewOverview = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const { data: res, isLoading } = useQuery({
     queryKey: ["management-dashboard-review-overview"],
     queryFn: () => dashboardApi.getReviewOverview(),
@@ -180,7 +188,7 @@ export const ReviewOverview = () => {
     return (
       <div className="flex items-center justify-center py-16 text-slate-500 dark:text-slate-400 font-medium text-sm transition-colors duration-200">
         <Loader size={20} className="animate-spin mr-2 text-sky-500" />
-        Đang tải dữ liệu đánh giá...
+        {t("loading_reviews")}
       </div>
     );
   }

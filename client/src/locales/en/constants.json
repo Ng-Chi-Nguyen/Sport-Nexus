@@ -1,0 +1,83 @@
+{
+  "user": {
+    "status": {
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "verified": {
+      "all": "All",
+      "yes": "Verified",
+      "no": "Not verified"
+    }
+  },
+  "coupon": {
+    "tab": {
+      "all": "All",
+      "active": "Active",
+      "inactive": "Expired"
+    },
+    "discount_type": {
+      "all": "All",
+      "cash": "Cash",
+      "percentage": "Percentage"
+    }
+  },
+  "purchaseOrder": {
+    "status": {
+      "all": "All",
+      "pending": "Pending",
+      "received": "Received",
+      "partially_received": "Partially received",
+      "cancelled": "Cancelled"
+    }
+  },
+  "permission": {
+    "module": {
+      "users": "Users",
+      "roles": "Roles",
+      "permissions": "Permissions",
+      "products": "Products",
+      "categories": "Categories",
+      "brands": "Brands",
+      "coupons": "Coupons",
+      "orders": "Orders",
+      "purchaseorders": "Purchase orders",
+      "reviews": "Reviews",
+      "stockmovements": "Inventory",
+      "suppliers": "Suppliers",
+      "systemlogs": "Logs"
+    },
+    "action": {
+      "create": "Create",
+      "read": "View list",
+      "update": "Update",
+      "delete": "Delete data"
+    },
+    "module_label": {
+      "users": "👤 User Management",
+      "roles": "🔑 Roles & Permissions",
+      "permissions": "🛡️ Permission List",
+      "useraddresses": "📍 Customer Addresses",
+      "systemlogs": "📋 System Logs",
+      "products": "📦 Product Management",
+      "categories": "📂 Product Categories",
+      "brands": "🏷️ Brands",
+      "attributekeys": "⚙️ Product Attributes",
+      "productimages": "🖼️ Image Library",
+      "orders": "🛒 Sales Orders",
+      "coupons": "🎟️ Coupons",
+      "reviews": "⭐ Customer Reviews",
+      "carts": "🛍️ Customer Carts",
+      "suppliers": "🏭 Suppliers",
+      "purchaseorders": "📝 Purchase Orders",
+      "stockmovements": "📉 Stock Movements"
+    },
+    "action_option": {
+      "create": "✨ Create new (Create)",
+      "read": "👁️ View data (Read)",
+      "update": "📝 Edit (Update)",
+      "delete": "🗑️ Delete data (Delete)"
+    }
+  }
+}

@@ -1,8 +1,10 @@
 import { Card } from "@/pages/Admin/Dashboard/components/Card";
 import { TrendingUp } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
+import { useTranslation } from "react-i18next";
 
 export const RevenueChart = ({ revenueTrend = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const maxTrend = Math.max(
     ...revenueTrend.map((i) => Number(i.revenue || 0)),
     1,
@@ -10,11 +12,11 @@ export const RevenueChart = ({ revenueTrend = [] }) => {
 
   return (
     <Card
-      title="Doanh thu theo thời gian"
+      title={t("revenue_over_time")}
       icon={<TrendingUp size={16} />}
       action={
         <span className="text-xs text-slate-500">
-          {revenueTrend.length} mốc
+          {t("period_count", { count: revenueTrend.length })}
         </span>
       }
     >
@@ -61,7 +63,7 @@ export const RevenueChart = ({ revenueTrend = [] }) => {
         </div>
       ) : (
         <div className="flex h-[180px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-          Chưa có dữ liệu
+          {t("no_data")}
         </div>
       )}
     </Card>

@@ -27,7 +27,7 @@ const CustomCheckbox = ({ label, checked, value, onChange, id }) => {
                    peer-checked:bg-sky-50 peer-checked:border-sky-500
                    dark:peer-checked:bg-sky-500/10 dark:peer-checked:border-sky-500/50 
                    peer-checked:shadow-[0_0_12px_rgba(14,165,233,0.2)]
-                   border rounded-lg transition-all duration-200 flex items-center justify-center overflow-hidden"
+                   border rounded-xl transition-all duration-200 flex items-center justify-center overflow-hidden shadow-sm"
       >
         <svg
           viewBox="0 0 69 89"
@@ -76,11 +76,11 @@ const AnimatedCheckbox = ({ id, label, checked, onChange }) => {
             height="100%"
             viewBox="0 0 18 18"
             className={`fill-none stroke-round stroke-join transition-all duration-300 stroke-[2]
-                       ${
-                         checked
-                           ? "stroke-sky-500 dark:stroke-sky-400"
-                           : "stroke-slate-300 group-hover:stroke-slate-400 dark:stroke-slate-800 dark:group-hover:stroke-slate-600"
-                       }`}
+                        ${
+                          checked
+                            ? "stroke-sky-500 dark:stroke-sky-400"
+                            : "stroke-slate-300 group-hover:stroke-slate-400 dark:stroke-slate-800 dark:group-hover:stroke-slate-600"
+                        }`}
           >
             {/* Đường viền khung hình vuông bo tròn góc */}
             <path

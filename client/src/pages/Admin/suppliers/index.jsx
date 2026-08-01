@@ -18,15 +18,18 @@ import Pagination from "@/components/ui/pagination";
 //lib
 import { queryClient } from "@/lib/react-query";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Quản lý chuỗi cung ứng", route: "" },
-  { title: "Nhà cung cấp", route: "#" },
-];
+import { useTranslation } from "react-i18next";
 
 const SupplierPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "supplier" });
   const response = useLoaderData();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("supply_chain"), route: "" },
+    { title: t("suppliers_title"), route: "#" },
+  ];
+
   const revalidator = useRevalidator();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -107,7 +110,7 @@ const SupplierPage = () => {
         error.message ||
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
-        "Đã có lỗi xảy ra!";
+        t("error_occurred");
       toast.error(errorMessage);
     }
   };
@@ -116,7 +119,7 @@ const SupplierPage = () => {
     if (!locationData)
       return (
         <span className="text-slate-400 dark:text-slate-500 italic">
-          Chưa cập nhật
+          {t("not_updated")}
         </span>
       );
 
@@ -131,7 +134,7 @@ const SupplierPage = () => {
     } catch (error) {
       return (
         <span className="text-rose-600 dark:text-rose-400">
-          Lỗi định dạng địa chỉ
+          {t("address_format_error")}
         </span>
       );
     }
@@ -145,18 +148,18 @@ const SupplierPage = () => {
       <div className="flex items-center gap-4">
         <div className="flex-1 relative group">
           <SearchTable
-            placeholder="Tìm kiếm nhà cung cấp..."
+            placeholder={t("search_placeholder")}
             value={searchInput}
             onChange={(val) => setSearchInput(val)}
           />
         </div>
         <div className="w-[180px]">
           <SimpleSelect
-            placeholder="Tất cả tỉnh/thành"
+            placeholder={t("all_provinces")}
             value={currentProvince}
             onChange={(val) => handleProvinceChange(val)}
             options={[
-              { slug: "", name: "Tất cả" },
+              { slug: "", name: t("all") },
               ...(response.provinces || []).map((p) => ({ slug: p, name: p })),
             ]}
           />
@@ -168,31 +171,31 @@ const SupplierPage = () => {
             onClick={clearAllFilters}
             className="px-2.5 py-1.5 text-[10px] font-bold rounded border border-slate-200 dark:border-slate-800 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer shrink-0"
           >
-            Xóa bộ lọc
+            {t("clear_filter")}
           </button>
         )}
 
         <ExcelCrudActions
           basePath="/management/supplier"
-          title="Import / Export nhà cung cấp"
+          title={t("import_export_title")}
           templateFileName="template-nha-cung-cap.xlsx"
           exportFileName="nha-cung-cap.xlsx"
         />
 
         <BtnAdd
           route={"/management/suppliers/create"}
-          name="Thêm nhà cung cấp"
+          name={t("add_supplier")}
         />
       </div>
 
       <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="section-title mb-0">Danh sách nhà cung cấp</h2>
+          <h2 className="section-title mb-0">{t("list_title")}</h2>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
             className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Tải lại"
+            title={t("reload")}
           >
             <RefreshCw
               size={18}
@@ -211,31 +214,31 @@ const SupplierPage = () => {
                     scope="col"
                     className="px-6 py-4 w-[30%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Nhà cung cấp
+                    {t("supplier_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 w-[25%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Địa chỉ
+                    {t("address_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 w-[18%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Email liên hệ
+                    {t("email_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 w-[15%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Số điện thoại
+                    {t("phone_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 w-[12%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Hành động
+                    {t("actions_col")}
                   </th>
                 </tr>
               </thead>
@@ -266,7 +269,7 @@ const SupplierPage = () => {
                             </p>
                             <p className="text-[12px] text-slate-500 dark:text-slate-400">
                               <span className="text-slate-400 dark:text-slate-500">
-                                Đại diện:
+                                {t("representative")}
                               </span>{" "}
                               <span className="text-emerald-600 dark:text-green-300 font-medium">
                                 {supplier.contact_person}
@@ -312,7 +315,7 @@ const SupplierPage = () => {
                       colSpan="5"
                       className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
                     >
-                      Không có nhà cung cấp nào được tìm thấy.
+                      {t("no_suppliers")}
                     </td>
                   </tr>
                 )}
@@ -323,8 +326,8 @@ const SupplierPage = () => {
 
         <ConfirmDelete
           isOpen={isConfirmOpen}
-          title="Xóa nhà cung cấp"
-          message="Bạn đang thực hiện xóa nhà cung cấp này khỏi hệ thống."
+          title={t("delete_title")}
+          message={t("delete_message")}
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmOpen(false)}
         />

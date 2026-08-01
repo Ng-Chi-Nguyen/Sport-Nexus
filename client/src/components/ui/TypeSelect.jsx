@@ -1,16 +1,18 @@
 import { Home, Building2, Briefcase } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const OPTIONS = [
-  { value: "home", label: "Nhà riêng", icon: Home },
-  { value: "office", label: "Văn phòng", icon: Building2 },
-  { value: "company", label: "Công ty", icon: Briefcase },
+  { value: "home", labelKey: "component.common.home_address", icon: Home },
+  { value: "office", labelKey: "component.common.office_address", icon: Building2 },
+  { value: "company", labelKey: "component.common.company_address", icon: Briefcase },
 ];
 
 const TypeSelect = ({ value, onChange }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
   return (
     <div>
       <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1.5">
-        Loại địa chỉ
+        {t("address_type")}
       </label>
       <div className="flex gap-2">
         {OPTIONS.map((opt) => {
@@ -29,7 +31,7 @@ const TypeSelect = ({ value, onChange }) => {
               }`}
             >
               <Icon size={14} className="shrink-0" />
-              <span>{opt.label}</span>
+              <span>{t(opt.labelKey)}</span>
             </button>
           );
         })}

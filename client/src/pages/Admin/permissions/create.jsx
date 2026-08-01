@@ -14,16 +14,20 @@ import { MODULE_LABELS, ACTION_OPTIONS } from "@/constants/permission";
 // lib
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Quản lý người dùng & phân quyền", route: "" },
-  { title: "Phân quyền", route: "/management/permissions" },
-  { title: "Thêm quyền", route: "#" },
-];
+import { useTranslation } from "react-i18next";
 
 const CreatePermissionPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "permission" });
+  const { t: tc } = useTranslation("translation", { keyPrefix: "constants" });
   const navigate = useNavigate();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("user_management"), route: "" },
+    { title: t("permission_title"), route: "/management/permissions" },
+    { title: t("create_breadcrumb"), route: "#" },
+  ];
+
 
   // Dữ liệu gửi đi
   const [selectedRole, setSelectedRole] = useState("");
@@ -52,7 +56,7 @@ const CreatePermissionPage = () => {
         error.message ||
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
-        "Đã có lỗi xảy ra!";
+        t("error_occurred");
       toast.error(errorMessage);
     }
   };
@@ -60,42 +64,45 @@ const CreatePermissionPage = () => {
   const moduleOptions = useMemo(() => {
     return Object.entries(MODULE_LABELS).map(([key, value]) => ({
       slug: key,
-      name: value,
+      name: tc(value),
     }));
-  }, []);
+  }, [tc]);
 
   return (
     <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
       <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide uppercase">
-        Thêm quyền hạn mới
+        {t("create_heading")}
       </h2>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
         <div className="col-span-12 lg:col-span-8 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 transition-colors duration-200">
           <TitleManagement color="violet">
-            Cấu hình tham số quyền hạn
+            {t("config_title")}
           </TitleManagement>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6 mt-2">
             <div className="flex flex-col gap-1">
               <Select
-                label="Chọn chức vụ / Phạm vi"
+                label={t("role_label")}
                 options={moduleOptions}
                 value={selectedRole}
                 onChange={(val) => setSelectedRole(val)}
-                placeholder="Chọn mục..."
+                placeholder={t("select_placeholder")}
               />
             </div>
 
             <div className="flex flex-col gap-1">
               <Select
-                label="Áp dụng cho bảng (Action)"
-                options={ACTION_OPTIONS}
+                label={t("action_label")}
+                options={ACTION_OPTIONS.map((o) => ({
+                  slug: o.slug,
+                  name: tc(o.name),
+                }))}
                 value={selectedAction}
                 onChange={(val) => setSelectedAction(val)}
-                placeholder="Chọn mục..."
+                placeholder={t("select_placeholder")}
               />
             </div>
           </div>
@@ -103,7 +110,7 @@ const CreatePermissionPage = () => {
           <div className="w-full mb-8">
             <FloatingInput
               id="permission_name"
-              label="Tên quyền hạn chi tiết"
+              label={t("name_label")}
               required
               value={permissionName}
               onChange={(e) => setPermissionName(e.target.value)}

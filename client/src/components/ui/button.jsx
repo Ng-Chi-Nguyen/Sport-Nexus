@@ -1,8 +1,12 @@
 import { ArrowLeft, Edit, Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
+const i18nPrefix = "component.common";
 
 // 1. NÚT THÊM MỚI (Thường nằm trên đầu danh sách)
 const BtnAdd = ({ name, route }) => {
+  const { t } = useTranslation("translation", { keyPrefix: i18nPrefix });
   return (
     <Link
       to={route}
@@ -21,7 +25,7 @@ const BtnAdd = ({ name, route }) => {
         strokeWidth={2}
         className="group-hover:rotate-90 transition-transform duration-200"
       />
-      <span>{name || "Thêm mới"}</span>
+      <span>{name || t("add_new")}</span>
     </Link>
   );
 };
@@ -52,6 +56,7 @@ const BtnSubmit = ({
 // 3. NÚT QUAY LẠI (Hỗ trợ Light/Dark Mode)
 const BtnGoback = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation("translation", { keyPrefix: i18nPrefix });
   return (
     <button
       onClick={() => navigate(-1)}
@@ -67,7 +72,7 @@ const BtnGoback = () => {
         strokeWidth={2}
         className="group-hover:-translate-x-0.5 transition-transform"
       />
-      <span>Quay lại</span>
+      <span>{t("go_back")}</span>
     </button>
   );
 };
@@ -75,6 +80,7 @@ const BtnGoback = () => {
 // 4. NÚT SỬA (Dạng Badge/Button kèm chữ)
 const BtnEdit = (props) => {
   const { route, name } = props;
+  const { t } = useTranslation("translation", { keyPrefix: i18nPrefix });
   return (
     <Link
       to={route}
@@ -82,7 +88,7 @@ const BtnEdit = (props) => {
                  bg-amber-500/10 text-amber-600 border border-amber-500/30 hover:bg-amber-500/20
                  dark:text-amber-400 
                  rounded-lg active:scale-95 transition-all duration-150 group"
-      title="Chỉnh sửa"
+      title={t("edit_title")}
     >
       <Pencil size={14} strokeWidth={2} />
       {name && (
@@ -95,6 +101,7 @@ const BtnEdit = (props) => {
 // 5. NÚT XÓA (Hiệu ứng mở nắp thùng rác)
 const BtnDelete = (props) => {
   const { onClick, className = "", name } = props;
+  const { t } = useTranslation("translation", { keyPrefix: i18nPrefix });
 
   return (
     <button
@@ -104,7 +111,7 @@ const BtnDelete = (props) => {
                   bg-rose-500/10 text-rose-600 border border-rose-500/30 hover:bg-rose-500/20
                   dark:text-rose-400 
                   rounded-lg active:scale-95 transition-all duration-150 ${className}`}
-      title="Xóa dữ liệu"
+      title={t("delete_data")}
     >
       <div className={`relative w-[14px] h-[14px] ${name ? "mr-1.5" : ""}`}>
         {/* Phần Nắp thùng rác */}
@@ -134,18 +141,20 @@ const BtnDelete = (props) => {
 // 6. CỤM NÚT ĐIỀU HƯỚNG CUỐI FORM (Quay lại + Lưu)
 const Submit_GoBack = (props) => {
   const { name, justify = "start", loading = false } = props;
+  const { t } = useTranslation("translation", { keyPrefix: i18nPrefix });
   return (
     <div
       className={`flex items-center gap-3 py-4 justify-${justify} border-t border-slate-200 dark:border-slate-800/60 mt-6`}
     >
       <BtnGoback />
-      <BtnSubmit name={name || "Lưu lại"} loading={loading} />
+      <BtnSubmit name={name || t("save")} loading={loading} />
     </div>
   );
 };
 
 // 7. CỤM ICON THAO TÁC TRONG BẢNG (Sửa/Xóa mini)
 const BtnActions = ({ route, id, onDelete }) => {
+  const { t } = useTranslation("translation", { keyPrefix: i18nPrefix });
   return (
     <div className="flex justify-center items-center gap-2">
       <Link
@@ -153,7 +162,7 @@ const BtnActions = ({ route, id, onDelete }) => {
         className="p-2 bg-slate-100 text-slate-600 hover:text-amber-600 border border-slate-200 hover:border-amber-500/40
                    dark:bg-[#111827] dark:text-slate-400 dark:hover:text-amber-400 dark:border-slate-800 dark:hover:border-amber-500/30 
                    rounded-lg transition-all duration-150"
-        title="Sửa"
+        title={t("edit")}
       >
         <Edit size={14} />
       </Link>
@@ -164,7 +173,7 @@ const BtnActions = ({ route, id, onDelete }) => {
         className="p-2 bg-slate-100 text-slate-600 hover:text-rose-600 border border-slate-200 hover:border-rose-500/40
                    dark:bg-[#111827] dark:text-slate-400 dark:hover:text-rose-500 dark:border-slate-800 dark:hover:border-rose-500/30 
                    rounded-lg transition-all duration-150"
-        title="Xóa"
+        title={t("delete")}
       >
         <Trash2 size={14} />
       </button>
@@ -181,18 +190,25 @@ const BtnSave = ({
   icon,
   className = "",
   ...props
-}) => (
-  <button
-    disabled={disabled || loading}
-    type="submit"
-    className={`px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider rounded transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
-    {...props}
-  >
-    {loading && <Loader2 size={15} className="animate-spin" />}
-    {!loading && icon}
-    <span>{loading ? loadingText || "Đang lưu..." : children}</span>
-  </button>
-);
+}) => {
+  const { t } = useTranslation("translation", { keyPrefix: i18nPrefix });
+  return (
+    <button
+      disabled={disabled || loading}
+      type="submit"
+      className={`px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider rounded transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      {...props}
+    >
+      {loading && <Loader2 size={15} className="animate-spin" />}
+      {!loading && icon}
+      <span>
+        {loading
+          ? loadingText || t("saving")
+          : children}
+      </span>
+    </button>
+  );
+};
 
 export {
   BtnAdd,

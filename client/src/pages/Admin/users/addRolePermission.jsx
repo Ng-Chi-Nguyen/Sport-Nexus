@@ -9,16 +9,20 @@ import PermissionTable from "@/components/permissionTable";
 import { PERMISSION_TRANSLATIONS } from "@/constants/permission";
 // api
 import userApi from "@/api/management/userApi";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Quản lý người dùng & phân quyền", route: "" },
-  { title: "Người dùng", route: "/management/users" },
-  { title: "Cấp quyền", route: "#" },
-];
+import { useTranslation } from "react-i18next";
 
 const AddRolePermissionPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "user" });
+  const { t: tc } = useTranslation("translation", { keyPrefix: "constants" });
   const navigate = useNavigate();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("user_management"), route: "" },
+    { title: t("users_title"), route: "/management/users" },
+    { title: t("grant_breadcrumb"), route: "#" },
+  ];
+
   const loaderData = useLoaderData();
   const { user, allPermissions } = loaderData;
 
@@ -50,12 +54,12 @@ const AddRolePermissionPage = () => {
         permissionIds: selectedIds,
       });
       if (response.success) {
-        toast.success("Cập nhật ma trận cấp quyền thành công!");
+        toast.success(t("update_success"));
       }
     } catch (error) {
       console.error("Lỗi:", error);
       toast.error(
-        error.response?.data?.message || "Cập nhật cấp quyền thất bại.",
+        error.response?.data?.message || t("update_failed"),
       );
     }
   };
@@ -69,10 +73,10 @@ const AddRolePermissionPage = () => {
         <div>
           <h2 className="text-xl font-bold text-slate-100 tracking-wide uppercase flex items-center gap-2">
             <span className="w-1.5 h-4 rounded-sm bg-sky-500 shadow-[0_0_8px_#0ea5e9]"></span>
-            Ma trận cấp quyền hạn
+            {t("permission_matrix")}
           </h2>
           <div className="flex items-center gap-2 mt-1.5 text-sm text-slate-400">
-            <span>Tài khoản:</span>
+            <span>{t("account_label")}</span>
             <span className="text-sky-400 font-semibold">
               {userData?.full_name}
             </span>
@@ -82,7 +86,7 @@ const AddRolePermissionPage = () => {
             </span>
             <span className="text-slate-600">|</span>
             <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-medium uppercase tracking-wider">
-              {userData?.role?.name || "Thành viên"}
+              {userData?.role?.name || t("member")}
             </span>
           </div>
         </div>
@@ -102,14 +106,14 @@ const AddRolePermissionPage = () => {
                          }`}
             >
               <HelpCircle size={14} strokeWidth={2.5} />
-              Tra cứu Module
+              {t("lookup_module")}
             </button>
 
             {/* POPOVER KÍNH MỜ: Đổ xuống mượt mà ngay dưới chân nút bấm */}
             {isModuleOpen && (
               <div className="absolute right-0 top-full mt-2 z-50 w-[320px] p-4 bg-[#0D121F]/95 border border-slate-800 rounded-xl shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-150">
                 <p className="text-sky-400 border-b border-white/5 mb-3 pb-1.5 font-bold font-mono text-xs tracking-wider">
-                  DANH SÁCH MODULES HỆ THỐNG:
+                  {t("modules_header")}
                 </p>
                 <div className="flex flex-col gap-1.5 max-h-[350px] overflow-y-auto pr-1 custom-scrollbar">
                   {Object.entries(PERMISSION_TRANSLATIONS.modules).map(
@@ -122,7 +126,7 @@ const AddRolePermissionPage = () => {
                           {key}
                         </span>
                         <span className="text-slate-300 font-medium">
-                          {value}
+                          {tc(value)}
                         </span>
                       </div>
                     ),
@@ -137,7 +141,7 @@ const AddRolePermissionPage = () => {
             onClick={() => navigate(-1)}
             className="h-[38px] px-4 bg-slate-900/60 text-slate-400 border border-slate-800 rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-slate-800 hover:text-slate-200 transition-all"
           >
-            Quay lại
+            {t("go_back")}
           </button>
         </div>
       </div>
@@ -147,7 +151,7 @@ const AddRolePermissionPage = () => {
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
             <span className="w-1 h-3 rounded-full bg-violet-500"></span>
-            Phân bổ quyền chức năng (Module ACL)
+            {t("module_acl")}
           </h3>
         </div>
 

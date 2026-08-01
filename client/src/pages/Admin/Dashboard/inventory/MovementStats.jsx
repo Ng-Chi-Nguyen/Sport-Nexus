@@ -5,32 +5,33 @@ import {
   ArrowDownRight,
   RotateCcw,
 } from "lucide-react";
-
-const TYPE_META = {
-  IN: {
-    label: "Nhập kho",
-    icon: <ArrowUpRight size={14} />,
-    color: "text-emerald-600 dark:text-emerald-400",
-    bg: "bg-emerald-500/10 dark:bg-emerald-500/20",
-  },
-  OUT: {
-    label: "Xuất kho",
-    icon: <ArrowDownRight size={14} />,
-    color: "text-rose-600 dark:text-red-400",
-    bg: "bg-rose-500/10 dark:bg-red-500/20",
-  },
-  ADJUSTMENT: {
-    label: "Điều chỉnh",
-    icon: <RotateCcw size={14} />,
-    color: "text-amber-600 dark:text-amber-400",
-    bg: "bg-amber-500/10 dark:bg-amber-500/20",
-  },
-};
+import { useTranslation } from "react-i18next";
 
 export const MovementStats = ({
   movementCountByType = {},
   movementTrend = [],
 }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
+  const TYPE_META = {
+    IN: {
+      label: t("type_in"),
+      icon: <ArrowUpRight size={14} />,
+      color: "text-emerald-600 dark:text-emerald-400",
+      bg: "bg-emerald-500/10 dark:bg-emerald-500/20",
+    },
+    OUT: {
+      label: t("type_out"),
+      icon: <ArrowDownRight size={14} />,
+      color: "text-rose-600 dark:text-red-400",
+      bg: "bg-rose-500/10 dark:bg-red-500/20",
+    },
+    ADJUSTMENT: {
+      label: t("type_adjustment"),
+      icon: <RotateCcw size={14} />,
+      color: "text-amber-600 dark:text-amber-400",
+      bg: "bg-amber-500/10 dark:bg-amber-500/20",
+    },
+  };
   const hasCounts = Object.keys(movementCountByType).length > 0;
   const totalMovements = Object.values(movementCountByType).reduce(
     (s, v) => s + v,
@@ -43,7 +44,7 @@ export const MovementStats = ({
 
   return (
     <div>
-      <Card title="Xu hướng nhập/xuất kho" icon={<ArrowUpDown size={16} />}>
+      <Card title={t("movement_trend")} icon={<ArrowUpDown size={16} />}>
         {/* Khung đếm số lượng theo loại biên động */}
         {hasCounts && (
           <div className="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
@@ -118,7 +119,7 @@ export const MovementStats = ({
                         OUT: {item.OUT || 0}
                       </span>
                       <span className="ml-1.5 text-[10px] text-amber-400 font-semibold">
-                        ĐC: {item.ADJUSTMENT || 0}
+                        {t("adj_short")}: {item.ADJUSTMENT || 0}
                       </span>
                     </div>
 
@@ -160,8 +161,8 @@ export const MovementStats = ({
           </div>
         ) : (
           <div className="flex h-[140px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-            Chưa có dữ liệu
-          </div>
+          {t("no_data")}
+        </div>
         )}
       </Card>
     </div>

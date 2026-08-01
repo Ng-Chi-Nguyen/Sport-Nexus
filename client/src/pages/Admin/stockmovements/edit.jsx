@@ -1,7 +1,11 @@
+import { useTranslation } from "react-i18next";
+
 const EditStockPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "stockMovement" });
+
   return (
     <>
-      <div className="">Edit Stock Page</div>
+      <div className="">{t("edit_title")}</div>
     </>
   );
 };

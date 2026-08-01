@@ -18,17 +18,19 @@ import Badge from "@/components/ui/badge";
 import Pagination from "@/components/ui/pagination";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={20} />, route: "" },
-  { title: "Quản lý sản phẩm & kho", route: "" },
-  { title: "Món hàng", route: "#" },
-];
+import { useTranslation } from "react-i18next";
 
 const VariantPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "productVariant" });
   const responses = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={20} />, route: "" },
+    { title: t("product_warehouse_management"), route: "" },
+    { title: t("variant_items"), route: "#" },
+  ];
 
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState({ id: "", name: "" });
@@ -120,7 +122,7 @@ const VariantPage = () => {
         error.message ||
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
-        "Đã có lỗi xảy ra!";
+        t("error_occurred");
       toast.error(errorMessage);
     }
   };
@@ -132,7 +134,7 @@ const VariantPage = () => {
       <div className="flex items-center gap-3 my-4">
         <div className="flex-1">
           <SearchTable
-            placeholder="Tìm kiếm sản phẩm..."
+            placeholder={t("search_product_placeholder")}
             value={searchInput}
             onChange={(val) => setSearchInput(val)}
           />
@@ -147,7 +149,7 @@ const VariantPage = () => {
           }`}
         >
           <Filter size={14} />
-          Bộ lọc
+          {t("filter")}
           {hasActiveFilters && (
             <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
           )}
@@ -158,13 +160,13 @@ const VariantPage = () => {
         </button>
         <ExcelCrudActions
           basePath="/core/product-variant"
-          title="Import / Export biến thể"
+          title={t("import_export_variant")}
           templateFileName="template-bien-the.xlsx"
           exportFileName="bien-the.xlsx"
         />
         <BtnAdd
           route="/management/product-variants/create"
-          name="Thêm biến thể"
+          name={t("add_variant")}
         />
       </div>
 
@@ -179,28 +181,28 @@ const VariantPage = () => {
           <div className="flex flex-wrap items-end gap-4">
             <div className="flex-1 min-w-[180px]">
               <SimpleSelect
-                label="Sản phẩm"
+                label={t("product_label")}
                 value={currentProductId}
                 onChange={(val) => setFilter("product_id", val)}
                 options={[
-                  { slug: "", name: "Tất cả" },
+                  { slug: "", name: t("all") },
                   ...(responses.products || []).map((p) => ({
                     slug: String(p.id),
                     name: p.name,
                   })),
                 ]}
-                placeholder="Tất cả"
+                placeholder={t("all")}
               />
             </div>
 
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                Tồn kho
+                {t("stock_label")}
               </label>
               <div className="flex items-center gap-1">
                 <input
                   type="number"
-                  placeholder="Tối thiểu"
+                  placeholder={t("min_placeholder")}
                   value={currentStockMin}
                   onChange={(e) => setFilter("stock_min", e.target.value)}
                   className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
@@ -210,7 +212,7 @@ const VariantPage = () => {
                 </span>
                 <input
                   type="number"
-                  placeholder="Tối đa"
+                  placeholder={t("max_placeholder")}
                   value={currentStockMax}
                   onChange={(e) => setFilter("stock_max", e.target.value)}
                   className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
@@ -220,12 +222,12 @@ const VariantPage = () => {
 
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                Khoảng giá
+                {t("price_range")}
               </label>
               <div className="flex items-center gap-1">
                 <input
                   type="number"
-                  placeholder="Tối thiểu"
+                  placeholder={t("min_placeholder")}
                   value={currentPriceMin}
                   onChange={(e) => setFilter("price_min", e.target.value)}
                   className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
@@ -235,7 +237,7 @@ const VariantPage = () => {
                 </span>
                 <input
                   type="number"
-                  placeholder="Tối đa"
+                  placeholder={t("max_placeholder")}
                   value={currentPriceMax}
                   onChange={(e) => setFilter("price_max", e.target.value)}
                   className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
@@ -249,7 +251,7 @@ const VariantPage = () => {
                 onClick={clearAllFilters}
                 className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-500 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
-                Xoá bộ lọc
+                {t("clear_filter")}
               </button>
             )}
           </div>
@@ -258,13 +260,13 @@ const VariantPage = () => {
 
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-          Danh sách biến thể
+          {t("variant_list_title")}
         </h2>
         <button
           onClick={handleRefresh}
           disabled={revalidator.state === "loading"}
           className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          title="Tải lại"
+          title={t("reload")}
         >
           <RefreshCw
             size={18}
@@ -279,16 +281,16 @@ const VariantPage = () => {
             <thead className="text-xs uppercase bg-slate-100 dark:bg-[#161F32] border-b border-slate-200 dark:border-slate-800">
               <tr>
                 <th className="px-6 py-4 font-black text-slate-600 dark:text-slate-400 !text-start">
-                  Thông tin sản phẩm
+                  {t("product_info_col")}
                 </th>
                 <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
-                  Phân loại
+                  {t("category_col")}
                 </th>
                 <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
-                  Tồn kho
+                  {t("stock_col")}
                 </th>
                 <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
-                  Thao tác
+                  {t("actions_col")}
                 </th>
               </tr>
             </thead>
@@ -313,7 +315,7 @@ const VariantPage = () => {
                             {variant.product.name}
                           </p>
                           <span className="text-[12px] text-slate-500 dark:text-slate-400">
-                            Giá gốc:{" "}
+                            {t("base_price_col")}{" "}
                             <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                               {Number(
                                 variant.product.base_price,
@@ -323,7 +325,7 @@ const VariantPage = () => {
                           </span>
                           <div className="mt-1">
                             <span className="text-xs text-slate-500 dark:text-slate-400">
-                              Giá bán:{" "}
+                              {t("sale_price_col")}{" "}
                             </span>
                             <span className="text-sm font-semibold text-sky-600 dark:text-sky-400">
                               {Number(variant.price).toLocaleString()}đ
@@ -344,7 +346,7 @@ const VariantPage = () => {
                           ))
                         ) : (
                           <span className="text-slate-400 dark:text-slate-500 text-xs italic">
-                            Không có phân loại
+                            {t("no_classification")}
                           </span>
                         )}
                       </div>
@@ -352,9 +354,9 @@ const VariantPage = () => {
 
                     <td className="px-6 py-4 text-center">
                       {variant.stock > 0 ? (
-                        <Badge color="success">Sẵn có: {variant.stock}</Badge>
+                        <Badge color="success">{t("in_stock_suffix")} {variant.stock}</Badge>
                       ) : (
-                        <Badge color="error">Hết hàng</Badge>
+                        <Badge color="error">{t("out_of_stock")}</Badge>
                       )}
                     </td>
 
@@ -375,7 +377,7 @@ const VariantPage = () => {
                     colSpan="4"
                     className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
                   >
-                    Không có biến thể nào được tìm thấy.
+                    {t("no_variants")}
                   </td>
                 </tr>
               )}
@@ -391,8 +393,8 @@ const VariantPage = () => {
         </div>
         <ConfirmDelete
           isOpen={isConfirmOpen}
-          title="Xóa biến thể sản phẩm"
-          message={`Bạn đang thực hiện xóa biến thể sản phẩm "${deleteTarget.name}".`}
+          title={t("delete_variant_title")}
+          message={t("delete_variant_message", { name: deleteTarget.name })}
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmOpen(false)}
         />

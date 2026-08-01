@@ -1,9 +1,11 @@
 import React, { useRef, useEffect } from "react";
 import { LogOut, TriangleAlert, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-// 1. MODAL XÁC NHẬN XÓA (STYLE NEON DANGER - LIGHT & DARK SUPPORT)
+// 1. MODAL XĂC NHáº¬N XĂ“A (STYLE NEON DANGER - LIGHT & DARK SUPPORT)
 const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
   const modalRef = useRef();
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -24,7 +26,7 @@ const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-md animate-in fade-in duration-200">
-      {/* KHUNG MODAL LINH HOẠT CHẾ ĐỘ SÁNG / TỐI */}
+      {/* KHUNG MODAL LINH HOáº T CHáº¾ Äá»˜ SĂNG / Tá»I */}
       <div
         ref={modalRef}
         className="relative w-full max-w-sm 
@@ -34,7 +36,7 @@ const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
                    rounded-2xl p-6 backdrop-blur-xl 
                    animate-in fade-in zoom-in-95 duration-200"
       >
-        {/* Nút đóng X */}
+        {/* NĂºt Ä‘Ă³ng X */}
         <button
           onClick={onCancel}
           className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors duration-150"
@@ -43,7 +45,7 @@ const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
         </button>
 
         <div className="flex flex-col items-center text-center">
-          {/* Vòng tròn cảnh báo Đỏ */}
+          {/* VĂ²ng trĂ²n cáº£nh bĂ¡o Äá» */}
           <div className="mb-4 p-3.5 bg-rose-50 dark:bg-rose-500/10 rounded-full border border-rose-200 dark:border-rose-500/30 dark:shadow-[0_0_15px_rgba(244,63,94,0.1)]">
             <TriangleAlert
               size={32}
@@ -51,7 +53,7 @@ const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
             />
           </div>
 
-          {/* Tiêu đề Modal */}
+          {/* TiĂªu Ä‘á» Modal */}
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-wide mb-1.5">
             {title}
           </h3>
@@ -60,7 +62,7 @@ const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
             {message}
           </p>
 
-          {/* Cụm nút bấm */}
+          {/* Cá»¥m nĂºt báº¥m */}
           <div className="flex w-full gap-3">
             <button
               onClick={onCancel}
@@ -69,7 +71,7 @@ const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
                          dark:text-slate-400 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-200 
                          transition-all duration-150"
             >
-              Hủy bỏ
+              {t("cancel")}
             </button>
             <button
               onClick={onConfirm}
@@ -78,16 +80,15 @@ const ConfirmDelete = ({ isOpen, title, message, onConfirm, onCancel }) => {
                          shadow-sm dark:shadow-[0_0_15px_rgba(225,29,72,0.2)] 
                          transition-all duration-150"
             >
-              Đồng ý
-            </button>
-          </div>
+              {t("agree")}
+            </button>          </div>
         </div>
       </div>
     </div>
   );
 };
 
-// 2. MODAL XÁC NHẬN CHUNG (THOÁT/ĐĂNG XUẤT/THÔNG BÁO)
+// 2. MODAL XĂC NHáº¬N CHUNG (THOĂT/ÄÄ‚NG XUáº¤T/THĂ”NG BĂO)
 const Confirm = ({
   isOpen,
   title,
@@ -97,6 +98,7 @@ const Confirm = ({
   type = "danger",
 }) => {
   const modalRef = useRef();
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -114,7 +116,7 @@ const Confirm = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-md animate-in fade-in duration-200">
-      {/* KHUNG MODAL THEME SÁNG / TỐI ĐA NĂNG */}
+      {/* KHUNG MODAL THEME SĂNG / Tá»I ÄA NÄ‚NG */}
       <div
         ref={modalRef}
         className={`relative w-full max-w-sm 
@@ -135,7 +137,7 @@ const Confirm = ({
         </button>
 
         <div className="flex flex-col items-center text-center">
-          {/* Vòng tròn Icon */}
+          {/* VĂ²ng trĂ²n Icon */}
           <div
             className={`mb-4 p-3.5 rounded-full border ${
               isDanger
@@ -168,7 +170,7 @@ const Confirm = ({
                          dark:text-slate-400 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-200 
                          transition-all duration-150"
             >
-              Hủy bỏ
+              {t("cancel")}
             </button>
             <button
               onClick={onConfirm}
@@ -178,7 +180,7 @@ const Confirm = ({
                   : "bg-sky-600 hover:bg-sky-500 shadow-sm dark:shadow-[0_0_15px_rgba(14,165,233,0.2)]"
               }`}
             >
-              Xác nhận
+              {t("confirm")}
             </button>
           </div>
         </div>

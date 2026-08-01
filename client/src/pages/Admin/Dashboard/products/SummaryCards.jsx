@@ -1,5 +1,6 @@
 import { Package, CheckCircle, XCircle, ImageOff, Layers } from "lucide-react";
 import { KpiCard } from "@/pages/Admin/Dashboard/components/KpiCard";
+import { useTranslation } from "react-i18next";
 
 const TONES = {
   blue: "from-blue-500/10 border-blue-200 dark:from-blue-600/30 dark:border-blue-900/40",
@@ -13,6 +14,7 @@ const TONES = {
 };
 
 export const SummaryCards = ({ summary = {} }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const {
     totalProducts = 0,
     activeProducts = 0,
@@ -24,31 +26,31 @@ export const SummaryCards = ({ summary = {} }) => {
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5 items-start">
       <KpiCard
-        label="Tổng sản phẩm"
+        label={t("total_products")}
         value={totalProducts.toLocaleString()}
         icon={<Package size={16} />}
         tone={TONES.blue}
       />
       <KpiCard
-        label="Đang active"
+        label={t("active_products")}
         value={activeProducts.toLocaleString()}
         icon={<CheckCircle size={16} />}
         tone={TONES.emerald}
       />
       <KpiCard
-        label="Ngừng bán"
+        label={t("inactive_products")}
         value={inactiveProducts.toLocaleString()}
         icon={<XCircle size={16} />}
         tone={TONES.amber}
       />
       <KpiCard
-        label="Thiếu ảnh"
+        label={t("missing_image")}
         value={noImageProducts.toLocaleString()}
         icon={<ImageOff size={16} />}
         tone={TONES.rose}
       />
       <KpiCard
-        label="Thiếu biến thể"
+        label={t("missing_variant")}
         value={noVariantProducts.toLocaleString()}
         icon={<Layers size={16} />}
         tone={TONES.violet}

@@ -1,58 +1,58 @@
 export const PERMISSION_TRANSLATIONS = {
   modules: {
-    users: "Người dùng",
-    roles: "Vai trò",
-    permissions: "Quyền hạn",
-    products: "Sản phẩm",
-    categories: "Danh mục",
-    brands: "Thương hiệu",
-    coupons: "Mã giảm giá",
-    orders: "Đơn hàng",
-    purchaseorders: "Nhập hàng",
-    reviews: "Đánh giá",
-    stockmovements: "Kho vận",
-    suppliers: "Nhà cung cấp",
-    systemlogs: "Nhật ký",
+    users: "permission.module.users",
+    roles: "permission.module.roles",
+    permissions: "permission.module.permissions",
+    products: "permission.module.products",
+    categories: "permission.module.categories",
+    brands: "permission.module.brands",
+    coupons: "permission.module.coupons",
+    orders: "permission.module.orders",
+    purchaseorders: "permission.module.purchaseorders",
+    reviews: "permission.module.reviews",
+    stockmovements: "permission.module.stockmovements",
+    suppliers: "permission.module.suppliers",
+    systemlogs: "permission.module.systemlogs",
   },
   // Actions (Hành động)
   actions: {
-    create: "Thêm mới",
-    read: "Xem danh sách",
-    update: "Cập nhật",
-    delete: "Xóa dữ liệu",
+    create: "permission.action.create",
+    read: "permission.action.read",
+    update: "permission.action.update",
+    delete: "permission.action.delete",
   },
 };
 
 export const MODULE_LABELS = {
   // Hệ thống & Tài khoản
-  users: "👤 Quản lý Người dùng",
-  roles: "🔑 Vai trò & Phân quyền",
-  permissions: "🛡️ Danh mục Quyền hạn",
-  useraddresses: "📍 Địa chỉ Khách hàng",
-  systemlogs: "📋 Nhật ký hệ thống",
+  users: "permission.module_label.users",
+  roles: "permission.module_label.roles",
+  permissions: "permission.module_label.permissions",
+  useraddresses: "permission.module_label.useraddresses",
+  systemlogs: "permission.module_label.systemlogs",
 
   // Hàng hóa & Thuộc tính
-  products: "📦 Quản lý Sản phẩm",
-  categories: "📂 Danh mục Sản phẩm",
-  brands: "🏷️ Thương hiệu",
-  attributekeys: "⚙️ Thuộc tính Sản phẩm",
-  productimages: "🖼️ Thư viện Hình ảnh",
+  products: "permission.module_label.products",
+  categories: "permission.module_label.categories",
+  brands: "permission.module_label.brands",
+  attributekeys: "permission.module_label.attributekeys",
+  productimages: "permission.module_label.productimages",
 
   // Kinh doanh & Vận hành
-  orders: "🛒 Đơn bán hàng",
-  coupons: "🎟️ Mã giảm giá",
-  reviews: "⭐ Đánh giá khách hàng",
-  carts: "🛍️ Giỏ hàng khách hàng",
+  orders: "permission.module_label.orders",
+  coupons: "permission.module_label.coupons",
+  reviews: "permission.module_label.reviews",
+  carts: "permission.module_label.carts",
 
   // Kho hàng & Nhập kho
-  suppliers: "🏭 Nhà cung cấp",
-  purchaseorders: "📝 Đơn nhập hàng",
-  stockmovements: "📉 Biến động kho",
+  suppliers: "permission.module_label.suppliers",
+  purchaseorders: "permission.module_label.purchaseorders",
+  stockmovements: "permission.module_label.stockmovements",
 };
 
 export const ACTION_OPTIONS = [
-  { slug: "create", name: "✨ Thêm mới (Create)" },
-  { slug: "read", name: "👁️ Xem dữ liệu (Read)" },
-  { slug: "update", name: "📝 Chỉnh sửa (Update)" },
-  { slug: "delete", name: "🗑️ Xóa dữ liệu (Delete)" },
+  { slug: "create", name: "permission.action_option.create" },
+  { slug: "read", name: "permission.action_option.read" },
+  { slug: "update", name: "permission.action_option.update" },
+  { slug: "delete", name: "permission.action_option.delete" },
 ];

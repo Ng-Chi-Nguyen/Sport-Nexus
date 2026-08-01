@@ -12,12 +12,7 @@ import { CouponOverview } from "./promotions";
 import { SupplierOverview } from "./suppliers";
 import { ReviewOverview } from "./reviews";
 import { SystemOverview } from "./system";
-
-const BREADCRUMBS = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Quản trị", route: "" },
-  { title: "Dashboard tổng quan", route: "#" },
-];
+import { useTranslation } from "react-i18next";
 
 const SECTIONS = {
   business: BusinessOverview,
@@ -32,8 +27,15 @@ const SECTIONS = {
 };
 
 const Dashboard = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const loaderData = useLoaderData();
   const db = loaderData?.data?.data || loaderData?.data || {};
+
+  const BREADCRUMBS = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("admin_breadcrumb"), route: "" },
+    { title: t("dashboard_breadcrumb"), route: "#" },
+  ];
 
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "business";
@@ -49,7 +51,7 @@ const Dashboard = () => {
       ) : (
         <div className="flex h-32 items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800">
           <p className="text-sm font-medium text-slate-400 dark:text-slate-500">
-            Chưa có dữ liệu cho mục này
+            {t("no_data_section")}
           </p>
         </div>
       )}

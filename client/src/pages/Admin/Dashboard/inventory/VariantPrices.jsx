@@ -1,15 +1,17 @@
 import { Card } from "@/pages/Admin/Dashboard/components/Card";
 import { DollarSign } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
+import { useTranslation } from "react-i18next";
 
 export const VariantPrices = ({ data = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const profitItems = data.filter((v) => v.costPrice > 0);
   const display =
     profitItems.length > 0 ? profitItems.slice(0, 20) : data.slice(0, 20);
 
   return (
     <Card
-      title="Giá vốn và giá bán theo biến thể"
+      title={t("variant_cost_price")}
       icon={<DollarSign size={16} />}
     >
       {display.length ? (
@@ -17,11 +19,11 @@ export const VariantPrices = ({ data = [] }) => {
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                <th className="pb-2 pr-2 font-medium">Sản phẩm</th>
-                <th className="pb-2 pr-2 font-medium text-right">Tồn</th>
-                <th className="pb-2 pr-2 font-medium text-right">Giá vốn</th>
-                <th className="pb-2 pr-2 font-medium text-right">Giá bán</th>
-                <th className="pb-2 pr-2 font-medium text-right">Lãi</th>
+                <th className="pb-2 pr-2 font-medium">{t("name_col")}</th>
+                <th className="pb-2 pr-2 font-medium text-right">{t("stock_col")}</th>
+                <th className="pb-2 pr-2 font-medium text-right">{t("cost_col")}</th>
+                <th className="pb-2 pr-2 font-medium text-right">{t("selling_col")}</th>
+                <th className="pb-2 pr-2 font-medium text-right">{t("profit_col")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
@@ -65,7 +67,7 @@ export const VariantPrices = ({ data = [] }) => {
         </div>
       ) : (
         <div className="flex h-[100px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-          Chưa có dữ liệu
+          {t("no_data")}
         </div>
       )}
     </Card>

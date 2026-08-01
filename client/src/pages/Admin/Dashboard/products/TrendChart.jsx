@@ -1,7 +1,9 @@
 import { Card } from "@/pages/Admin/Dashboard/components/Card";
 import { TrendingUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const TrendChart = ({ newProductTrend = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const maxCount = Math.max(
     ...newProductTrend.map((i) => Number(i.count || 0)),
     1,
@@ -9,11 +11,11 @@ export const TrendChart = ({ newProductTrend = [] }) => {
 
   return (
     <Card
-      title="Sản phẩm mới theo thời gian"
+      title={t("new_products_over_time")}
       icon={<TrendingUp size={16} />}
       action={
         <span className="text-xs text-slate-500 dark:text-slate-400">
-          {newProductTrend.length} mốc
+          {t("period_count", { count: newProductTrend.length })}
         </span>
       }
     >
@@ -35,7 +37,7 @@ export const TrendChart = ({ newProductTrend = [] }) => {
                   <div className="absolute bottom-full z-50 mb-1 hidden rounded-lg bg-slate-900 border border-slate-700 px-2 py-1 text-center shadow-lg dark:bg-slate-900 dark:border-slate-700 group-hover:block whitespace-nowrap">
                     <p className="text-[9px] text-slate-400">{item.period}</p>
                     <p className="text-xs font-semibold text-sky-400">
-                      {item.count} SP
+                      {item.count} {t("unit_product")}
                     </p>
                   </div>
 
@@ -60,7 +62,7 @@ export const TrendChart = ({ newProductTrend = [] }) => {
         </div>
       ) : (
         <div className="flex h-[140px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-          Chưa có dữ liệu
+          {t("no_data")}
         </div>
       )}
     </Card>

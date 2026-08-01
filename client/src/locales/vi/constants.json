@@ -1,0 +1,83 @@
+{
+  "user": {
+    "status": {
+      "all": "Tất cả",
+      "active": "Hoạt động",
+      "inactive": "Vô hiệu"
+    },
+    "verified": {
+      "all": "Tất cả",
+      "yes": "Đã xác thực",
+      "no": "Chưa xác thực"
+    }
+  },
+  "coupon": {
+    "tab": {
+      "all": "Tất cả",
+      "active": "Còn hiệu lực",
+      "inactive": "Hết hiệu lực"
+    },
+    "discount_type": {
+      "all": "Tất cả",
+      "cash": "Tiền mặt",
+      "percentage": "Phần trăm"
+    }
+  },
+  "purchaseOrder": {
+    "status": {
+      "all": "Tất cả",
+      "pending": "Đang chờ",
+      "received": "Đã nhận",
+      "partially_received": "Nhận một phần",
+      "cancelled": "Đã hủy"
+    }
+  },
+  "permission": {
+    "module": {
+      "users": "Người dùng",
+      "roles": "Vai trò",
+      "permissions": "Quyền hạn",
+      "products": "Sản phẩm",
+      "categories": "Danh mục",
+      "brands": "Thương hiệu",
+      "coupons": "Mã giảm giá",
+      "orders": "Đơn hàng",
+      "purchaseorders": "Nhập hàng",
+      "reviews": "Đánh giá",
+      "stockmovements": "Kho vận",
+      "suppliers": "Nhà cung cấp",
+      "systemlogs": "Nhật ký"
+    },
+    "action": {
+      "create": "Thêm mới",
+      "read": "Xem danh sách",
+      "update": "Cập nhật",
+      "delete": "Xóa dữ liệu"
+    },
+    "module_label": {
+      "users": "👤 Quản lý Người dùng",
+      "roles": "🔑 Vai trò & Phân quyền",
+      "permissions": "🛡️ Danh mục Quyền hạn",
+      "useraddresses": "📍 Địa chỉ Khách hàng",
+      "systemlogs": "📋 Nhật ký hệ thống",
+      "products": "📦 Quản lý Sản phẩm",
+      "categories": "📂 Danh mục Sản phẩm",
+      "brands": "🏷️ Thương hiệu",
+      "attributekeys": "⚙️ Thuộc tính Sản phẩm",
+      "productimages": "🖼️ Thư viện Hình ảnh",
+      "orders": "🛒 Đơn bán hàng",
+      "coupons": "🎟️ Mã giảm giá",
+      "reviews": "⭐ Đánh giá khách hàng",
+      "carts": "🛍️ Giỏ hàng khách hàng",
+      "suppliers": "🏭 Nhà cung cấp",
+      "purchaseorders": "📝 Đơn nhập hàng",
+      "stockmovements": "📉 Biến động kho"
+    },
+    "action_option": {
+      "create": "✨ Thêm mới (Create)",
+      "read": "👁️ Xem dữ liệu (Read)",
+      "update": "📝 Chỉnh sửa (Update)",
+      "delete": "🗑️ Xóa dữ liệu (Delete)"
+    }
+  }
+}

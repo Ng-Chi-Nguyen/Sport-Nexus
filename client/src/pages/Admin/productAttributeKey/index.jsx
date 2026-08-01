@@ -12,15 +12,20 @@ import LoaderProduct from "@/loaders/core/productLoader";
 import { queryClient } from "@/lib/react-query";
 import { toast } from "sonner";
 import Pagination from "@/components/ui/pagination";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={20} />, route: "" },
-  { title: "Quản lý sản phẩm & kho", route: "" },
-  { title: "Gán thuộc tính sản phẩm", route: "" },
-];
+import { useTranslation } from "react-i18next";
 
 const ProductAttributeKey = () => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "productAttributeKey",
+  });
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={20} />, route: "" },
+    { title: t("product_warehouse_management"), route: "" },
+    { title: t("assignment_title"), route: "" },
+  ];
+
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState({
     totalPages: 1,
@@ -83,7 +88,7 @@ const ProductAttributeKey = () => {
       }
     } catch (error) {
       setIsConfirmOpen(false);
-      toast.error(error.response?.data?.message || "Đã có lỗi xảy ra!");
+      toast.error(error.response?.data?.message || t("error_occurred"));
     }
   };
 
@@ -102,7 +107,7 @@ const ProductAttributeKey = () => {
   };
 
   const productOptions = [
-    { id: "", name: "Tất cả sản phẩm" },
+    { id: "", name: t("all_products") },
     ...products.map((p) => ({ id: p.id, name: p.name })),
   ];
 
@@ -115,22 +120,22 @@ const ProductAttributeKey = () => {
             value={currentProductId}
             options={productOptions}
             onChange={handleProductFilter}
-            label="Lọc theo sản phẩm"
+            label={t("filter_product_label")}
           />
         </div>
         <BtnAdd
           route={"/management/product-attribute-key/create"}
           className="w-[200px]"
-          name="Gán thuộc tính"
+          name={t("assign_btn")}
         />
       </div>
       <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="section-title mb-0">Danh sách thuộc tính sản phẩm</h2>
+          <h2 className="section-title mb-0">{t("list_title")}</h2>
           <button
             onClick={handleRefresh}
             className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            title="Tải lại"
+            title={t("reload")}
           >
             <RefreshCw size={18} />
           </button>
@@ -141,16 +146,16 @@ const ProductAttributeKey = () => {
               <thead>
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-                    Sản phẩm
+                    {t("product_col")}
                   </th>
                   <th className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-                    Thuộc tính
+                    {t("attribute_col")}
                   </th>
                   <th className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-                    Đơn vị
+                    {t("unit_col")}
                   </th>
                   <th className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-                    Hành động
+                    {t("actions_col")}
                   </th>
                 </tr>
               </thead>
@@ -189,7 +194,7 @@ const ProductAttributeKey = () => {
                       colSpan="4"
                       className="px-6 py-20 text-center text-slate-400 dark:text-slate-500 italic text-sm"
                     >
-                      Không có bản ghi nào
+                      {t("no_records")}
                     </td>
                   </tr>
                 )}
@@ -205,8 +210,8 @@ const ProductAttributeKey = () => {
       />
       <ConfirmDelete
         isOpen={isConfirmOpen}
-        title="Xóa bản ghi"
-        message={`Bạn đang xóa bản ghi thuộc tính "${deleteTarget.name}".`}
+        title={t("delete_title")}
+        message={t("delete_message", { name: deleteTarget.name })}
         onConfirm={handleDelete}
         onCancel={() => setIsConfirmOpen(false)}
       />

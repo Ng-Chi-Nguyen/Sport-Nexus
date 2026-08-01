@@ -1,21 +1,23 @@
 import { useSearchParams } from "react-router-dom";
-
-const TABS = [
-  { key: "business", label: "Kinh doanh" },
-  { key: "customers", label: "Khách hàng" },
-  { key: "products", label: "Sản phẩm" },
-  { key: "inventory", label: "Kho" },
-  { key: "orders", label: "Đơn hàng" },
-  { key: "promotions", label: "Khuyến mãi" },
-  { key: "suppliers", label: "Nhà cung cấp" },
-  { key: "reviews", label: "Đánh giá" },
-  { key: "system", label: "Hệ thống" },
-  { key: "overview", label: "Tổng hợp" },
-];
+import { useTranslation } from "react-i18next";
 
 export const TabNav = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const [searchParams, setSearchParams] = useSearchParams();
   const active = searchParams.get("tab") || "business";
+
+  const TABS = [
+    { key: "business", label: t("tab_business") },
+    { key: "customers", label: t("tab_customers") },
+    { key: "products", label: t("tab_products") },
+    { key: "inventory", label: t("tab_inventory") },
+    { key: "orders", label: t("tab_orders") },
+    { key: "promotions", label: t("tab_promotions") },
+    { key: "suppliers", label: t("tab_suppliers") },
+    { key: "reviews", label: t("tab_reviews") },
+    { key: "system", label: t("tab_system") },
+    { key: "overview", label: t("tab_overview") },
+  ];
 
   const handleTab = (key) => {
     const next = new URLSearchParams(searchParams.toString());

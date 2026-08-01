@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const RangeInput = ({
   label,
@@ -6,17 +7,18 @@ const RangeInput = ({
   maxValue,
   onMinChange,
   onMaxChange,
-  placeholderMin = "Tối thiểu",
-  placeholderMax = "Tối đa",
+  placeholderMin,
+  placeholderMax,
   type = "number",
 }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
   return (
     <div>
       {label && <label className="label-filter">{label}</label>}
       <div className="flex items-center gap-1.5">
         <input
           type={type}
-          placeholder={placeholderMin}
+          placeholder={placeholderMin ?? t("min_placeholder")}
           value={minValue}
           onChange={(e) => onMinChange(e.target.value)}
           className="input-dark"
@@ -26,7 +28,7 @@ const RangeInput = ({
         </span>
         <input
           type={type}
-          placeholder={placeholderMax}
+          placeholder={placeholderMax ?? t("max_placeholder")}
           value={maxValue}
           onChange={(e) => onMaxChange(e.target.value)}
           className="input-dark"

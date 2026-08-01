@@ -1,6 +1,7 @@
 import { Card } from "@/pages/Admin/Dashboard/components/Card";
 import { Tags, Percent, DollarSign, Receipt } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
+import { useTranslation } from "react-i18next";
 
 const PAYMENT_BADGE = {
   Paid: "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-transparent",
@@ -13,32 +14,33 @@ const PAYMENT_BADGE = {
 };
 
 export const CouponStats = ({ couponStats = {}, paymentStatuses = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const { withCoupon, withoutCoupon, couponRate, totalDiscount } = couponStats;
 
   const STATS = [
     {
-      label: "Tỉ lệ dùng coupon",
+      label: t("coupon_rate"),
       value: `${couponRate || 0}%`,
       icon: <Percent size={16} />,
       color: "text-purple-600 dark:text-purple-400",
       bg: "bg-purple-500/10 dark:bg-purple-500/20",
     },
     {
-      label: "Đơn có coupon",
+      label: t("orders_with_coupon"),
       value: (withCoupon ?? 0).toLocaleString(),
       icon: <Tags size={16} />,
       color: "text-emerald-600 dark:text-emerald-400",
       bg: "bg-emerald-500/10 dark:bg-emerald-500/20",
     },
     {
-      label: "Đơn không coupon",
+      label: t("orders_without_coupon"),
       value: (withoutCoupon ?? 0).toLocaleString(),
       icon: <Receipt size={16} />,
       color: "text-slate-600 dark:text-slate-400",
       bg: "bg-slate-500/10 dark:bg-slate-500/20",
     },
     {
-      label: "Tổng giảm giá",
+      label: t("total_discount"),
       value: formatCurrency(totalDiscount || 0),
       icon: <DollarSign size={16} />,
       color: "text-amber-600 dark:text-amber-400",
@@ -47,7 +49,7 @@ export const CouponStats = ({ couponStats = {}, paymentStatuses = [] }) => {
   ];
 
   return (
-    <Card title="Thống kê coupon & thanh toán" icon={<Tags size={16} />}>
+    <Card title={t("coupon_stats_title")} icon={<Tags size={16} />}>
       {/* Khung 4 chỉ số thống kê coupon */}
       <div className="grid grid-cols-2 gap-2 mb-3">
         {STATS.map((s) => (
@@ -76,7 +78,7 @@ export const CouponStats = ({ couponStats = {}, paymentStatuses = [] }) => {
 
       {/* Danh sách trạng thái thanh toán */}
       <h4 className="mb-2 text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
-        Trạng thái thanh toán
+        {t("payment_status_title")}
       </h4>
       <div className="space-y-1.5">
         {paymentStatuses.length ? (
@@ -102,7 +104,7 @@ export const CouponStats = ({ couponStats = {}, paymentStatuses = [] }) => {
           ))
         ) : (
           <div className="flex h-[60px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-            Chưa có dữ liệu
+            {t("no_data")}
           </div>
         )}
       </div>

@@ -1,17 +1,19 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import countryData from "@/assets/data/countries.json";
 import addressData from "@/assets/data/addressVN_afterUpdate.json";
 
-// 1. COMPONENT SELECT TIÊU CHUẨN
+// 1. COMPONENT SELECT TIĂU CHUáº¨N
 const Select = ({
   options,
   value,
   onChange,
-  placeholder = "Chọn một mục",
+  placeholder,
   label,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
 
   const safeOptions = useMemo(() => {
     if (Array.isArray(options)) return options;
@@ -34,7 +36,7 @@ const Select = ({
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      {/* NHÃN (LABEL) */}
+      {/* NHĂƒN (LABEL) */}
       {label && (
         <label
           className={`absolute -top-2 left-3 bg-slate-50 dark:bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
@@ -45,7 +47,7 @@ const Select = ({
         </label>
       )}
 
-      {/* TRIGGER KHUNG BẤM */}
+      {/* TRIGGER KHUNG Báº¤M */}
       <div
         className={`h-10 px-3 rounded-lg relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
           isOpen
@@ -60,7 +62,7 @@ const Select = ({
               : "text-slate-400 dark:text-slate-500"
           }`}
         >
-          {selectedOption ? selectedOption.name : placeholder}
+          {selectedOption ? selectedOption.name : placeholder ?? t("select_option")}
         </span>
         <ChevronDown
           size={14}
@@ -101,9 +103,10 @@ const Select = ({
   );
 };
 
-// 2. COMPONENT SELECTPRO CHUYÊN DỤNG (Cấu trúc object { id, name })
+// 2. COMPONENT SELECTPRO CHUYĂN Dá»¤NG (Cáº¥u trĂºc object { id, name })
 const SelectPro = ({ options = [], label, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
   const selectedOption = options?.find((opt) => opt.id === value);
 
   return (
@@ -138,7 +141,7 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
               : "text-slate-400 dark:text-slate-600"
           }`}
         >
-          {selectedOption ? selectedOption.name : "Chọn..."}
+          {selectedOption ? selectedOption.name : t("choose")}
         </span>
         <ChevronDown
           size={14}
@@ -178,14 +181,15 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
   );
 };
 
-// 3. COMPONENT CHỌN QUỐC GIA (XUẤT XỨ)
-const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
+// 3. COMPONENT CHá»ŒN QUá»C GIA (XUáº¤T Xá»¨)
+const CountrySelect = ({ value, onChange, label }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
 
   const selectedName = useMemo(() => {
     const found = countryData.find((c) => c.name === value);
-    return found ? found.name : "Chọn quốc gia...";
-  }, [value]);
+    return found ? found.name : t("choose_country");
+  }, [value, t]);
 
   return (
     <div
@@ -201,7 +205,8 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
             isOpen ? "text-sky-600 dark:text-sky-400" : "text-slate-500"
           }`}
         >
-          {label} <span className="text-rose-500">*</span>
+          {label ?? t("origin_label")}{" "}
+          <span className="text-rose-500">*</span>
         </label>
       )}
 
@@ -273,18 +278,19 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
   );
 };
 
-// 4. COMPONENT ĐỊA CHỈ VIỆT NAM LIÊN KẾT
+// 4. COMPONENT Äá»A CHá»ˆ VIá»†T NAM LIĂN Káº¾T
 const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
 
   useEffect(() => {
     if (initialProvince) {
       const cleanInitialProvince = initialProvince
         .toLowerCase()
         .replace("tp.", "")
-        .replace("thành phố", "")
-        .replace("tỉnh", "")
+        .replace("thĂ nh phá»‘", "")
+        .replace("tá»‰nh", "")
         .trim();
 
       const foundProvince = addressData.find((p) => {
@@ -303,7 +309,7 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
           const searchVariants = [lowerWard];
 
           const stripped = lowerWard
-            .replace(/^(quận|huyện|phường|xã|thị trấn)\s+/i, "")
+            .replace(/^(quáº­n|huyá»‡n|phÆ°á»ng|xĂ£|thá»‹ tráº¥n)\s+/i, "")
             .trim();
           if (stripped && stripped !== lowerWard) searchVariants.push(stripped);
 
@@ -383,7 +389,7 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
     <div className="flex gap-4 w-full">
       <div className="flex-1">
         <Select
-          label="Tỉnh / Thành phố"
+          label={t("province_label")}
           options={provinceOptions}
           value={selectedProvince}
           onChange={(val) => {
@@ -395,11 +401,13 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
 
       <div className="flex-1">
         <Select
-          label="Phường / Xã"
+          label={t("ward_label")}
           options={wardOptions}
           value={selectedWard}
           placeholder={
-            selectedProvince ? "Chọn Phường / Xã" : "Vui lòng chọn Tỉnh"
+            selectedProvince
+              ? t("choose_ward")
+              : t("select_province_first")
           }
           onChange={(val) => setSelectedWard(val)}
         />
@@ -413,10 +421,11 @@ const SimpleSelect = ({
   options,
   value,
   onChange,
-  placeholder = "Chọn một mục",
+  placeholder,
   label,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
 
   const safeOptions = useMemo(() => {
     if (Array.isArray(options)) return options;
@@ -463,7 +472,7 @@ const SimpleSelect = ({
               : "text-slate-400 dark:text-slate-500"
           }`}
         >
-          {selectedOption ? selectedOption.name : placeholder}
+          {selectedOption ? selectedOption.name : placeholder ?? t("select_option")}
         </span>
         <ChevronDown
           size={14}

@@ -13,18 +13,20 @@ import {
 } from "react-router-dom";
 import { toast } from "sonner";
 import { Download, Loader2 } from "lucide-react";
-import { formatCurrency } from "@/utils/formatters";
 import { getStockBadgeClass } from "@/utils/statusStyles";
 import excelCrudImportApi from "@/api/management/excelCrudImportApi";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Quản lý sản phẩm & kho", route: "" },
-  { title: "Tồn kho", route: "#" },
-];
+import { useTranslation } from "react-i18next";
 
 const StockPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "stockMovement" });
   const response = useLoaderData() || {};
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("product_warehouse_management"), route: "" },
+    { title: t("stock_title"), route: "#" },
+  ];
+
   const revalidator = useRevalidator();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -96,9 +98,9 @@ const StockPage = () => {
       a.download = "ton-kho.xlsx";
       a.click();
       window.URL.revokeObjectURL(url);
-      toast.success("Export thành công");
+      toast.success(t("export_success"));
     } catch (err) {
-      toast.error(err?.message || "Export thất bại");
+      toast.error(err?.message || t("export_failed"));
     } finally {
       setExportLoading(false);
     }
@@ -122,7 +124,7 @@ const StockPage = () => {
       <div className="flex items-center gap-4">
         <div className="flex-1 relative group">
           <SearchTable
-            placeholder="Tìm kiếm sản phẩm..."
+            placeholder={t("search_placeholder")}
             value={searchInput}
             onChange={(val) => setSearchInput(val)}
           />
@@ -137,7 +139,7 @@ const StockPage = () => {
           }`}
         >
           <Filter size={14} />
-          Bộ lọc
+          {t("filter_btn")}
           {hasActiveFilters && (
             <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
           )}
@@ -156,9 +158,9 @@ const StockPage = () => {
           ) : (
             <Download size={16} />
           )}
-          {exportLoading ? "Đang xuất..." : "Export"}
+          {exportLoading ? t("exporting") : t("export_btn")}
         </button>
-        <BtnAdd route={"/management/stocks/create"} name="Tạo biến động kho" />
+        <BtnAdd route={"/management/stocks/create"} name={t("add_movement")} />
       </div>
 
       <div
@@ -172,28 +174,28 @@ const StockPage = () => {
           <div className="flex flex-wrap items-end gap-4">
             <div className="flex-1 min-w-[180px]">
               <SimpleSelect
-                label="Sản phẩm"
+                label={t("product_label")}
                 value={currentProductId}
                 onChange={(val) => setFilter("product_id", val)}
                 options={[
-                  { slug: "", name: "Tất cả" },
+                  { slug: "", name: t("all") },
                   ...(response.products || []).map((p) => ({
                     slug: String(p.id),
                     name: p.name,
                   })),
                 ]}
-                placeholder="Tất cả"
+                placeholder={t("all")}
               />
             </div>
 
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                Tồn kho
+                {t("stock_label")}
               </label>
               <div className="flex items-center gap-1">
                 <input
                   type="number"
-                  placeholder="Tối thiểu"
+                  placeholder={t("min_placeholder")}
                   value={currentStockMin}
                   onChange={(e) => setFilter("stock_min", e.target.value)}
                   className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
@@ -203,7 +205,7 @@ const StockPage = () => {
                 </span>
                 <input
                   type="number"
-                  placeholder="Tối đa"
+                  placeholder={t("max_placeholder")}
                   value={currentStockMax}
                   onChange={(e) => setFilter("stock_max", e.target.value)}
                   className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
@@ -213,12 +215,12 @@ const StockPage = () => {
 
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                Khoảng giá
+                {t("price_range")}
               </label>
               <div className="flex items-center gap-1">
                 <input
                   type="number"
-                  placeholder="Tối thiểu"
+                  placeholder={t("min_placeholder")}
                   value={currentPriceMin}
                   onChange={(e) => setFilter("price_min", e.target.value)}
                   className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
@@ -228,7 +230,7 @@ const StockPage = () => {
                 </span>
                 <input
                   type="number"
-                  placeholder="Tối đa"
+                  placeholder={t("max_placeholder")}
                   value={currentPriceMax}
                   onChange={(e) => setFilter("price_max", e.target.value)}
                   className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
@@ -242,7 +244,7 @@ const StockPage = () => {
                 onClick={clearAllFilters}
                 className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-500 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
-                Xoá bộ lọc
+                {t("clear_filter")}
               </button>
             )}
           </div>
@@ -256,13 +258,13 @@ const StockPage = () => {
           <div>
             <div className="flex items-center gap-3">
               <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 tracking-wide">
-                Biến động kho
+                {t("movement_title")}
               </h2>
               <button
                 onClick={handleRefresh}
                 disabled={revalidator.state === "loading"}
                 className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                title="Tải lại"
+                title={t("reload")}
               >
                 <RefreshCw
                   size={18}
@@ -276,33 +278,33 @@ const StockPage = () => {
             {/* Chú thích màu sắc */}
             <div className="flex flex-wrap items-center gap-4 mt-3 text-[11px] font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-[#111827]/60 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-900/60 w-fit">
               <span className="text-slate-400 dark:text-slate-500 uppercase tracking-widest font-bold text-[9px]">
-                Chú thích:
+                {t("legend")}
               </span>
 
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e]"></div>
-                <span>Nguy hiểm (&lt; 10)</span>
+                <span>{t("danger_legend")}</span>
               </div>
 
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]"></div>
-                <span>Cảnh báo (10 - 50)</span>
+                <span>{t("warning_legend")}</span>
               </div>
 
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full bg-sky-500 shadow-[0_0_8px_#0ea5e9]"></div>
-                <span>Ổn định (51 - 100)</span>
+                <span>{t("stable_legend")}</span>
               </div>
 
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></div>
-                <span>An toàn (&gt; 100)</span>
+                <span>{t("safe_legend")}</span>
               </div>
             </div>
           </div>
 
           <div className="text-xs bg-slate-100 dark:bg-[#111827] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl font-medium h-fit self-end">
-            Tổng số mặt hàng:{" "}
+            {t("total_items")}{" "}
             <span className="text-sky-600 dark:text-sky-400 font-bold">
               {paginationInfo.totalItems || stocks.length}
             </span>
@@ -316,16 +318,16 @@ const StockPage = () => {
               <thead>
                 <tr>
                   <th scope="col" className="px-6 py-4 w-[12%]">
-                    Mã định danh
+                    {t("id_col")}
                   </th>
                   <th scope="col" className="px-6 py-4 w-[40%] !text-start">
-                    Sản phẩm
+                    {t("product_col")}
                   </th>
                   <th scope="col" className="px-6 py-4 w-[28%] text-center">
-                    Thuộc tính
+                    {t("attributes_col")}
                   </th>
                   <th scope="col" className="px-6 py-4 w-[20%] text-center">
-                    Số lượng tồn
+                    {t("stock_qty_col")}
                   </th>
                 </tr>
               </thead>
@@ -335,7 +337,7 @@ const StockPage = () => {
                     const product = stock.product;
                     const thumbnail = product?.thumbnail;
                     const productName =
-                      product?.name || "Sản phẩm không xác định";
+                      product?.name || t("unknown_product");
                     const price = stock.price ? Number(stock.price) : 0;
                     const currentStock = stock.stock ?? 0;
 
@@ -366,7 +368,7 @@ const StockPage = () => {
                               </p>
 
                               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                                Giá gốc:{" "}
+                                {t("base_price")}{" "}
                                 <span className="text-[12px] font-semibold text-emerald-600 dark:text-emerald-400">
                                   {Number(price).toLocaleString()}
                                 </span>{" "}
@@ -397,7 +399,7 @@ const StockPage = () => {
                             </div>
                           ) : (
                             <span className="text-slate-400 dark:text-slate-500 text-xs italic">
-                              Mặc định
+                              {t("default_attr")}
                             </span>
                           )}
                         </td>
@@ -421,9 +423,8 @@ const StockPage = () => {
                       colSpan="4"
                       className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
                     >
-                      Không tìm thấy dữ liệu tồn kho phù hợp.
-                    </td>
-                  </tr>
+                      {t("no_data")}
+                    </td>                  </tr>
                 )}
               </tbody>
             </table>

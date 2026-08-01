@@ -5,20 +5,22 @@ import {
   buildDashboardGroupParams,
   buildDashboardRangeParams,
 } from "@/utils/dashboard.utils";
-
-const PRESETS = [
-  { key: "1d", label: "Hôm nay", days: 1 },
-  { key: "7d", label: "7 ngày", days: 7 },
-  { key: "30d", label: "30 ngày", days: 30 },
-  { key: "90d", label: "90 ngày", days: 90 },
-];
-
-const formatDateInput = (date) => date.toISOString().split("T")[0];
+import { useTranslation } from "react-i18next";
 
 export const FilterBar = ({ meta = {} }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const revalidator = useRevalidator();
   const [searchParams, setSearchParams] = useSearchParams();
   const [activePreset, setActivePreset] = useState("30d");
+
+  const PRESETS = [
+    { key: "1d", label: t("today"), days: 1 },
+    { key: "7d", label: t("days_7"), days: 7 },
+    { key: "30d", label: t("days_30"), days: 30 },
+    { key: "90d", label: t("days_90"), days: 90 },
+  ];
+
+  const formatDateInput = (date) => date.toISOString().split("T")[0];
 
   const currentFrom = searchParams.get("from") || meta.from || "";
   const currentTo = searchParams.get("to") || meta.to || "";
@@ -104,7 +106,7 @@ export const FilterBar = ({ meta = {} }) => {
                   : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
               }`}
             >
-              {g === "day" ? "Ngày" : g === "week" ? "Tuần" : "Tháng"}
+              {g === "day" ? t("group_day") : g === "week" ? t("group_week") : t("group_month")}
             </button>
           ))}
         </div>
@@ -115,7 +117,7 @@ export const FilterBar = ({ meta = {} }) => {
           className="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-semibold transition-colors cursor-pointer
                      border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-900
                      dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:text-sky-300"
-          title="Làm mới dữ liệu"
+          title={t("refresh_title")}
         >
           <RefreshCw
             size={12}

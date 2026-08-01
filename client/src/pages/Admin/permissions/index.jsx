@@ -19,15 +19,19 @@ import { PERMISSION_TRANSLATIONS } from "@/constants/permission";
 import permissionApi from "@/api/management/permissionApi";
 import { queryClient } from "@/lib/react-query";
 import { getActionColor } from "@/utils/statusStyles";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Quản lý người dùng & phân quyền", route: "" },
-  { title: "Phân quyền", route: "" },
-];
+import { useTranslation } from "react-i18next";
 
 const PermissionPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "permission" });
+  const { t: tc } = useTranslation("translation", { keyPrefix: "constants" });
   const response = useLoaderData();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("user_management"), route: "" },
+    { title: t("permission_title"), route: "" },
+  ];
+
   const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
 
@@ -89,7 +93,7 @@ const PermissionPage = () => {
     } catch (error) {
       setIsConfirmOpen(false);
       const errorMessage =
-        error.message || error.response?.data?.message || "Đã có lỗi xảy ra!";
+        error.message || error.response?.data?.message || t("error_occurred");
       toast.error(errorMessage);
     }
   };
@@ -101,7 +105,7 @@ const PermissionPage = () => {
       {/* THANH TÌM KIẾM & CỤM NÚT HÀNH ĐỘNG PHÍA NGOÀI */}
       <div className="flex items-center gap-4 relative">
         <div className="flex-1 relative group">
-          <SearchTable placeholder="Tìm kiếm mã quyền hạn..." />
+          <SearchTable placeholder={t("search_placeholder")} />
         </div>
 
         {/* NÚT BẤM TRA CỨU MODULE ĐỘC LẬP NGOÀI BẢNG */}
@@ -116,14 +120,14 @@ const PermissionPage = () => {
             }`}
           >
             <HelpCircle size={15} strokeWidth={2.5} />
-            Tra cứu Module
+            {t("lookup_module")}
           </button>
 
           {/* BẢNG HIỂN THỊ NỘI DUNG POP-UP MODULES */}
           {isModuleOpen && (
             <div className="absolute right-0 top-full mt-2.5 z-50 w-[320px] p-4 bg-white dark:bg-[#0D121F]/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-150 transition-colors duration-200">
               <p className="text-sky-600 dark:text-sky-400 border-b border-slate-200 dark:border-white/5 mb-3 pb-1.5 font-bold font-mono text-xs tracking-wider">
-                DANH SÁCH MODULES HỆ THỐNG:
+                {t("modules_header")}
               </p>
               <div className="flex flex-col gap-1.5 max-h-[350px] overflow-y-auto pr-1 custom-scrollbar">
                 {Object.entries(PERMISSION_TRANSLATIONS.modules).map(
@@ -136,7 +140,7 @@ const PermissionPage = () => {
                         {key}
                       </span>
                       <span className="text-slate-700 dark:text-slate-300 font-medium">
-                        {value}
+                        {tc(value)}
                       </span>
                     </div>
                   ),
@@ -146,18 +150,18 @@ const PermissionPage = () => {
           )}
         </div>
 
-        <BtnAdd route={"/management/permissions/create"} name="Thêm quyền" />
+        <BtnAdd route={"/management/permissions/create"} name={t("add_permission")} />
       </div>
 
       {/* KHỐI LAYOUT CHỦ ĐẠO */}
       <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md relative z-10 transition-colors duration-200">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="section-title mb-0">Danh sách quyền hạn</h3>
+          <h3 className="section-title mb-0">{t("list_title")}</h3>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
             className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Tải lại"
+            title={t("reload")}
           >
             <RefreshCw
               size={18}
@@ -175,31 +179,31 @@ const PermissionPage = () => {
                     scope="col"
                     className="px-6 py-4 w-[35%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Tên quyền
+                    {t("name_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 w-[20%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Bảng (Module)
+                    {t("module_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 w-[15%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Hành động
+                    {t("action_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 w-[20%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Mã hệ thống (Slug)
+                    {t("slug_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 w-[10%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Thao tác
+                    {t("actions_col")}
                   </th>
                 </tr>
               </thead>
@@ -248,7 +252,7 @@ const PermissionPage = () => {
                       colSpan="5"
                       className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
                     >
-                      Không tìm thấy quyền hạn nào trong hệ thống.
+                      {t("no_permissions")}
                     </td>
                   </tr>
                 )}
@@ -267,8 +271,8 @@ const PermissionPage = () => {
 
         <ConfirmDelete
           isOpen={isConfirmOpen}
-          title="Xóa quyền hạn"
-          message={`Bạn đang thực hiện xóa mã quyền "${deleteTarget}". Toàn bộ dữ liệu phân quyền này sẽ bị loại bỏ vĩnh viễn khỏi hệ thống.`}
+          title={t("delete_title")}
+          message={t("delete_message", { slug: deleteTarget })}
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmOpen(false)}
         />

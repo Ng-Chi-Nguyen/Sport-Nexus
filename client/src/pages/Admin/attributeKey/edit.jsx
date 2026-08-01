@@ -8,34 +8,38 @@ import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { TitleManagement } from "@/components/ui/title";
-
-const breadcrumbData = [
-  {
-    title: <LayoutDashboard size={20} />,
-    route: "",
-  },
-  {
-    title: "Quản lý sản phẩm & kho",
-    route: "",
-  },
-  {
-    title: "Thuộc tính sản phẩm",
-    route: "/management/attribute-key/",
-  },
-  {
-    title: "Chỉnh sửa",
-    route: "",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const EditAttributeKey = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "attributeKey" });
   const responseOld = useLoaderData();
   const navigate = useNavigate();
   const [name, setName] = useState(responseOld?.data?.name || "");
   const [unit, setUnit] = useState(responseOld?.data?.unit || "");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const breadcrumbData = [
+    {
+      title: <LayoutDashboard size={20} />,
+      route: "",
+    },
+    {
+      title: t("product_warehouse_management"),
+      route: "",
+    },
+    {
+      title: t("product_attributes"),
+      route: "/management/attribute-key/",
+    },
+    {
+      title: t("edit_breadcrumb"),
+      route: "",
+    },
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const formData = new FormData();
     formData.append("name", name);
     formData.append("unit", unit);
@@ -47,7 +51,7 @@ const EditAttributeKey = () => {
       );
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["attribute-keys"] });
-        toast.success(response.message);
+        toast.success(response.message || t("update_success"));
         navigate(-1);
       }
     } catch (error) {
@@ -55,9 +59,11 @@ const EditAttributeKey = () => {
         error.message ||
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
-        "Đã có lỗi xảy ra!";
+        t("error_occurred");
 
       toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -68,11 +74,11 @@ const EditAttributeKey = () => {
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 w-full max-w-xl bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200"
       >
-        <TitleManagement color="blue">Thông tin thuộc tính</TitleManagement>
+        <TitleManagement color="blue">{t("form_title")}</TitleManagement>
         <div className="flex flex-col sm:flex-row gap-4 mt-2">
           <div className="flex-1">
             <FloatingInput
-              label="Tên thuộc tính"
+              label={t("attribute_name")}
               value={name}
               required
               onChange={(e) => setName(e.target.value)}
@@ -80,14 +86,14 @@ const EditAttributeKey = () => {
           </div>
           <div className="flex-1">
             <FloatingInput
-              label="Đơn vị"
+              label={t("unit")}
               value={unit}
               onChange={(e) => setUnit(e.target.value)}
             />
           </div>
         </div>
         <div className="flex justify-end pt-4 border-t border-slate-200 dark:border-white/5">
-          <Submit_GoBack />
+          <Submit_GoBack isLoading={isSubmitting} />
         </div>
       </form>
     </div>

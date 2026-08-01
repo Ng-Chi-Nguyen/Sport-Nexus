@@ -2,87 +2,108 @@
 
 export const SIDEBAR_MENU_STRUCTURE = (prefix) => [
   {
-    title: "HỆ THỐNG",
+    title: "system",
     items: [
       {
         path: `${prefix}/dashboard`,
-        label: "Tổng quan",
+        label: "overview",
         iconName: "LayoutDashboard",
         roles: ["admin"],
       },
       {
         path: `${prefix}/logs`,
-        label: "Hoạt động",
+        label: "activity",
         iconName: "ClipboardClock",
         roles: ["admin"],
       },
     ],
   },
   {
-    title: "KINH DOANH",
+    title: "business",
     items: [
       {
         path: `${prefix}/orders`,
-        label: "Đơn hàng",
+        label: "orders",
         iconName: "ClipboardList",
       },
-      { path: `${prefix}/carts`, label: "Giỏ hàng", iconName: "ShoppingCart" },
-      { path: `${prefix}/coupons`, label: "Khuyến mãi", iconName: "Barcode" },
+      {
+        path: `${prefix}/carts`,
+        label: "carts",
+        iconName: "ShoppingCart",
+      },
+      { path: `${prefix}/coupons`, label: "coupons", iconName: "Barcode" },
       {
         path: `${prefix}/reviews`,
-        label: "Đánh giá & Phản hồi",
+        label: "reviews",
         iconName: "Star",
       },
     ],
   },
   {
-    title: "SẢN PHẨM & KHO",
+    title: "products_warehouse",
     items: [
-      { path: `${prefix}/categories`, label: "Danh mục", iconName: "ListTree" },
-      { path: `${prefix}/products`, label: "Sản phẩm", iconName: "Package" },
+      {
+        path: `${prefix}/categories`,
+        label: "categories",
+        iconName: "ListTree",
+      },
+      {
+        path: `${prefix}/products`,
+        label: "products",
+        iconName: "Package",
+      },
       {
         path: `${prefix}/product-variants`,
-        label: "Sản phẩm chi tiết",
+        label: "product_variants",
         iconName: "ChartColumnStacked",
       },
       {
         path: `${prefix}/attribute-key`,
-        label: "Thuộc tính SP",
+        label: "attribute_key",
         iconName: "Tag",
       },
       {
         path: `${prefix}/product-attribute-key`,
-        label: "Gán thuộc tính SP",
+        label: "product_attribute_key",
         iconName: "Tags",
       },
-      { path: `${prefix}/brands`, label: "Thương hiệu", iconName: "Award" },
-      { path: `${prefix}/stocks`, label: "Tồn kho", iconName: "Warehouse" },
+      { path: `${prefix}/brands`, label: "brands", iconName: "Award" },
+      { path: `${prefix}/stocks`, label: "stocks", iconName: "Warehouse" },
     ],
   },
   {
-    title: "CHUỖI CUNG ỨNG",
+    title: "supply_chain",
     items: [
       {
         path: `${prefix}/suppliers`,
-        label: "Nhà cung cấp",
+        label: "suppliers",
         iconName: "ArchiveRestore",
       },
-      { path: `${prefix}/purchase`, label: "Nhập hàng", iconName: "Import" },
+      {
+        path: `${prefix}/purchase`,
+        label: "purchase",
+        iconName: "Import",
+      },
     ],
   },
   {
-    title: "NGƯỜI DÙNG & ACL",
+    title: "users_acl",
     items: [
-      { path: `${prefix}/users`, label: "Khách hàng", iconName: "IdCard", roles: ["admin"] },
+      {
+        path: `${prefix}/users`,
+        label: "users",
+        iconName: "IdCard",
+        roles: ["admin"],
+      },
       {
         path: `${prefix}/permissions`,
-        label: "Phân quyền",
+        label: "permissions",
         iconName: "KeySquare",
         roles: ["admin"],
       },
       {
         path: `${prefix}/addresses`,
-        label: "Địa chỉ",
+        label: "addresses",
         iconName: "LocateFixed",
         roles: ["admin"],
       },
@@ -92,25 +113,25 @@ export const SIDEBAR_MENU_STRUCTURE = (prefix) => [
 
 export const USER_SETTINGS_POPOVER = [
   {
-    label: "Hoạt động",
+    label: "activity",
     iconName: "Activity",
     type: "link",
-    targetPath: "/logs", // Sẽ chuyển hướng thành /management/logs
+    targetPath: "/logs",
   },
   {
-    label: "Trí thông minh cá nhân",
+    label: "personal_ai",
     iconName: "User",
     type: "button",
-    targetPath: "/personal-ai", // Sau này đổi route chỉ cần sửa ở đây
+    targetPath: "/personal-ai",
   },
   {
-    label: "Quản lý gói thuê bao",
+    label: "billing",
     iconName: "ShieldCheck",
     type: "button",
-    targetPath: "/billing", // Sau này đổi route chỉ cần sửa ở đây
+    targetPath: "/billing",
   },
   {
-    label: "Đăng xuất hệ thống",
+    label: "logout",
     iconName: "LogOut",
     type: "logout",
   },

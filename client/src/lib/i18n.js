@@ -6,11 +6,17 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import viHome from "@/locales/vi/home.json";
 import viFooter from "@/locales/vi/footer.json";
 import viheader from "@/locales/vi/header.json";
+import vndashboard from "@/locales/vi/dashboard.json";
+import viComponent from "@/locales/vi/component.json";
+import viConstants from "@/locales/vi/constants.json";
 
 // 2. Tiếng Anh (en)
 import enHome from "@/locales/en/home.json";
 import enFooter from "@/locales/en/footer.json";
 import enheader from "@/locales/en/header.json";
+import endashboard from "@/locales/en/dashboard.json";
+import enComponent from "@/locales/en/component.json";
+import enConstants from "@/locales/en/constants.json";
 
 // 3. Tiếng Trung (zh)
 import zhHome from "@/locales/zh/home.json";
@@ -107,8 +113,8 @@ i18n
     .use(initReactI18next)
     .init({
         resources: {
-            vi: { translation: { ...viHome, ...viFooter, ...viheader } },
-            en: { translation: { ...enHome, ...enFooter, ...enheader } },
+            vi: { translation: { ...viHome, ...viFooter, ...viheader, ...vndashboard, component: viComponent, constants: viConstants } },
+            en: { translation: { ...enHome, ...enFooter, ...enheader, ...endashboard, component: enComponent, constants: enConstants } },
             zh: { translation: { ...zhHome, ...zhFooter, ...zhheader } },
             ja: { translation: { ...jaHome, ...jaFooter, ...jaheader } },
             th: { translation: { ...thHome, ...thFooter, ...thheader } },

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Eye, EyeClosed, ImagePlus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-// 1. INPUT CƠ BẢN
+// 1. INPUT CÆ  Báº¢N
 const InputFrom = (props) => {
   let { type, placeholder, onChange, value, className = "" } = props;
   return (
@@ -20,7 +21,7 @@ const InputFrom = (props) => {
   );
 };
 
-// 2. INPUT MẬT KHẨU CƠ BẢN
+// 2. INPUT Máº¬T KHáº¨U CÆ  Báº¢N
 const InputPassword = (props) => {
   const [show, setShow] = useState(false);
   let { placeholder, value, onChange, className = "" } = props;
@@ -52,8 +53,9 @@ const InputPassword = (props) => {
   );
 };
 
-// 3. COMPONENT TẢI ẢNH (AVATAR/LOGO)
+// 3. COMPONENT Táº¢I áº¢NH (AVATAR/LOGO)
 const InputFile = ({ label, value, onChange }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
   const [preview, setPreview] = useState(null);
 
   useEffect(() => {
@@ -110,11 +112,11 @@ const InputFile = ({ label, value, onChange }) => {
                 e.target.style.display = "none";
               }}
             />
-            {/* Lớp phủ khi di chuột vào */}
+            {/* Lá»›p phá»§ khi di chuá»™t vĂ o */}
             <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1">
               <ImagePlus size={24} className="text-sky-400" />
               <span className="text-[10px] text-slate-200 font-medium">
-                Thay đổi ảnh
+                {t("change_image")}
               </span>
             </div>
           </>
@@ -122,7 +124,7 @@ const InputFile = ({ label, value, onChange }) => {
           <div className="flex flex-col items-center justify-center text-slate-400 hover:text-sky-600 dark:text-slate-500 dark:group-hover:text-sky-400 transition-colors">
             <ImagePlus size={28} className="mb-1.5" strokeWidth={1.5} />
             <span className="text-[10px] font-bold tracking-wider">
-              TẢI ẢNH LÊN
+              {t("upload_image")}
             </span>
           </div>
         )}
@@ -131,7 +133,7 @@ const InputFile = ({ label, value, onChange }) => {
   );
 };
 
-// 4. FLOATING INPUT CAO CẤP
+// 4. FLOATING INPUT CAO Cáº¤P
 const FloatingInput = ({ label, id, ...props }) => {
   const inputClass =
     "peer w-full p-[11px_15px] text-sm rounded-xl border outline-none tracking-wide transition-colors duration-200 " +
@@ -154,7 +156,7 @@ const FloatingInput = ({ label, id, ...props }) => {
   );
 };
 
-// 5. FLOATING INPUT PASSWORD CAO CẤP
+// 5. FLOATING INPUT PASSWORD CAO Cáº¤P
 const FloatingInputPassword = ({ label, id, ...props }) => {
   const [showPass, setShowPass] = useState(false);
 
@@ -196,7 +198,7 @@ const FloatingInputPassword = ({ label, id, ...props }) => {
   );
 };
 
-// 6. INPUT CÓ LABEL PHÍA TRÊN
+// 6. INPUT CĂ“ LABEL PHĂA TRĂN
 const LabelInput = ({
   label,
   required,

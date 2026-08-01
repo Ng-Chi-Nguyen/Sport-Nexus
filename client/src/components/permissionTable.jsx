@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Save, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const PermissionTable = ({
   allPermissions = {},
   userPermissions = [],
   onSave,
 }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "permission" });
   const navigate = useNavigate();
   const actions = ["Read", "Create", "Update", "Delete"];
 
@@ -39,7 +41,7 @@ const PermissionTable = ({
   if (!allPermissions || Object.keys(allPermissions).length === 0) {
     return (
       <div className="py-12 text-center text-slate-400 dark:text-slate-500 animate-pulse font-medium text-sm tracking-wide">
-        Đang nạp cấu trúc ma trận quyền hạn...
+        {t("loading_matrix")}
       </div>
     );
   }
@@ -51,7 +53,7 @@ const PermissionTable = ({
           <thead className="text-xs text-slate-600 dark:text-slate-400 uppercase bg-slate-100 dark:bg-[#161F32]/60 border-b border-slate-200 dark:border-slate-900 font-semibold tracking-wider">
             <tr>
               <th className="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
-                Module (Chức năng)
+                {t("module_function_col")}
               </th>
               {actions.map((action) => (
                 <th
@@ -159,7 +161,7 @@ const PermissionTable = ({
           onClick={() => navigate(-1)}
           className="h-[40px] px-5 bg-slate-100 text-slate-600 border border-slate-200 rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-slate-200 hover:text-slate-900 dark:bg-slate-900/60 dark:text-slate-400 dark:border-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-all flex items-center gap-2"
         >
-          <ArrowLeft size={14} /> Quay lại
+          <ArrowLeft size={14} /> {t("go_back")}
         </button>
 
         <button
@@ -167,7 +169,7 @@ const PermissionTable = ({
           onClick={handleSaveData}
           className="h-[40px] px-6 bg-sky-500/10 text-sky-600 border border-sky-300 dark:text-sky-400 dark:border-sky-500/20 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all duration-200 shadow-sm"
         >
-          <Save size={14} /> Lưu cấp quyền
+          <Save size={14} /> {t("save_permissions")}
         </button>
       </div>
     </div>

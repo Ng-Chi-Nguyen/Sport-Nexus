@@ -19,15 +19,19 @@ import {
   USER_VERIFIED_OPTIONS,
 } from "@/constants/management/user";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Quản lý người dùng & phân quyền", route: "" },
-  { title: "Người dùng", route: "#" },
-];
+import { useTranslation } from "react-i18next";
 
 const UserPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "user" });
+  const { t: tc } = useTranslation("translation", { keyPrefix: "constants" });
   const responses = useLoaderData();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("user_management"), route: "" },
+    { title: t("users_title"), route: "#" },
+  ];
+
   const revalidator = useRevalidator();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -84,7 +88,7 @@ const UserPage = () => {
         await queryClient.invalidateQueries({ queryKey: ["users"] });
         revalidator.revalidate();
         setIsConfirmOpen(false);
-        toast.success(response.message || "Xóa người dùng thành công!");
+        toast.success(response.message || t("delete_success"));
       }
     } catch (error) {
       setIsConfirmOpen(false);
@@ -92,7 +96,7 @@ const UserPage = () => {
         error.message ||
           error.response?.data?.message ||
           error.response?.data?.errors?.[0] ||
-          "Đã có lỗi xảy ra!",
+          t("error_occurred"),
       );
     }
   };
@@ -114,7 +118,7 @@ const UserPage = () => {
                 : "text-slate-500 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-300"
             }`}
           >
-            {opt.name}
+            {tc(opt.name)}
           </button>
         ))}
       </div>
@@ -132,16 +136,16 @@ const UserPage = () => {
         onToggleFilters={() => setShowFilters(!showFilters)}
         hasActiveFilters={hasActiveFilters}
         onClearFilters={clearAllFilters}
-        searchPlaceholder="Tìm kiếm tên, email, số điện thoại..."
+        searchPlaceholder={t("search_placeholder")}
         addButton={
           <div className="flex items-center gap-2 flex-wrap justify-end">
             <ExcelCrudActions
               basePath="/management/user"
-              title="Import / Export người dùng"
+              title={t("import_export_title")}
               templateFileName="template-nguoi-dung.xlsx"
               exportFileName="nguoi-dung.xlsx"
             />
-            <BtnAdd route={"/management/users/create"} name="Thêm người dùng" />
+            <BtnAdd route={"/management/users/create"} name={t("add_user")} />
           </div>
         }
       >
@@ -149,29 +153,29 @@ const UserPage = () => {
           "status",
           USER_STATUS_OPTIONS,
           currentStatus,
-          "Trạng thái",
+          t("status_label"),
         )}
         {renderSegmented(
           "is_verified",
           USER_VERIFIED_OPTIONS,
           currentIsVerified,
-          "Xác thực",
+          t("verified_label"),
         )}
         <SimpleSelect
-          label="Vai trò"
+          label={t("role_label")}
           value={currentRoleId}
           onChange={(val) => setFilter("role_id", val)}
           options={[
-            { slug: "", name: "Tất cả" },
+            { slug: "", name: t("all") },
             ...(responses.roles || []).map((r) => ({
               slug: String(r.id),
               name: r.name,
             })),
           ]}
-          placeholder="Tất cả"
+          placeholder={t("all")}
         />
         <RangeInput
-          label="Ngày tạo"
+          label={t("created_at_label")}
           type="date"
           minValue={currentDateFrom}
           maxValue={currentDateTo}
@@ -183,12 +187,12 @@ const UserPage = () => {
       {/* KHỐI LAYOUT SÁNG/TỐI ĐỒNG BỘ */}
       <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="section-title mb-0">Danh sách người dùng</h3>
+          <h3 className="section-title mb-0">{t("list_title")}</h3>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
             className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Tải lại"
+            title={t("reload")}
           >
             <RefreshCw
               size={18}
@@ -206,31 +210,31 @@ const UserPage = () => {
                     scope="col"
                     className="px-6 py-4 w-[35%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Người dùng
+                    {t("user_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 w-[25%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Liên hệ
+                    {t("contact_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 w-[12%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Xác thực
+                    {t("verified_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 w-[13%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Vai trò
+                    {t("role_col")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 w-[15%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Hành động
+                    {t("actions_col")}
                   </th>
                 </tr>
               </thead>
@@ -258,7 +262,7 @@ const UserPage = () => {
                               {user.full_name}
                             </p>
                             <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                              Ngày tạo:{" "}
+                              {t("created_at")}{" "}
                               <span className="text-slate-600 dark:text-slate-400">
                                 {formatFullDateTime(user.created_at)}
                               </span>
@@ -278,7 +282,7 @@ const UserPage = () => {
                             </span>
                           ) : (
                             <span className="text-slate-400 dark:text-slate-600 text-[11px] italic">
-                              Chưa có SĐT
+                              {t("no_phone")}
                             </span>
                           )}
                         </div>
@@ -288,11 +292,11 @@ const UserPage = () => {
                         <div className="flex justify-center">
                           {user.is_verified ? (
                             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/20">
-                              <span>Đã xác thực</span>
+                              <span>{t("verified")}</span>
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-300 dark:border-rose-500/20">
-                              <span>Chưa xác thực</span>
+                              <span>{t("not_verified")}</span>
                             </span>
                           )}
                         </div>
@@ -317,7 +321,7 @@ const UserPage = () => {
                           <Link
                             to={`/management/users/add-role/${user.id}`}
                             className="p-2 bg-slate-100 dark:bg-[#111827] text-slate-500 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 border border-slate-200 dark:border-slate-800/85 hover:border-violet-300 dark:hover:border-violet-500/40 rounded-lg transition-all duration-150"
-                            title="Phân quyền hạn"
+                            title={t("assign_permission")}
                           >
                             <ShieldAlert size={14} strokeWidth={2} />
                           </Link>
@@ -336,7 +340,7 @@ const UserPage = () => {
                       colSpan="5"
                       className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
                     >
-                      Không tìm thấy người dùng nào.
+                      {t("no_users")}
                     </td>
                   </tr>
                 )}
@@ -355,8 +359,8 @@ const UserPage = () => {
 
         <ConfirmDelete
           isOpen={isConfirmOpen}
-          title="Xóa người dùng"
-          message="Bạn đang thực hiện hành động xóa người dùng. Toàn bộ dữ liệu liên quan sẽ bị loại bỏ vĩnh viễn khỏi hệ thống."
+          title={t("delete_title")}
+          message={t("delete_message")}
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmOpen(false)}
         />

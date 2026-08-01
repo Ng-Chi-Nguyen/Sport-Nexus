@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { Search, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const SearchTable = (props) => {
   const { placeholder, value, onChange, onClear } = props;
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
   const isControlled = value !== undefined;
   const [internalValue, setInternalValue] = useState("");
 
@@ -32,11 +36,12 @@ const SearchTable = (props) => {
         value={displayValue}
         onChange={handleChange}
         placeholder={placeholder}
-        className="w-full pl-11 pr-24 py-2.5 rounded-xl text-sm transition-all duration-200 outline-none
-                   bg-white border-slate-300 text-slate-800 placeholder-slate-400
-                   focus:border-sky-500 focus:ring-1 focus:ring-sky-500/20
-                   dark:bg-[#111827]/80 dark:border-slate-800/80 dark:text-slate-200 dark:placeholder-slate-500
-                   dark:focus:bg-[#111827] dark:focus:border-sky-500 dark:focus:ring-sky-500/30"
+        className="w-full pl-11 pr-24 py-2.5 rounded-xl text-sm outline-none
+                   bg-white text-slate-800 placeholder-slate-400
+                   border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500/20
+                   dark:bg-[#111827]/80 dark:text-slate-200 dark:placeholder-slate-500
+                   dark:border-slate-800 dark:focus:bg-[#111827] dark:focus:border-sky-500 dark:focus:ring-sky-500/30
+                   transition-colors duration-200 ease-in-out"
       />
 
       {/* Khu vực chứa nhóm nút chức năng góc phải */}
@@ -49,7 +54,7 @@ const SearchTable = (props) => {
             className="p-1.5 rounded-lg transition-colors cursor-pointer
                        text-slate-400 hover:text-slate-600 hover:bg-slate-100
                        dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-slate-800/50"
-            title="Xóa tìm kiếm"
+            title={t("clear_search")}
           >
             <X className="w-4 h-4" />
           </button>
@@ -63,7 +68,7 @@ const SearchTable = (props) => {
                      dark:bg-[#4facf3]/10 dark:text-[#4facf3] dark:border-[#4facf3]/20 dark:hover:bg-[#4facf3]/20"
         >
           <Search className="w-3.5 h-3.5" strokeWidth={2.5} />
-          <span>Tìm</span>
+          <span>{t("search")}</span>
         </button>
       </div>
     </div>

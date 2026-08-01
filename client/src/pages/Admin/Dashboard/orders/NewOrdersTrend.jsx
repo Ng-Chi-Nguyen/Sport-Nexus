@@ -1,16 +1,18 @@
 import { Card } from "@/pages/Admin/Dashboard/components/Card";
 import { TrendingUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const NewOrdersTrend = ({ data = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const maxCount = Math.max(...data.map((i) => Number(i.count || 0)), 1);
 
   return (
     <Card
-      title="Số đơn mới theo thời gian"
+      title={t("new_orders_over_time")}
       icon={<TrendingUp size={16} />}
       action={
         <span className="text-xs text-slate-500 dark:text-slate-400">
-          {data.length} mốc
+          {t("period_count", { count: data.length })}
         </span>
       }
     >
@@ -35,7 +37,7 @@ export const NewOrdersTrend = ({ data = [] }) => {
                       {item.period}
                     </span>
                     <span className="ml-2 text-xs font-semibold text-sky-400">
-                      {item.count} đơn
+                      {t("order_count", { count: item.count })}
                     </span>
                   </div>
 
@@ -65,7 +67,7 @@ export const NewOrdersTrend = ({ data = [] }) => {
         </div>
       ) : (
         <div className="flex h-[140px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-          Chưa có dữ liệu
+          {t("no_data")}
         </div>
       )}
     </Card>

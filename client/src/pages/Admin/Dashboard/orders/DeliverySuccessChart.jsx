@@ -1,16 +1,18 @@
 import { Card } from "@/pages/Admin/Dashboard/components/Card";
 import { PackageCheck } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const DeliverySuccessChart = ({ data = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const maxTotal = Math.max(...data.map((i) => Number(i.total || 0)), 1);
 
   return (
     <Card
-      title="Tỉ lệ giao thành công theo thời gian"
+      title={t("delivery_success_rate")}
       icon={<PackageCheck size={16} />}
       action={
         <span className="text-xs text-slate-500 dark:text-slate-400">
-          {data.length} mốc
+          {t("period_count", { count: data.length })}
         </span>
       }
     >
@@ -39,10 +41,10 @@ export const DeliverySuccessChart = ({ data = [] }) => {
                       {item.period}
                     </span>
                     <span className="ml-2 text-[10px] text-slate-300">
-                      Tổng: {item.total}
+                      {t("total_prefix")} {item.total}
                     </span>
                     <span className="ml-1.5 text-[10px] text-emerald-400 font-semibold">
-                      Giao: {item.delivered}
+                      {t("delivered_prefix")} {item.delivered}
                     </span>
                     <span className="ml-1.5 text-xs font-bold text-sky-400">
                       {successRate}%
@@ -79,7 +81,7 @@ export const DeliverySuccessChart = ({ data = [] }) => {
         </div>
       ) : (
         <div className="flex h-[160px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-          Chưa có dữ liệu
+          {t("no_data")}
         </div>
       )}
     </Card>

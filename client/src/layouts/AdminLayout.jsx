@@ -6,6 +6,8 @@ import {
   ChevronRight,
   Sun,
   Moon,
+  Languages,
+  Check,
 } from "lucide-react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import logoSvg from "@/assets/images/logo-sportnexus-light.svg";
@@ -15,19 +17,30 @@ import useResponsive from "@/hooks/useResponsive";
 import SidebarCollapsed from "@/components/admin/SidebarCollapsed";
 import BottomNav from "@/components/admin/BottomNav";
 import * as Icons from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { clearAuth } from "@/lib/authStorage";
+import LANGUAGES from "@/constants/languages";
 
 const AdminLayout = () => {
   const prefix_path = "/management";
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
+  const { t: tCommon } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
+  const { t: tMenu } = useTranslation("translation", {
+    keyPrefix: "component.menu",
+  });
   const { isDesktop, isTablet, isMobile } = useResponsive();
 
   // --- REFS & STATES ---
   const [isOpenSettings, setIsOpenSettings] = useState(false);
+  const [isHoverSettings, setIsHoverSettings] = useState(false);
+  const [isLangHovered, setIsLangHovered] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const settingsRef = useRef(null);
 
-  // State quản lý Theme (Sáng / Tối)
+  // State quáº£n lĂ½ Theme (SĂ¡ng / Tá»‘i)
   const [isDarkMode, setIsDarkMode] = useState(() => {
     return (
       localStorage.getItem("theme") === "dark" ||
@@ -36,7 +49,14 @@ const AdminLayout = () => {
     );
   });
 
-  // Đồng bộ class "dark" vào thẻ html
+  // State quáº£n lĂ½ NgĂ´n ngá»¯
+  const [currentLang, setCurrentLang] = useState(() => {
+    return (
+      localStorage.getItem("language") || i18n.language?.split("-")[0] || "vi"
+    );
+  });
+
+  // Äá»“ng bá»™ class "dark" vĂ o tháº» html
   useEffect(() => {
     const root = document.documentElement;
     if (isDarkMode) {
@@ -49,6 +69,13 @@ const AdminLayout = () => {
   }, [isDarkMode]);
 
   const toggleTheme = () => setIsDarkMode((prev) => !prev);
+
+  // HĂ m thay Ä‘á»•i ngĂ´n ngá»¯
+  const handleLanguageChange = (langCode) => {
+    setCurrentLang(langCode);
+    i18n.changeLanguage(langCode);
+    localStorage.setItem("language", langCode);
+  };
 
   // Popover items for settings
   const popoverItems = useMemo(() => {
@@ -107,6 +134,8 @@ const AdminLayout = () => {
     const handleClickOutside = (event) => {
       if (settingsRef.current && !settingsRef.current.contains(event.target)) {
         setIsOpenSettings(false);
+        setIsHoverSettings(false);
+        setIsLangHovered(false);
       }
     };
     if (isOpenSettings) {
@@ -166,7 +195,7 @@ const AdminLayout = () => {
                     <div className="border-t border-slate-200 dark:border-slate-800/60 my-2 mx-2" />
                   ) : (
                     <p className="text-[10px] font-bold text-slate-400 dark:text-slate-600 tracking-widest uppercase px-2 truncate">
-                      {section.title}
+                      {tMenu(section.title)}
                     </p>
                   )}
                   <ul className="space-y-0.5">
@@ -188,7 +217,7 @@ const AdminLayout = () => {
                             {item.icon}
                           </span>
                           {!isCollapsed && (
-                            <span className="truncate">{item.label}</span>
+                            <span className="truncate">{tMenu(item.label)}</span>
                           )}
                         </NavLink>
                       </li>
@@ -208,47 +237,141 @@ const AdminLayout = () => {
             {isOpenSettings && (
               <div
                 className={`absolute bottom-full left-0 mb-2 bg-white/95 dark:bg-[#0D121F]/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-xl p-2 z-50 flex flex-col gap-0.5 ${
-                  isCollapsed ? "w-[180px]" : "w-full"
+                  isCollapsed ? "w-[200px]" : "w-full"
                 }`}
               >
                 {!isCollapsed && (
                   <div className="px-3 py-2 border-b border-slate-100 dark:border-white/5 mb-1">
                     <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                      Tra cứu hệ thống
+                      {tCommon("system_lookup")}
                     </p>
                   </div>
                 )}
 
-                {/* Nút Đổi Giao Diện Sáng / Tối */}
-                <button
-                  type="button"
-                  onClick={toggleTheme}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all text-left"
-                >
-                  {isDarkMode ? (
-                    <Sun size={16} className="text-amber-500" />
-                  ) : (
-                    <Moon size={16} className="text-indigo-500" />
-                  )}
-                  <span>{isDarkMode ? "Chế độ sáng" : "Chế độ tối"}</span>
-                </button>
-
-                {/* Nút Thu nhỏ / Mở rộng */}
+                {/* NĂºt Thu nhá» / Má»Ÿ rá»™ng */}
                 <button
                   type="button"
                   onClick={() => {
                     setIsCollapsed(!isCollapsed);
                     setIsOpenSettings(false);
                   }}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-sky-600 bg-sky-50 dark:text-sky-400 dark:bg-sky-500/5 border border-sky-200 dark:border-sky-500/10 hover:bg-sky-100 dark:hover:bg-sky-500/10 transition-all text-left"
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-sky-600 bg-sky-50 dark:text-sky-400 dark:bg-sky-500/5 border border-sky-200 dark:border-sky-500/10 hover:bg-sky-100 dark:hover:bg-sky-500/10 transition-all text-left mt-1"
                 >
                   {isCollapsed ? (
                     <ChevronRight size={16} />
                   ) : (
                     <ChevronLeft size={16} />
                   )}
-                  <span>{isCollapsed ? "Mở rộng thanh" : "Thu nhỏ thanh"}</span>
+                  <span>
+                    {isCollapsed
+                      ? tCommon("expand_sidebar")
+                      : tCommon("collapse_sidebar")}
+                  </span>
                 </button>
+
+                <div className="border-t border-slate-100 dark:border-white/5 my-1" />
+
+                {/* NĂºt settings hover */}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setIsHoverSettings(true)}
+                  onMouseLeave={() => {
+                    setIsHoverSettings(false);
+                    setIsLangHovered(false);
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setIsHoverSettings((prev) => !prev)}
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all text-left ${
+                      isHoverSettings
+                        ? "bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-200"
+                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200"
+                    }`}
+                  >
+                    <Settings size={16} className="shrink-0" />
+                    <span>{tCommon("settings")}</span>
+                  </button>
+
+                  {isHoverSettings && (
+                    <div className="absolute left-full top-0 ml-1 w-56 bg-white/95 dark:bg-[#0D121F]/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-xl p-2 z-50 flex flex-col gap-0.5">
+                      <button
+                        type="button"
+                        onClick={toggleTheme}
+                        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all text-left"
+                      >
+                        {isDarkMode ? (
+                          <Sun size={16} className="text-amber-500" />
+                        ) : (
+                          <Moon size={16} className="text-indigo-500" />
+                        )}
+                        <span>
+                          {isDarkMode
+                            ? tCommon("light_mode")
+                            : tCommon("dark_mode")}
+                        </span>
+                      </button>
+
+                      {/* NgĂ´n ngá»¯ */}
+                      <div
+                        className="relative"
+                        onMouseEnter={() => setIsLangHovered(true)}
+                        onMouseLeave={() => setIsLangHovered(false)}
+                      >
+                        <button
+                          type="button"
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200 transition-all text-left"
+                        >
+                          <div className="flex items-center gap-3">
+                            <Languages size={16} className="shrink-0" />
+                            <span>{tCommon("language")}</span>
+                          </div>
+                          <ChevronRight
+                            size={14}
+                            className="text-slate-400 dark:text-slate-500"
+                          />
+                        </button>
+
+                        {isLangHovered && (
+                          <div className="absolute left-full top-0 ml-1 w-48 max-h-64 overflow-y-auto bg-white/95 dark:bg-[#0D121F]/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-xl p-1 z-50 flex flex-col custom-scrollbar">
+                            {LANGUAGES.map((lang) => {
+                              const isActive = currentLang === lang.code;
+                              return (
+                                <button
+                                  key={lang.code}
+                                  type="button"
+                                  onClick={() =>
+                                    handleLanguageChange(lang.code)
+                                  }
+                                  className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all text-left ${
+                                    isActive
+                                      ? "text-sky-600 bg-sky-50 dark:text-sky-400 dark:bg-sky-500/10 font-semibold"
+                                      : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800/60"
+                                  }`}
+                                >
+                                  <span className="flex items-center gap-2.5">
+                                    <span className="text-base leading-none">
+                                      {lang.flag}
+                                    </span>
+                                    <span className="truncate">
+                                      {lang.label}
+                                    </span>
+                                  </span>
+                                  {isActive && (
+                                    <Check
+                                      size={14}
+                                      className="text-sky-500 shrink-0"
+                                    />
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 <div className="border-t border-slate-100 dark:border-white/5 my-1" />
 
@@ -263,7 +386,7 @@ const AdminLayout = () => {
                           className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-rose-600 hover:bg-rose-50 dark:text-rose-500/90 dark:hover:bg-rose-950/20 dark:hover:text-rose-400 transition-all text-left"
                         >
                           {item.icon}
-                          <span>{item.label}</span>
+                          <span>{tMenu(item.label)}</span>
                         </button>
                       </div>
                     );
@@ -281,7 +404,7 @@ const AdminLayout = () => {
                       className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200 transition-all text-left"
                     >
                       {item.icon}
-                      <span>{item.label}</span>
+                      <span>{tMenu(item.label)}</span>
                     </button>
                   );
                 })}
@@ -290,7 +413,11 @@ const AdminLayout = () => {
 
             {/* Profile trigger button */}
             <div
-              onClick={() => setIsOpenSettings(!isOpenSettings)}
+              onClick={() => {
+                setIsOpenSettings(!isOpenSettings);
+                setIsHoverSettings(false);
+                setIsLangHovered(false);
+              }}
               className={`flex items-center rounded-xl border cursor-pointer transition-all duration-150 group ${
                 isCollapsed ? "justify-center p-2" : "p-2.5 gap-3"
               } ${

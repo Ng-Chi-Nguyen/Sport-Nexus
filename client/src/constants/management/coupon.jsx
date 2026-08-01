@@ -1,11 +1,11 @@
 export const ACTIVE_TABS = [
-  { value: "", label: "Tất cả" },
-  { value: "true", label: "Còn hiệu lực" },
-  { value: "false", label: "Hết hiệu lực" },
+  { value: "", label: "coupon.tab.all" },
+  { value: "true", label: "coupon.tab.active" },
+  { value: "false", label: "coupon.tab.inactive" },
 ];
 
 export const DISCOUNT_TYPE_OPTIONS = [
-  { slug: "", name: "Tất cả" },
-  { slug: "CASH", name: "Tiền mặt" },
-  { slug: "PERCENTAGE", name: "Phần trăm" },
+  { slug: "", name: "coupon.discount_type.all" },
+  { slug: "CASH", name: "coupon.discount_type.cash" },
+  { slug: "PERCENTAGE", name: "coupon.discount_type.percentage" },
 ];

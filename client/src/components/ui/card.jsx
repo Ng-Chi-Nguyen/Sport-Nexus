@@ -4,6 +4,7 @@ import { formatCurrency } from "@/utils/formatters";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { useTranslation } from "react-i18next";
 
 const GRADIENTS = [
   "from-blue-500 to-cyan-500",
@@ -17,6 +18,9 @@ const GRADIENTS = [
 ];
 
 const CardBrand = ({ data }) => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
   const { logo, name, origin } = data || {};
 
   const placeholderImage =
@@ -63,7 +67,7 @@ const CardBrand = ({ data }) => {
             className="text-base font-bold text-slate-800 dark:text-slate-100 truncate max-w-[180px] mx-auto group-hover:text-sky-600 dark:group-hover:text-white transition-colors duration-200 tracking-wide"
             title={name}
           >
-            {name || "Tên thương hiệu"}
+            {name || t("brand_name")}
           </h3>
 
           {origin ? (
@@ -73,7 +77,7 @@ const CardBrand = ({ data }) => {
             </Badge>
           ) : (
             <span className="text-[12px] text-slate-400 dark:text-slate-600 italic block">
-              Chưa cập nhật
+              {t("not_updated")}
             </span>
           )}
         </div>
@@ -84,6 +88,9 @@ const CardBrand = ({ data }) => {
 
 const ProductCard = ({ product, index = 0 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
   const { addItem } = useCart();
   const { isLiked, toggleLike } = useWishlist();
   const liked = isLiked(product.id);
@@ -100,8 +107,8 @@ const ProductCard = ({ product, index = 0 }) => {
   };
 
   return (
-    <div className="group flex flex-col bg-white dark:bg-[#0D121F] rounded-lg transition-all duration-300 border border-slate-200 dark:border-slate-800/80 shadow-sm hover:shadow-md dark:shadow-none">
-      <div className="relative aspect-square overflow-hidden rounded-t-lg border-b border-slate-100 dark:border-slate-800/60">
+    <div className="group flex flex-col bg-white dark:bg-[#0D121F] transition-all duration-300 border border-slate-200 dark:border-slate-800/80 shadow-sm hover:shadow-md dark:shadow-none">
+      <div className="relative aspect-square overflow-hidden border-b border-slate-100 dark:border-slate-800/60">
         {product.thumbnail ? (
           <div className="w-full h-full bg-slate-50 dark:bg-[#111827]/60 p-2">
             <img
@@ -121,16 +128,16 @@ const ProductCard = ({ product, index = 0 }) => {
         )}
 
         {hasDiscount && (
-          <div className="absolute top-2 left-2 bg-red-600 text-white text-[11px] font-bold px-2 py-0.5 rounded-sm z-10">
+          <div className="absolute top-2 left-2 bg-red-600 text-white text-[11px] font-bold px-2 py-0.5 z-10">
             -{discountPercent}%
           </div>
         )}
 
-        {/* Nút tác vụ nhanh khi hover */}
+        {/* NĂºt tĂ¡c vá»¥ nhanh khi hover */}
         <div className="absolute inset-x-0 bottom-3 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-10">
-          <div className="flex bg-white dark:bg-[#161F32] rounded-md shadow-md border border-slate-200 dark:border-slate-700 divide-x divide-slate-100 dark:divide-slate-700/60 overflow-hidden">
+          <div className="flex bg-white dark:bg-[#161F32] shadow-md border border-slate-200 dark:border-slate-700 divide-x divide-slate-100 dark:divide-slate-700/60 overflow-hidden">
             <button
-              title="Thêm vào giỏ"
+              title={t("add_to_cart")}
               className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
@@ -142,7 +149,7 @@ const ProductCard = ({ product, index = 0 }) => {
               <ShoppingCart size={16} />
             </button>
             <button
-              title="Xem chi tiết"
+              title={t("view_detail")}
               className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors"
               onClick={goToDetail}
             >
@@ -155,10 +162,10 @@ const ProductCard = ({ product, index = 0 }) => {
       <div className="pt-3 flex flex-col flex-grow space-y-1.5 p-3">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 tracking-wider uppercase truncate max-w-[80%]">
-            {product.brand?.name || "Chưa phân loại"}
+            {product.brand?.name || t("uncategorized")}
           </span>
           <button
-            title={liked ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
+            title={liked ? t("remove_favorite") : t("add_favorite")}
             onClick={(e) => {
               e.stopPropagation();
               toggleLike(product.id);

@@ -1,7 +1,9 @@
 import { Card } from "@/pages/Admin/Dashboard/components/Card";
 import { UserPlus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const NewUserChart = ({ newUserTrend = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const maxCount = Math.max(
     ...newUserTrend.map((i) => Number(i.count || 0)),
     1,
@@ -9,11 +11,11 @@ export const NewUserChart = ({ newUserTrend = [] }) => {
 
   return (
     <Card
-      title="User mới theo thời gian"
+      title={t("new_users_over_time")}
       icon={<UserPlus size={16} />}
       action={
         <span className="text-xs text-slate-500 dark:text-slate-400">
-          {newUserTrend.length} mốc
+          {t("period_count", { count: newUserTrend.length })}
         </span>
       }
     >
@@ -35,7 +37,7 @@ export const NewUserChart = ({ newUserTrend = [] }) => {
                   <div className="absolute bottom-full z-50 mb-1 hidden rounded-lg bg-slate-900 border border-slate-700 px-2 py-1 text-center shadow-lg dark:bg-slate-900 dark:border-slate-700 group-hover:block whitespace-nowrap">
                     <p className="text-[9px] text-slate-400">{item.period}</p>
                     <p className="text-xs font-semibold text-violet-400">
-                      {item.count} user
+                      {t("user_count", { count: item.count })}
                     </p>
                   </div>
 
@@ -60,7 +62,7 @@ export const NewUserChart = ({ newUserTrend = [] }) => {
         </div>
       ) : (
         <div className="flex h-[180px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-          Chưa có dữ liệu
+          {t("no_data")}
         </div>
       )}
     </Card>

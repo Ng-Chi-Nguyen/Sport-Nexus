@@ -11,8 +11,10 @@ import {
 import { useCoupons } from "@/contexts/CouponContext";
 import { formatDate, formatCurrency } from "@/utils/formatters";
 import { SportNexusLogoIcon } from "@/components/logo";
+import { useTranslation } from "react-i18next";
 
 const CouponCard = ({ coupon }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
   const { isSaved, toggleSave } = useCoupons();
   const [copiedCode, setCopiedCode] = useState(null);
   const [now] = useState(() => Date.now());
@@ -23,11 +25,11 @@ const CouponCard = ({ coupon }) => {
   const disabled = isInactive || isExpired || isOutOfStock;
 
   const statusLabel = isInactive
-    ? "Ngưng hiệu lực"
+    ? t("coupon_inactive")
     : isExpired
-      ? "Hết hạn"
+      ? t("coupon_expired")
       : isOutOfStock
-        ? "Hết lượt"
+        ? t("coupon_out_of_stock")
         : null;
 
   const saved = isSaved(coupon.code);
@@ -40,8 +42,8 @@ const CouponCard = ({ coupon }) => {
     setTimeout(() => setCopiedCode(null), 2000);
   };
 
-  // Logic in thẻ giống hệt 100% giao diện màn hình
-  // Logic in phiếu vừa vặn kích thước thật
+  // Logic in tháº» giá»‘ng há»‡t 100% giao diá»‡n mĂ n hĂ¬nh
+  // Logic in phiáº¿u vá»«a váº·n kĂ­ch thÆ°á»›c tháº­t
   const handlePrint = () => {
     if (disabled) return;
 
@@ -51,7 +53,7 @@ const CouponCard = ({ coupon }) => {
     const printWindow = window.open("", "_blank", "width=800,height=600");
     if (!printWindow) return;
 
-    // Thu thập tất cả StyleSheet/Tailwind từ document chính
+    // Thu tháº­p táº¥t cáº£ StyleSheet/Tailwind tá»« document chĂ­nh
     const styleSheets = Array.from(document.styleSheets)
       .map((sheet) => {
         try {
@@ -68,14 +70,14 @@ const CouponCard = ({ coupon }) => {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>In Phiếu Giảm Giá - ${coupon.code}</title>
+          <title>In Phiáº¿u Giáº£m GiĂ¡ - ${coupon.code}</title>
           <style>
             ${styleSheets}
             
-            /* THIẾT LẬP KHỔ GIẤY VỪA VẶN MÁY IN */
+            /* THIáº¾T Láº¬P KHá»” GIáº¤Y Vá»ªA Váº¶N MĂY IN */
             @page {
-              size: 105mm 45mm; /* Kích thước vừa khít phiếu */
-              margin: 0;       /* Loại bỏ lề trắng mặc định của máy in */
+              size: 105mm 45mm; /* KĂ­ch thÆ°á»›c vá»«a khĂ­t phiáº¿u */
+              margin: 0;       /* Loáº¡i bá» lá» tráº¯ng máº·c Ä‘á»‹nh cá»§a mĂ¡y in */
             }
 
             html, body {
@@ -91,7 +93,7 @@ const CouponCard = ({ coupon }) => {
               print-color-adjust: exact !important;
             }
 
-            /* Container ôm sát phiếu */
+            /* Container Ă´m sĂ¡t phiáº¿u */
             .print-container {
               width: 100mm;
               height: 40mm;
@@ -100,7 +102,7 @@ const CouponCard = ({ coupon }) => {
               align-items: center;
             }
 
-            /* Ép thẻ coupon lấp đầy khung in */
+            /* Ă‰p tháº» coupon láº¥p Ä‘áº§y khung in */
             .print-container > div {
               width: 100% !important;
               height: 100% !important;
@@ -171,7 +173,7 @@ const CouponCard = ({ coupon }) => {
         aria-hidden="true"
       />
 
-      {/* Badge Trạng thái */}
+      {/* Badge Tráº¡ng thĂ¡i */}
       {statusLabel && (
         <span className="absolute top-1.5 right-2 z-10 rounded-full bg-black/30 px-2 py-0.5 text-[9px] font-semibold backdrop-blur-sm">
           {statusLabel}
@@ -179,21 +181,21 @@ const CouponCard = ({ coupon }) => {
       )}
 
       <div className="relative flex h-full items-stretch">
-        {/* Cột Trái: Nút In + Giá trị giảm */}
+        {/* Cá»™t TrĂ¡i: NĂºt In + GiĂ¡ trá»‹ giáº£m */}
         <div className="flex w-[115px] shrink-0 flex-col justify-center items-center gap-0.5 px-1 py-2 text-center border-r border-dashed border-white/30">
-          {/* Nút In phiếu (Ẩn khi in ra giấy nhờ class no-print) */}
+          {/* NĂºt In phiáº¿u (áº¨n khi in ra giáº¥y nhá» class no-print) */}
           <button
             onClick={handlePrint}
             disabled={disabled}
             className="no-print inline-flex items-center justify-center gap-1 px-2 py-0.5 mb-1 rounded border border-white/60 bg-white/10 hover:bg-white hover:text-blue-600 text-[10px] font-semibold text-white transition-colors"
-            title="In phiếu mua tại cửa hàng"
+            title={t("print_store_voucher")}
           >
             <Printer className="w-3 h-3" />
-            <span>In phiếu</span>
+            <span>{t("print_voucher")}</span>
           </button>
 
           <span className="text-[10px] font-medium uppercase tracking-wider text-white/80">
-            Phiếu giảm giá
+            {t("discount_voucher")}
           </span>
           <span className="text-xl font-black leading-none drop-shadow-sm my-0.5">
             {coupon.discount_type === "PERCENTAGE"
@@ -201,13 +203,13 @@ const CouponCard = ({ coupon }) => {
               : `-${formatCurrency(coupon.discount_value)}`}
           </span>
           <span className="text-[10px] font-medium uppercase tracking-tight text-white/80">
-            Trên đơn hàng
+            {t("on_order")}
           </span>
         </div>
 
-        {/* Cột Phải: Thông tin & Hành động */}
+        {/* Cá»™t Pháº£i: ThĂ´ng tin & HĂ nh Ä‘á»™ng */}
         <div className="flex flex-1 flex-col justify-between p-2.5 pl-3.5">
-          {/* Hàng 1: Mã Code + Nút Sao chép */}
+          {/* HĂ ng 1: MĂ£ Code + NĂºt Sao chĂ©p */}
           <div className="flex items-center gap-1.5 h-7">
             <span className="flex-1 truncate rounded bg-white/15 px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white text-center">
               {coupon.code}
@@ -220,45 +222,49 @@ const CouponCard = ({ coupon }) => {
               {copiedCode === coupon.code ? (
                 <>
                   <Check className="w-3 h-3 text-emerald-400" />
-                  <span>Đã chép</span>
+                  <span>{t("copied")}</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-3 h-3" />
-                  <span>Copy</span>
+                  <span>{t("copy")}</span>
                 </>
               )}
             </button>
           </div>
 
-          {/* Hàng 2: Chi tiết điều kiện */}
+          {/* HĂ ng 2: Chi tiáº¿t Ä‘iá»u kiá»‡n */}
           <div className="flex flex-col gap-0.5 text-[11px] text-white/90 leading-tight my-auto">
             <p className="truncate">
               {coupon.discount_type === "PERCENTAGE"
-                ? `Tối đa giảm: ${formatCurrency(coupon.max_discount)}`
-                : "Giảm trực tiếp vào đơn hàng"}
+                ? `${t("max_discount")} ${formatCurrency(
+                    coupon.max_discount,
+                  )}`
+                : t("direct_discount")}
             </p>
             <p className="truncate">
-              Đơn tối thiểu: {formatCurrency(coupon.min_order_value)}
+              {t("min_order")}{" "}
+              {formatCurrency(coupon.min_order_value)}
             </p>
             <p className="truncate">
-              HSD: {formatDate(coupon.end_date)} · {coupon.usage_count}/
+              {t("expiry")}:{" "}
+              {formatDate(coupon.end_date)} Â· {coupon.usage_count}/
               {coupon.usage_limit}
             </p>
           </div>
 
-          {/* Hàng 3: Nút Lưu / Đã lưu + Xóa (Ẩn khi in nhờ class no-print) */}
+          {/* HĂ ng 3: NĂºt LÆ°u / ÄĂ£ lÆ°u + XĂ³a (áº¨n khi in nhá» class no-print) */}
           <div className="no-print h-7 w-full">
             {saved ? (
               <div className="flex h-full w-full items-stretch rounded-lg overflow-hidden border border-white shadow-sm">
                 <div className="flex flex-1 items-center justify-center gap-1 bg-white text-blue-600 px-2 text-[11px] font-bold">
                   <Check className="w-3.5 h-3.5 stroke-[3]" />
-                  <span>Đã lưu</span>
+                  <span>{t("saved_label")}</span>
                 </div>
                 <button
                   onClick={() => toggleSave(coupon)}
                   disabled={disabled}
-                  title="Xóa khỏi danh sách lưu"
+                  title={t("remove_from_saved")}
                   className="flex items-center justify-center bg-blue-600/80 hover:bg-red-600 px-2.5 text-white/90 hover:text-white transition-colors border-l border-blue-400/30"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -271,7 +277,7 @@ const CouponCard = ({ coupon }) => {
                 className="h-full w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-white/60 bg-white/5 px-2.5 text-[11px] font-semibold text-white transition-all hover:bg-white/15 disabled:cursor-not-allowed"
               >
                 <Bookmark className="w-3.5 h-3.5" />
-                <span>Lưu mã</span>
+                <span>{t("save_code")}</span>
               </button>
             )}
           </div>

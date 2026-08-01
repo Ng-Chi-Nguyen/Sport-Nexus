@@ -8,6 +8,7 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import excelCrudImportApi from "@/api/management/excelCrudImportApi";
 
 const ExcelCrudImportModal = ({
@@ -24,6 +25,7 @@ const ExcelCrudImportModal = ({
   const [loading, setLoading] = useState(false);
   const [importing, setImporting] = useState(false);
   const fileInputRef = useRef(null);
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
 
   if (!isOpen) return null;
 
@@ -35,7 +37,9 @@ const ExcelCrudImportModal = ({
       setPreview(res);
     } catch (err) {
       toast.error(
-        err?.response?.data?.message || err.message || "Đọc file thất bại",
+        err?.response?.data?.message ||
+          err.message ||
+          t("read_file_error"),
       );
     } finally {
       setLoading(false);
@@ -55,7 +59,7 @@ const ExcelCrudImportModal = ({
     const f = e.dataTransfer.files?.[0];
     if (!f) return;
     if (!f.name.endsWith(".xlsx") && !f.name.endsWith(".xls")) {
-      toast.error("Chỉ hỗ trợ file .xlsx");
+      toast.error(t("only_support_xlsx"));
       return;
     }
     setFile(f);
@@ -67,12 +71,14 @@ const ExcelCrudImportModal = ({
     setImporting(true);
     try {
       const res = await excelCrudImportApi.import(basePath, file);
-      toast.success(res.message || "Import thành công");
+      toast.success(res.message || t("import_success"));
       onSuccess?.();
       onClose();
     } catch (err) {
       toast.error(
-        err?.response?.data?.message || err.message || "Import thất bại",
+        err?.response?.data?.message ||
+          err.message ||
+          t("import_error"),
       );
     } finally {
       setImporting(false);
@@ -120,15 +126,17 @@ const ExcelCrudImportModal = ({
             />
             <Upload size={36} className="mx-auto mb-3 text-slate-500" />
             <p className="text-sm font-medium text-slate-300">
-              Kéo thả file Excel vào đây
+              {t("drop_file_here")}
             </p>
             <p className="text-xs text-slate-500 mt-1">
-              hoặc nhấn để chọn file
+              {t("or_click_select")}
             </p>
             {sheetNote ? (
               <p className="text-xs text-slate-600 mt-2">{sheetNote}</p>
             ) : (
-              <p className="text-xs text-slate-600 mt-2">Hỗ trợ: .xlsx, .xls</p>
+              <p className="text-xs text-slate-600 mt-2">
+                {t("supported_formats")}
+              </p>
             )}
             {file && (
               <p className="mt-3 text-sm text-sky-400 font-medium flex items-center justify-center gap-2">
@@ -140,7 +148,7 @@ const ExcelCrudImportModal = ({
           {loading ? (
             <div className="flex items-center justify-center gap-2 py-4 text-slate-400">
               <Loader2 size={18} className="animate-spin" />
-              <span className="text-sm">Đang đọc file...</span>
+              <span className="text-sm">{t("reading_file")}</span>
             </div>
           ) : null}
 
@@ -152,7 +160,9 @@ const ExcelCrudImportModal = ({
                   <span className="text-emerald-400 font-medium">
                     {preview.success}
                   </span>
-                  <span className="text-slate-400">thành công</span>
+                  <span className="text-slate-400">
+                    {t("success_suffix")}
+                  </span>
                 </div>
                 {preview.failed > 0 ? (
                   <div className="flex items-center gap-1.5 text-sm">
@@ -160,15 +170,17 @@ const ExcelCrudImportModal = ({
                     <span className="text-amber-400 font-medium">
                       {preview.failed}
                     </span>
-                    <span className="text-slate-400">lỗi</span>
+                    <span className="text-slate-400">
+                      {t("error_suffix")}
+                    </span>
                   </div>
                 ) : null}
                 <div className="text-sm text-slate-500">
-                  Tổng:{" "}
+                  {t("total_label")}{" "}
                   <span className="font-medium text-slate-300">
                     {preview.total}
                   </span>{" "}
-                  dòng
+                  {t("rows_suffix")}
                 </div>
               </div>
 
@@ -181,8 +193,8 @@ const ExcelCrudImportModal = ({
                     >
                       <span className="text-amber-500 shrink-0">•</span>
                       <span>
-                        Dòng {err.row}: <strong>{err.field}</strong> —{" "}
-                        {err.message}
+                        {t("row_label")} {err.row}:{" "}
+                        <strong>{err.field}</strong> — {err.message}
                       </span>
                     </p>
                   ))}
@@ -197,7 +209,7 @@ const ExcelCrudImportModal = ({
             onClick={onClose}
             className="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors"
           >
-            Hủy
+            {t("cancel")}
           </button>
           <button
             onClick={handleImport}
@@ -211,8 +223,12 @@ const ExcelCrudImportModal = ({
           >
             {importing ? <Loader2 size={16} className="animate-spin" /> : null}
             {importing
-              ? "Đang import..."
-              : `Import${preview ? ` ${preview.success} dòng` : ""}`}
+              ? t("importing")
+              : `${t("import")}${
+                  preview
+                    ? ` ${preview.success} ${t("rows_suffix")}`
+                    : ""
+                }`}
           </button>
         </div>
       </div>

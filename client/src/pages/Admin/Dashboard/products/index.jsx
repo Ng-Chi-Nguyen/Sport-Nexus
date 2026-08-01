@@ -6,8 +6,10 @@ import { TrendChart } from "./TrendChart";
 import { SellingOverview, RevenueOverview, ReviewOverview } from "./TopTables";
 import { Distribution } from "./Distribution";
 import { Loader } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const ProductOverview = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const [searchParams] = useSearchParams();
   const params = {
     from: searchParams.get("from") || "",
@@ -29,7 +31,7 @@ export const ProductOverview = () => {
     return (
       <div className="flex items-center justify-center py-16 text-slate-500 dark:text-slate-400 font-medium text-sm transition-colors duration-200">
         <Loader size={20} className="animate-spin mr-2 text-sky-500" />
-        Đang tải dữ liệu sản phẩm...
+        {t("loading_products")}
       </div>
     );
   }

@@ -15,16 +15,18 @@ import productImageApi from "@/api/core/productImageApi";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
 import MultiFileUpload from "@/components/ui/MultiFileUpload";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={20} />, route: "" },
-  { title: "Quản lý sản phẩm", route: "/management/products" },
-  { title: "Chỉnh sửa sản phẩm", route: "" },
-];
+import { useTranslation } from "react-i18next";
 
 const EditProductPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "product" });
   const { brands, suppliers, categories, product } = useLoaderData();
   const navigate = useNavigate();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={20} />, route: "" },
+    { title: t("product_management_no_warehouse"), route: "/management/products" },
+    { title: t("edit_product_breadcrumb"), route: "" },
+  ];
 
   // state form
   const [selectBrand, setSelectBrand] = useState(product?.data?.brand_id || "");
@@ -128,7 +130,7 @@ const EditProductPage = () => {
         error.message ||
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
-        "Đã có lỗi xảy ra!";
+        t("error_occurred");
 
       toast.error(errorMessage);
     }
@@ -138,7 +140,7 @@ const EditProductPage = () => {
     <div className="animate-in fade-in duration-500 space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
       <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide">
-        Chỉnh sửa sản phẩm
+        {t("edit_product_heading")}
       </h2>
 
       <form
@@ -148,14 +150,14 @@ const EditProductPage = () => {
         {/* CỘT TRÁI */}
         <div className="w-full lg:w-1/2 flex flex-col gap-4">
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <TitleManagement color="amber">Phân loại hệ thống</TitleManagement>
+            <TitleManagement color="amber">{t("system_classification")}</TitleManagement>
             <div className="flex flex-col sm:flex-row gap-3 mt-3 mb-3">
               <div className="w-full sm:w-1/2">
                 <SelectPro
                   value={selectBrand}
                   options={brandsOptions}
                   onChange={(val) => setSelectBrand(val)}
-                  label="Chọn thương hiệu"
+                  label={t("choose_brand")}
                 />
               </div>
               <div className="w-full sm:w-1/2">
@@ -163,7 +165,7 @@ const EditProductPage = () => {
                   value={selectSupplier}
                   options={suppliersOptions}
                   onChange={(val) => setSelectSupplier(val)}
-                  label="Chọn nhà cung cấp"
+                  label={t("choose_supplier")}
                 />
               </div>
             </div>
@@ -171,12 +173,12 @@ const EditProductPage = () => {
               value={selectCategory}
               options={categoriesOptions}
               onChange={(val) => setSelectCategory(val)}
-              label="Chọn loại hàng"
+              label={t("choose_category")}
             />
           </div>
 
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <TitleManagement color="cyan">Ảnh đại diện</TitleManagement>
+            <TitleManagement color="cyan">{t("thumbnail_title")}</TitleManagement>
             <div className="mt-3">
               <InputFile
                 value={thumbnail}
@@ -188,7 +190,7 @@ const EditProductPage = () => {
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <div className="mt-1">
               <MultiFileUpload
-                label="Ảnh mô tả sản phẩm"
+                label={t("product_images_label")}
                 value={productImages}
                 onChange={setProductImages}
                 maxFiles={10}
@@ -199,13 +201,13 @@ const EditProductPage = () => {
 
         {/* CỘT PHẢI */}
         <div className="w-full lg:w-1/2 rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900 flex flex-col gap-4">
-          <TitleManagement color="emerald">Thông tin sản phẩm</TitleManagement>
+          <TitleManagement color="emerald">{t("product_info_title")}</TitleManagement>
 
           <div className="flex flex-col sm:flex-row gap-3 mt-2">
             <div className="flex-1">
               <FloatingInput
                 id="name"
-                label="Tên sản phẩm"
+                label={t("product_name_label")}
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -214,7 +216,7 @@ const EditProductPage = () => {
             <div className="w-full sm:w-40">
               <FloatingInput
                 id="base_price"
-                label="Giá gốc (vnđ)"
+                label={t("base_price_vnd")}
                 required
                 type="number"
                 value={basePrice}
@@ -226,8 +228,8 @@ const EditProductPage = () => {
           <div>
             <FloatingTextarea
               id="product_desc"
-              label="Mô tả sản phẩm"
-              placeholder="Nhập mô tả chi tiết..."
+              label={t("product_desc_label")}
+              placeholder={t("desc_placeholder")}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required={true}
@@ -238,7 +240,9 @@ const EditProductPage = () => {
             <div className="border border-slate-200 dark:border-slate-800 w-full sm:w-[50%] p-3 rounded-lg bg-slate-50/50 dark:bg-[#111827]/40">
               <AnimatedCheckbox
                 id="is_active_checkbox"
-                label={isActive ? "Sản phẩm đang bán" : "Tạm ngưng kinh doanh"}
+                label={
+                  isActive ? t("selling_label") : t("pause_label")
+                }
                 checked={isActive}
                 onChange={(e) => setIsActive(e.target.checked)}
               />

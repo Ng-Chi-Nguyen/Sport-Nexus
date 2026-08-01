@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getSidebarSections } from "@/constants/adminMenuConfig";
 
 const SidebarCollapsed = ({ userRole }) => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.menu",
+  });
   const sections = getSidebarSections(userRole);
   const [tooltip, setTooltip] = useState(null);
 
@@ -37,7 +41,7 @@ const SidebarCollapsed = ({ userRole }) => {
               </NavLink>
               {tooltip === item.label && (
                 <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 px-2 py-1 bg-slate-800 text-slate-200 text-xs rounded-md shadow-lg whitespace-nowrap z-50 pointer-events-none">
-                  {item.label}
+                  {t(item.label)}
                 </div>
               )}
             </div>

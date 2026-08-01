@@ -11,17 +11,10 @@ import useTableFilters from "@/hooks/useTableFilters";
 import Pagination from "@/components/ui/pagination";
 import Badge from "@/components/ui/badge";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
-
-const breadcrumbData = [
-  {
-    title: <LayoutDashboard size={18} strokeWidth={1.5} />,
-    route: "",
-  },
-  { title: "Quản lý sản phẩm & kho", route: "" },
-  { title: "Thương hiệu", route: "" },
-];
+import { useTranslation } from "react-i18next";
 
 const BrandPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "brand" });
   const responses = useLoaderData();
   const revalidator = useRevalidator();
   const queryClient = useQueryClient();
@@ -37,6 +30,15 @@ const BrandPage = () => {
     searchParams,
     setSearchParams,
   } = useTableFilters();
+
+  const breadcrumbData = [
+    {
+      title: <LayoutDashboard size={18} strokeWidth={1.5} />,
+      route: "",
+    },
+    { title: t("product_warehouse_management"), route: "" },
+    { title: t("brand_management"), route: "" },
+  ];
 
   const paginationInfo = pagination || {
     totalPages: 1,
@@ -70,19 +72,16 @@ const BrandPage = () => {
         onToggleFilters={() => setShowFilters(!showFilters)}
         hasActiveFilters={hasActiveFilters}
         onClearFilters={clearAllFilters}
-        searchPlaceholder="Tìm kiếm tên thương hiệu..."
+        searchPlaceholder={t("search_brand_placeholder")}
         addButton={
           <div className="flex items-center gap-2 flex-wrap justify-end">
             <ExcelCrudActions
               basePath="/management/brand"
-              title="Import / Export thương hiệu"
+              title={t("import_export_brand")}
               templateFileName="template-thuong-hieu.xlsx"
               exportFileName="thuong-hieu.xlsx"
             />
-            <BtnAdd
-              route={"/management/brands/create"}
-              name="Thêm thương hiệu"
-            />
+            <BtnAdd route={"/management/brands/create"} name={t("add_brand")} />
           </div>
         }
       >
@@ -97,17 +96,19 @@ const BrandPage = () => {
       <div className="bg-white dark:bg-[#0D121F]/30 border border-slate-200 dark:border-slate-900/80 rounded-2xl p-4 sm:p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
         <div className="flex items-center gap-3 mb-6 justify-between">
           <h2 className="text-sm font-bold text-slate-900 dark:text-slate-200 tracking-wide uppercase">
-            Danh sách thương hiệu
+            {t("brand_list")}
           </h2>
           <div className="flex items-center gap-3">
             {allBrands.length > 0 && (
-              <Badge>{pagination?.totalItems || 0} thương hiệu</Badge>
+              <Badge>
+                {pagination?.totalItems || 0} {t("brands_suffix")}
+              </Badge>
             )}
             <button
               onClick={handleRefresh}
               disabled={revalidator.state === "loading"}
               className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              title="Tải lại"
+              title={t("reload")}
             >
               <RefreshCw
                 size={18}
@@ -134,7 +135,7 @@ const BrandPage = () => {
           <div className="py-24 text-center">
             <div className="text-4xl mb-4 opacity-30">🏷️</div>
             <p className="text-slate-400 dark:text-slate-500 italic text-sm">
-              Không tìm thấy thương hiệu nào trên hệ thống.
+              {t("no_brands_found")}
             </p>
           </div>
         )}

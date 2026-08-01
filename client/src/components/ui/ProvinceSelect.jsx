@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const ProvinceSelect = ({
   provinces = [],
@@ -11,6 +12,7 @@ const ProvinceSelect = ({
 }) => {
   const [provinceOpen, setProvinceOpen] = useState(false);
   const [wardOpen, setWardOpen] = useState(false);
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
 
   const provinceRef = useRef(null);
   const wardRef = useRef(null);
@@ -18,7 +20,7 @@ const ProvinceSelect = ({
   const selectedProvince = provinces.find((p) => p.Code === provinceValue);
   const selectedWard = wards.find((w) => w.Code === wardValue);
 
-  // Tự động đóng dropdown khi click ra ngoài vùng chọn
+  // Tá»± Ä‘á»™ng Ä‘Ă³ng dropdown khi click ra ngoĂ i vĂ¹ng chá»n
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (provinceRef.current && !provinceRef.current.contains(event.target)) {
@@ -34,10 +36,11 @@ const ProvinceSelect = ({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {/* Chọn Tỉnh / Thành phố */}
+      {/* Chá»n Tá»‰nh / ThĂ nh phá»‘ */}
       <div className="relative" ref={provinceRef}>
         <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1.5">
-          Tỉnh / Thành phố <span className="text-red-500">*</span>
+          {t("province_label")}{" "}
+          <span className="text-red-500">*</span>
         </label>
         <button
           type="button"
@@ -58,7 +61,7 @@ const ProvinceSelect = ({
           >
             {provinceValue
               ? selectedProvince?.FullName
-              : "Chọn Tỉnh / Thành phố"}
+              : t("choose_province")}
           </span>
           <ChevronDown
             size={16}
@@ -97,10 +100,11 @@ const ProvinceSelect = ({
         )}
       </div>
 
-      {/* Chọn Phường / Xã */}
+      {/* Chá»n PhÆ°á»ng / XĂ£ */}
       <div className="relative" ref={wardRef}>
         <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1.5">
-          Phường / Xã <span className="text-red-500">*</span>
+          {t("ward_label")}{" "}
+          <span className="text-red-500">*</span>
         </label>
         <button
           type="button"
@@ -124,7 +128,7 @@ const ProvinceSelect = ({
           >
             {wardValue && selectedWard
               ? selectedWard.FullName
-              : "Chọn Phường / Xã"}
+              : t("choose_ward")}
           </span>
           <ChevronDown
             size={16}

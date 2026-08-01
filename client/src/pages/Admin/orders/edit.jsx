@@ -15,18 +15,20 @@ import couponApi from "@/api/management/couponApi";
 import orderApi from "@/api/customer/orderApi";
 // lib
 import { queryClient } from "@/lib/react-query";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Quản lý kinh doanh", route: "" },
-  { title: "Đơn hàng", route: "/management/orders" },
-  { title: "Chỉnh sửa đơn hàng", route: "#" },
-];
+import { useTranslation } from "react-i18next";
 
 const EditOrderPage = () => {
   const navigate = useNavigate();
   const response = useLoaderData();
   const orderData = response.order.data;
+  const { t } = useTranslation("translation", { keyPrefix: "order" });
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("business_management"), route: "" },
+    { title: t("order_management"), route: "/management/orders" },
+    { title: t("edit_order_breadcrumb"), route: "#" },
+  ];
 
   // --- KHỞI TẠO STATE TỪ LOADER DATA ---
   const [items, setItems] = useState(
@@ -76,7 +78,7 @@ const EditOrderPage = () => {
 
       return {
         id: v.id,
-        name: `${v.product?.name || "Sản phẩm không rõ tên"}${variantLabel}`,
+        name: `${v.product?.name || t("unknown_product")}${variantLabel}`,
       };
     });
   }, [response?.productVariants?.data]);
@@ -87,7 +89,7 @@ const EditOrderPage = () => {
         item.id === itemId ? { ...item, [field]: value } : item,
       ),
     );
-    setDiscount(0); // Reset giảm giá khi thay đổi giỏ hàng
+    setDiscount(0);
     setFinal(0);
   };
 
@@ -103,7 +105,7 @@ const EditOrderPage = () => {
         setFinal(resCoupon.data.newAmount);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Lỗi kiểm tra mã!");
+      toast.error(error.response?.data?.message || t("coupon_check_error"));
     }
   };
 
@@ -139,7 +141,7 @@ const EditOrderPage = () => {
       }
     } catch (error) {
       console.error(error.message);
-      toast.error(error.response?.data?.message || "Cập nhật thất bại!");
+      toast.error(error.response?.data?.message || t("update_failed"));
     }
   };
 
@@ -150,10 +152,10 @@ const EditOrderPage = () => {
       {/* KHỐI TIÊU ĐỀ ĐƠN HÀNG */}
       <div className="flex justify-between items-center my-2">
         <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide">
-          Chỉnh sửa đơn hàng #{orderData.id}
+          {t("edit_order_title")} #{orderData.id}
         </h2>
         <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
-          Ngày tạo: {formatFullDateTime(orderData.created_at)}
+          {t("created_date")} {formatFullDateTime(orderData.created_at)}
         </span>
       </div>
 
@@ -161,19 +163,19 @@ const EditOrderPage = () => {
         onSubmit={handleSubmit}
         className="flex flex-col lg:flex-row gap-4 items-start w-full"
       >
-        {/* CỘT TRÁI: THÔNG TIN KHÁCH HÀNG & DÒNG TIỀN (30%) */}
-        <div className="w-full lg:w-[30%] flex flex-col gap-4">
+        {/* CỘT TRÁI: Đặt tỷ lệ lg:w-[33%] chuẩn giống trang Create */}
+        <div className="w-full lg:w-[33%] flex-shrink-0 flex flex-col gap-4">
           {/* CARD: KHÁCH HÀNG */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <TitleManagement color="cyan">Khách hàng</TitleManagement>
+            <TitleManagement color="cyan">{t("customer_card")}</TitleManagement>
             <div className="flex flex-col gap-5 mt-3">
               <FloatingInput
-                label="Email"
+                label={t("email_label")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <FloatingInput
-                label="Địa chỉ"
+                label={t("address_label")}
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
@@ -182,11 +184,11 @@ const EditOrderPage = () => {
 
           {/* CARD: KHUYẾN MÃI */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <TitleManagement color="orange">Khuyến mãi</TitleManagement>
+            <TitleManagement color="orange">{t("promo_card")}</TitleManagement>
             <div className="flex gap-3 items-end mt-3">
               <div className="flex-1">
                 <FloatingInput
-                  label="Mã coupon"
+                  label={t("coupon_label")}
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                 />
@@ -196,29 +198,31 @@ const EditOrderPage = () => {
                 onClick={handleApplyCoupon}
                 className="h-[46px] px-4 rounded-lg text-xs font-bold transition-all uppercase tracking-wider flex-shrink-0 border bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 dark:hover:bg-sky-500/20"
               >
-                K.tra
+                {t("check_btn")}
               </button>
             </div>
           </div>
 
           {/* CARD: THANH TOÁN */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <TitleManagement color="emerald">Thanh toán</TitleManagement>
+            <TitleManagement color="emerald">
+              {t("payment_card")}
+            </TitleManagement>
             <div className="space-y-3 text-sm font-medium mt-4">
               <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                <span>Tạm tính:</span>
+                <span>{t("subtotal")}</span>
                 <span className="font-mono text-slate-800 dark:text-slate-300">
                   {formatCurrency(totalAmount)}
                 </span>
               </div>
               <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                <span>Giảm giá:</span>
+                <span>{t("discount_amount")}</span>
                 <span className="font-mono text-rose-600 dark:text-rose-400 font-semibold">
                   -{formatCurrency(discount)}
                 </span>
               </div>
               <div className="flex justify-between text-emerald-600 dark:text-emerald-400 border-t pt-3 text-base font-black border-slate-200 dark:border-slate-800/80">
-                <span>Tổng cuối:</span>
+                <span>{t("final_total")}</span>
                 <span className="font-mono px-2.5 py-0.5 rounded-lg border bg-emerald-50 border-emerald-200 dark:bg-emerald-500/5 dark:border-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
                   {discount !== 0
                     ? formatCurrency(final)
@@ -228,23 +232,23 @@ const EditOrderPage = () => {
             </div>
           </div>
 
-          <Submit_GoBack name="Sửa đơn" />
+          <Submit_GoBack name={t("submit_edit")} />
         </div>
 
         {/* CỘT PHẢI: TRẠNG THÁI HỆ THỐNG & SẢN PHẨM MUA */}
-        <div className="flex-1 flex flex-col gap-4 w-full">
+        <div className="flex-1 min-w-0 flex flex-col gap-4 w-full">
           {/* CARD: TRẠNG THÁI HỆ THỐNG */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 relative z-20 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="violet">
-              Trạng thái hệ thống
+              {t("system_status_title")}
             </TitleManagement>
             <div className="flex flex-col sm:flex-row gap-4 mt-3">
               <div className="flex-1">
                 <SelectPro
-                  label="Phương thức"
+                  label={t("method_label")}
                   options={[
                     { id: "MOMO", name: "MoMo" },
-                    { id: "COD", name: "Tiền mặt" },
+                    { id: "COD", name: t("cash") },
                   ]}
                   value={method}
                   onChange={setMethod}
@@ -252,11 +256,11 @@ const EditOrderPage = () => {
               </div>
               <div className="flex-1">
                 <SelectPro
-                  label="Đơn hàng"
+                  label={t("order_short")}
                   options={[
-                    { id: "Processing", name: "Chuẩn bị" },
-                    { id: "Shipping", name: "Đang giao" },
-                    { id: "Delivered", name: "Đã giao" },
+                    { id: "Processing", name: t("status_processing_short") },
+                    { id: "Shipping", name: t("status_shipping_short") },
+                    { id: "Delivered", name: t("status_delivered_short") },
                   ]}
                   value={status}
                   onChange={setStatus}
@@ -264,10 +268,10 @@ const EditOrderPage = () => {
               </div>
               <div className="flex-1">
                 <SelectPro
-                  label="Thanh toán"
+                  label={t("payment_label")}
                   options={[
-                    { id: "Pending", name: "Chờ" },
-                    { id: "Paid", name: "Đã trả" },
+                    { id: "Pending", name: t("pay_pending_short") },
+                    { id: "Paid", name: t("pay_paid_short") },
                   ]}
                   value={paymentStatus}
                   onChange={setPaymentStatus}
@@ -280,7 +284,7 @@ const EditOrderPage = () => {
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 relative z-10 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <div className="flex justify-between items-center mb-5">
               <TitleManagement color="blue">
-                Danh sách sản phẩm ({items.length})
+                {t("product_list_count")} ({items.length})
               </TitleManagement>
               <button
                 type="button"
@@ -297,7 +301,7 @@ const EditOrderPage = () => {
                 }
                 className="px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all duration-150 border bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 dark:hover:bg-sky-500/20 shadow-sm"
               >
-                <Plus size={16} strokeWidth={2.5} /> Thêm món
+                <Plus size={16} strokeWidth={2.5} /> {t("add_item")}
               </button>
             </div>
 
@@ -317,14 +321,14 @@ const EditOrderPage = () => {
                       onChange={(val) =>
                         handleItemChange(item.id, "variantId", val)
                       }
-                      label="Sản phẩm"
+                      label={t("product_label")}
                     />
                   </div>
 
                   {/* Số lượng */}
                   <div className="w-full sm:w-24 flex-shrink-0">
                     <FloatingInput
-                      label="SL"
+                      label={t("quantity")}
                       type="number"
                       value={item.quantity}
                       onChange={(e) =>
@@ -336,7 +340,7 @@ const EditOrderPage = () => {
                   {/* Đơn giá mua */}
                   <div className="w-full sm:w-36 flex-shrink-0">
                     <FloatingInput
-                      label="Giá"
+                      label={t("price_label")}
                       type="number"
                       value={item.price_at_purchase}
                       onChange={(e) =>

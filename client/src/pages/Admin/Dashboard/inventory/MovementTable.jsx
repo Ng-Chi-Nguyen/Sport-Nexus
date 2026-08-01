@@ -1,20 +1,27 @@
 import { Card } from "@/pages/Admin/Dashboard/components/Card";
 import { History, ArrowUpRight, ArrowDownRight, RotateCcw } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-export const MovementTable = ({ data = [] }) => (
-  <Card title="Biến động tồn kho gần đây" icon={<History size={16} />}>
-    {data.length ? (
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs">
-          <thead>
-            <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              <th className="pb-2 pr-2 font-medium">Biến thể ID</th>
-              <th className="pb-2 pr-2 font-medium">Loại</th>
-              <th className="pb-2 pr-2 font-medium text-right">Số lượng</th>
-              <th className="pb-2 pr-2 font-medium">Lý do</th>
-              <th className="pb-2 pr-2 font-medium text-right">Ngày</th>
-            </tr>
-          </thead>
+export const MovementTable = ({ data = [] }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
+  return (
+    <Card title={t("recent_movements")} icon={<History size={16} />}>
+      {data.length ? (
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="border-b border-slate-200 dark:border-slate-800 text-left text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <th className="pb-2 pr-2 font-medium">{t("variant_id_col")}</th>
+                <th className="pb-2 pr-2 font-medium">{t("type_col")}</th>
+                <th className="pb-2 pr-2 font-medium text-right">
+                  {t("quantity_col")}
+                </th>
+                <th className="pb-2 pr-2 font-medium">{t("reason_col")}</th>
+                <th className="pb-2 pr-2 font-medium text-right">
+                  {t("date_col")}
+                </th>
+              </tr>
+            </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
             {data.map((m) => {
               const isIn = m.type === "IN";
@@ -72,8 +79,9 @@ export const MovementTable = ({ data = [] }) => (
       </div>
     ) : (
       <div className="flex h-[100px] items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-        Chưa có dữ liệu
+        {t("no_data")}
       </div>
     )}
-  </Card>
-);
+    </Card>
+  );
+};

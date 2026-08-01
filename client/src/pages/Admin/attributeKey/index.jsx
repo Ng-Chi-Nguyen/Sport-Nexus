@@ -17,20 +17,25 @@ import { queryClient } from "@/lib/react-query";
 import { toast } from "sonner";
 import Pagination from "@/components/ui/pagination";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={20} />, route: "" },
-  { title: "Quản lý sản phẩm & kho", route: "" },
-  { title: "Thuộc tính sản phẩm", route: "" },
-];
+import { useTranslation } from "react-i18next";
 
 const AttributeKey = () => {
+  const { t } = useTranslation();
   const responses = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState({ id: "", name: "" });
   const [units, setUnits] = useState([]);
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={20} />, route: "" },
+    {
+      title: t("attributeKey.product_warehouse_management"),
+      route: "",
+    },
+    { title: t("attributeKey.product_attributes"), route: "" },
+  ];
 
   const currentSearch = searchParams.get("search") || "";
   const currentUnit = searchParams.get("unit") || "";
@@ -78,7 +83,9 @@ const AttributeKey = () => {
     } catch (error) {
       setIsConfirmOpen(false);
       const errorMessage =
-        error.message || error.response?.data?.message || "Đã có lỗi xảy ra!";
+        error.message ||
+        error.response?.data?.message ||
+        t("attributeKey.error_occurred");
       toast.error(errorMessage);
     }
   };
@@ -114,21 +121,21 @@ const AttributeKey = () => {
       <div className="flex items-center gap-4 rounded-xl">
         <div className="flex-1 relative group">
           <SearchTable
-            placeholder="Tìm kiếm tên thuộc tính..."
+            placeholder={t("attributeKey.search_placeholder")}
             value={searchInput}
             onChange={(val) => setSearchInput(val)}
           />
         </div>
         <div className="w-[160px]">
           <SimpleSelect
-            placeholder="Tất cả đơn vị"
+            placeholder={t("attributeKey.all_units")}
             value={currentUnit}
             onChange={(val) => handleUnitClick(val)}
             options={[
-              { slug: "", name: "Tất cả" },
+              { slug: "", name: t("attributeKey.all") },
               ...units.map((u) => ({
                 slug: u || "null",
-                name: u || "Không có",
+                name: u || t("attributeKey.none"),
               })),
             ]}
           />
@@ -136,7 +143,7 @@ const AttributeKey = () => {
 
         <ExcelCrudActions
           basePath="/core/variant-attribute-key"
-          title="Import / Export thuộc tính"
+          title={t("attributeKey.import_export")}
           templateFileName="template-thuoc-tinh.xlsx"
           exportFileName="thuoc-tinh.xlsx"
         />
@@ -144,18 +151,18 @@ const AttributeKey = () => {
         <BtnAdd
           route={"/management/attribute-key/create"}
           className="w-[200px]"
-          name="Thêm thuộc tính"
+          name={t("attributeKey.add_attribute")}
         />
       </div>
 
       <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="section-title mb-0">Danh sách thuộc tính</h2>
+          <h2 className="section-title mb-0">{t("attributeKey.title")}</h2>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
             className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Tải lại"
+            title={t("attributeKey.reload")}
           >
             <RefreshCw
               size={18}
@@ -172,25 +179,25 @@ const AttributeKey = () => {
                     scope="col"
                     className="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Tên thuộc tính
+                    {t("attributeKey.attribute_name")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Đơn vị
+                    {t("attributeKey.unit")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Được sử dụng
+                    {t("attributeKey.used_count")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
-                    Hành động
+                    {t("attributeKey.actions")}
                   </th>
                 </tr>
               </thead>
@@ -205,10 +212,12 @@ const AttributeKey = () => {
                         {attr.name}
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <Badge color="blue">{attr.unit || "Không có"}</Badge>
+                        <Badge color="blue">
+                          {attr.unit || t("attributeKey.none")}
+                        </Badge>
                       </td>
                       <td className="px-6 py-4 text-center text-slate-500 dark:text-slate-400 text-xs">
-                        20 sản phẩm
+                        20 {t("attributeKey.products_suffix")}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <BtnActions
@@ -225,7 +234,7 @@ const AttributeKey = () => {
                       colSpan="4"
                       className="px-6 py-20 text-center text-slate-400 dark:text-slate-500 italic text-sm"
                     >
-                      Không có thuộc tính nào
+                      {t("attributeKey.no_attributes")}
                     </td>
                   </tr>
                 )}
@@ -243,8 +252,10 @@ const AttributeKey = () => {
       </div>
       <ConfirmDelete
         isOpen={isConfirmOpen}
-        title="Xóa thuộc tính"
-        message={`Bạn đang thực hiện xóa thuộc tính "${deleteTarget.name}".`}
+        title={t("attributeKey.confirm_delete_title")}
+        message={t("attributeKey.confirm_delete_message", {
+          name: deleteTarget.name,
+        })}
         onConfirm={handleDelete}
         onCancel={() => setIsConfirmOpen(false)}
       />

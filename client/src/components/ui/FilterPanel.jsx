@@ -1,5 +1,6 @@
 import { SearchTable } from "@/components/ui/search";
 import { Filter, ChevronDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const FilterPanel = ({
   searchValue,
@@ -8,23 +9,24 @@ const FilterPanel = ({
   onToggleFilters,
   hasActiveFilters,
   onClearFilters,
-  searchPlaceholder = "Tìm kiếm...",
+  searchPlaceholder,
   addButton,
   children,
 }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
   return (
     <>
       <div className="flex items-center gap-4">
-        {/* Ô Tìm Kiếm */}
+        {/* Ă” TĂ¬m Kiáº¿m */}
         <div className="flex-1 relative group">
           <SearchTable
-            placeholder={searchPlaceholder}
+            placeholder={searchPlaceholder ?? t("search_placeholder")}
             value={searchValue}
             onChange={onSearchChange}
           />
         </div>
 
-        {/* Nút Bật/Tắt Bộ Lọc */}
+        {/* NĂºt Báº­t/Táº¯t Bá»™ Lá»c */}
         <button
           type="button"
           onClick={onToggleFilters}
@@ -35,7 +37,7 @@ const FilterPanel = ({
           }`}
         >
           <Filter size={14} />
-          <span>Bộ lọc</span>
+          <span>{t("filter")}</span>
           {hasActiveFilters && (
             <span className="w-1.5 h-1.5 rounded-full bg-sky-500 dark:bg-[#4facf3]" />
           )}
@@ -50,7 +52,7 @@ const FilterPanel = ({
         {addButton}
       </div>
 
-      {/* Khung Chứa Các Lựa Chọn Lọc */}
+      {/* Khung Chá»©a CĂ¡c Lá»±a Chá»n Lá»c */}
       <div
         className={`transition-all duration-300 ease-in-out ${
           showFilters
@@ -64,14 +66,14 @@ const FilterPanel = ({
               {children}
             </div>
 
-            {/* Nút Xóa Bộ Lọc */}
+            {/* NĂºt XĂ³a Bá»™ Lá»c */}
             {hasActiveFilters && (
               <button
                 type="button"
                 onClick={onClearFilters}
                 className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-300 text-rose-600 bg-rose-50 hover:bg-rose-100 dark:border-rose-500/20 dark:text-rose-400 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
-                Xóa bộ lọc
+                {t("clear_filter")}
               </button>
             )}
           </div>

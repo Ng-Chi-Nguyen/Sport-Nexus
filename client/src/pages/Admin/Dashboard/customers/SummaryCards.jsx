@@ -2,6 +2,7 @@ import { Users, UserCheck, UserX, ShoppingBag, Repeat } from "lucide-react";
 import { KpiCard } from "@/pages/Admin/Dashboard/components/KpiCard";
 import { Card } from "@/pages/Admin/Dashboard/components/Card";
 import { ProgressBar } from "@/pages/Admin/Dashboard/components/ProgressBar";
+import { useTranslation } from "react-i18next";
 
 const KPI_TONES = {
   blue: "from-blue-500/10 border-blue-200 dark:from-blue-600/30 dark:border-blue-900/40",
@@ -15,6 +16,7 @@ const KPI_TONES = {
 };
 
 export const SummaryCards = ({ summary = {} }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const {
     totalUsers = 0,
     verifiedUsers = 0,
@@ -34,25 +36,25 @@ export const SummaryCards = ({ summary = {} }) => {
       {/* Hàng KPI chính */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 items-start">
         <KpiCard
-          label="Tổng người dùng"
+          label={t("total_users")}
           value={totalUsers.toLocaleString()}
           icon={<Users size={16} />}
           tone={KPI_TONES.blue}
         />
         <KpiCard
-          label="User có đơn hàng"
+          label={t("users_with_orders")}
           value={usersWithOrders.toLocaleString()}
           icon={<ShoppingBag size={16} />}
           tone={KPI_TONES.emerald}
         />
         <KpiCard
-          label="Tỉ lệ quay lại"
+          label={t("repeat_purchase_rate")}
           value={`${repeatPurchaseRate}%`}
           icon={<Repeat size={16} />}
           tone={KPI_TONES.violet}
         />
         <KpiCard
-          label="User bị khóa"
+          label={t("blocked_users")}
           value={blockedUsers.toLocaleString()}
           icon={<UserX size={16} />}
           tone={KPI_TONES.rose}
@@ -61,10 +63,10 @@ export const SummaryCards = ({ summary = {} }) => {
 
       {/* Hàng các thẻ phân tích tỷ lệ (Xác thực, Trạng thái, Phân khúc) */}
       <div className="grid gap-4 sm:grid-cols-3 items-start">
-        <Card title="Xác thực" icon={<UserCheck size={16} />}>
+        <Card title={t("verification_title")} icon={<UserCheck size={16} />}>
           <div className="space-y-3 py-1">
             <ProgressBar
-              label="Đã xác thực"
+              label={t("verified")}
               count={verifiedUsers}
               color="from-emerald-500 to-teal-400"
               percent={
@@ -74,7 +76,7 @@ export const SummaryCards = ({ summary = {} }) => {
               }
             />
             <ProgressBar
-              label="Chưa xác thực"
+              label={t("unverified")}
               count={unverifiedUsers}
               color="from-amber-500 to-orange-400"
               percent={
@@ -86,16 +88,16 @@ export const SummaryCards = ({ summary = {} }) => {
           </div>
         </Card>
 
-        <Card title="Trạng thái" icon={<UserX size={16} />}>
+        <Card title={t("status_title")} icon={<UserX size={16} />}>
           <div className="space-y-3 py-1">
             <ProgressBar
-              label="Đang hoạt động"
+              label={t("active_users")}
               count={activeUsers}
               color="from-emerald-500 to-teal-400"
               percent={totalUsers ? (activeUsers / totalUsers) * 100 : 0}
             />
             <ProgressBar
-              label="Bị khóa"
+              label={t("blocked")}
               count={blockedUsers}
               color="from-rose-500 to-red-400"
               percent={totalUsers ? (blockedUsers / totalUsers) * 100 : 0}
@@ -103,10 +105,10 @@ export const SummaryCards = ({ summary = {} }) => {
           </div>
         </Card>
 
-        <Card title="Phân khúc mua hàng" icon={<ShoppingBag size={16} />}>
+        <Card title={t("purchase_segment")} icon={<ShoppingBag size={16} />}>
           <div className="space-y-3 py-1">
             <ProgressBar
-              label="Khách mua 1 lần"
+              label={t("one_time_buyers")}
               count={oneTimeBuyers}
               color="from-blue-500 to-cyan-400"
               percent={
@@ -114,7 +116,7 @@ export const SummaryCards = ({ summary = {} }) => {
               }
             />
             <ProgressBar
-              label="Khách quay lại"
+              label={t("repeat_buyers")}
               count={repeatBuyers}
               color="from-violet-500 to-purple-400"
               percent={

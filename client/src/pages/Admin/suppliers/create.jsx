@@ -13,16 +13,19 @@ import supplierdApi from "@/api/management/supplierApi";
 import { queryClient } from "@/lib/react-query";
 import { Submit_GoBack } from "@/components/ui/button";
 import { TitleManagement } from "@/components/ui/title";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={20} />, route: "" },
-  { title: "Quản lý chuỗi cung ứng", route: "" },
-  { title: "Nhà cung cấp", route: "/management/suppliers" },
-  { title: "Thêm nhà cung cấp", route: "" },
-];
+import { useTranslation } from "react-i18next";
 
 const CreateSupplierPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "supplier" });
   const navigate = useNavigate();
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={20} />, route: "" },
+    { title: t("supply_chain"), route: "" },
+    { title: t("suppliers_title"), route: "/management/suppliers" },
+    { title: t("create_breadcrumb"), route: "" },
+  ];
+
   // state form
   const [logo, setLogo] = useState(null);
   const [name, setName] = useState("");
@@ -77,7 +80,7 @@ const CreateSupplierPage = () => {
         error.message ||
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
-        "Đã có lỗi xảy ra!";
+        t("error_occurred");
 
       toast.error(errorMessage);
     }
@@ -87,7 +90,7 @@ const CreateSupplierPage = () => {
     <div className="space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
       <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide uppercase">
-        Thêm mới nhà cung cấp
+        {t("create_heading")}
       </h2>
 
       <form
@@ -98,13 +101,13 @@ const CreateSupplierPage = () => {
         <div className="flex-1 flex flex-col gap-4 w-full">
           <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
             <TitleManagement color="green">
-              Thông tin người liên hệ mua hàng phẩm
+              {t("contact_info_title")}
             </TitleManagement>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
               <div>
                 <FloatingInput
                   id="name"
-                  label="Tên nhà cung cấp"
+                  label={t("name_label")}
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -113,7 +116,7 @@ const CreateSupplierPage = () => {
               <div>
                 <FloatingInput
                   id="contact_person"
-                  label="Tên người đại diện"
+                  label={t("contact_person_label")}
                   required
                   value={contactPerson}
                   onChange={(e) => setContactPerson(e.target.value)}
@@ -122,7 +125,7 @@ const CreateSupplierPage = () => {
               <div>
                 <FloatingInput
                   id="email"
-                  label="Email liên hệ"
+                  label={t("email_label")}
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -131,7 +134,7 @@ const CreateSupplierPage = () => {
               <div>
                 <FloatingInput
                   id="phone"
-                  label="Số điện thoại"
+                  label={t("phone_label")}
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -142,7 +145,7 @@ const CreateSupplierPage = () => {
 
           <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
             <TitleManagement color="emerald">
-              Địa chỉ kho/văn phòng nhà cung cấp
+              {t("address_title")}
             </TitleManagement>
 
             <div className="mt-3">
@@ -151,14 +154,14 @@ const CreateSupplierPage = () => {
 
             {ward && (
               <div className="mt-4 text-sm text-sky-600 dark:text-[#4facf3] font-medium italic">
-                Địa chỉ: {ward}, {province}
+                {t("address_label")} {ward}, {province}
               </div>
             )}
 
             <div className="w-full mt-4">
               <FloatingInput
                 id="specific_address"
-                label="Địa chỉ chi tiết"
+                label={t("detail_address_label")}
                 required
                 value={detail}
                 onChange={(e) => setDetail(e.target.value)}
@@ -171,7 +174,7 @@ const CreateSupplierPage = () => {
         <div className="w-full lg:w-[35%] flex flex-col gap-4">
           <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
             <TitleManagement color="cyan">
-              Logo nhà cung cấp (nếu có)
+              {t("logo_title")}
             </TitleManagement>
             <div className="mt-3">
               <InputFile value={logo} onChange={(file) => setLogo(file)} />

@@ -16,21 +16,16 @@ import { queryClient } from "@/lib/react-query";
 import { toast } from "sonner";
 import couponApi from "@/api/management/couponApi";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
-
-// Import component SimpleSelect mới từ thư mục chứa ui components của bạn
 import { SimpleSelect } from "@/components/ui/select";
 import {
   ACTIVE_TABS,
   DISCOUNT_TYPE_OPTIONS,
 } from "@/constants/management/coupon";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Quản lý kinh doanh", route: "" },
-  { title: "Khuyến mãi", route: "/management/coupons" },
-];
+import { useTranslation } from "react-i18next";
 
 const CouponPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "coupon" });
+  const { t: tc } = useTranslation("translation", { keyPrefix: "constants" });
   const responses = useLoaderData();
   const revalidator = useRevalidator();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,6 +33,12 @@ const CouponPage = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("business_management"), route: "" },
+    { title: t("coupon_management"), route: "/management/coupons" },
+  ];
 
   const currentSearch = searchParams.get("search") || "";
   const isActive = searchParams.get("is_active") || "";
@@ -106,7 +107,7 @@ const CouponPage = () => {
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["coupons"] });
         revalidator.revalidate();
-        toast.success(response.message);
+        toast.success(response.message || t("delete_success"));
         setIsConfirmOpen(false);
       }
     } catch (error) {
@@ -115,7 +116,7 @@ const CouponPage = () => {
         error.message ||
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
-        "Đã có lỗi xảy ra!";
+        t("error_occurred");
       toast.error(errorMessage);
     }
   };
@@ -128,7 +129,7 @@ const CouponPage = () => {
       <div className="flex flex-wrap items-center gap-3 my-4">
         <form onSubmit={handleSearchSubmit} className="flex-1 min-w-[240px]">
           <SearchTable
-            placeholder="Tìm kiếm mã khuyến mãi..."
+            placeholder={t("search_placeholder")}
             value={searchTerm}
             onChange={setSearchTerm}
           />
@@ -144,7 +145,7 @@ const CouponPage = () => {
           }`}
         >
           <Filter size={14} />
-          Bộ lọc
+          {t("filter_btn")}
           {hasActiveFilters && (
             <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
           )}
@@ -158,7 +159,7 @@ const CouponPage = () => {
 
         <ExcelCrudActions
           basePath="/management/coupon"
-          title="Import / Export mã giảm giá"
+          title={t("import_export_title")}
           templateFileName="template-ma-giam-gia.xlsx"
           exportFileName="ma-giam-gia.xlsx"
           onSuccess={() => {
@@ -166,7 +167,7 @@ const CouponPage = () => {
             revalidator.revalidate();
           }}
         />
-        <BtnAdd route="/management/coupons/create" name="Thêm khuyến mãi" />
+        <BtnAdd route="/management/coupons/create" name={t("add_coupon_btn")} />
       </div>
 
       {/* KHU VỰC BỘ LỌC NGANG */}
@@ -179,10 +180,9 @@ const CouponPage = () => {
       >
         <div className="p-4 rounded-xl border shadow-lg transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/80 dark:border-slate-800">
           <div className="flex flex-wrap items-end gap-4">
-            {/* 1. Trạng thái */}
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[230px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                Trạng thái
+                {t("status_label")}
               </label>
               <div className="flex items-center gap-0.5 p-0.5 rounded-lg h-10 border transition-colors duration-200 bg-slate-100 border-slate-200 dark:bg-[#111827]/60 dark:border-slate-800">
                 {ACTIVE_TABS.map((tab) => (
@@ -196,27 +196,28 @@ const CouponPage = () => {
                         : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
                     }`}
                   >
-                    {tab.label}
+                    {tc(tab.label)}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* 2. Loại giảm giá */}
             <div className="flex-1 min-w-[150px]">
               <SimpleSelect
-                label="Loại giảm giá"
-                options={DISCOUNT_TYPE_OPTIONS}
+                label={t("discount_type_label")}
+                options={DISCOUNT_TYPE_OPTIONS.map((o) => ({
+                  slug: o.slug,
+                  name: tc(o.name),
+                }))}
                 value={discountType}
                 onChange={(val) => setFilter("discount_type", val)}
-                placeholder="Tất cả"
+                placeholder={t("all_placeholder")}
               />
             </div>
 
-            {/* 3. Từ ngày */}
             <div className="flex-1 min-w-[140px]">
               <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                Từ ngày
+                {t("date_from_label")}
               </label>
               <input
                 type="date"
@@ -226,10 +227,9 @@ const CouponPage = () => {
               />
             </div>
 
-            {/* 4. Đến ngày */}
             <div className="flex-1 min-w-[140px]">
               <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                Đến ngày
+                {t("date_to_label")}
               </label>
               <input
                 type="date"
@@ -239,15 +239,14 @@ const CouponPage = () => {
               />
             </div>
 
-            {/* 5. Giá trị giảm */}
             <div className="w-[180px] shrink-0">
               <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                Giá trị giảm
+                {t("discount_value_label")}
               </label>
               <div className="flex items-center gap-1">
                 <input
                   type="number"
-                  placeholder="Tối thiểu"
+                  placeholder={t("min_placeholder")}
                   value={discountMin}
                   onChange={(e) => setFilter("discount_min", e.target.value)}
                   className="w-full h-10 px-2 text-xs rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
@@ -257,7 +256,7 @@ const CouponPage = () => {
                 </span>
                 <input
                   type="number"
-                  placeholder="Tối đa"
+                  placeholder={t("max_placeholder")}
                   value={discountMax}
                   onChange={(e) => setFilter("discount_max", e.target.value)}
                   className="w-full h-10 px-2 text-xs rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
@@ -265,14 +264,13 @@ const CouponPage = () => {
               </div>
             </div>
 
-            {/* 6. Nút Xóa bộ lọc */}
             {hasActiveFilters && (
               <button
                 type="button"
                 onClick={clearAllFilters}
                 className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 dark:border-rose-500/20 dark:text-rose-400 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
-                Xoá bộ lọc
+                {t("clear_filter_btn")}
               </button>
             )}
           </div>
@@ -282,13 +280,13 @@ const CouponPage = () => {
       {/* TIÊU ĐỀ & NÚT REFRESH */}
       <div className="flex items-center justify-between">
         <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
-          Danh sách mã giảm giá
+          {t("coupon_list_title")}
         </h2>
         <button
           onClick={handleRefresh}
           disabled={revalidator.state === "loading"}
           className="p-1.5 rounded-lg transition-colors text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
-          title="Tải lại"
+          title={t("reload")}
         >
           <RefreshCw
             size={18}
@@ -304,19 +302,19 @@ const CouponPage = () => {
             <thead className="text-xs uppercase border-b transition-colors duration-200 bg-slate-100 border-slate-200 dark:bg-[#161F32] dark:border-slate-800">
               <tr>
                 <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
-                  Mã Code
+                  {t("table_code")}
                 </th>
                 <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
-                  Hiệu lực
+                  {t("table_validity")}
                 </th>
                 <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
-                  Giới hạn đơn
+                  {t("table_order_limit")}
                 </th>
                 <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
-                  Sử dụng
+                  {t("table_usage")}
                 </th>
                 <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
-                  Thao tác
+                  {t("table_actions")}
                 </th>
               </tr>
             </thead>
@@ -333,14 +331,14 @@ const CouponPage = () => {
                       </Badge>
                       {!coupon.is_active && (
                         <div className="mt-1">
-                          <Badge color="red">Đã hết hạn</Badge>
+                          <Badge color="red">{t("expired_badge")}</Badge>
                         </div>
                       )}
                       <div className="flex items-center justify-center gap-1 mt-1.5">
                         <span className="font-bold text-[12px] text-slate-600 dark:text-slate-300">
                           {coupon.discount_type === "CASH"
-                            ? "Giảm tiền mặt"
-                            : "Giảm phần trăm"}
+                            ? t("cash_type")
+                            : t("percentage_type")}
                         </span>
                         <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">
                           {coupon.discount_type === "CASH"
@@ -351,18 +349,20 @@ const CouponPage = () => {
                     </td>
                     <td className="px-6 py-4 text-center text-[12px]">
                       <div className="text-slate-500 dark:text-slate-400">
-                        Từ: {formatDate(coupon.start_date)}
+                        {t("from_date")} {formatDate(coupon.start_date)}
                       </div>
                       <div className="text-rose-600 dark:text-rose-400 font-medium">
-                        Đến: {formatDate(coupon.end_date)}
+                        {t("to_date")} {formatDate(coupon.end_date)}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center text-[12px]">
                       <div className="text-slate-500 dark:text-slate-400 italic">
-                        Đơn tối thiểu: {formatCurrency(coupon.min_order_value)}
+                        {t("min_order")}{" "}
+                        {formatCurrency(coupon.min_order_value)}
                       </div>
                       <div className="font-bold text-slate-800 dark:text-slate-200">
-                        Giảm tối đa: {formatCurrency(coupon.max_discount)}
+                        {t("max_discount")}{" "}
+                        {formatCurrency(coupon.max_discount)}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
@@ -374,10 +374,10 @@ const CouponPage = () => {
                       <div className="flex gap-2 justify-center">
                         <BtnEdit
                           route={`/management/coupons/edit/${coupon.id}`}
-                          name="Sửa"
+                          name={t("edit_btn")}
                         />
                         <BtnDelete
-                          name="Xóa"
+                          name={t("delete_btn")}
                           onClick={() => openConfirm(coupon.id)}
                         />
                       </div>
@@ -390,7 +390,7 @@ const CouponPage = () => {
                     colSpan="5"
                     className="px-6 py-10 text-center text-slate-400 dark:text-slate-500 italic"
                   >
-                    Không tìm thấy mã khuyến mãi nào
+                    {t("no_coupons_found")}
                   </td>
                 </tr>
               )}
@@ -399,8 +399,8 @@ const CouponPage = () => {
         </div>
         <ConfirmDelete
           isOpen={isConfirmOpen}
-          title="Xóa mã giảm giá"
-          message="Bạn đang thực hiện xóa mã giảm giá."
+          title={t("delete_modal_title")}
+          message={t("delete_modal_message")}
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmOpen(false)}
         />

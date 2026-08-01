@@ -15,17 +15,19 @@ import couponApi from "@/api/management/couponApi";
 import orderApi from "@/api/customer/orderApi";
 // lib
 import { queryClient } from "@/lib/react-query";
-
-const breadcrumbData = [
-  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-  { title: "Quản lý kinh doanh", route: "" },
-  { title: "Đơn hàng", route: "/management/orders" },
-  { title: "Thêm đơn hàng mới", route: "#" },
-];
+import { useTranslation } from "react-i18next";
 
 const CreateOrderPage = () => {
   const navigate = useNavigate();
   const response = useLoaderData();
+  const { t } = useTranslation("translation", { keyPrefix: "order" });
+
+  const breadcrumbData = [
+    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+    { title: t("business_management"), route: "" },
+    { title: t("order_management"), route: "/management/orders" },
+    { title: t("add_order_breadcrumb"), route: "#" },
+  ];
 
   // state form
   const [items, setItems] = useState([
@@ -47,7 +49,7 @@ const CreateOrderPage = () => {
 
   const handleAddItem = () => {
     if (items.length >= 10) {
-      toast.error("Nếu số lượng món hàng lớn hơn 10 món hãy nhập bằng file");
+      toast.error(t("many_items_error"));
       return;
     }
 
@@ -96,7 +98,7 @@ const CreateOrderPage = () => {
 
       return {
         id: v.id,
-        name: `${v.product?.name || "Sản phẩm không rõ tên"}${variantLabel}`,
+        name: `${v.product?.name || t("unknown_product")}${variantLabel}`,
       };
     });
   }, [response?.productVariants?.data]);
@@ -129,7 +131,7 @@ const CreateOrderPage = () => {
         error.message ||
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
-        "Đã có lỗi xảy ra!";
+        t("error_occurred");
       toast.error(errorMessage);
     }
   };
@@ -166,7 +168,7 @@ const CreateOrderPage = () => {
         error.message ||
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
-        "Đã có lỗi xảy ra!";
+        t("error_occurred");
       toast.error(errorMessage);
     }
   };
@@ -175,7 +177,7 @@ const CreateOrderPage = () => {
     <div className="animate-in fade-in duration-500 space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
       <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide">
-        Tạo đơn hàng mới
+        {t("create_order_title")}
       </h2>
 
       <form
@@ -186,15 +188,15 @@ const CreateOrderPage = () => {
         <div className="w-full lg:w-[30%] flex flex-col gap-4">
           {/* CARD: THÔNG TIN KHÁCH HÀNG */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <TitleManagement color="cyan">Thông tin khách hàng</TitleManagement>
+            <TitleManagement color="cyan">{t("customer_info_title")}</TitleManagement>
             <div className="flex flex-col gap-5 mt-3">
               <FloatingInput
-                label="Email khách hàng"
+                label={t("customer_email")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <FloatingInput
-                label="Địa chỉ giao hàng"
+                label={t("shipping_address")}
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
@@ -204,12 +206,12 @@ const CreateOrderPage = () => {
           {/* CARD: MÃ GIẢM GIÁ */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="orange">
-              Thanh toán & Mã giảm giá
+              {t("payment_coupon")}
             </TitleManagement>
             <div className="flex gap-3 items-end mt-3">
               <div className="flex-1">
                 <FloatingInput
-                  label="Mã giảm giá"
+                  label={t("coupon_code")}
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                 />
@@ -219,29 +221,29 @@ const CreateOrderPage = () => {
                 onClick={handleApplyCoupon}
                 className="h-[46px] px-4 rounded-lg text-xs font-bold transition-all uppercase tracking-wider flex-shrink-0 border bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 dark:hover:bg-sky-500/20"
               >
-                K.tra
+                {t("check_btn")}
               </button>
             </div>
           </div>
 
           {/* CARD: TỔNG KẾT ĐƠN HÀNG */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <TitleManagement color="emerald">Tổng kết đơn hàng</TitleManagement>
+            <TitleManagement color="emerald">{t("order_summary")}</TitleManagement>
             <div className="space-y-3 text-sm font-medium mt-4">
               <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                <span>Tạm tính:</span>
+                <span>{t("subtotal")}</span>
                 <span className="font-mono text-slate-800 dark:text-slate-300">
                   {formatCurrency(totalAmount)}
                 </span>
               </div>
               <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                <span>Số tiền giảm:</span>
+                <span>{t("discount_amount")}</span>
                 <span className="font-mono text-rose-600 dark:text-rose-400 font-semibold">
                   -{formatCurrency(discount)}
                 </span>
               </div>
               <div className="flex justify-between text-emerald-600 dark:text-emerald-400 border-t pt-3 text-base font-black border-slate-200 dark:border-slate-800/80">
-                <span>Tổng cuối:</span>
+                <span>{t("final_total")}</span>
                 <span className="font-mono px-2.5 py-0.5 rounded-lg border bg-emerald-50 border-emerald-200 dark:bg-emerald-500/5 dark:border-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
                   {discount !== 0
                     ? formatCurrency(final)
@@ -258,14 +260,14 @@ const CreateOrderPage = () => {
         <div className="flex-1 flex flex-col gap-4 w-full">
           {/* CARD: THÔNG TIN ĐƠN HÀNG */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 relative z-20 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <TitleManagement color="violet">Thông tin đơn hàng</TitleManagement>
+            <TitleManagement color="violet">{t("order_info")}</TitleManagement>
             <div className="flex flex-col sm:flex-row gap-4 mt-3">
               <div className="w-full sm:w-1/3">
                 <SelectPro
-                  label="Phương thức thanh toán"
+                  label={t("payment_method")}
                   options={[
-                    { id: "MOMO", name: "Ví MoMo" },
-                    { id: "COD", name: "Tiền mặt" },
+                    { id: "MOMO", name: t("momo_wallet") },
+                    { id: "COD", name: t("cash") },
                   ]}
                   value={method}
                   onChange={handleMethodChange}
@@ -273,13 +275,13 @@ const CreateOrderPage = () => {
               </div>
               <div className="w-full sm:w-1/3">
                 <SelectPro
-                  label="Trạng thái đơn hàng"
+                  label={t("order_status")}
                   options={[
-                    { id: "Processing", name: "Chuẩn bị hàng" },
-                    { id: "Shipping", name: "Đang giao" },
-                    { id: "Delivered", name: "Đã giao" },
-                    { id: "Cancelled", name: "Hủy" },
-                    { id: "Refunded", name: "Trả hàng" },
+                    { id: "Processing", name: t("status_processing") },
+                    { id: "Shipping", name: t("status_shipping") },
+                    { id: "Delivered", name: t("status_delivered") },
+                    { id: "Cancelled", name: t("status_cancelled") },
+                    { id: "Refunded", name: t("status_refunded") },
                   ]}
                   value={status}
                   onChange={handleStatusChange}
@@ -287,12 +289,12 @@ const CreateOrderPage = () => {
               </div>
               <div className="w-full sm:w-1/3">
                 <SelectPro
-                  label="Trạng thái thanh toán"
+                  label={t("payment_status")}
                   options={[
-                    { id: "Pending", name: "Chờ thanh toán" },
-                    { id: "Paid", name: "Đã thanh toán" },
-                    { id: "Failed", name: "Thanh toán thất bại" },
-                    { id: "Refunded", name: "Hoàn tiền" },
+                    { id: "Pending", name: t("pay_pending") },
+                    { id: "Paid", name: t("pay_paid") },
+                    { id: "Failed", name: t("pay_failed") },
+                    { id: "Refunded", name: t("pay_refunded") },
                   ]}
                   value={paymentStatus}
                   onChange={handlePaymentStatusChange}
@@ -305,14 +307,14 @@ const CreateOrderPage = () => {
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 relative z-10 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <div className="flex justify-between items-center mb-5">
               <TitleManagement color="blue">
-                Danh sách sản phẩm mua
+                {t("product_list_title")}
               </TitleManagement>
               <button
                 type="button"
                 onClick={handleAddItem}
                 className="px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all duration-150 border bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 dark:hover:bg-sky-500/20 shadow-sm"
               >
-                <Plus size={16} strokeWidth={2.5} /> Thêm sản phẩm
+                <Plus size={16} strokeWidth={2.5} /> {t("add_product")}
               </button>
             </div>
 
@@ -332,14 +334,14 @@ const CreateOrderPage = () => {
                       onChange={(val) =>
                         handleItemChange(item.id, "variantId", val)
                       }
-                      label="Sản phẩm"
+                      label={t("product_label")}
                     />
                   </div>
 
                   {/* Số lượng */}
                   <div className="w-full sm:w-24 flex-shrink-0">
                     <FloatingInput
-                      label="SL"
+                      label={t("quantity")}
                       type="number"
                       value={item.quantity}
                       onChange={(e) =>
@@ -351,7 +353,7 @@ const CreateOrderPage = () => {
                   {/* Đơn giá */}
                   <div className="w-full sm:w-36 flex-shrink-0">
                     <FloatingInput
-                      label="Đơn giá"
+                      label={t("unit_price")}
                       type="number"
                       value={item.price_at_purchase}
                       onChange={(e) =>
