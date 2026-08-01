@@ -58,22 +58,20 @@ export const MiddleBanner = ({ brands = [] }) => {
   ));
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 md:py-14 select-none">
+    <div className="max-w-7xl mx-auto px-4 py-10 md:py-14">
       <div className="bg-gradient-to-r from-blue-50 via-white to-blue-50 rounded-2xl border border-slate-100 shadow-sm py-8 md:py-10 px-4">
         <div className="relative overflow-hidden">
           <div className="flex">
-          <div
-            ref={containerRef}
-            className="flex items-center whitespace-nowrap will-change-transform"
-          >
-            {brandItems}
-            {brandItems}
+            <div
+              ref={containerRef}
+              className="flex items-center whitespace-nowrap will-change-transform"
+            >
+              {brandItems}
+              {brandItems}
+            </div>
           </div>
         </div>
       </div>
     </div>
-    </div>
   );
 };
-
-

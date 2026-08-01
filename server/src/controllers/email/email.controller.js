@@ -21,20 +21,21 @@ const emailController = {
         }
     },
 
-    getViewEmailWelcome: async (req, res) => {
+    sendSupport: async (req, res) => {
+        const { full_name, email, phone, subject, message } = req.body;
         try {
-            // 1. Định nghĩa dữ liệu giả (Dummy Data) để test
-            const verify_url = "http://localhost:5173/home";
-            const data = {
-                full_name: "Nguyễn Chí Nguyện (Preview)",
-                verify_url: verify_url
-            };
+            await emailService.sendSupportEmail({ full_name, email, phone, subject, message });
 
-            // 2. Render file EJS ra giao diện web
-            res.render('emails/welcome', data);
-            // Lưu ý: Đảm bảo bạn đã cấu hình app.set('view engine', 'ejs')
+            return res.status(200).json({
+                status: true,
+                message: "Yêu cầu hỗ trợ đã được gửi thành công!"
+            });
         } catch (error) {
-            res.status(500).send("Lỗi render: " + error.message);
+            return res.status(500).json({
+                status: false,
+                message: "Lỗi server nội bộ khi gửi mail hỗ trợ",
+                error: error.message
+            });
         }
     }
 }

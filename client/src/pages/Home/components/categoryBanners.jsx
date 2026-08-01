@@ -20,7 +20,7 @@ export const CategoryBanners = ({ categories }) => {
             >
               <div className="absolute inset-0 bg-black/10" />
               <div className="relative h-full flex flex-col items-center justify-center p-4 text-center">
-                <span className="text-white/20 font-black text-4xl select-none absolute -bottom-2 -right-2">
+                <span className="text-white/20 font-black text-4xl absolute -bottom-2 -right-2">
                   {cat.name.charAt(0).toUpperCase()}
                 </span>
                 <h3 className="font-black text-base text-white tracking-tight relative z-10">

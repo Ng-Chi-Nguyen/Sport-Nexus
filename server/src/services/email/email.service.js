@@ -83,6 +83,38 @@ const emailService = {
             subject: `Cập nhật trạng thái đơn hàng #${order.id} - Sport Nexus`,
             html,
         });
+    },
+
+    sendSupportEmail: async ({ full_name, email, phone, subject, message }) => {
+        const templatePath = path.resolve('src/views/emails/support.ejs');
+        const createdAt = new Date().toLocaleString("vi-VN");
+
+        const html = await ejs.renderFile(templatePath, {
+            full_name,
+            email,
+            phone: phone || "Chưa cung cấp",
+            subject: subject || "Yêu cầu hỗ trợ chung",
+            message,
+            created_at: createdAt
+        });
+
+        // 1. Gửi mail phản hồi tự động cho khách hàng
+        const userMail = transporter.sendMail({
+            from: `"Sport Nexus" <${emailAdmin}>`,
+            to: email,
+            subject: `[Sport Nexus] Xác nhận yêu cầu hỗ trợ: ${subject || "Yêu cầu chung"}`,
+            html,
+        });
+
+        // 2. Gửi thông báo đến email Admin để bộ phận hỗ trợ xử lý
+        const adminMail = transporter.sendMail({
+            from: `"Sport Nexus Support" <${emailAdmin}>`,
+            to: emailAdmin,
+            subject: `[Yêu cầu hỗ trợ mới] ${subject || "Khách hàng gửi hỗ trợ"}`,
+            html,
+        });
+
+        return await Promise.all([userMail, adminMail]);
     }
 };
 

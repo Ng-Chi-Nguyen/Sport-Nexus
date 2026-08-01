@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Search,
   MapPin,
@@ -17,23 +18,16 @@ export const NavCategoryMenu = ({
   isOpenMenu,
   setIsOpenMenu,
 }) => {
+  const { t } = useTranslation();
   const menuRef = useRef(null);
   const { pathname } = useLocation();
 
   const infoLinks = [
-    { name: "Hệ thống cửa hàng", to: "/he-thong-cua-hang", icon: MapPin },
-    {
-      name: "Chính sách bảo hành",
-      to: "/chinh-sach-bao-hanh",
-      icon: ShieldCheck,
-    },
-    { name: "Điều khoản sử dụng", to: "/dieu-khoan-su-dung", icon: PhoneCall },
-    {
-      name: "Chính sách bảo mật",
-      to: "/chinh-sach-bao-mat",
-      icon: ShieldCheck,
-    },
-    { name: "Tuyển dụng", to: "/tuyen-dung", icon: Users },
+    { key: "store_system", to: "/he-thong-cua-hang", icon: MapPin },
+    { key: "warranty_policy", to: "/chinh-sach-bao-hanh", icon: ShieldCheck },
+    { key: "terms_of_use", to: "/dieu-khoan-su-dung", icon: PhoneCall },
+    { key: "privacy_policy", to: "/chinh-sach-bao-mat", icon: ShieldCheck },
+    { key: "recruitment", to: "/tuyen-dung", icon: Users },
   ];
 
   // Xử lý click outside đóng menu
@@ -55,7 +49,7 @@ export const NavCategoryMenu = ({
   return (
     <div
       ref={menuRef}
-      className={`sticky top-16 z-40 w-full font-sans select-none transition-all duration-300 ${
+      className={`sticky top-16 z-40 w-full font-sans transition-all duration-300 ${
         isScrolled
           ? "-translate-y-full opacity-0 pointer-events-none"
           : "translate-y-0 opacity-100"
@@ -64,7 +58,7 @@ export const NavCategoryMenu = ({
       {/* 1. TOP NAV BAR */}
       <div className="bg-slate-900 text-slate-300 border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 h-12 flex items-center justify-between gap-4">
-          {/* Search Box cho Mobile (đã dọn sạch viền đen) */}
+          {/* Search Box cho Mobile */}
           <div className="flex-1 sm:hidden relative flex items-center rounded-full overflow-hidden bg-slate-800 border border-slate-700 focus-within:border-blue-500">
             <Search
               size={14}
@@ -72,14 +66,14 @@ export const NavCategoryMenu = ({
             />
             <input
               type="text"
-              placeholder="Tìm kiếm..."
+              placeholder={t("search_placeholder")}
               className="w-full h-8 pl-9 pr-16 bg-transparent text-xs text-white placeholder-slate-500 outline-none focus:outline-none focus:ring-0 border-none"
             />
             <button
               type="button"
               className="absolute right-0 h-full px-3 bg-blue-600 text-white text-xs font-medium hover:bg-blue-500 transition-colors"
             >
-              Tìm
+              {t("search_btn")}
             </button>
           </div>
 
@@ -99,7 +93,7 @@ export const NavCategoryMenu = ({
                   }`}
                 >
                   <Icon size={14} />
-                  <span>{link.name}</span>
+                  <span>{t(`${link.key}`)}</span>
                 </Link>
               );
             })}
@@ -107,7 +101,7 @@ export const NavCategoryMenu = ({
 
           {/* Hotline */}
           <div className="hidden lg:block text-xs font-medium text-slate-400">
-            Hotline:{" "}
+            {t("hotline")}:{" "}
             <a
               href="tel:0812312831"
               className="text-blue-400 font-bold hover:underline"
@@ -126,12 +120,14 @@ export const NavCategoryMenu = ({
             <div className="md:col-span-3">
               <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
                 <Grid size={14} />
-                <span>Danh Mục Sản Phẩm ({categories.length})</span>
+                <span>
+                  {t("categories_title", { count: categories.length })}
+                </span>
               </div>
 
               {categories.length === 0 ? (
                 <p className="py-8 text-center text-xs text-slate-400">
-                  Chưa có danh mục nào
+                  {t("no_categories")}
                 </p>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -156,18 +152,16 @@ export const NavCategoryMenu = ({
                 <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">
                   Sport Nexus
                 </span>
-                <h4 className="text-xs font-semibold">
-                  Thiết bị thi đấu chính hãng
-                </h4>
+                <h4 className="text-xs font-semibold">{t("banner_title")}</h4>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Cung cấp dụng cụ thể thao đạt chuẩn cho mọi giải đấu.
+                  {t("banner_desc")}
                 </p>
                 <Link
                   to="/products"
                   onClick={() => setIsOpenMenu(false)}
                   className="inline-flex items-center gap-1 text-xs font-medium text-blue-400 hover:text-blue-300 pt-2"
                 >
-                  <span>Xem tất cả</span>
+                  <span>{t("view_all")}</span>
                   <ArrowUpRight size={14} />
                 </Link>
               </div>

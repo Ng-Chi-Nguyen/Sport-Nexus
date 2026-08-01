@@ -1,31 +1,24 @@
 import { Clock } from "lucide-react";
 import { ProductCard } from "@/components/ui/card";
 import SeeMore from "@/components/ui/seeMore";
+import { useTranslation } from "react-i18next";
 
 export const NewArrivals = ({ products }) => {
+  const { t } = useTranslation();
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm">
-        <div className="flex items-center gap-3 px-6 pt-6 pb-4 border-b border-slate-50">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-100">
-            <Clock className="text-white" size={16} />
-          </div>
-          <div>
-            <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">
-              New Arrivals
-            </span>
-            <h3 className="text-lg font-black text-slate-900">Hàng mới về</h3>
-          </div>
+      <h2 className="mb-6 text-xl md:text-2xl font-bold text-blue-600 flex items-center gap-2">
+        <Clock className="tw-5 h-5 text-blue-600" strokeWidth={3} />
+        {t("new_arrivals")}
+      </h2>
+      <div className="p-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+          {products.map((p, idx) => (
+            <ProductCard key={p.id} product={p} index={idx} />
+          ))}
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-            {products.map((p, idx) => (
-              <ProductCard key={p.id} product={p} index={idx} />
-            ))}
-          </div>
 
-          <SeeMore to="/san-pham?sort=newest" />
-        </div>
+        <SeeMore to="/san-pham?sort=newest" label={t("see_more")} />
       </div>
     </div>
   );

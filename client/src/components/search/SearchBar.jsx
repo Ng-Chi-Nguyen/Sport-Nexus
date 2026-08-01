@@ -9,25 +9,27 @@ import {
   recordLastSearchTerm,
   removeFromSearchHistory,
 } from "@/lib/searchHistory";
+import { useTranslation } from "react-i18next";
 
 const DEBOUNCE_MS = 300;
 
 const SearchBar = () => {
-    const [query, setQuery] = useState("");
-    const [suggestions, setSuggestions] = useState([]);
-    const [total, setTotal] = useState(0);
-    const [isOpen, setIsOpen] = useState(false);
-    const [activeIdx, setActiveIdx] = useState(-1);
-    const [history, setHistory] = useState(() => getSearchHistory());
-    const navigate = useNavigate();
-    const wrapperRef = useRef(null);
-    const inputRef = useRef(null);
-    const debounceRef = useRef(null);
+  const { t } = useTranslation();
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(-1);
+  const [history, setHistory] = useState(() => getSearchHistory());
+  const navigate = useNavigate();
+  const wrapperRef = useRef(null);
+  const inputRef = useRef(null);
+  const debounceRef = useRef(null);
 
-    const saveTerm = (term) => {
-        addToSearchHistory(term);
-        setHistory(getSearchHistory());
-    };
+  const saveTerm = (term) => {
+    addToSearchHistory(term);
+    setHistory(getSearchHistory());
+  };
 
   const fetchSuggestions = useCallback(async (q) => {
     if (!q.trim()) {
@@ -48,36 +50,36 @@ const SearchBar = () => {
     }
   }, []);
 
-    const handleChange = (e) => {
-        const val = e.target.value;
-        setQuery(val);
-        setActiveIdx(-1);
-        if (debounceRef.current) clearTimeout(debounceRef.current);
-        if (!val.trim()) {
-            setSuggestions([]);
-            setTotal(0);
-            setIsOpen(true);
-            return;
-        }
-        debounceRef.current = setTimeout(() => fetchSuggestions(val), DEBOUNCE_MS);
-    };
+  const handleChange = (e) => {
+    const val = e.target.value;
+    setQuery(val);
+    setActiveIdx(-1);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (!val.trim()) {
+      setSuggestions([]);
+      setTotal(0);
+      setIsOpen(true);
+      return;
+    }
+    debounceRef.current = setTimeout(() => fetchSuggestions(val), DEBOUNCE_MS);
+  };
 
-    const handleSubmit = (searchQuery) => {
-        const q = (searchQuery || query).trim();
-        if (!q) return;
-        saveTerm(q);
-        recordLastSearchTerm(q);
-        setIsOpen(false);
-        navigate(`/tim-kiem?q=${encodeURIComponent(q)}`);
-    };
+  const handleSubmit = (searchQuery) => {
+    const q = (searchQuery || query).trim();
+    if (!q) return;
+    saveTerm(q);
+    recordLastSearchTerm(q);
+    setIsOpen(false);
+    navigate(`/tim-kiem?q=${encodeURIComponent(q)}`);
+  };
 
-    const handleSelect = (slug) => {
-        const q = query.trim();
-        saveTerm(q);
-        recordLastSearchTerm(q);
-        setIsOpen(false);
-        navigate(`/san-pham/${slug}`);
-    };
+  const handleSelect = (slug) => {
+    const q = query.trim();
+    saveTerm(q);
+    recordLastSearchTerm(q);
+    setIsOpen(false);
+    navigate(`/san-pham/${slug}`);
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -109,14 +111,13 @@ const SearchBar = () => {
 
   return (
     <div ref={wrapperRef} className="relative flex-1 max-w-2xl hidden sm:block">
-      {/* 1. Bọc container có overflow-hidden để mọi viền nhô ra ngoài đều bị cắt gọn theo góc bo */}
+      {/* Container bọc ngoài */}
       <div className="relative flex items-center rounded-full overflow-hidden border border-gray-200 focus-within:border-primary transition-colors">
         <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none z-10"
           strokeWidth={2}
         />
 
-        {/* 2. Triệt tiêu hoàn toàn outline/ring/focus-visible trên Input */}
         <input
           ref={inputRef}
           type="text"
@@ -124,7 +125,7 @@ const SearchBar = () => {
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           onFocus={() => setIsOpen(true)}
-          placeholder="Tìm kiếm sản phẩm..."
+          placeholder={t("placeholder")}
           className="w-full h-10 pl-10 pr-24 bg-gray-50 text-sm placeholder:text-gray-400 focus:bg-white
             outline-none focus:outline-none focus-visible:outline-none 
             ring-0 focus:ring-0 focus-visible:ring-0 border-none focus:border-none"
@@ -145,24 +146,24 @@ const SearchBar = () => {
           </button>
         )}
 
-        {/* 3. Tắt outline/ring trên Nút Tìm Kiếm */}
         <button
           type="button"
           onClick={() => handleSubmit()}
           className="h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-medium transition-colors duration-200 shrink-0
             outline-none focus:outline-none focus-visible:outline-none ring-0 focus:ring-0 border-none"
         >
-          Tìm kiếm
+          {t("button")}
         </button>
       </div>
 
       {/* Dropdown lịch sử tìm kiếm khi ô trống */}
-      {isOpen && !query.trim() &&
+      {isOpen &&
+        !query.trim() &&
         (history.length > 0 ? (
           <div className="absolute top-full mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
             <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-100">
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Lịch sử tìm kiếm
+                {t("history_title")}
               </span>
               <button
                 type="button"
@@ -172,18 +173,23 @@ const SearchBar = () => {
                 }}
                 className="text-xs text-gray-400 hover:text-primary transition-colors outline-none focus:outline-none"
               >
-                Xóa tất cả
+                {t("clear_all")}
               </button>
             </div>
             {history.map((item) => (
-              <div key={item.term} className="group flex items-center px-2 hover:bg-gray-50">
+              <div
+                key={item.term}
+                className="group flex items-center px-2 hover:bg-gray-50"
+              >
                 <button
                   type="button"
                   onMouseDown={() => handleSubmit(item.term)}
                   className="flex-1 flex items-center gap-3 py-2.5 px-2 text-left outline-none focus:outline-none"
                 >
                   <Clock size={16} className="text-gray-400 shrink-0" />
-                  <span className="text-sm text-gray-700 truncate">{item.term}</span>
+                  <span className="text-sm text-gray-700 truncate">
+                    {item.term}
+                  </span>
                 </button>
                 <button
                   type="button"
@@ -192,7 +198,7 @@ const SearchBar = () => {
                     setHistory(getSearchHistory());
                   }}
                   className="p-1.5 text-gray-300 hover:text-red-500 transition-colors outline-none focus:outline-none"
-                  aria-label={`Xóa ${item.term} khỏi lịch sử`}
+                  aria-label={t("clear_item_aria", { term: item.term })}
                 >
                   <X size={14} />
                 </button>
@@ -201,7 +207,7 @@ const SearchBar = () => {
           </div>
         ) : (
           <div className="absolute top-full mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-50 py-6 text-center text-sm text-gray-500">
-            Chưa có lịch sử tìm kiếm
+            {t("no_history")}
           </div>
         ))}
 
@@ -250,14 +256,14 @@ const SearchBar = () => {
             onMouseDown={() => handleSubmit(query)}
             className="w-full px-4 py-3 text-sm font-medium text-primary border-t border-gray-100 hover:bg-primary/5 text-center outline-none focus:outline-none"
           >
-            Xem tất cả {total} kết quả
+            {t("view_all_results", { total })}
           </button>
         </div>
       )}
 
       {isOpen && query && suggestions.length === 0 && (
         <div className="absolute top-full mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-50 py-6 text-center text-sm text-gray-500">
-          Không tìm thấy sản phẩm nào
+          {t("no_results")}
         </div>
       )}
     </div>

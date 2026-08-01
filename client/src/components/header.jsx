@@ -1,5 +1,6 @@
 import {
   Bell,
+  ChevronRight,
   Heart,
   Languages,
   LayoutDashboard,
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Logo } from "./logo";
 import SearchBar from "@/components/search/SearchBar";
@@ -25,11 +27,13 @@ import { useCart } from "@/contexts/CartContext";
 import { clearAuth } from "@/lib/authStorage";
 
 const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
+  const { i18n, t } = useTranslation();
   const { count } = useCart();
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
   const [avatarError, setAvatarError] = useState(false);
   const [isOpenSettings, setIsOpenSettings] = useState(false);
+  const [isLangHovered, setIsLangHovered] = useState(false);
   const [isDark, setIsDark] = useState(
     () => localStorage.getItem("theme") === "dark",
   );
@@ -44,6 +48,7 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
     const handleClickOutside = (event) => {
       if (settingsRef.current && !settingsRef.current.contains(event.target)) {
         setIsOpenSettings(false);
+        setIsLangHovered(false);
       }
     };
     if (isOpenSettings) {
@@ -51,6 +56,35 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
     }
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpenSettings]);
+
+  const handleChangeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    setIsLangHovered(false);
+    setIsOpenSettings(false);
+  };
+
+  const LANGUAGES = [
+    { code: "vi", flag: "🇻🇳", label: "Tiếng Việt" },
+    { code: "en", flag: "🇬🇧", label: "English" },
+    { code: "zh", flag: "🇨🇳", label: "中文" },
+    { code: "ja", flag: "🇯🇵", label: "日本語" },
+    { code: "ko", flag: "🇰🇷", label: "한국어" },
+    { code: "th", flag: "🇹🇭", label: "ไทย" },
+    { code: "fr", flag: "🇫🇷", label: "Français" },
+    { code: "es", flag: "🇪🇸", label: "Español" },
+    { code: "de", flag: "🇩🇪", label: "Deutsch" },
+    { code: "it", flag: "🇮🇹", label: "Italiano" },
+    { code: "pt", flag: "🇵🇹", label: "Português" },
+    { code: "ru", flag: "🇷🇺", label: "Русский" },
+    { code: "ar", flag: "🇸🇦", label: "العربية" },
+    { code: "hi", flag: "🇮🇳", label: "हिन्दी" },
+    { code: "id", flag: "🇮🇩", label: "Bahasa Indonesia" },
+    { code: "ms", flag: "🇲🇾", label: "Bahasa Melayu" },
+    { code: "nl", flag: "🇳🇱", label: "Nederlands" },
+    { code: "pl", flag: "🇵🇱", label: "Polski" },
+    { code: "tr", flag: "🇹🇷", label: "Türkçe" },
+    { code: "sv", flag: "🇸🇪", label: "Svenska" },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white/80 backdrop-blur-md border-b border-gray-200/70 shadow-sm">
@@ -108,7 +142,7 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
             >
               <User size={18} strokeWidth={1.5} />
               <span className="text-sm font-medium hidden sm:inline">
-                Đăng nhập
+                {t("login")}
               </span>
             </Link>
           )}
@@ -135,7 +169,7 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
           </button>
 
           {isOpenSettings && (
-            <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-200 shadow-xl z-50 flex flex-col">
+            <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 shadow-xl z-50 flex flex-col rounded-lg py-1">
               <span className="absolute -top-1.5 right-3 w-3 h-3 bg-white border-t border-l border-gray-200 rotate-45" />
               {user && user.role?.slug !== "customer" && (
                 <Link
@@ -144,7 +178,7 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
                   className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
                 >
                   <LayoutDashboard size={18} strokeWidth={1.5} />
-                  <span>Quản trị</span>
+                  <span>{t("admin")}</span>
                 </Link>
               )}
               {user && (
@@ -155,7 +189,7 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
                     className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
                   >
                     <Heart size={18} strokeWidth={1.5} />
-                    <span>Sản phẩm đã thích</span>
+                    <span>{t("wishlist")}</span>
                   </Link>
                   <Link
                     to="/hoa-don"
@@ -163,7 +197,7 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
                     className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
                   >
                     <Receipt size={18} strokeWidth={1.5} />
-                    <span>Hóa đơn đã thanh toán</span>
+                    <span>{t("invoices")}</span>
                   </Link>
                   <Link
                     to="/khuyen-mai"
@@ -171,7 +205,7 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
                     className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
                   >
                     <TicketPercent size={18} strokeWidth={1.5} />
-                    <span>Mã giảm giá của tôi</span>
+                    <span>{t("coupons")}</span>
                   </Link>
                   <Link
                     to="/thong-bao"
@@ -179,7 +213,7 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
                     className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
                   >
                     <Bell size={18} strokeWidth={1.5} />
-                    <span>Thông báo</span>
+                    <span>{t("notifications")}</span>
                   </Link>
                   <Link
                     to="/lich-su-tim-kiem"
@@ -187,7 +221,7 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
                     className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
                   >
                     <Search size={18} strokeWidth={1.5} />
-                    <span>Lịch sử tìm kiếm</span>
+                    <span>{t("search_history")}</span>
                   </Link>
                   <Link
                     to="/bao-mat"
@@ -195,33 +229,76 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
                     className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
                   >
                     <ShieldCheck size={18} strokeWidth={1.5} />
-                    <span>Bảo mật tài khoản</span>
+                    <span>{t("security")}</span>
                   </Link>
-                  <button
-                    onClick={() => setIsOpenSettings(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100 text-left"
+
+                  {/* Mục Ngôn ngữ kèm Submenu khi Hover */}
+                  <div
+                    className="relative border-b border-gray-100"
+                    onMouseEnter={() => setIsLangHovered(true)}
+                    onMouseLeave={() => setIsLangHovered(false)}
                   >
-                    <Languages size={18} strokeWidth={1.5} />
-                    <span>Ngôn ngữ</span>
-                  </button>
+                    <button className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all text-left">
+                      <div className="flex items-center gap-3">
+                        <Languages size={18} strokeWidth={1.5} />
+                        <span>{t("language")}</span>
+                      </div>
+                      <ChevronRight size={16} className="text-gray-400" />
+                    </button>
+
+                    {/* Submenu chọn Tiếng Việt / English */}
+                    {isLangHovered && (
+                      <div className="absolute right-full top-0 w-48 max-h-64 overflow-y-auto bg-white border border-gray-200 shadow-xl z-50 flex flex-col py-1 scrollbar-thin">
+                        {LANGUAGES.map((lang, index) => {
+                          const isActive = i18n.language.startsWith(lang.code);
+                          return (
+                            <button
+                              key={lang.code}
+                              onClick={() => handleChangeLanguage(lang.code)}
+                              className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium hover:bg-primary/5 transition-all text-left ${
+                                index !== LANGUAGES.length - 1
+                                  ? "border-b border-gray-100"
+                                  : ""
+                              } ${
+                                isActive
+                                  ? "text-primary bg-primary/5 font-semibold"
+                                  : "text-gray-700"
+                              }`}
+                            >
+                              <span className="flex items-center gap-2.5">
+                                <span className="text-lg leading-none">
+                                  {lang.flag}
+                                </span>
+                                <span className="truncate">{lang.label}</span>
+                              </span>
+                              {isActive && (
+                                <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
                   <Link
                     to="/ho-tro"
                     onClick={() => setIsOpenSettings(false)}
                     className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
                   >
                     <LifeBuoy size={18} strokeWidth={1.5} />
-                    <span>Hỗ trợ / Trợ giúp</span>
+                    <span>{t("help")}</span>
                   </Link>
                   <button
                     onClick={() => setIsDark((prev) => !prev)}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100 text-left"
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100 text-left w-full"
                   >
                     {isDark ? (
                       <Sun size={18} strokeWidth={1.5} />
                     ) : (
                       <Moon size={18} strokeWidth={1.5} />
                     )}
-                    <span>{isDark ? "Chế độ sáng" : "Chế độ tối"}</span>
+                    <span>{isDark ? t("light_mode") : t("dark_mode")}</span>
                   </button>
                   <Link
                     to="/tai-khoan"
@@ -229,17 +306,17 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
                     className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100"
                   >
                     <User size={18} strokeWidth={1.5} />
-                    <span>Tài khoản</span>
+                    <span>{t("account")}</span>
                   </Link>
                   <button
                     onClick={() => {
                       clearAuth();
                       window.location.href = "/auth/login";
                     }}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-rose-500 hover:bg-rose-50 transition-all text-left"
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-rose-500 hover:bg-rose-50 transition-all text-left w-full"
                   >
                     <LogOut size={18} strokeWidth={1.5} />
-                    <span>Đăng xuất</span>
+                    <span>{t("logout")}</span>
                   </button>
                 </>
               )}

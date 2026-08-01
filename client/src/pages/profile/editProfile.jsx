@@ -54,7 +54,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="max-w-2xl font-sans select-none">
+    <div className="max-w-2xl font-sans">
       <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200">
         <button
           type="button"

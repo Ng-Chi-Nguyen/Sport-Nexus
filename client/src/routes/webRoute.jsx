@@ -10,6 +10,7 @@ import {
   orderDetailLoader,
   productsLoader,
 } from "./webLoader";
+import Support from "@/pages/settings/supports";
 
 const HomePage = lazy(() => import("@/pages/Home/"));
 const ProductDetail = lazy(() => import("@/pages/ProductDetail"));
@@ -31,7 +32,6 @@ const FavoritesPage = lazy(() => import("@/pages/favorites"));
 const CouponsPage = lazy(() => import("@/pages/coupons"));
 const SearchHistoryPage = lazy(() => import("@/pages/searchHistory"));
 const ProfilePlaceholder = lazy(() => import("@/pages/profile/placeholder"));
-const Support = lazy(() => import("@/pages/profile/placeholder"));
 
 export const webRoutes = {
   children: [

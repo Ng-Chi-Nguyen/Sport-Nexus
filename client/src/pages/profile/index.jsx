@@ -44,7 +44,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-800 font-sans select-none">
+    <div className="min-h-screen bg-white text-slate-800 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="mt-20">

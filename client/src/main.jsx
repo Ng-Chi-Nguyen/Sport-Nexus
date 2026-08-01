@@ -9,6 +9,7 @@ import { queryClient } from "@/lib/react-query";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { CouponProvider } from "@/contexts/CouponContext";
+import "@/lib/i18n";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 createRoot(document.getElementById("root")).render(
@@ -17,10 +18,13 @@ createRoot(document.getElementById("root")).render(
       <CartProvider>
         <WishlistProvider>
           <CouponProvider>
-            <RouterProvider router={router} fallbackElement={<LoadingSpinner />} />
+            <RouterProvider
+              router={router}
+              fallbackElement={<LoadingSpinner />}
+            />
           </CouponProvider>
         </WishlistProvider>
       </CartProvider>
     </QueryClientProvider>
-  </GoogleOAuthProvider>
+  </GoogleOAuthProvider>,
 );

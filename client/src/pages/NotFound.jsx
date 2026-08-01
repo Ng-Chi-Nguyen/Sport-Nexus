@@ -7,13 +7,13 @@ const NotFound = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F4F6F9] font-sans select-none">
+    <div className="min-h-screen flex flex-col bg-[#F4F6F9] font-sans">
       <Header />
 
       <main className="flex-grow flex items-center justify-center p-6">
         <div className="max-w-md w-full text-center space-y-6">
           <div className="relative inline-block">
-            <h1 className="text-[120px] sm:text-[160px] font-black leading-none text-slate-200 select-none">
+            <h1 className="text-[120px] sm:text-[160px] font-black leading-none text-slate-200">
               404
             </h1>
             <div className="absolute inset-0 flex items-center justify-center">

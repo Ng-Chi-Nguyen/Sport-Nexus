@@ -6,6 +6,6 @@ const sendEmailRoute = express.Router();
 sendEmailRoute
 
     .post("/welcome", emailController.sendWelcome)
-    .get("/welcome", emailController.getViewEmailWelcome)
+    .post("/support", emailController.sendSupport)
 
 export default sendEmailRoute;

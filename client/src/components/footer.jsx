@@ -8,11 +8,14 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Logo } from "./logo";
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
-    <footer className="bg-white border-t-4 border-slate-900 pt-16 pb-6 px-4 md:px-16 lg:px-24 font-sans select-none">
+    <footer className="bg-white border-t-4 border-slate-900 pt-16 pb-6 px-4 md:px-16 lg:px-24 font-sans">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-slate-200">
         {/* Cột 1: Giới thiệu */}
         <div className="space-y-5">
@@ -20,8 +23,7 @@ const Footer = () => {
             <Logo />
           </div>
           <p className="text-slate-600 font-medium text-sm leading-relaxed max-w-xs">
-            Hệ thống quản lý và phân phối sản phẩm thể thao hiện đại, tối ưu quy
-            trình vận hành trong dự án khóa luận tốt nghiệp.
+            {t("description")}
           </p>
           {/* Hàng nút mạng xã hội phong cách Neo-brutalism */}
           <div className="flex flex-wrap gap-3 pt-2">
@@ -80,7 +82,7 @@ const Footer = () => {
         {/* Cột 2: Điều hướng nhanh */}
         <div>
           <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 mb-5 border-l-4 border-blue-500 pl-2">
-            Liên kết nhanh
+            {t("quick_links")}
           </h3>
           <ul className="space-y-3 text-[13px] font-bold text-slate-600 uppercase tracking-tight">
             <li>
@@ -88,7 +90,7 @@ const Footer = () => {
                 to="/"
                 className="hover:text-blue-600 hover:underline inline-flex items-center gap-0.5 transition-all"
               >
-                Trang chủ{" "}
+                {t("home")}{" "}
                 <ArrowUpRight
                   size={12}
                   className="opacity-0 hover:opacity-100"
@@ -100,7 +102,7 @@ const Footer = () => {
                 to="/products"
                 className="hover:text-blue-600 hover:underline inline-flex items-center gap-0.5 transition-all"
               >
-                Sản phẩm
+                {t("products")}
               </Link>
             </li>
             <li>
@@ -108,7 +110,7 @@ const Footer = () => {
                 to="/orders"
                 className="hover:text-blue-600 hover:underline inline-flex items-center gap-0.5 transition-all"
               >
-                Đơn hàng
+                {t("orders")}
               </Link>
             </li>
             <li>
@@ -116,7 +118,7 @@ const Footer = () => {
                 to="/auth/login"
                 className="hover:text-blue-600 hover:underline inline-flex items-center gap-0.5 transition-all"
               >
-                Quản trị
+                {t("management")}
               </Link>
             </li>
           </ul>
@@ -125,7 +127,7 @@ const Footer = () => {
         {/* Cột 3: Hỗ trợ */}
         <div>
           <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 mb-5 border-l-4 border-blue-500 pl-2">
-            Hỗ trợ khách hàng
+            {t("customer_support")}
           </h3>
           <ul className="space-y-3 text-[13px] font-bold text-slate-600 uppercase tracking-tight">
             <li>
@@ -133,7 +135,7 @@ const Footer = () => {
                 href="#privacy"
                 className="hover:text-blue-600 transition-colors block"
               >
-                Chính sách bảo mật
+                {t("privacy_policy")}
               </a>
             </li>
             <li>
@@ -141,7 +143,7 @@ const Footer = () => {
                 href="#terms"
                 className="hover:text-blue-600 transition-colors block"
               >
-                Điều khoản sử dụng
+                {t("terms_of_use")}
               </a>
             </li>
             <li>
@@ -149,7 +151,7 @@ const Footer = () => {
                 href="#refund"
                 className="hover:text-blue-600 transition-colors block"
               >
-                Chính sách hoàn tiền
+                {t("refund_policy")}
               </a>
             </li>
           </ul>
@@ -158,14 +160,12 @@ const Footer = () => {
         {/* Cột 4: Thông tin liên hệ */}
         <div>
           <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 mb-5 border-l-4 border-blue-500 pl-2">
-            Thông tin liên hệ
+            {t("contact_info")}
           </h3>
           <ul className="space-y-3 text-[13px] font-semibold text-slate-600">
             <li className="flex items-start gap-2.5">
               <MapPin size={16} className="text-blue-600 shrink-0 mt-0.5" />
-              <span className="leading-tight">
-                Đường 3/2, Phường Xuân Khánh, Quận Ninh Kiều, Cần Thơ
-              </span>
+              <span className="leading-tight">{t("address")}</span>
             </li>
             <li className="flex items-center gap-2.5">
               <Phone size={16} className="text-blue-600 shrink-0" />
@@ -192,9 +192,9 @@ const Footer = () => {
       {/* Dòng bản quyền phía dưới cùng */}
       <div className="pt-6 text-center">
         <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">
-          Mã số SV:{" "}
-          <span className="text-blue-600 font-extrabold">227060172</span> — BẢN
-          QUYỀN THUỘC VỀ{" "}
+          {t("student_id")}:{" "}
+          <span className="text-blue-600 font-extrabold">227060172</span> —{" "}
+          {t("copyright")}{" "}
           <span className="text-slate-700 font-extrabold">
             NGUYỄN CHÍ NGUYỆN
           </span>

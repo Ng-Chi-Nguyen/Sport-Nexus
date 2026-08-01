@@ -23,6 +23,7 @@ import banner2 from "@/assets/images/baner-bong-da.png";
 import banner3 from "@/assets/images/banner-boi-loi.jpg";
 import banner4 from "@/assets/images/banner-the-thao-dien-tu.jpg";
 import banner5 from "@/assets/images/leo-nui-banner.jpg";
+import { useTranslation } from "react-i18next";
 
 const bannerImages = [banner1, banner2, banner3, banner4, banner5];
 
@@ -42,8 +43,9 @@ const quickCategories = [
 ];
 
 export const HeroBanner = () => {
+  const { t } = useTranslation();
   return (
-    <section className="relative bg-slate-900 text-white min-h-[550px] md:min-h-[620px] flex items-center justify-center font-sans select-none overflow-visible">
+    <section className="relative bg-slate-900 text-white min-h-[550px] md:min-h-[620px] flex items-center justify-center font-sans overflow-visible">
       {/* 1. Slider hình nền */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <Swiper
@@ -76,29 +78,28 @@ export const HeroBanner = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 z-20 w-full text-left">
         <div className="max-w-2xl space-y-6">
           <span className="inline-block bg-blue-500 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded text-black shadow-sm">
-            Bộ sưu tập mới 2026
+            {t("new_collection_2026")}
           </span>
 
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight leading-none text-white">
-            Giới hạn là thứ <br />
+            {t("limits_are")} <br />
             <span className="text-xl md:text-2xl font-normal normal-case block my-2 text-blue-400">
-              chỉ
+              {t("only_meant")}
             </span>
-            để vượt qua
+            {t("to_be_broken")}
           </h1>
 
           <p className="text-slate-200 text-sm md:text-base leading-relaxed">
             <span className="text-blue-400 font-semibold">
-              Mỗi giới hạn đều là cơ hội để bứt phá.{" "}
+              {t("hero_quote")}{" "}
             </span>
-            Với những sản phẩm thể thao được tuyển chọn từ các thương hiệu uy
-            tín, chúng tôi đồng hành cùng bạn trên hành trình vươn tới những mục
-            tiêu lớn hơn.
+            {t("hero_description")}
           </p>
 
           <div className="pt-2 space-y-2">
             <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              Tư vấn mua hàng: <span className="text-white">0812312831</span>
+              {t("shopping_consultation")}:{" "}
+              <span className="text-white">0812312831</span>
             </div>
             <div className="flex flex-wrap gap-2.5">
               <a
@@ -118,7 +119,7 @@ export const HeroBanner = () => {
                 Zalo
               </a>
               <a
-                href="https://tiktok.com"
+                href="https://www.tiktok.com/@chinguyen.ng"
                 target="_blank"
                 rel="noreferrer"
                 className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider border border-white bg-white/10 text-white hover:bg-white hover:text-black transition-colors"

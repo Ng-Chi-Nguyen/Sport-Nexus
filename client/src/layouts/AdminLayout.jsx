@@ -99,7 +99,7 @@ const AdminLayout = () => {
         >
           <div className="flex flex-col flex-1 min-h-0">
             <div
-              className={`flex items-center mb-4 select-none shrink-0 ${isCollapsed ? "justify-center" : ""}`}
+              className={`flex items-center mb-4 shrink-0 ${isCollapsed ? "justify-center" : ""}`}
             >
               <Link
                 to="/"
@@ -172,7 +172,7 @@ const AdminLayout = () => {
                 }`}
               >
                 {!isCollapsed && (
-                  <div className="px-3 py-2 border-b border-white/5 mb-1 select-none">
+                  <div className="px-3 py-2 border-b border-white/5 mb-1">
                     <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                       Tra cứu hệ thống
                     </p>
@@ -232,7 +232,7 @@ const AdminLayout = () => {
 
             <div
               onClick={() => setIsOpenSettings(!isOpenSettings)}
-              className={`flex items-center rounded-xl border select-none cursor-pointer transition-all duration-150 group ${
+              className={`flex items-center rounded-xl border cursor-pointer transition-all duration-150 group ${
                 isCollapsed ? "justify-center p-2" : "p-2.5 gap-3"
               } ${
                 isOpenSettings

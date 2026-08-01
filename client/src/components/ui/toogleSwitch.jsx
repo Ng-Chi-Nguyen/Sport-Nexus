@@ -3,7 +3,7 @@ const ToogleSwitchBlue3D = (props) => {
   // console.log(checked);
   return (
     <>
-      <label className="relative inline-flex cursor-pointer select-none">
+      <label className="relative inline-flex cursor-pointer">
         {/* Input Checkbox (ẩn nhưng vẫn hoạt động) */}
         <input
           type="checkbox"
