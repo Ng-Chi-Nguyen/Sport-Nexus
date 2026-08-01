@@ -1,6 +1,7 @@
 {
   "type": "module",
   "dependencies": {
+    "@payos/node": "^2.0.5",
     "@prisma/client": "^5.22.0",
     "@supabase/supabase-js": "^2.86.2",
     "adm-zip": "^0.6.0",
