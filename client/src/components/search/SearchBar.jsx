@@ -112,9 +112,9 @@ const SearchBar = () => {
   return (
     <div ref={wrapperRef} className="relative flex-1 max-w-2xl hidden sm:block">
       {/* Container bọc ngoài */}
-      <div className="relative flex items-center rounded-full overflow-hidden border border-gray-200 focus-within:border-primary transition-colors">
+      <div className="relative flex items-center rounded-full overflow-hidden border border-gray-200 dark:border-slate-700 focus-within:border-primary transition-colors">
         <Search
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none z-10"
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-slate-400 pointer-events-none z-10"
           strokeWidth={2}
         />
 
@@ -126,7 +126,7 @@ const SearchBar = () => {
           onKeyDown={handleKeyDown}
           onFocus={() => setIsOpen(true)}
           placeholder={t("placeholder")}
-          className="w-full h-10 pl-10 pr-24 bg-gray-50 text-sm placeholder:text-gray-400 focus:bg-white
+          className="w-full h-10 pl-10 pr-24 bg-gray-50 dark:bg-slate-800 text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:bg-white dark:focus:bg-[#1e293b]
             outline-none focus:outline-none focus-visible:outline-none 
             ring-0 focus:ring-0 focus-visible:ring-0 border-none focus:border-none"
         />
@@ -140,7 +140,7 @@ const SearchBar = () => {
               setIsOpen(true);
               inputRef.current?.focus();
             }}
-            className="absolute right-24 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 outline-none focus:outline-none focus-visible:outline-none ring-0"
+            className="absolute right-24 top-1/2 -translate-y-1/2 p-1 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 outline-none focus:outline-none focus-visible:outline-none ring-0"
           >
             <X size={16} />
           </button>
@@ -160,9 +160,9 @@ const SearchBar = () => {
       {isOpen &&
         !query.trim() &&
         (history.length > 0 ? (
-          <div className="absolute top-full mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-100">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+          <div className="absolute top-full mt-2 w-full bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-50 overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-100 dark:border-slate-700">
+              <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">
                 {t("history_title")}
               </span>
               <button
@@ -171,7 +171,7 @@ const SearchBar = () => {
                   clearSearchHistory();
                   setHistory(getSearchHistory());
                 }}
-                className="text-xs text-gray-400 hover:text-primary transition-colors outline-none focus:outline-none"
+                className="text-xs text-gray-400 dark:text-slate-500 hover:text-primary transition-colors outline-none focus:outline-none"
               >
                 {t("clear_all")}
               </button>
@@ -179,15 +179,15 @@ const SearchBar = () => {
             {history.map((item) => (
               <div
                 key={item.term}
-                className="group flex items-center px-2 hover:bg-gray-50"
+                className="group flex items-center px-2 hover:bg-gray-50 dark:hover:bg-slate-800"
               >
                 <button
                   type="button"
                   onMouseDown={() => handleSubmit(item.term)}
                   className="flex-1 flex items-center gap-3 py-2.5 px-2 text-left outline-none focus:outline-none"
                 >
-                  <Clock size={16} className="text-gray-400 shrink-0" />
-                  <span className="text-sm text-gray-700 truncate">
+                  <Clock size={16} className="text-gray-400 dark:text-slate-500 shrink-0" />
+                  <span className="text-sm text-gray-700 dark:text-slate-200 truncate">
                     {item.term}
                   </span>
                 </button>
@@ -197,7 +197,7 @@ const SearchBar = () => {
                     removeFromSearchHistory(item.term);
                     setHistory(getSearchHistory());
                   }}
-                  className="p-1.5 text-gray-300 hover:text-red-500 transition-colors outline-none focus:outline-none"
+                  className="p-1.5 text-gray-300 dark:text-slate-600 hover:text-red-500 dark:hover:text-red-400 transition-colors outline-none focus:outline-none"
                   aria-label={t("clear_item_aria", { term: item.term })}
                 >
                   <X size={14} />
@@ -206,14 +206,14 @@ const SearchBar = () => {
             ))}
           </div>
         ) : (
-          <div className="absolute top-full mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-50 py-6 text-center text-sm text-gray-500">
+          <div className="absolute top-full mt-2 w-full bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-50 py-6 text-center text-sm text-gray-500 dark:text-slate-400">
             {t("no_history")}
           </div>
         ))}
 
       {/* Dropdown danh sách gợi ý */}
       {isOpen && suggestions.length > 0 && (
-        <div className="absolute top-full mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+        <div className="absolute top-full mt-2 w-full bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-50 overflow-hidden">
           {suggestions.map((item, idx) => (
             <button
               key={item.id}
@@ -221,10 +221,10 @@ const SearchBar = () => {
               onMouseDown={() => handleSelect(item.slug)}
               onMouseEnter={() => setActiveIdx(idx)}
               className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors outline-none focus:outline-none ${
-                idx === activeIdx ? "bg-primary/5" : "hover:bg-gray-50"
+                idx === activeIdx ? "bg-primary/5" : "hover:bg-gray-50 dark:hover:bg-slate-800"
               }`}
             >
-              <div className="w-10 h-10 rounded-lg bg-gray-100 overflow-hidden shrink-0">
+              <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 overflow-hidden shrink-0">
                 {item.thumbnail ? (
                   <img
                     src={item.thumbnail}
@@ -232,16 +232,16 @@ const SearchBar = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
+                  <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-slate-500">
                     <Search size={16} />
                   </div>
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-800 truncate">
+                <p className="text-sm font-medium text-gray-800 dark:text-slate-100 truncate">
                   {item.name}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 dark:text-slate-400">
                   {item.brand?.name && `${item.brand.name} · `}
                   {new Intl.NumberFormat("vi-VN", {
                     style: "currency",
@@ -254,7 +254,7 @@ const SearchBar = () => {
           <button
             type="button"
             onMouseDown={() => handleSubmit(query)}
-            className="w-full px-4 py-3 text-sm font-medium text-primary border-t border-gray-100 hover:bg-primary/5 text-center outline-none focus:outline-none"
+            className="w-full px-4 py-3 text-sm font-medium text-primary border-t border-gray-100 dark:border-slate-700 hover:bg-primary/5 text-center outline-none focus:outline-none"
           >
             {t("view_all_results", { total })}
           </button>
@@ -262,7 +262,7 @@ const SearchBar = () => {
       )}
 
       {isOpen && query && suggestions.length === 0 && (
-        <div className="absolute top-full mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-50 py-6 text-center text-sm text-gray-500">
+        <div className="absolute top-full mt-2 w-full bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-50 py-6 text-center text-sm text-gray-500 dark:text-slate-400">
           {t("no_results")}
         </div>
       )}

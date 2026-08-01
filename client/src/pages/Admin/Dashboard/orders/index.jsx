@@ -18,15 +18,20 @@ export const OrderOverview = () => {
   };
 
   const { data: res, isLoading } = useQuery({
-    queryKey: ["management-dashboard-order-overview", params.from, params.to, params.group_by],
+    queryKey: [
+      "management-dashboard-order-overview",
+      params.from,
+      params.to,
+      params.group_by,
+    ],
     queryFn: () => dashboardApi.getOrderOverview(params),
   });
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-16 text-slate-400">
-        <Loader size={20} className="animate-spin mr-2" />
-        Đang tải dữ liệu...
+      <div className="flex items-center justify-center py-16 text-slate-500 dark:text-slate-400 font-medium text-sm transition-colors duration-200">
+        <Loader size={20} className="animate-spin mr-2 text-sky-500" />
+        Đang tải dữ liệu đơn hàng...
       </div>
     );
   }

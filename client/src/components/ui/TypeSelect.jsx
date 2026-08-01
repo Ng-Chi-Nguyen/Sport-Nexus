@@ -9,24 +9,26 @@ const OPTIONS = [
 const TypeSelect = ({ value, onChange }) => {
   return (
     <div>
-      <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
+      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1.5">
         Loại địa chỉ
       </label>
       <div className="flex gap-2">
         {OPTIONS.map((opt) => {
           const Icon = opt.icon;
+          const isSelected = value === opt.value;
+
           return (
             <button
               key={opt.value}
               type="button"
               onClick={() => onChange(opt.value)}
-              className={`flex items-center gap-1.5 px-3 py-2 border rounded text-xs font-bold uppercase tracking-wider transition-colors ${
-                value === opt.value
-                  ? "border-blue-600 bg-blue-50 text-blue-700"
-                  : "border-slate-300 text-slate-600 hover:border-slate-400"
+              className={`flex items-center gap-1.5 px-3 py-2 border rounded-lg text-xs font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer ${
+                isSelected
+                  ? "border-sky-500 bg-sky-50 text-sky-600 dark:border-sky-500/50 dark:bg-sky-500/10 dark:text-sky-400"
+                  : "border-slate-300 text-slate-600 bg-slate-50 hover:bg-slate-100 hover:border-slate-400 dark:border-slate-800 dark:text-slate-400 dark:bg-[#111827]/40 dark:hover:bg-[#161F32] dark:hover:text-slate-200"
               }`}
             >
-              <Icon size={14} />
+              <Icon size={14} className="shrink-0" />
               <span>{opt.label}</span>
             </button>
           );

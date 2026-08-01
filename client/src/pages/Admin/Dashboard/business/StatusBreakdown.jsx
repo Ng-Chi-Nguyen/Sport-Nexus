@@ -19,26 +19,34 @@ export const StatusBreakdown = ({ ordersByStatus = {}, totalOrders = 0 }) => {
       title="Trạng thái đơn hàng"
       icon={<BarChart3 size={16} />}
       action={
-        <span className="text-xs text-slate-500">{totalOrders} đơn</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">
+          {totalOrders} đơn
+        </span>
       }
     >
       <div className="space-y-3 py-1">
-        {rows.map(([st, count]) => {
-          const num = Number(count || 0);
-          const cfg = STATUS_CFG[st] || {
-            label: st,
-            color: "from-sky-500 to-blue-500",
-          };
-          return (
-            <ProgressBar
-              key={st}
-              label={cfg.label}
-              count={`${num} đơn`}
-              color={cfg.color}
-              percent={Math.max((num / maxVal) * 100, num > 0 ? 6 : 0)}
-            />
-          );
-        })}
+        {rows.length === 0 ? (
+          <p className="text-xs text-slate-400 dark:text-slate-500 italic text-center py-4">
+            Chưa có dữ liệu trạng thái
+          </p>
+        ) : (
+          rows.map(([st, count]) => {
+            const num = Number(count || 0);
+            const cfg = STATUS_CFG[st] || {
+              label: st,
+              color: "from-sky-500 to-blue-500",
+            };
+            return (
+              <ProgressBar
+                key={st}
+                label={cfg.label}
+                count={`${num} đơn`}
+                color={cfg.color}
+                percent={Math.max((num / maxVal) * 100, num > 0 ? 6 : 0)}
+              />
+            );
+          })
+        )}
       </div>
     </Card>
   );

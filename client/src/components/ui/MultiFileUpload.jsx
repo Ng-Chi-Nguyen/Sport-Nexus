@@ -45,17 +45,17 @@ const MultiFileUpload = ({ label, value = [], onChange, maxFiles = 10 }) => {
   return (
     <div className="flex flex-col gap-3 w-full">
       {label && (
-        <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-wider pb-2 flex items-center gap-2 border-b border-white/5">
-          <span className="w-1.5 h-3.5 rounded-sm bg-cyan-500 shadow-[0_0_8px_#06b6d4]"></span>
+        <h3 className="font-semibold text-xs text-slate-600 dark:text-slate-400 uppercase tracking-wider pb-2 flex items-center gap-2 border-b border-slate-200 dark:border-white/5">
+          <span className="w-1.5 h-3.5 rounded-sm bg-sky-500 shadow-[0_0_8px_#0ea5e9]"></span>
           {label}
         </h3>
       )}
 
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {previews.map((src, idx) => (
           <div
             key={idx}
-            className="relative group aspect-square rounded-lg overflow-hidden border border-slate-800 bg-[#0D121F]"
+            className="relative group aspect-square rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-[#0D121F] shadow-sm transition-colors"
           >
             <img
               src={src}
@@ -68,7 +68,8 @@ const MultiFileUpload = ({ label, value = [], onChange, maxFiles = 10 }) => {
             <button
               type="button"
               onClick={() => handleRemove(idx)}
-              className="absolute top-1 right-1 p-1 bg-rose-500/80 hover:bg-rose-500 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute top-1 right-1 p-1 bg-rose-500/90 hover:bg-rose-600 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
+              title="Xóa ảnh"
             >
               <X size={14} />
             </button>
@@ -76,7 +77,7 @@ const MultiFileUpload = ({ label, value = [], onChange, maxFiles = 10 }) => {
         ))}
 
         {canAdd && (
-          <label className="aspect-square rounded-lg border-2 border-dashed border-slate-700 hover:border-cyan-500/50 bg-[#0D121F]/40 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors hover:bg-[#161F32]/40">
+          <label className="aspect-square rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-sky-500 dark:hover:border-sky-500/50 bg-slate-50 dark:bg-[#0D121F]/40 hover:bg-slate-100 dark:hover:bg-[#161F32]/40 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors group">
             <input
               type="file"
               multiple
@@ -84,8 +85,11 @@ const MultiFileUpload = ({ label, value = [], onChange, maxFiles = 10 }) => {
               className="hidden"
               onChange={handleFileSelect}
             />
-            <ImagePlus size={24} className="text-slate-500" />
-            <span className="text-[10px] text-slate-500 font-medium">
+            <ImagePlus
+              size={24}
+              className="text-slate-400 dark:text-slate-500 group-hover:text-sky-500 transition-colors"
+            />
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
               Thêm ảnh
             </span>
           </label>

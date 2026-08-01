@@ -26,9 +26,9 @@ export const CustomerOverview = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-16 text-slate-400">
-        <Loader size={20} className="animate-spin mr-2" />
-        Đang tải dữ liệu...
+      <div className="flex items-center justify-center py-16 text-slate-500 dark:text-slate-400 font-medium text-sm transition-colors duration-200">
+        <Loader size={20} className="animate-spin mr-2 text-sky-500" />
+        Đang tải dữ liệu khách hàng...
       </div>
     );
   }

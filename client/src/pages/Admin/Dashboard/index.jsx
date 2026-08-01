@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { useSearchParams, useLoaderData } from "react-router-dom";
 import { LayoutDashboard } from "lucide-react";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { FilterBar } from "./components/FilterBar";
@@ -35,19 +35,23 @@ const Dashboard = () => {
   const loaderData = useLoaderData();
   const db = loaderData?.data?.data || loaderData?.data || {};
 
-  const params = new URLSearchParams(window.location.search);
-  const activeTab = params.get("tab") || "business";
+  const [searchParams] = useSearchParams();
+  const activeTab = searchParams.get("tab") || "business";
   const SectionComponent = SECTIONS[activeTab];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={BREADCRUMBS} />
       <FilterBar meta={db.meta} />
       <TabNav />
       {SectionComponent ? (
         <SectionComponent data={db} />
       ) : (
-        <p className="text-center text-sm text-slate-500">Chưa có dữ liệu</p>
+        <div className="flex h-32 items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800">
+          <p className="text-sm font-medium text-slate-400 dark:text-slate-500">
+            Chưa có dữ liệu cho mục này
+          </p>
+        </div>
       )}
     </div>
   );

@@ -4,11 +4,14 @@ import { Card } from "@/pages/Admin/Dashboard/components/Card";
 import { ProgressBar } from "@/pages/Admin/Dashboard/components/ProgressBar";
 
 const KPI_TONES = {
-  blue: "from-blue-600/30 border-blue-900/40",
-  emerald: "from-emerald-600/30 border-emerald-900/40",
-  amber: "from-amber-600/30 border-amber-900/40",
-  violet: "from-violet-600/30 border-violet-900/40",
-  rose: "from-rose-600/30 border-rose-900/40",
+  blue: "from-blue-500/10 border-blue-200 dark:from-blue-600/30 dark:border-blue-900/40",
+  emerald:
+    "from-emerald-500/10 border-emerald-200 dark:from-emerald-600/30 dark:border-emerald-900/40",
+  amber:
+    "from-amber-500/10 border-amber-200 dark:from-amber-600/30 dark:border-amber-900/40",
+  violet:
+    "from-violet-500/10 border-violet-200 dark:from-violet-600/30 dark:border-violet-900/40",
+  rose: "from-rose-500/10 border-rose-200 dark:from-rose-600/30 dark:border-rose-900/40",
 };
 
 export const SummaryCards = ({ summary = {} }) => {
@@ -28,6 +31,7 @@ export const SummaryCards = ({ summary = {} }) => {
 
   return (
     <div className="space-y-4">
+      {/* Hàng KPI chính */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 items-start">
         <KpiCard
           label="Tổng người dùng"
@@ -55,6 +59,7 @@ export const SummaryCards = ({ summary = {} }) => {
         />
       </div>
 
+      {/* Hàng các thẻ phân tích tỷ lệ (Xác thực, Trạng thái, Phân khúc) */}
       <div className="grid gap-4 sm:grid-cols-3 items-start">
         <Card title="Xác thực" icon={<UserCheck size={16} />}>
           <div className="space-y-3 py-1">
@@ -62,13 +67,21 @@ export const SummaryCards = ({ summary = {} }) => {
               label="Đã xác thực"
               count={verifiedUsers}
               color="from-emerald-500 to-teal-400"
-              percent={totalVerification ? (verifiedUsers / totalVerification) * 100 : 0}
+              percent={
+                totalVerification
+                  ? (verifiedUsers / totalVerification) * 100
+                  : 0
+              }
             />
             <ProgressBar
               label="Chưa xác thực"
               count={unverifiedUsers}
               color="from-amber-500 to-orange-400"
-              percent={totalVerification ? (unverifiedUsers / totalVerification) * 100 : 0}
+              percent={
+                totalVerification
+                  ? (unverifiedUsers / totalVerification) * 100
+                  : 0
+              }
             />
           </div>
         </Card>
@@ -96,13 +109,17 @@ export const SummaryCards = ({ summary = {} }) => {
               label="Khách mua 1 lần"
               count={oneTimeBuyers}
               color="from-blue-500 to-cyan-400"
-              percent={usersWithOrders ? (oneTimeBuyers / usersWithOrders) * 100 : 0}
+              percent={
+                usersWithOrders ? (oneTimeBuyers / usersWithOrders) * 100 : 0
+              }
             />
             <ProgressBar
               label="Khách quay lại"
               count={repeatBuyers}
               color="from-violet-500 to-purple-400"
-              percent={usersWithOrders ? (repeatBuyers / usersWithOrders) * 100 : 0}
+              percent={
+                usersWithOrders ? (repeatBuyers / usersWithOrders) * 100 : 0
+              }
             />
           </div>
         </Card>

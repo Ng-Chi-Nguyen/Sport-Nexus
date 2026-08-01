@@ -20,31 +20,34 @@ const FloatingTextarea = ({
         onChange={onChange}
         readOnly={isLocked}
         placeholder=" " // 💡 BẮT BUỘC phải giữ khoảng trắng này
-        className="block px-4 pb-3 pt-5 w-full text-sm min-h-[140px] max-h-[350px] text-slate-200 
-                   bg-[#111827]/40 border border-slate-800 rounded-xl appearance-none outline-none 
-                   transition-colors duration-200 tracking-wide custom-scrollbar
-                   focus:border-sky-500/50 focus:bg-[#161F32]/60 focus:ring-1 focus:ring-sky-500/10
+        className="block px-4 pb-3 pt-5 w-full text-sm min-h-[140px] max-h-[350px] appearance-none outline-none 
+                   transition-colors duration-200 tracking-wide custom-scrollbar rounded-xl border
+                   bg-slate-50 border-slate-300 text-slate-800 focus:border-sky-500 focus:bg-white focus:ring-1 focus:ring-sky-500/20
+                   dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 
+                   dark:focus:border-sky-500/50 dark:focus:bg-[#161F32]/60 dark:focus:ring-sky-500/10
                    disabled:opacity-40 disabled:cursor-not-allowed peer"
         {...props}
       />
 
-      {/* LABEL: Đã sửa lại bộ chọn peer-not-placeholder-shown để fix lỗi không bay */}
+      {/* LABEL FLOATING */}
       <label
         htmlFor={id}
-        className="absolute left-[15px] top-4 text-sm text-slate-500 pointer-events-none 
+        className="absolute left-[15px] top-4 text-sm text-slate-400 dark:text-slate-500 pointer-events-none 
                    transition-all duration-200 tracking-wide origin-[0] z-10
                    
-                   /* 1. Trạng thái khi đang click vào điền (Focus) */
+                   /* 1. Trạng thái khi Focus */
                    peer-focus:-translate-y-[24px] peer-focus:-translate-x-1.5 
-                   peer-focus:scale-[0.82] peer-focus:bg-[#0D121F] peer-focus:px-1.5 
-                   peer-focus:text-sky-400 peer-focus:font-semibold
+                   peer-focus:scale-[0.82] peer-focus:bg-slate-50 peer-focus:px-1.5 
+                   peer-focus:text-sky-600 peer-focus:font-semibold
+                   dark:peer-focus:bg-[#0D121F] dark:peer-focus:text-sky-400
                    
-                   /* 2. TRẠNG THÁI ĐÃ SỬA: Khi có chữ bên trong (Placeholder ẩn đi) */
-                   peer-not-placeholder-shown:-translate-y-[24px] 
-                   peer-not-placeholder-shown:-translate-x-1.5 
-                   peer-not-placeholder-shown:scale-[0.82] 
-                   peer-not-placeholder-shown:bg-[#0D121F] 
-                   peer-not-placeholder-shown:px-1.5 peer-not-placeholder-shown:text-slate-400"
+                   /* 2. Trạng thái khi có chữ bên trong */
+                   peer-[:not(:placeholder-shown)]:-translate-y-[24px] 
+                   peer-[:not(:placeholder-shown)]:-translate-x-1.5 
+                   peer-[:not(:placeholder-shown)]:scale-[0.82] 
+                   peer-[:not(:placeholder-shown)]:bg-slate-50 
+                   peer-[:not(:placeholder-shown)]:px-1.5 peer-[:not(:placeholder-shown)]:text-slate-500
+                   dark:peer-[:not(:placeholder-shown)]:bg-[#0D121F] dark:peer-[:not(:placeholder-shown)]:text-slate-400"
       >
         {label} {required && <span className="text-rose-500">*</span>}
       </label>

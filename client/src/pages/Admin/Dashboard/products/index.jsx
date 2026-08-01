@@ -27,9 +27,9 @@ export const ProductOverview = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-16 text-slate-400">
-        <Loader size={20} className="animate-spin mr-2" />
-        Đang tải dữ liệu...
+      <div className="flex items-center justify-center py-16 text-slate-500 dark:text-slate-400 font-medium text-sm transition-colors duration-200">
+        <Loader size={20} className="animate-spin mr-2 text-sky-500" />
+        Đang tải dữ liệu sản phẩm...
       </div>
     );
   }
@@ -41,13 +41,22 @@ export const ProductOverview = () => {
     <div className="space-y-4">
       <SummaryCards summary={data.summary || {}} />
       <div className="flex flex-col lg:flex-row gap-4 items-start">
-        <div className="flex-1 space-y-4 min-w-0">
+        <div className="flex-1 space-y-4 min-w-0 w-full">
           <TrendChart newProductTrend={data.newProductTrend || []} />
-          <SellingOverview top={data.topSelling || []} worst={data.worstSelling || []} />
+          <SellingOverview
+            top={data.topSelling || []}
+            worst={data.worstSelling || []}
+          />
         </div>
-        <div className="flex-1 space-y-4 min-w-0">
-          <ReviewOverview most={data.mostReviewed || []} least={data.leastReviewed || []} />
-          <RevenueOverview top={data.topRevenue || []} lowest={data.lowestRevenue || []} />
+        <div className="flex-1 space-y-4 min-w-0 w-full">
+          <ReviewOverview
+            most={data.mostReviewed || []}
+            least={data.leastReviewed || []}
+          />
+          <RevenueOverview
+            top={data.topRevenue || []}
+            lowest={data.lowestRevenue || []}
+          />
         </div>
       </div>
       <Distribution distribution={data.distribution || {}} />

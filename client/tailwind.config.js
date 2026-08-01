@@ -1,8 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  // 1. Kích hoạt Dark Mode bằng class 'dark' ở <html>
+  darkMode: 'class',
+
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    // 1. Định nghĩa các mốc màn hình (Breakpoints)
     screens: {
       'xs': '480px',   // Mobile ngang
       'sm': '640px',   // Tablet dọc
@@ -12,23 +14,33 @@ export default {
       '2xl': '1536px', // Màn hình lớn
     },
     extend: {
-      // 2. Định nghĩa Font chữ cho phong cách thể thao
       fontFamily: {
-        // Font chính cho nội dung (Sạch sẽ, dễ đọc)
         sans: ['"Inter"', 'sans-serif'],
-        // Font cho tiêu đề
         display: ['"Montserrat"', 'sans-serif'],
       },
-      // 3. Định nghĩa kích thước chữ tùy chỉnh
       fontSize: {
         'heading-lg': ['3rem', { lineHeight: '1.1', fontWeight: '800' }],
         'heading-md': ['2.25rem', { lineHeight: '1.2', fontWeight: '700' }],
         'body-lg': ['1.125rem', { lineHeight: '1.75' }],
-        'tiny': ['0.625rem', { lineHeight: '1rem' }], // 10px
+        'tiny': ['0.625rem', { lineHeight: '1rem' }],
       },
       colors: {
-        'primary': '#4facf3',
-        'btn': 'bg-blue-500',
+        primary: '#4facf3',
+        // Tối ưu hóa hệ thống màu sắc
+        light: {
+          bg: '#f8fafc',      // Slate 50
+          sidebar: '#ffffff', // Trắng thuần
+          border: '#e2e8f0',   // Slate 200
+          text: '#0f172a',     // Slate 900
+          muted: '#64748b',    // Slate 500
+        },
+        dark: {
+          bg: '#080C14',       // Xám đen sâu
+          sidebar: '#0D121F',  // Sidebar tối
+          border: '#1e293b',   // Slate 800
+          text: '#f8fafc',     // Slate 50
+          muted: '#94a3b8',    // Slate 400
+        }
       },
 
       keyframes: {

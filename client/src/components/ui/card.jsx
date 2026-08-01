@@ -24,15 +24,16 @@ const CardBrand = ({ data }) => {
 
   return (
     <div
-      className="group relative bg-[#111827]/40 p-5 cursor-pointer w-[90%]
-                 border border-slate-800/60
+      className="group relative bg-white dark:bg-[#111827]/40 p-5 cursor-pointer w-[90%]
+                 border border-slate-200 dark:border-slate-800/60 rounded-xl
                  hover:border-sky-500/40
                  transition-all duration-400
+                 shadow-sm dark:shadow-none
                  hover:shadow-[0_0_40px_rgba(14,165,233,0.12)]
                  overflow-hidden"
     >
       <div
-        className="absolute inset-0  opacity-0 group-hover:opacity-100
+        className="absolute inset-0 opacity-0 group-hover:opacity-100
                    transition-opacity duration-500 pointer-events-none
                    bg-gradient-to-br from-sky-500/[0.06] via-transparent to-transparent"
       />
@@ -40,9 +41,9 @@ const CardBrand = ({ data }) => {
       <div className="relative z-10 flex flex-col items-center text-center gap-4">
         <div
           className="w-[70%] h-auto p-2 flex items-center justify-center
-                     bg-[#0D121F] overflow-hidden flex-shrink-0
-                     ring-2 ring-slate-700/60 group-hover:ring-sky-400/50
-                     shadow-[0_0_20px_rgba(0,0,0,0.3)]
+                     bg-slate-50 dark:bg-[#0D121F] overflow-hidden flex-shrink-0 rounded-lg
+                     ring-2 ring-slate-200 dark:ring-slate-700/60 group-hover:ring-sky-400/50
+                     shadow-sm dark:shadow-[0_0_20px_rgba(0,0,0,0.3)]
                      group-hover:shadow-[0_0_30px_rgba(14,165,233,0.15)]
                      transition-all duration-300"
         >
@@ -59,7 +60,7 @@ const CardBrand = ({ data }) => {
 
         <div className="space-y-1">
           <h3
-            className="text-base font-bold text-slate-100 truncate max-w-[180px] mx-auto group-hover:text-white transition-colors duration-200 tracking-wide"
+            className="text-base font-bold text-slate-800 dark:text-slate-100 truncate max-w-[180px] mx-auto group-hover:text-sky-600 dark:group-hover:text-white transition-colors duration-200 tracking-wide"
             title={name}
           >
             {name || "Tên thương hiệu"}
@@ -71,7 +72,7 @@ const CardBrand = ({ data }) => {
               <span className="pl-1 truncate max-w-[140px]">{origin}</span>
             </Badge>
           ) : (
-            <span className="text-[12px] text-slate-600 italic block">
+            <span className="text-[12px] text-slate-400 dark:text-slate-600 italic block">
               Chưa cập nhật
             </span>
           )}
@@ -99,10 +100,10 @@ const ProductCard = ({ product, index = 0 }) => {
   };
 
   return (
-    <div className="group flex flex-col bg-white rounded-sm transition-all duration-300 border">
-      <div className="relative aspect-square overflow-hidden rounded-sm border border-slate-100">
+    <div className="group flex flex-col bg-white dark:bg-[#0D121F] rounded-lg transition-all duration-300 border border-slate-200 dark:border-slate-800/80 shadow-sm hover:shadow-md dark:shadow-none">
+      <div className="relative aspect-square overflow-hidden rounded-t-lg border-b border-slate-100 dark:border-slate-800/60">
         {product.thumbnail ? (
-          <div className="w-full h-full bg-[#F8F8F8] p-2">
+          <div className="w-full h-full bg-slate-50 dark:bg-[#111827]/60 p-2">
             <img
               src={product.thumbnail}
               alt={product.name}
@@ -125,11 +126,12 @@ const ProductCard = ({ product, index = 0 }) => {
           </div>
         )}
 
+        {/* Nút tác vụ nhanh khi hover */}
         <div className="absolute inset-x-0 bottom-3 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-10">
-          <div className="flex bg-white rounded-sm shadow-md border border-slate-200 divide-x divide-slate-100 overflow-hidden">
+          <div className="flex bg-white dark:bg-[#161F32] rounded-md shadow-md border border-slate-200 dark:border-slate-700 divide-x divide-slate-100 dark:divide-slate-700/60 overflow-hidden">
             <button
               title="Thêm vào giỏ"
-              className="p-2.5 hover:bg-slate-50 text-slate-800 transition-colors"
+              className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
                 if (product.first_variant_id) {
@@ -141,7 +143,7 @@ const ProductCard = ({ product, index = 0 }) => {
             </button>
             <button
               title="Xem chi tiết"
-              className="p-2.5 hover:bg-slate-50 text-slate-800 transition-colors"
+              className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors"
               onClick={goToDetail}
             >
               <Eye size={16} />
@@ -152,7 +154,7 @@ const ProductCard = ({ product, index = 0 }) => {
 
       <div className="pt-3 flex flex-col flex-grow space-y-1.5 p-3">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-bold text-slate-400 tracking-wider uppercase truncate max-w-[80%]">
+          <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 tracking-wider uppercase truncate max-w-[80%]">
             {product.brand?.name || "Chưa phân loại"}
           </span>
           <button
@@ -162,7 +164,9 @@ const ProductCard = ({ product, index = 0 }) => {
               toggleLike(product.id);
             }}
             className={`transition-colors shrink-0 ${
-              liked ? "text-red-500" : "text-slate-400 hover:text-red-500"
+              liked
+                ? "text-red-500"
+                : "text-slate-400 dark:text-slate-500 hover:text-red-500"
             }`}
           >
             <Heart size={16} className={liked ? "fill-red-500" : ""} />
@@ -170,28 +174,28 @@ const ProductCard = ({ product, index = 0 }) => {
         </div>
 
         <h3
-          className="text-[13px] md:text-[14px] font-semibold text-slate-800 line-clamp-2 leading-snug hover:text-blue-600 cursor-pointer transition-colors min-h-[38px]"
+          className="text-[13px] md:text-[14px] font-semibold text-slate-800 dark:text-slate-200 line-clamp-2 leading-snug hover:text-blue-600 dark:hover:text-sky-400 cursor-pointer transition-colors min-h-[38px]"
           onClick={() => navigate(`/san-pham/${product.slug}`)}
         >
           {product.name}
         </h3>
 
         {product.avg_rating > 0 && (
-          <div className="flex items-center gap-1 text-amber-400 text-[11px] font-bold">
+          <div className="flex items-center gap-1 text-amber-500 dark:text-amber-400 text-[11px] font-bold">
             <Star size={12} className="fill-amber-400" />
             <span>{Number(product.avg_rating).toFixed(1)}</span>
-            <span className="text-slate-400 font-normal">
+            <span className="text-slate-400 dark:text-slate-500 font-normal">
               ({product.total_reviews})
             </span>
           </div>
         )}
 
         <div className="pt-1 mt-auto flex items-center gap-2 flex-wrap">
-          <p className="text-[15px] md:text-[16px] font-bold text-red-600">
+          <p className="text-[15px] md:text-[16px] font-bold text-red-600 dark:text-red-500">
             {formatCurrency(salePrice)}
           </p>
           {hasDiscount && (
-            <p className="text-[12px] md:text-[13px] text-slate-400 line-through">
+            <p className="text-[12px] md:text-[13px] text-slate-400 dark:text-slate-500 line-through">
               {formatCurrency(originalPrice)}
             </p>
           )}

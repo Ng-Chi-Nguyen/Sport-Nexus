@@ -26,24 +26,30 @@ const BtnAdd = ({ name, route }) => {
   );
 };
 
-// 2. NÚT LƯU / SUBMIT FORM
-const BtnSubmit = (props) => {
-  const { name } = props;
+// 2. NÚT LƯU / SUBMIT FORM (Hỗ trợ cả trạng thái Loading)
+const BtnSubmit = ({
+  name,
+  loading = false,
+  disabled = false,
+  className = "",
+}) => {
   return (
     <button
       type="submit"
-      className="cursor-pointer font-medium text-[14px] tracking-wider text-white px-6 py-2.5 rounded-xl
-                 bg-sky-600 hover:bg-sky-500
-                 shadow-[0_0_15px_rgba(14,165,233,0.2)]
-                 hover:shadow-[0_0_20px_rgba(14,165,233,0.4)]
-                 active:scale-95 transition-all duration-150 uppercase"
+      disabled={disabled || loading}
+      className={`cursor-pointer font-medium text-[14px] tracking-wider text-white px-6 py-2.5 rounded-xl
+                 bg-sky-600 hover:bg-sky-500 active:scale-95 transition-all duration-150 uppercase
+                 shadow-[0_0_15px_rgba(14,165,233,0.2)] hover:shadow-[0_0_20px_rgba(14,165,233,0.4)]
+                 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100
+                 inline-flex items-center justify-center gap-2 ${className}`}
     >
-      {name}
+      {loading && <Loader2 size={16} className="animate-spin" />}
+      <span>{name}</span>
     </button>
   );
 };
 
-// 3. NÚT QUAY LẠI
+// 3. NÚT QUAY LẠI (Hỗ trợ Light/Dark Mode)
 const BtnGoback = () => {
   const navigate = useNavigate();
   return (
@@ -51,8 +57,9 @@ const BtnGoback = () => {
       onClick={() => navigate(-1)}
       type="button"
       className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
-                 bg-[#111827] text-slate-400 hover:text-slate-200 
-                 border border-slate-800 hover:border-slate-700
+                 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300
+                 dark:bg-[#111827] dark:text-slate-400 dark:hover:text-slate-200 
+                 dark:border-slate-800 dark:hover:border-slate-700
                  text-[14px] font-medium active:scale-95 transition-all duration-150 group"
     >
       <ArrowLeft
@@ -65,15 +72,16 @@ const BtnGoback = () => {
   );
 };
 
-// 4. NÚT SỬA (Dạng Badge/Button có text đi kèm)
+// 4. NÚT SỬA (Dạng Badge/Button kèm chữ)
 const BtnEdit = (props) => {
-  let { route, name } = props;
+  const { route, name } = props;
   return (
     <Link
       to={route}
-      className="flex items-center justify-center px-3 py-1.5 bg-amber-500/10 text-amber-400 
-                 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 
-                 active:scale-95 transition-all duration-150 group"
+      className="flex items-center justify-center px-3 py-1.5 
+                 bg-amber-500/10 text-amber-600 border border-amber-500/30 hover:bg-amber-500/20
+                 dark:text-amber-400 
+                 rounded-lg active:scale-95 transition-all duration-150 group"
       title="Chỉnh sửa"
     >
       <Pencil size={14} strokeWidth={2} />
@@ -84,20 +92,21 @@ const BtnEdit = (props) => {
   );
 };
 
-// 5. NÚT XÓA (Dạng Badge/Button kèm hiệu ứng mở nắp thùng rác đã tối ưu)
+// 5. NÚT XÓA (Hiệu ứng mở nắp thùng rác)
 const BtnDelete = (props) => {
-  const { onClick, className, name } = props;
+  const { onClick, className = "", name } = props;
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`group flex items-center justify-center px-3 py-1.5 bg-rose-500/10 text-rose-400 
-        border border-rose-500/30 rounded-lg hover:bg-rose-500/20 
-        active:scale-95 transition-all duration-150 ${className}`}
+      className={`group flex items-center justify-center px-3 py-1.5 
+                  bg-rose-500/10 text-rose-600 border border-rose-500/30 hover:bg-rose-500/20
+                  dark:text-rose-400 
+                  rounded-lg active:scale-95 transition-all duration-150 ${className}`}
       title="Xóa dữ liệu"
     >
-      <div className="relative w-[14px] h-[14px] ${name ? 'mr-1.5' : ''}">
+      <div className={`relative w-[14px] h-[14px] ${name ? "mr-1.5" : ""}`}>
         {/* Phần Nắp thùng rác */}
         <Trash2
           size={14}
@@ -124,32 +133,37 @@ const BtnDelete = (props) => {
 
 // 6. CỤM NÚT ĐIỀU HƯỚNG CUỐI FORM (Quay lại + Lưu)
 const Submit_GoBack = (props) => {
-  const { name, justify = "start" } = props;
+  const { name, justify = "start", loading = false } = props;
   return (
     <div
-      className={`flex items-center gap-3 py-4 justify-${justify} border-t border-slate-900/60 mt-6`}
+      className={`flex items-center gap-3 py-4 justify-${justify} border-t border-slate-200 dark:border-slate-800/60 mt-6`}
     >
       <BtnGoback />
-      <BtnSubmit name={name || "Lưu lại"} />
+      <BtnSubmit name={name || "Lưu lại"} loading={loading} />
     </div>
   );
 };
 
-// 7. CỤM ICON THAO TÁC TRONG BẢNG (Sửa/Xóa mini gọn gàng như hình mẫu)
+// 7. CỤM ICON THAO TÁC TRONG BẢNG (Sửa/Xóa mini)
 const BtnActions = ({ route, id, onDelete }) => {
   return (
     <div className="flex justify-center items-center gap-2">
       <Link
         to={route}
-        className="p-2 bg-[#111827] text-slate-400 hover:text-amber-400 border border-slate-800 hover:border-amber-500/30 rounded-lg transition-all duration-150"
+        className="p-2 bg-slate-100 text-slate-600 hover:text-amber-600 border border-slate-200 hover:border-amber-500/40
+                   dark:bg-[#111827] dark:text-slate-400 dark:hover:text-amber-400 dark:border-slate-800 dark:hover:border-amber-500/30 
+                   rounded-lg transition-all duration-150"
         title="Sửa"
       >
         <Edit size={14} />
       </Link>
 
       <button
+        type="button"
         onClick={() => onDelete(id)}
-        className="p-2 bg-[#111827] text-slate-400 hover:text-rose-500 border border-slate-800 hover:border-rose-500/30 rounded-lg transition-all duration-150"
+        className="p-2 bg-slate-100 text-slate-600 hover:text-rose-600 border border-slate-200 hover:border-rose-500/40
+                   dark:bg-[#111827] dark:text-slate-400 dark:hover:text-rose-500 dark:border-slate-800 dark:hover:border-rose-500/30 
+                   rounded-lg transition-all duration-150"
         title="Xóa"
       >
         <Trash2 size={14} />
@@ -158,8 +172,16 @@ const BtnActions = ({ route, id, onDelete }) => {
   );
 };
 
-// 8. NÚT LƯU VỚI TRẠNG THÁI LOADING (dùng trong form địa chỉ, auth)
-const BtnSave = ({ children, loading, loadingText, disabled, icon, className = "", ...props }) => (
+// 8. NÚT LƯU VỚI TRẠNG THÁI LOADING
+const BtnSave = ({
+  children,
+  loading,
+  loadingText,
+  disabled,
+  icon,
+  className = "",
+  ...props
+}) => (
   <button
     disabled={disabled || loading}
     type="submit"
@@ -168,7 +190,7 @@ const BtnSave = ({ children, loading, loadingText, disabled, icon, className = "
   >
     {loading && <Loader2 size={15} className="animate-spin" />}
     {!loading && icon}
-    <span>{loading ? (loadingText || "Đang lưu...") : children}</span>
+    <span>{loading ? loadingText || "Đang lưu..." : children}</span>
   </button>
 );
 

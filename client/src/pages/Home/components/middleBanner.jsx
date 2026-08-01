@@ -59,7 +59,7 @@ export const MiddleBanner = ({ brands = [] }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 md:py-14">
-      <div className="bg-gradient-to-r from-blue-50 via-white to-blue-50 rounded-2xl border border-slate-100 shadow-sm py-8 md:py-10 px-4">
+      <div className="bg-gradient-to-r from-blue-50 via-white to-blue-50 dark:from-[#1e293b] dark:via-[#1e293b] dark:to-[#1e293b] rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm py-8 md:py-10 px-4">
         <div className="relative overflow-hidden">
           <div className="flex">
             <div

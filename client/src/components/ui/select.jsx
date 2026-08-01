@@ -1,10 +1,9 @@
-import { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import countryData from "@/assets/data/countries.json";
 import addressData from "@/assets/data/addressVN_afterUpdate.json";
 
-// 1. COMPONENT SELECT TIÊU CHUẨN (Hỗ trợ cấu trúc Object & Array)
-// Đã được tối ưu bỏ min-width để co giãn tự nhiên trong ô lọc hàng ngang
+// 1. COMPONENT SELECT TIÊU CHUẨN
 const Select = ({
   options,
   value,
@@ -29,7 +28,7 @@ const Select = ({
 
   return (
     <div
-      className={`relative w-full cursor-pointer text-slate-200 font-medium transition-all ${
+      className={`relative w-full cursor-pointer text-slate-800 dark:text-slate-200 font-medium transition-all ${
         isOpen ? "z-[9999] overflow-visible" : "z-10"
       }`}
       onMouseEnter={() => setIsOpen(true)}
@@ -38,40 +37,46 @@ const Select = ({
       {/* NHÃN (LABEL) */}
       {label && (
         <label
-          className={`absolute -top-2 left-3 bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
-            isOpen ? "text-sky-400" : "text-slate-500"
+          className={`absolute -top-2 left-3 bg-slate-50 dark:bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
+            isOpen ? "text-sky-600 dark:text-sky-400" : "text-slate-500"
           }`}
         >
           {label} <span className="text-rose-500">*</span>
         </label>
       )}
 
-      {/* TRIGGER KHUNG BẤM (Cố định chiều cao h-10 để đồng bộ hàng ngang) */}
+      {/* TRIGGER KHUNG BẤM */}
       <div
-        className={`bg-[#111827]/40 h-10 px-3 rounded-lg relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
+        className={`h-10 px-3 rounded-lg relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
           isOpen
-            ? "border-sky-500/50 bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
-            : "border-slate-800"
+            ? "border-sky-500 bg-white dark:border-sky-500/50 dark:bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.1)]"
+            : "border-slate-300 bg-white dark:border-slate-800 dark:bg-[#111827]/40"
         }`}
       >
         <span
-          className={`truncate mr-2 ${selectedOption ? "text-slate-200" : "text-slate-500"}`}
+          className={`truncate mr-2 ${
+            selectedOption
+              ? "text-slate-800 dark:text-slate-200"
+              : "text-slate-400 dark:text-slate-500"
+          }`}
         >
           {selectedOption ? selectedOption.name : placeholder}
         </span>
         <ChevronDown
           size={14}
           className={`transition-transform duration-200 shrink-0 ${
-            isOpen ? "rotate-180 text-sky-400" : "rotate-0 text-slate-500"
+            isOpen
+              ? "rotate-180 text-sky-600 dark:text-sky-400"
+              : "rotate-0 text-slate-400 dark:text-slate-500"
           }`}
         />
       </div>
 
-      {/* DROPDOWN MENU CON TRONG SUỐT GLASS (z-[9999] bảo đảm nổi trên table) */}
+      {/* DROPDOWN MENU CON */}
       <div
-        className={`flex flex-col rounded-xl p-1 bg-[#111827]/95 border border-slate-800 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
+        className={`flex flex-col rounded-xl p-1 shadow-xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999]"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#111827]/95 dark:border-slate-800"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1 z-[-1]"
         }`}
       >
@@ -84,8 +89,8 @@ const Select = ({
             }}
             className={`rounded-lg p-[8px_12px] text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
               value === option.slug
-                ? "text-sky-400 font-bold bg-sky-500/10 border border-sky-500/20"
-                : "text-slate-400 hover:bg-[#161F32] hover:text-slate-100"
+                ? "text-sky-600 font-bold bg-sky-50 dark:text-sky-400 dark:bg-sky-500/10 dark:border dark:border-sky-500/20"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-[#161F32] dark:hover:text-slate-100"
             }`}
           >
             {option.name}
@@ -96,14 +101,14 @@ const Select = ({
   );
 };
 
-// 2. COMPONENT SELECTPRO CHUYÊN DỤNG (Hỗ trợ cấu trúc object { id, name })
+// 2. COMPONENT SELECTPRO CHUYÊN DỤNG (Cấu trúc object { id, name })
 const SelectPro = ({ options = [], label, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectedOption = options?.find((opt) => opt.id === value);
 
   return (
     <div
-      className={`relative w-full h-[42px] cursor-pointer text-slate-200 font-medium transition-all ${
+      className={`relative w-full h-[42px] cursor-pointer text-slate-800 dark:text-slate-200 font-medium transition-all ${
         isOpen ? "z-[9999] overflow-visible" : "z-10"
       }`}
       onMouseEnter={() => setIsOpen(true)}
@@ -111,8 +116,8 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
     >
       {label && (
         <label
-          className={`absolute -top-2 left-3 bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
-            isOpen ? "text-sky-400" : "text-slate-500"
+          className={`absolute -top-2 left-3 bg-slate-50 dark:bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
+            isOpen ? "text-sky-600 dark:text-sky-400" : "text-slate-500"
           }`}
         >
           {label} <span className="text-rose-500">*</span>
@@ -120,29 +125,35 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
       )}
 
       <div
-        className={`bg-[#111827]/40 p-[11px_15px] h-full rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
+        className={`p-[11px_15px] h-full rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
           isOpen
-            ? "border-sky-500/50 bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
-            : "border-slate-800"
+            ? "border-sky-500 bg-white dark:border-sky-500/50 dark:bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
+            : "border-slate-300 bg-white dark:border-slate-800 dark:bg-[#111827]/40"
         }`}
       >
         <span
-          className={`truncate mr-4 ${selectedOption ? "text-slate-200" : "text-slate-600"}`}
+          className={`truncate mr-4 ${
+            selectedOption
+              ? "text-slate-800 dark:text-slate-200"
+              : "text-slate-400 dark:text-slate-600"
+          }`}
         >
           {selectedOption ? selectedOption.name : "Chọn..."}
         </span>
         <ChevronDown
           size={14}
           className={`transition-transform duration-200 ${
-            isOpen ? "rotate-180 text-sky-400" : "rotate-0 text-slate-500"
+            isOpen
+              ? "rotate-180 text-sky-600 dark:text-sky-400"
+              : "rotate-0 text-slate-400 dark:text-slate-500"
           }`}
         />
       </div>
 
       <div
-        className={`flex flex-col rounded-xl p-1 bg-[#111827]/95 border border-slate-800 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
+        className={`flex flex-col rounded-xl p-1 shadow-xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999]"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#111827]/95 dark:border-slate-800"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1"
         }`}
       >
@@ -155,8 +166,8 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
             }}
             className={`rounded-lg p-[8px_12px] text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
               value === option.id
-                ? "text-sky-400 font-bold bg-sky-500/10 border border-sky-500/20"
-                : "text-slate-400 hover:bg-[#161F32] hover:text-slate-100"
+                ? "text-sky-600 font-bold bg-sky-50 dark:text-sky-400 dark:bg-sky-500/10 dark:border dark:border-sky-500/20"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-[#161F32] dark:hover:text-slate-100"
             }`}
           >
             {option.name}
@@ -178,7 +189,7 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
 
   return (
     <div
-      className={`relative w-full min-w-[240px] cursor-pointer text-slate-200 font-medium transition-all ${
+      className={`relative w-full min-w-[240px] cursor-pointer text-slate-800 dark:text-slate-200 font-medium transition-all ${
         isOpen ? "z-[9999] overflow-visible" : "z-10"
       }`}
       onMouseEnter={() => setIsOpen(true)}
@@ -186,8 +197,8 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
     >
       {label && (
         <label
-          className={`absolute -top-2 left-3 bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
-            isOpen ? "text-sky-400" : "text-slate-500"
+          className={`absolute -top-2 left-3 bg-slate-50 dark:bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
+            isOpen ? "text-sky-600 dark:text-sky-400" : "text-slate-500"
           }`}
         >
           {label} <span className="text-rose-500">*</span>
@@ -195,19 +206,25 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
       )}
 
       <div
-        className={`bg-[#111827]/40 p-[11px_15px] rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
+        className={`p-[11px_15px] rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
           isOpen
-            ? "border-sky-500/50 bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
-            : "border-slate-800"
+            ? "border-sky-500 bg-white dark:border-sky-500/50 dark:bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
+            : "border-slate-300 bg-white dark:border-slate-800 dark:bg-[#111827]/40"
         }`}
       >
         <span
-          className={`truncate mr-2 inline-flex items-center gap-2 ${value ? "text-slate-200" : "text-slate-600"}`}
+          className={`truncate mr-2 inline-flex items-center gap-2 ${
+            value
+              ? "text-slate-800 dark:text-slate-200"
+              : "text-slate-400 dark:text-slate-600"
+          }`}
         >
           {value && (
             <img
-              src={`https://flagcdn.com/24x18/${countryData.find((c) => c.name === value)?.code?.toLowerCase()}.png`}
-              className="inline-block w-5 h-3.5 object-cover rounded-sm"
+              src={`https://flagcdn.com/24x18/${countryData
+                .find((c) => c.name === value)
+                ?.code?.toLowerCase()}.png`}
+              className="inline-block w-5 h-3.5 object-cover rounded-sm border border-slate-200 dark:border-none"
               alt=""
             />
           )}
@@ -216,15 +233,17 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
         <ChevronDown
           size={14}
           className={`transition-transform duration-200 ${
-            isOpen ? "rotate-180 text-sky-400" : "rotate-0 text-slate-500"
+            isOpen
+              ? "rotate-180 text-sky-600 dark:text-sky-400"
+              : "rotate-0 text-slate-400 dark:text-slate-500"
           }`}
         />
       </div>
 
       <div
-        className={`flex flex-col rounded-xl p-1 bg-[#111827]/95 border border-slate-800 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
+        className={`flex flex-col rounded-xl p-1 shadow-xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999]"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#111827]/95 dark:border-slate-800"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1"
         }`}
       >
@@ -237,13 +256,13 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
             }}
             className={`rounded-lg p-[8px_12px] text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap inline-flex items-center gap-2 ${
               value === country.name
-                ? "text-sky-400 font-bold bg-sky-500/10 border border-sky-500/20"
-                : "text-slate-400 hover:bg-[#161F32] hover:text-slate-100"
+                ? "text-sky-600 font-bold bg-sky-50 dark:text-sky-400 dark:bg-sky-500/10 dark:border dark:border-sky-500/20"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-[#161F32] dark:hover:text-slate-100"
             }`}
           >
             <img
               src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
-              className="inline-block w-5 h-3.5 object-cover rounded-sm"
+              className="inline-block w-5 h-3.5 object-cover rounded-sm border border-slate-200 dark:border-none"
               alt=""
             />
             {country.name}
@@ -254,7 +273,7 @@ const CountrySelect = ({ value, onChange, label = "Xuất xứ" }) => {
   );
 };
 
-// 4. COMPONENT ĐỊA CHỈ VIỆT NAM LIÊN KẾT (TỈNH/THÀNH - PHƯỜNG/XÃ)
+// 4. COMPONENT ĐỊA CHỈ VIỆT NAM LIÊN KẾT
 const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
@@ -389,6 +408,7 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
   );
 };
 
+// 5. SIMPLE SELECT
 const SimpleSelect = ({
   options,
   value,
@@ -398,7 +418,6 @@ const SimpleSelect = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Chuẩn hóa dữ liệu đầu vào (hỗ trợ cả Array và Object)
   const safeOptions = useMemo(() => {
     if (Array.isArray(options)) return options;
     if (options && typeof options === "object") {
@@ -414,49 +433,52 @@ const SimpleSelect = ({
 
   return (
     <div
-      className={`relative w-full cursor-pointer text-slate-200 font-medium transition-all ${
+      className={`relative w-full cursor-pointer text-slate-800 dark:text-slate-200 font-medium transition-all ${
         isOpen ? "z-[9999] overflow-visible" : "z-10"
       }`}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      {/* NHÃN BÊN TRÊN */}
       {label && (
         <label
-          className={`absolute -top-2 left-3 bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
-            isOpen ? "text-sky-400" : "text-slate-500"
+          className={`absolute -top-2 left-3 bg-slate-50 dark:bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
+            isOpen ? "text-sky-600 dark:text-sky-400" : "text-slate-500"
           }`}
         >
           {label}
         </label>
       )}
 
-      {/* KHUNG BẤM CHÍNH (Chiều cao h-10 đồng bộ các ô lọc khác) */}
       <div
-        className={`bg-[#111827]/40 h-10 px-3 rounded-lg relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
+        className={`h-10 px-3 rounded-lg relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
           isOpen
-            ? "border-sky-500/50 bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
-            : "border-slate-800"
+            ? "border-sky-500 bg-white dark:border-sky-500/50 dark:bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
+            : "border-slate-300 bg-white dark:border-slate-800 dark:bg-[#111827]/40"
         }`}
       >
         <span
-          className={`truncate mr-2 ${selectedOption ? "text-slate-200" : "text-slate-500"}`}
+          className={`truncate mr-2 ${
+            selectedOption
+              ? "text-slate-800 dark:text-slate-200"
+              : "text-slate-400 dark:text-slate-500"
+          }`}
         >
           {selectedOption ? selectedOption.name : placeholder}
         </span>
         <ChevronDown
           size={14}
           className={`transition-transform duration-200 shrink-0 ${
-            isOpen ? "rotate-180 text-sky-400" : "rotate-0 text-slate-500"
+            isOpen
+              ? "rotate-180 text-sky-600 dark:text-sky-400"
+              : "rotate-0 text-slate-400 dark:text-slate-500"
           }`}
         />
       </div>
 
-      {/* DANH SÁCH DROPDOWN MENU (Hiển thị đè lên bảng bên dưới nhờ z-[9999]) */}
       <div
-        className={`flex flex-col rounded-lg p-1 bg-[#111827]/98 border border-slate-800/80 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
+        className={`flex flex-col rounded-lg p-1 shadow-xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999]"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#111827]/98 dark:border-slate-800/80"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1 z-[-1]"
         }`}
       >
@@ -469,8 +491,8 @@ const SimpleSelect = ({
             }}
             className={`rounded px-3 py-2 text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
               value === option.slug
-                ? "text-slate-100 font-semibold bg-slate-800/80"
-                : "text-slate-400 hover:bg-[#161F32] hover:text-slate-200"
+                ? "text-sky-600 font-semibold bg-sky-50 dark:text-slate-100 dark:bg-slate-800/80"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-[#161F32] dark:hover:text-slate-200"
             }`}
           >
             {option.name}

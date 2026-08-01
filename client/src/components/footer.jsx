@@ -15,14 +15,14 @@ const Footer = () => {
   const { t } = useTranslation();
 
   return (
-    <footer className="bg-white border-t-4 border-slate-900 pt-16 pb-6 px-4 md:px-16 lg:px-24 font-sans">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-slate-200">
+    <footer className="bg-white dark:bg-[#1e293b] border-t-4 border-slate-900 dark:border-slate-700 pt-16 pb-6 px-4 md:px-16 lg:px-24 font-sans">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-slate-200 dark:border-slate-700">
         {/* Cột 1: Giới thiệu */}
         <div className="space-y-5">
           <div className="inline-block transform hover:-rotate-1 transition-transform">
             <Logo />
           </div>
-          <p className="text-slate-600 font-medium text-sm leading-relaxed max-w-xs">
+          <p className="text-slate-600 dark:text-slate-400 font-medium text-sm leading-relaxed max-w-xs">
             {t("description")}
           </p>
           {/* Hàng nút mạng xã hội phong cách Neo-brutalism */}
@@ -81,10 +81,10 @@ const Footer = () => {
 
         {/* Cột 2: Điều hướng nhanh */}
         <div>
-          <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 mb-5 border-l-4 border-blue-500 pl-2">
+          <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 dark:text-slate-100 mb-5 border-l-4 border-blue-500 pl-2">
             {t("quick_links")}
           </h3>
-          <ul className="space-y-3 text-[13px] font-bold text-slate-600 uppercase tracking-tight">
+          <ul className="space-y-3 text-[13px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-tight">
             <li>
               <Link
                 to="/"
@@ -126,10 +126,10 @@ const Footer = () => {
 
         {/* Cột 3: Hỗ trợ */}
         <div>
-          <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 mb-5 border-l-4 border-blue-500 pl-2">
+          <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 dark:text-slate-100 mb-5 border-l-4 border-blue-500 pl-2">
             {t("customer_support")}
           </h3>
-          <ul className="space-y-3 text-[13px] font-bold text-slate-600 uppercase tracking-tight">
+          <ul className="space-y-3 text-[13px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-tight">
             <li>
               <a
                 href="#privacy"
@@ -159,10 +159,10 @@ const Footer = () => {
 
         {/* Cột 4: Thông tin liên hệ */}
         <div>
-          <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 mb-5 border-l-4 border-blue-500 pl-2">
+          <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 dark:text-slate-100 mb-5 border-l-4 border-blue-500 pl-2">
             {t("contact_info")}
           </h3>
-          <ul className="space-y-3 text-[13px] font-semibold text-slate-600">
+          <ul className="space-y-3 text-[13px] font-semibold text-slate-600 dark:text-slate-400">
             <li className="flex items-start gap-2.5">
               <MapPin size={16} className="text-blue-600 shrink-0 mt-0.5" />
               <span className="leading-tight">{t("address")}</span>
@@ -195,7 +195,7 @@ const Footer = () => {
           {t("student_id")}:{" "}
           <span className="text-blue-600 font-extrabold">227060172</span> —{" "}
           {t("copyright")}{" "}
-          <span className="text-slate-700 font-extrabold">
+          <span className="text-slate-700 dark:text-slate-200 font-extrabold">
             NGUYỄN CHÍ NGUYỆN
           </span>
         </p>
@@ -206,7 +206,7 @@ const Footer = () => {
 
 const FooterAuth = () => {
   return (
-    <footer className="w-full py-6 bg-transparent text-center border-t border-slate-100">
+    <footer className="w-full py-6 bg-transparent text-center border-t border-slate-100 dark:border-slate-800">
       <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">
         © 227060172 | SPORT NEXUS — TIỂU LUẬN TỐT NGHIỆP CNTT —
         <span className="text-blue-600 font-extrabold"> NGUYỄN CHÍ NGUYỆN</span>

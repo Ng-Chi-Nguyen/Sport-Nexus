@@ -6,8 +6,13 @@
 
 @layer base {
   body {
-    /* Sử dụng font Inter mặc định, chữ mượt trên mọi màn hình */
-    @apply font-sans text-slate-900 antialiased bg-white;
+    /* Sử dụng font Inter mặc định, nền sáng cho Light Mode */
+    @apply font-sans text-slate-800 antialiased bg-slate-50 transition-colors duration-300;
+  }
+
+  /* Chuyển nền và màu chữ khi bật Dark Mode */
+  html.dark body {
+    @apply bg-[#080C14] text-slate-300;
   }
 
   /* Định nghĩa tiêu đề kiểu thể thao: Chữ in hoa và hơi nghiêng */
@@ -19,116 +24,114 @@
 }
 
 @layer components {
-  /* Khung bọc bảng Dark Theme */
+  /* =============================================
+     ===                  TABLE                    ===
+     ============================================= */
+
+  /* Khung bọc bảng linh hoạt Light / Dark */
   .table-retro {
-    @apply w-full border border-slate-900 rounded-xl overflow-x-auto
-           bg-[#0D121F] shadow-2xl;
+    @apply w-full border border-slate-200 dark:border-slate-800 rounded-xl overflow-x-auto
+           bg-white dark:bg-[#0D121F] shadow-sm dark:shadow-2xl transition-colors duration-300;
   }
 
   /* Header của bảng */
   .table-retro thead {
-    @apply bg-[#161F32] border-b border-slate-900;
+    @apply bg-slate-100 dark:bg-[#161F32] border-b border-slate-200 dark:border-slate-800;
   }
 
   .table-retro thead th {
-    @apply text-[12px] font-semibold text-slate-400 uppercase tracking-wider 
-           text-left py-4 px-6 border-b border-slate-900 text-center;
+    @apply text-[12px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider 
+           py-4 px-6 border-b border-slate-200 dark:border-slate-800 text-center;
   }
 
-  /* CSS Quyết định các đường line mỏng chạy xuyên suốt giữa các items */
   .table-retro tbody tr {
     @apply transition-colors duration-150;
   }
 
   .table-retro tbody tr td {
-    @apply !bg-[#0D121F] text-[13px] text-slate-300 py-5 px-6 
-         border-b border-white;
+    @apply bg-white dark:!bg-[#0D121F] text-[13px] text-slate-700 dark:text-slate-300 py-5 px-6 
+           border-b border-slate-100 dark:border-slate-800/60;
   }
 
-  /* Hiệu ứng hover highlight nguyên dòng công nghệ */
+  /* Hiệu ứng hover highlight nguyên dòng */
   .table-retro tbody tr:hover td {
-    @apply !bg-[#1E293B]/40 text-white !important;
+    @apply bg-slate-50 dark:!bg-[#1E293B]/40 text-slate-900 dark:text-white !important;
   }
 
   /* =============================================
-     ===             FILTER / FORM              ===
+     ===              FILTER / FORM                ===
      ============================================= */
 
-  /* Ô nhập liệu nền tối — dùng cho mọi <input>, <select>
-     trong filter panel và form. Đã gồm đầy đủ:
-     - padding, border-radius, height đồng bộ
-     - màu nền/viền/chữ tối
-     - focus ring xanh + placeholder màu xám   */
+  /* Ô nhập liệu hỗ trợ 2 chế độ */
   .input-dark {
-    @apply w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none placeholder:text-slate-600;
+    @apply w-full h-10 px-3 text-xs rounded-lg 
+           bg-slate-100 dark:bg-[#111827]/40 
+           border border-slate-300 dark:border-slate-800 
+           text-slate-800 dark:text-slate-200 
+           outline-none placeholder:text-slate-400 dark:placeholder:text-slate-600
+           transition-colors duration-200;
   }
   .input-dark:focus {
-    @apply border-[#4facf3]/50 ring-1 ring-[#4facf3]/20;
+    @apply border-sky-500/60 dark:border-[#4facf3]/50 ring-1 ring-sky-500/20 dark:ring-[#4facf3]/20;
   }
 
-  /* Nhãn cho mỗi bộ lọc — chữ nhỏ, in hoa, tracking rộng */
+  /* Nhãn cho mỗi bộ lọc */
   .label-filter {
-    @apply block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5;
+    @apply block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5;
   }
 
   /* Khung bao bọc panel filter collapsible */
   .filter-panel {
-    @apply p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg;
+    @apply p-4 bg-white dark:bg-[#0D121F]/80 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm dark:shadow-lg transition-colors duration-300;
   }
 
   /* =============================================
-     ===             CONTAINERS                ===
+     ===               CONTAINERS                  ===
      ============================================= */
 
-  /* Vùng nội dung chính (bao bọc bảng, grid, form section)
-     Nền tối trong suốt + viền + bo góc + đổ bóng + kính mờ */
+  /* Thẻ Glass Card hỗ trợ 2 giao diện */
   .glass-card {
-    @apply bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md;
+    @apply bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-sm dark:shadow-2xl backdrop-blur-md transition-colors duration-300;
   }
 
-  /* Tiêu đề section bên trong glass-card — dùng với h2/h3 */
+  /* Tiêu đề section bên trong glass-card */
   .section-title {
-    @apply text-lg font-semibold text-slate-100 tracking-wide mb-6;
+    @apply text-lg font-semibold text-slate-800 dark:text-slate-100 tracking-wide mb-6;
   }
 
   /* =============================================
-     ===             TAG / BUTTON              ===
+     ===              TAG / BUTTON                 ===
      ============================================= */
 
-  /* Base nút tag/tab dạng badge — chỉ layout, không màu
-     Kết hợp với .btn-tag-idle hoặc .btn-tag-active */
   .btn-tag {
     @apply px-3 py-1.5 text-xs font-bold rounded-lg border cursor-pointer transition-colors;
   }
 
-  /* Trạng thái idle (chưa chọn) — nền tối, viền xám */
+  /* Trạng thái idle (chưa chọn) */
   .btn-tag-idle {
-    @apply bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200;
+    @apply bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 
+           dark:bg-[#111827]/40 dark:text-slate-400 dark:border-slate-800 dark:hover:bg-[#161F32] dark:hover:text-slate-200;
   }
 
-  /* Trạng thái active (đang chọn) — nền xanh nhạt, viền xanh,
-     kèm hiệu ứng glow nhẹ */
+  /* Trạng thái active (đang chọn) */
   .btn-tag-active {
-    @apply bg-sky-500/10 text-sky-400 border-sky-500/20 shadow-[0_0_12px_rgba(14,165,233,0.1)];
+    @apply bg-sky-500/10 text-sky-600 border-sky-300 dark:text-sky-400 dark:border-sky-500/20 dark:shadow-[0_0_12px_rgba(14,165,233,0.1)];
   }
 }
 
 /* 1. Reset vùng chứa */
 .custom-scrollbar {
   overflow-y: auto !important;
-  /* Ngăn nội dung bị nhảy khi thanh cuộn hiện/ẩn */
   scrollbar-gutter: stable;
 }
 
 /* 2. Cấu hình thanh cuộn mỏng (Chrome, Edge, Safari) */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px !important;
-  /* Độ mỏng như đường kẻ bạn muốn */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent !important;
-  /* Luôn trong suốt nền */
 }
 
 /* 3. Tay cầm (Thumb) - MẶC ĐỊNH LÀ ẨN */
@@ -137,17 +140,16 @@
   border-radius: 20px !important;
 }
 
-/* 4. CHÌA KHÓA: Chỉ hiện màu xanh khi RÊ CHUỘT VÀO SIDEBAR */
+/* 4. Hiện màu khi rê chuột vào */
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
   background-color: #4facf3 !important;
 }
 
-/* 5. Khi di chuột TRỰC TIẾP vào thanh cuộn thì đậm hơn tí */
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #3b95d1 !important;
 }
 
-/* Kill browser default focus ring gây chớp trắng */
+/* Kill browser default focus ring */
 *:focus {
   outline: none !important;
 }
@@ -166,7 +168,7 @@ input[type="number"] {
   appearance: textfield;
 }
 
-/* 6. Hỗ trợ Firefox (Dành cho 5% người dùng còn lại) */
+/* 6. Hỗ trợ Firefox */
 @supports (scrollbar-width: thin) {
   .custom-scrollbar {
     scrollbar-width: thin !important;
@@ -195,9 +197,15 @@ input[type="number"] {
   background: transparent;
 }
 .overflow-x-auto::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #cbd5e1;
   border-radius: 3px;
 }
+html.dark .overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #1e293b;
+}
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+html.dark .overflow-x-auto::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }

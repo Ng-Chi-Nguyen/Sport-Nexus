@@ -1,3 +1,5 @@
+import React from "react";
+
 const RangeInput = ({
   label,
   minValue,
@@ -10,8 +12,8 @@ const RangeInput = ({
 }) => {
   return (
     <div>
-      <label className="label-filter">{label}</label>
-      <div className="flex items-center gap-1">
+      {label && <label className="label-filter">{label}</label>}
+      <div className="flex items-center gap-1.5">
         <input
           type={type}
           placeholder={placeholderMin}
@@ -19,7 +21,9 @@ const RangeInput = ({
           onChange={(e) => onMinChange(e.target.value)}
           className="input-dark"
         />
-        <span className="text-slate-600 shrink-0">–</span>
+        <span className="text-slate-400 dark:text-slate-600 shrink-0 font-bold">
+          –
+        </span>
         <input
           type={type}
           placeholder={placeholderMax}

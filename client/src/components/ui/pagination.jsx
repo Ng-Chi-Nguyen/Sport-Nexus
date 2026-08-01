@@ -1,32 +1,7 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const variants = {
-  dark: {
-    wrapper: "justify-end",
-    nav: "w-9 h-9 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-slate-100 disabled:opacity-25 disabled:hover:bg-slate-900 disabled:hover:text-slate-400 disabled:cursor-not-allowed transition-all duration-200 shadow-sm",
-    page: (active) =>
-      active
-        ? "w-9 h-9 rounded-lg text-xs font-bold border transition-all duration-200 shadow-sm bg-gradient-to-b from-sky-500/20 to-sky-500/5 text-sky-400 border-sky-500/50 shadow-[0_0_15px_rgba(14,165,233,0.25)]"
-        : "w-9 h-9 rounded-lg text-xs font-bold border transition-all duration-200 shadow-sm bg-slate-900 text-slate-400 border-slate-800 hover:bg-slate-800 hover:text-slate-100",
-    dots: "w-9 h-9 flex items-center justify-center text-slate-600 font-bold",
-    gapClass: "gap-1.5",
-  },
-  light: {
-    wrapper: "justify-center",
-    nav: "flex items-center gap-1 px-3 py-1.5 text-sm rounded border disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors",
-    page: (active) =>
-      active
-        ? "w-8 h-8 text-sm rounded border bg-blue-600 text-white border-blue-600"
-        : "w-8 h-8 text-sm rounded border hover:bg-slate-50 transition-colors",
-    dots: "w-8 h-8 flex items-center justify-center text-slate-400 text-sm",
-    gapClass: "gap-1",
-  },
-};
-
-const Pagination = ({ totalPages, currentPage, onPageChange, variant = "dark" }) => {
-  const v = variants[variant] || variants.dark;
-
+const Pagination = ({ totalPages, currentPage, onPageChange }) => {
   const getPageNumbers = () => {
     const pages = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -46,25 +21,36 @@ const Pagination = ({ totalPages, currentPage, onPageChange, variant = "dark" })
   if (totalPages <= 1) return null;
 
   return (
-    <div className={`flex items-center ${v.wrapper} gap-2 font-medium select-none`}>
+    <div className="flex items-center justify-end gap-2 font-medium select-none">
+      {/* Nút Trang Trước */}
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={v.nav}
+        className="flex items-center justify-center w-9 h-9 rounded-lg border transition-all duration-200 shadow-sm
+                   bg-white border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900
+                   dark:bg-[#0D121F] dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100
+                   disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-[#0D121F]"
+        title="Trang trước"
       >
-        <ChevronLeft size={variant === "light" ? 14 : 16} strokeWidth={variant === "light" ? 2 : 2.5} />
-        {variant === "light" && "Trước"}
+        <ChevronLeft size={16} strokeWidth={2.5} />
       </button>
 
-      <div className={`flex ${v.gapClass}`}>
+      {/* Danh Sách Các Số Trang */}
+      <div className="flex items-center gap-1.5">
         {getPageNumbers().map((page, index) => (
           <React.Fragment key={index}>
             {page === "..." ? (
-              <span className={v.dots}>...</span>
+              <span className="w-9 h-9 flex items-center justify-center text-slate-400 dark:text-slate-600 font-bold">
+                ...
+              </span>
             ) : (
               <button
                 onClick={() => onPageChange(page)}
-                className={v.page(currentPage === page)}
+                className={`w-9 h-9 rounded-lg text-xs font-bold border transition-all duration-200 shadow-sm flex items-center justify-center ${
+                  currentPage === page
+                    ? "bg-sky-50 text-sky-600 border-sky-300 dark:bg-gradient-to-b dark:from-sky-500/20 dark:to-sky-500/5 dark:text-sky-400 dark:border-sky-500/50 dark:shadow-[0_0_15px_rgba(14,165,233,0.25)]"
+                    : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100 hover:text-slate-900 dark:bg-[#0D121F] dark:text-slate-400 dark:border-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                }`}
               >
                 {page}
               </button>
@@ -73,13 +59,17 @@ const Pagination = ({ totalPages, currentPage, onPageChange, variant = "dark" })
         ))}
       </div>
 
+      {/* Nút Trang Sau */}
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={v.nav}
+        className="flex items-center justify-center w-9 h-9 rounded-lg border transition-all duration-200 shadow-sm
+                   bg-white border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900
+                   dark:bg-[#0D121F] dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100
+                   disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-[#0D121F]"
+        title="Trang sau"
       >
-        {variant === "light" && "Sau"}
-        <ChevronRight size={variant === "light" ? 14 : 16} strokeWidth={variant === "light" ? 2 : 2.5} />
+        <ChevronRight size={16} strokeWidth={2.5} />
       </button>
     </div>
   );

@@ -11,8 +11,8 @@ export const ProductSection = ({ title, products = [] }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-3">
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        <div className="flex items-center justify-between gap-4 px-6 pt-6 pb-4 border-b border-slate-50">
+      <div className="bg-white dark:bg-[#1e293b] rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between gap-4 px-6 pt-6 pb-4 border-b border-slate-50 dark:border-slate-800">
           <div className="flex items-center gap-3">
             <h2 className="text-xl md:text-2xl font-bold text-blue-600 flex items-center gap-2">
               <span className="border-b border-blue-600">{title}</span>
@@ -26,7 +26,7 @@ export const ProductSection = ({ title, products = [] }) => {
           </button>
         </div>
         <div className="p-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
             {products.map((p, idx) => (
               <ProductCard key={p.id} product={p} index={idx} />
             ))}

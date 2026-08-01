@@ -18,7 +18,7 @@ export const SpecialSale = ({ products = [] }) => {
         ))}
       </div>
 
-      <SeeMore to="/san-pham?sort=best-selling" />
+      <SeeMore to="/san-pham?sort=best-selling" label={t("see_more")} />
     </div>
   );
 };
