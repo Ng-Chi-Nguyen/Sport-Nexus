@@ -42,7 +42,7 @@ const CreateOrderPage = () => {
   const [paymentStatus, setPaymentStatus] = useState("Pending");
   const [discount, setDiscount] = useState(0);
   const [final, setFinal] = useState(0);
-  const [code, setCode] = useState(null);
+  const [code, setCode] = useState("");
   const [status, setStatus] = useState("Processing");
 
   const handleAddItem = () => {
@@ -80,33 +80,18 @@ const CreateOrderPage = () => {
     }, 0);
   }, [items]);
 
-  // ❌ Đoạn code cũ đang lỗi:
-  // const variantsOptions = useMemo(
-  //   () =>
-  //     response.productVariants.data.map((v) => ({
-  //       id: v.id,
-  //       name: `${v.product.name} - ${v.VariableAttributes[0].attributeKey.name}: ${v.VariableAttributes[0].value}`,
-  //     })),
-  //   [response.productVariants.data],
-  // );
-
-  //  Đoạn code MỚI đã được sửa an toàn:
   const variantsOptions = useMemo(() => {
-    // Đề phòng trường hợp dữ liệu chưa được load kịp hoặc rỗng
     if (!response?.productVariants?.data) return [];
 
     return response.productVariants.data.map((v) => {
-      // Kiểm tra xem sản phẩm có thuộc tính biến thể nào không
       const hasAttributes =
         v.VariableAttributes && v.VariableAttributes.length > 0;
 
-      // Nếu có thì lấy tên thuộc tính, nếu không thì để chuỗi rỗng
       const attrName = hasAttributes
         ? v.VariableAttributes[0]?.attributeKey?.name
         : "";
       const attrValue = hasAttributes ? v.VariableAttributes[0]?.value : "";
 
-      // Tạo nhãn hiển thị, nếu không có biến thể thì chỉ hiện tên sản phẩm gốc
       const variantLabel = hasAttributes ? ` - ${attrName}: ${attrValue}` : "";
 
       return {
@@ -158,7 +143,7 @@ const CreateOrderPage = () => {
       discount_amount: discount,
       final_amount: finalAmountToSend,
       shipping_address: address,
-      coupon_code: code,
+      coupon_code: code || null,
       user_email: email,
       payment_method: method,
       payment_status: paymentStatus,
@@ -187,17 +172,20 @@ const CreateOrderPage = () => {
   };
 
   return (
-    <div className="animate-in fade-in duration-500 space-y-4">
+    <div className="animate-in fade-in duration-500 space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
-      <h2 className="text-xl font-bold text-slate-100 tracking-wide">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide">
         Tạo đơn hàng mới
       </h2>
 
-      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-4 items-start w-full">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col lg:flex-row gap-4 items-start w-full"
+      >
         {/* CỘT TRÁI (THÔNG TIN KHÁCH HÀNG & TỔNG KẾT) */}
         <div className="w-full lg:w-[30%] flex flex-col gap-4">
           {/* CARD: THÔNG TIN KHÁCH HÀNG */}
-          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="cyan">Thông tin khách hàng</TitleManagement>
             <div className="flex flex-col gap-5 mt-3">
               <FloatingInput
@@ -214,7 +202,7 @@ const CreateOrderPage = () => {
           </div>
 
           {/* CARD: MÃ GIẢM GIÁ */}
-          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="orange">
               Thanh toán & Mã giảm giá
             </TitleManagement>
@@ -229,7 +217,7 @@ const CreateOrderPage = () => {
               <button
                 type="button"
                 onClick={handleApplyCoupon}
-                className="h-[46px] px-4 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-lg text-xs font-bold hover:bg-sky-500/20 transition-all uppercase tracking-wider flex-shrink-0"
+                className="h-[46px] px-4 rounded-lg text-xs font-bold transition-all uppercase tracking-wider flex-shrink-0 border bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 dark:hover:bg-sky-500/20"
               >
                 K.tra
               </button>
@@ -237,24 +225,24 @@ const CreateOrderPage = () => {
           </div>
 
           {/* CARD: TỔNG KẾT ĐƠN HÀNG */}
-          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="emerald">Tổng kết đơn hàng</TitleManagement>
             <div className="space-y-3 text-sm font-medium mt-4">
-              <div className="flex justify-between text-slate-400">
+              <div className="flex justify-between text-slate-600 dark:text-slate-400">
                 <span>Tạm tính:</span>
-                <span className="font-mono text-slate-300">
+                <span className="font-mono text-slate-800 dark:text-slate-300">
                   {formatCurrency(totalAmount)}
                 </span>
               </div>
-              <div className="flex justify-between text-slate-400">
+              <div className="flex justify-between text-slate-600 dark:text-slate-400">
                 <span>Số tiền giảm:</span>
-                <span className="font-mono text-rose-400">
+                <span className="font-mono text-rose-600 dark:text-rose-400 font-semibold">
                   -{formatCurrency(discount)}
                 </span>
               </div>
-              <div className="flex justify-between text-emerald-400 border-t border-slate-800/80 pt-3 text-base font-black">
+              <div className="flex justify-between text-emerald-600 dark:text-emerald-400 border-t pt-3 text-base font-black border-slate-200 dark:border-slate-800/80">
                 <span>Tổng cuối:</span>
-                <span className="font-mono bg-emerald-500/5 px-2.5 py-0.5 rounded-lg border border-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
+                <span className="font-mono px-2.5 py-0.5 rounded-lg border bg-emerald-50 border-emerald-200 dark:bg-emerald-500/5 dark:border-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
                   {discount !== 0
                     ? formatCurrency(final)
                     : formatCurrency(totalAmount)}
@@ -267,9 +255,9 @@ const CreateOrderPage = () => {
         </div>
 
         {/* CỘT PHẢI (THÔNG TIN ĐƠN HÀNG & DANH SÁCH MÓN HÀNG) */}
-        <div className="flex-1 flex flex-col gap-4">
-          {/* CARD: THÔNG TIN ĐƠN HÀNG (SELECTS TRẠNG THÁI) */}
-          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md z-20">
+        <div className="flex-1 flex flex-col gap-4 w-full">
+          {/* CARD: THÔNG TIN ĐƠN HÀNG */}
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 relative z-20 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="violet">Thông tin đơn hàng</TitleManagement>
             <div className="flex flex-col sm:flex-row gap-4 mt-3">
               <div className="w-full sm:w-1/3">
@@ -314,7 +302,7 @@ const CreateOrderPage = () => {
           </div>
 
           {/* CARD: DANH SÁCH SẢN PHẨM MUA */}
-          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 relative z-10 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <div className="flex justify-between items-center mb-5">
               <TitleManagement color="blue">
                 Danh sách sản phẩm mua
@@ -322,7 +310,7 @@ const CreateOrderPage = () => {
               <button
                 type="button"
                 onClick={handleAddItem}
-                className="bg-sky-500/10 text-sky-400 border border-sky-500/20 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-sky-500/20 shadow-[0_0_15px_rgba(14,165,233,0.05)] transition-all duration-150"
+                className="px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all duration-150 border bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 dark:hover:bg-sky-500/20 shadow-sm"
               >
                 <Plus size={16} strokeWidth={2.5} /> Thêm sản phẩm
               </button>
@@ -333,7 +321,7 @@ const CreateOrderPage = () => {
               {items.map((item, index) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-4 p-4 bg-[#111827]/40 border border-slate-800/60 rounded-xl relative transition-all duration-150"
+                  className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 p-4 rounded-xl border relative transition-all duration-150 bg-slate-50/80 border-slate-200 dark:bg-[#111827]/40 dark:border-slate-800/60"
                   style={{ zIndex: items.length - index }}
                 >
                   {/* Select sản phẩm */}
@@ -349,7 +337,7 @@ const CreateOrderPage = () => {
                   </div>
 
                   {/* Số lượng */}
-                  <div className="w-24 flex-shrink-0">
+                  <div className="w-full sm:w-24 flex-shrink-0">
                     <FloatingInput
                       label="SL"
                       type="number"
@@ -361,7 +349,7 @@ const CreateOrderPage = () => {
                   </div>
 
                   {/* Đơn giá */}
-                  <div className="w-36 flex-shrink-0">
+                  <div className="w-full sm:w-36 flex-shrink-0">
                     <FloatingInput
                       label="Đơn giá"
                       type="number"
@@ -377,8 +365,8 @@ const CreateOrderPage = () => {
                   </div>
 
                   {/* Thành tiền từng item */}
-                  <div className="w-[100px] text-right pr-2 flex-shrink-0">
-                    <span className="text-xs font-bold font-mono text-sky-400 bg-sky-500/5 px-2 py-1 rounded border border-sky-500/10">
+                  <div className="w-full sm:w-[100px] text-left sm:text-right pr-2 flex-shrink-0 flex items-center sm:block">
+                    <span className="text-xs font-bold font-mono px-2 py-1 rounded border bg-sky-50 text-sky-600 border-sky-200 dark:bg-sky-500/5 dark:text-sky-400 dark:border-sky-500/10">
                       {formatCurrency(item.quantity * item.price_at_purchase)}
                     </span>
                   </div>
@@ -391,7 +379,7 @@ const CreateOrderPage = () => {
                       setDiscount(0);
                       setFinal(0);
                     }}
-                    className="p-2 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all duration-150 flex-shrink-0"
+                    className="p-2 self-end sm:self-auto text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:text-rose-400 dark:hover:bg-rose-500/10 rounded-lg transition-all duration-150 flex-shrink-0"
                   >
                     <Trash2 size={18} />
                   </button>

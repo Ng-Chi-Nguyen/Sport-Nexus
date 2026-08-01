@@ -7,7 +7,11 @@ import FilterPanel from "@/components/ui/FilterPanel";
 import Pagination from "@/components/ui/pagination";
 import { SimpleSelect } from "@/components/ui/select";
 import useTableFilters from "@/hooks/useTableFilters";
-import { actionTypes, entityTypes, statusOptions } from "@/constants/management/log";
+import {
+  actionTypes,
+  entityTypes,
+  statusOptions,
+} from "@/constants/management/log";
 import LogEntry from "./LogEntry";
 
 const breadcrumbData = [
@@ -50,9 +54,10 @@ const LogPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
+      {/* Panel bộ lọc */}
       <FilterPanel
         searchValue={searchParams.get("search") || ""}
         onSearchChange={(val) => setFilter("search", val)}
@@ -80,34 +85,55 @@ const LogPage = () => {
           options={statusOptions}
           placeholder="Trạng thái"
         />
+
+        {/* Ô chọn ngày Từ (from) */}
         <div>
           <input
             type="date"
             value={searchParams.get("from") || ""}
             onChange={(e) => setFilter("from", e.target.value)}
-            className="w-full px-3 py-2 text-xs bg-[#111827]/60 border border-slate-800 rounded-lg text-slate-300"
+            className="w-full px-3 py-2 text-xs rounded-lg transition-colors duration-150 outline-none
+                       bg-white border border-slate-300 text-slate-800 focus:border-sky-500
+                       dark:bg-[#111827]/60 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-400"
           />
         </div>
+
+        {/* Ô chọn ngày Đến (to) */}
         <div>
           <input
             type="date"
             value={searchParams.get("to") || ""}
             onChange={(e) => setFilter("to", e.target.value)}
-            className="w-full px-3 py-2 text-xs bg-[#111827]/60 border border-slate-800 rounded-lg text-slate-300"
+            className="w-full px-3 py-2 text-xs rounded-lg transition-colors duration-150 outline-none
+                       bg-white border border-slate-300 text-slate-800 focus:border-sky-500
+                       dark:bg-[#111827]/60 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-400"
           />
         </div>
       </FilterPanel>
 
-      <div className="bg-[#0D121F]/40 border border-slate-900 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-        <div className="flex items-center justify-between">
-          <h2 className="section-title">Lịch sử hoạt động</h2>
+      {/* Khung danh sách Log */}
+      <div
+        className="rounded-2xl p-6 shadow-xl backdrop-blur-md border transition-colors duration-200
+                      bg-white border-slate-200/80
+                      dark:bg-[#0D121F]/40 dark:border-slate-900"
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
+            Lịch sử hoạt động
+          </h2>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1.5 rounded-lg transition-colors
+                       text-slate-500 hover:text-slate-900 hover:bg-slate-100
+                       dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800
+                       disabled:opacity-50 disabled:cursor-not-allowed"
             title="Tải lại"
           >
-            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+            <RefreshCw
+              size={18}
+              className={revalidator.state === "loading" ? "animate-spin" : ""}
+            />
           </button>
         </div>
 
@@ -118,12 +144,12 @@ const LogPage = () => {
             ))}
           </div>
         ) : (
-          <div className="py-20 text-center text-slate-500 italic text-sm">
+          <div className="py-20 text-center text-slate-400 dark:text-slate-500 italic text-sm">
             Không có hoạt động nào.
           </div>
         )}
 
-        <div className="mt-6 border-t border-white/5 pt-4">
+        <div className="mt-6 border-t pt-4 border-slate-200 dark:border-slate-800/60">
           <Pagination
             totalPages={paginationInfo.totalPages}
             currentPage={paginationInfo.currentPage}

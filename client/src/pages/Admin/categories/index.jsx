@@ -80,20 +80,16 @@ const CategoryPage = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await categoryApi.delete(deleteTarget); // Gọi API xóa
+      const response = await categoryApi.delete(deleteTarget);
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["categories"] });
-        revalidator.revalidate(); // Cập nhật UI
+        revalidator.revalidate();
         toast.success(response.message);
-        setIsConfirmOpen(false); // Đóng modal
+        setIsConfirmOpen(false);
       }
     } catch (error) {
-      // 1. Log để kiểm tra cấu trúc lỗi thực tế trong Console
       console.log("Cấu trúc error nhận được:", error);
       setIsConfirmOpen(false);
-      // 2. Lấy thông báo lỗi linh hoạt
-      // Nếu có Interceptor: dùng error.message
-      // Nếu không có Interceptor: dùng error.response?.data?.message
       const errorMessage =
         error.message ||
         error.response?.data?.message ||
@@ -118,7 +114,9 @@ const CategoryPage = () => {
   return (
     <>
       <Breadcrumbs data={breadcrumbData} />
-      <div className="flex items-center gap-4">
+
+      {/* Khu vực Tìm kiếm, Tab trạng thái, Action */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4">
         <div className="flex-1 relative group">
           <SearchTable
             placeholder="Tìm kiếm danh mục..."
@@ -126,7 +124,9 @@ const CategoryPage = () => {
             onChange={(val) => setSearchInput(val)}
           />
         </div>
-        <div className="flex items-center gap-2 p-1 bg-[#0D121F]/20 border border-slate-900/60 rounded-xl">
+
+        {/* Nhóm tab lọc trạng thái (Hỗ trợ Light/Dark) */}
+        <div className="flex items-center gap-2 p-1 bg-white dark:bg-[#0D121F]/20 border border-slate-200 dark:border-slate-900/60 rounded-xl shadow-sm dark:shadow-none">
           {[
             { value: "", label: "Tất cả" },
             { value: "true", label: "Hiện" },
@@ -140,8 +140,8 @@ const CategoryPage = () => {
                 onClick={() => handleActiveClick(tab.value)}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 cursor-pointer ${
                   isActive
-                    ? "bg-sky-500/20 text-sky-300 border border-sky-500/30"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "bg-sky-500/10 text-sky-600 dark:bg-sky-500/20 dark:text-sky-300 border border-sky-300 dark:border-sky-500/30"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
                 }`}
               >
                 {tab.label}
@@ -162,117 +162,96 @@ const CategoryPage = () => {
         />
         <BtnAdd
           route={"/management/categories/create"}
-          className="w-[30%]"
+          className="w-full md:w-[30%]"
           name="Thêm danh mục"
         />
       </div>
-      <div className="mt-2 bg-[#0D121F]/40 border border-slate-900 rounded-2xl pt-2 pl-2 shadow-2xl backdrop-blur-md">
-        <div className="flex items-center justify-between pr-2">
-          <h2 className="section-title">Danh sách danh mục</h2>
+
+      {/* Khu vực Bảng hiển thị sử dụng class glass-card chung */}
+      <div className="mt-4 glass-card">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="section-title mb-0">Danh sách danh mục</h2>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title="Tải lại"
           >
-            <RefreshCw size={18} className={revalidator.state === "loading" ? "animate-spin" : ""} />
+            <RefreshCw
+              size={18}
+              className={revalidator.state === "loading" ? "animate-spin" : ""}
+            />
           </button>
         </div>
-        <div className="mb-2 table-retro">
+
+        <div className="table-retro mb-4">
           <div className="overflow-x-auto">
-          <table className="w-full border-separate border-spacing-0 min-w-[600px]">
-            <thead>
-              <tr>
-                <th
-                  scope="col"
-                  className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider"
-                >
-                  Ảnh đại diện
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-4 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider"
-                >
-                  Tên danh mục
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-4 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider"
-                >
-                  Trạng thái
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-4 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider"
-                >
-                  Mã (Slug)
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-4 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider"
-                >
-                  Hành động
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {categories.length > 0 ? (
-                categories.map((category) => (
-                  <tr
-                    key={category.id}
-                    className="border-t border-slate-800/40 hover:bg-slate-800/20 transition-colors duration-200"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <img
-                        src={
-                          category.image ||
-                          "https://placehold.co/200x200/png?text=No+Logo"
-                        }
-                        alt={category.name}
-                        className="w-[50px] h-auto object-contain m-auto"
-                      />
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span className="text-sm font-semibold text-slate-200">
-                        {category.name}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <Badge color={category.is_active ? "green" : "indigo"}>
-                        {category.is_active ? "Hiện" : "Ẩn"}
-                      </Badge>
-                    </td>
-                    <td className="px-6 py-4 text-center font-mono text-slate-500 text-xs">
-                      {category.slug}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex gap-3 justify-center">
-                        <BtnEdit
-                          route={`/management/categories/edit/${category.id}`}
-                          name="Sửa"
+            <table className="w-full border-separate border-spacing-0 min-w-[600px]">
+              <thead>
+                <tr>
+                  <th scope="col">Ảnh đại diện</th>
+                  <th scope="col">Tên danh mục</th>
+                  <th scope="col">Trạng thái</th>
+                  <th scope="col">Mã (Slug)</th>
+                  <th scope="col">Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                {categories.length > 0 ? (
+                  categories.map((category) => (
+                    <tr key={category.id}>
+                      <td className="whitespace-nowrap">
+                        <img
+                          src={
+                            category.image ||
+                            "https://placehold.co/200x200/png?text=No+Logo"
+                          }
+                          alt={category.name}
+                          className="w-[50px] h-auto object-contain m-auto"
                         />
-                        <BtnDelete
-                          name="Xóa"
-                          onClick={() => openConfirm(category.id)}
-                        />
-                      </div>
+                      </td>
+                      <td className="text-center">
+                        <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                          {category.name}
+                        </span>
+                      </td>
+                      <td className="text-center">
+                        <Badge color={category.is_active ? "green" : "indigo"}>
+                          {category.is_active ? "Hiện" : "Ẩn"}
+                        </Badge>
+                      </td>
+                      <td className="text-center font-mono text-slate-500 dark:text-slate-500 text-xs">
+                        {category.slug}
+                      </td>
+                      <td>
+                        <div className="flex gap-3 justify-center">
+                          <BtnEdit
+                            route={`/management/categories/edit/${category.id}`}
+                            name="Sửa"
+                          />
+                          <BtnDelete
+                            name="Xóa"
+                            onClick={() => openConfirm(category.id)}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="px-6 py-20 text-center text-slate-400 dark:text-slate-500 italic text-sm"
+                    >
+                      Chưa có danh mục nào trên hệ thống.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="px-6 py-20 text-center text-slate-500 italic text-sm"
-                  >
-                    Chưa có danh mục nào trên hệ thống.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
+
         <Pagination
           totalPages={pagination?.totalPages || 1}
           currentPage={pagination?.currentPage || 1}

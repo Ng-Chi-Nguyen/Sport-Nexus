@@ -1,45 +1,40 @@
+import { LayoutDashboard } from "lucide-react";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { Submit_GoBack } from "@/components/ui/button";
 import { FloatingInput } from "@/components/ui/input";
-import { SelectPro } from "@/components/ui/select";
 import { TitleManagement } from "@/components/ui/title";
+import { SelectPro } from "@/components/ui/select";
 import { AnimatedCheckbox } from "@/components/ui/ckeckbox";
-import { LayoutDashboard } from "lucide-react";
 import { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import couponApi from "@/api/management/couponApi";
 import { queryClient } from "@/lib/react-query";
 
 const breadcrumbData = [
-  { title: <LayoutDashboard size={20} />, route: "" },
-  { title: "Quản lý kinhh doanh", route: "" },
+  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
+  { title: "Quản lý kinh doanh", route: "" },
   { title: "Khuyến mãi", route: "/management/coupons" },
-  { title: "Chỉnh sữa mã khuyến mãi", route: "" },
+  { title: "Thêm mã khuyến mãi", route: "" },
 ];
 
 const discountTypeOptions = [
-  { id: "CASH", name: "Tiền mặt ($)" },
+  { id: "CASH", name: "Tiền mặt (đ)" },
   { id: "PERCENTAGE", name: "Phần trăm (%)" },
 ];
 
-const EditCouponPage = () => {
-  const response = useLoaderData();
+const CreateCouponPage = () => {
   const navigate = useNavigate();
-  const couponOld = response.data;
   // state form
-  const [discountType, setDiscountType] = useState(couponOld.discount_type);
-  const [discountValue, setDiscountValue] = useState(couponOld.discount_value);
-  const [code, setCode] = useState(couponOld.code);
-  const [maxDiscount, setMaxDiscount] = useState(couponOld.max_discount);
-  const [minOrderValue, setMinOrderValue] = useState(couponOld.min_order_value);
-  const [startDate, setStartDate] = useState(
-    couponOld.start_date.split("T")[0],
-  );
-  const [endDate, setEndDate] = useState(couponOld.end_date.split("T")[0]);
-  const [usageLimit, setUsageLimit] = useState(couponOld.usage_limit);
-  const [isActive, setIsActive] = useState(couponOld.is_active);
-  // console.log(response);
+  const [discountType, setDiscountType] = useState("");
+  const [discountValue, setDiscountValue] = useState(1);
+  const [code, setCode] = useState("");
+  const [maxDiscount, setMaxDiscount] = useState(0);
+  const [minOrderValue, setMinOrderValue] = useState(0);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [usageLimit, setUsageLimit] = useState(1);
+  const [isActive, setIsActive] = useState(false);
 
   const handleIsActiveChange = (checkedValue) => {
     setIsActive(checkedValue);
@@ -59,20 +54,16 @@ const EditCouponPage = () => {
       start_date: startDate,
       is_active: isActive,
     };
-    // console.log(dataToSend);
+
     try {
-      const response = await couponApi.update(couponOld.id, dataToSend);
-      // console.log(response.data);
+      const response = await couponApi.create(dataToSend);
       if (response.success) {
-        await Promise.all([
-          queryClient.setQueryData(["coupon", couponOld.id], response.data),
-          queryClient.resetQueries({ queryKey: ["coupons"] }),
-        ]);
+        await queryClient.invalidateQueries({ queryKey: ["coupons"] });
         toast.success(response.message);
         navigate(-1);
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       const errorMessage =
         error.message ||
         error.response?.data?.message ||
@@ -82,20 +73,32 @@ const EditCouponPage = () => {
       toast.error(errorMessage);
     }
   };
+
   return (
-    <>
+    <div className="space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
-      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-3 mt-2">
-        <div className="flex flex-col gap-3">
-          <div className="border border-gray-200 rounded-[5px] p-3">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide">
+        Thêm mã khuyến mãi
+      </h2>
+
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col lg:flex-row gap-4 items-start w-full"
+      >
+        {/* CỘT TRÁI */}
+        <div className="w-full lg:w-[50%] flex flex-col gap-4">
+          {/* CARD: CẤU HÌNH GIẢM GIÁ */}
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="emerald">Cấu hình giảm giá</TitleManagement>
-            <SelectPro
-              label="Chọn loại hình giảm giá"
-              options={discountTypeOptions}
-              value={discountType}
-              onChange={(val) => setDiscountType(val)}
-            />
-            <div className="flex flex-col sm:flex-row gap-3 my-4">
+            <div className="mt-3">
+              <SelectPro
+                label="Chọn loại hình giảm giá"
+                options={discountTypeOptions}
+                value={discountType}
+                onChange={(val) => setDiscountType(val)}
+              />
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 mt-4">
               <FloatingInput
                 label="Giá trị giảm"
                 type="number"
@@ -110,9 +113,11 @@ const EditCouponPage = () => {
               />
             </div>
           </div>
-          <div className="border border-gray-200 rounded-[5px] p-3">
+
+          {/* CARD: THÔNG TIN MÃ */}
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement>Thông tin mã</TitleManagement>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-center mt-3">
               <div className="w-full sm:w-1/2">
                 <FloatingInput
                   label="Mã code"
@@ -120,7 +125,7 @@ const EditCouponPage = () => {
                   onChange={(e) => setCode(e.target.value)}
                 />
               </div>
-              <div className="p-[10px_15px] text-base rounded-lg border border-[#8d8d8d]">
+              <div className="w-full sm:w-1/2 px-4 py-3 rounded-lg border transition-colors duration-200 bg-slate-50 border-slate-200 dark:bg-[#111827]/40 dark:border-slate-800">
                 <AnimatedCheckbox
                   id="status"
                   label={isActive ? "Còn thời hạn" : "Hết hạn"}
@@ -131,10 +136,13 @@ const EditCouponPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-3">
-          <div className="border border-gray-200 rounded-[5px] p-3">
+
+        {/* CỘT PHẢI */}
+        <div className="w-full lg:w-[50%] flex flex-col gap-4">
+          {/* CARD: KHUNG THỜI GIAN */}
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="orange">Khung thời gian</TitleManagement>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 mt-3">
               <FloatingInput
                 label="Ngày bắt đầu"
                 type="date"
@@ -149,9 +157,11 @@ const EditCouponPage = () => {
               />
             </div>
           </div>
-          <div className="border border-gray-200 rounded-[5px] p-3">
-            <TitleManagement color="red">Điều kiện sữ dụng</TitleManagement>
-            <div className="flex flex-col sm:flex-row gap-4">
+
+          {/* CARD: ĐIỀU KIỆN SỬ DỤNG */}
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
+            <TitleManagement color="red">Điều kiện sử dụng</TitleManagement>
+            <div className="flex flex-col sm:flex-row gap-4 mt-3">
               <FloatingInput
                 label="Đơn hàng tối thiểu"
                 type="number"
@@ -159,21 +169,21 @@ const EditCouponPage = () => {
                 onChange={(e) => setMinOrderValue(e.target.value)}
               />
               <FloatingInput
-                label="Giới hạn sữ dụng"
+                label="Giới hạn sử dụng"
                 min={1}
                 type="number"
                 value={usageLimit}
                 onChange={(e) => setUsageLimit(e.target.value)}
               />
             </div>
-            <div className="mt-2">
-              <Submit_GoBack justify="end" name="Sữa" />
+            <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800/80">
+              <Submit_GoBack justify="end" />
             </div>
           </div>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 
-export default EditCouponPage;
+export default CreateCouponPage;

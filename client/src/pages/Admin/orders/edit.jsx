@@ -64,17 +64,14 @@ const EditOrderPage = () => {
     if (!response?.productVariants?.data) return [];
 
     return response.productVariants.data.map((v) => {
-      // Kiểm tra xem sản phẩm có thuộc tính biến thể hay không
       const hasAttributes =
         Array.isArray(v.VariableAttributes) && v.VariableAttributes.length > 0;
 
-      // Trích xuất an toàn qua Optional Chaining
       const attrName = hasAttributes
         ? v.VariableAttributes[0]?.attributeKey?.name
         : "";
       const attrValue = hasAttributes ? v.VariableAttributes[0]?.value : "";
 
-      // Tạo nhãn: có biến thể thì hiển thị kèm theo, không có thì chỉ hiện tên sản phẩm gốc
       const variantLabel = hasAttributes ? ` - ${attrName}: ${attrValue}` : "";
 
       return {
@@ -90,7 +87,7 @@ const EditOrderPage = () => {
         item.id === itemId ? { ...item, [field]: value } : item,
       ),
     );
-    setDiscount(0); // Reset giảm giá khi thay đổi giỏ hàng để yêu cầu check lại
+    setDiscount(0); // Reset giảm giá khi thay đổi giỏ hàng
     setFinal(0);
   };
 
@@ -147,24 +144,27 @@ const EditOrderPage = () => {
   };
 
   return (
-    <div className="animate-in fade-in duration-500 space-y-4">
+    <div className="animate-in fade-in duration-500 space-y-4 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
-      {/* KHỐI TIÊU ĐỀ ĐƠN HÀNG TRÊN NỀN TỐI */}
+      {/* KHỐI TIÊU ĐỀ ĐƠN HÀNG */}
       <div className="flex justify-between items-center my-2">
-        <h2 className="text-xl font-bold text-slate-100 tracking-wide">
+        <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-wide">
           Chỉnh sửa đơn hàng #{orderData.id}
         </h2>
-        <span className="text-xs text-slate-500 font-mono">
+        <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
           Ngày tạo: {formatFullDateTime(orderData.created_at)}
         </span>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-4 items-start w-full">
-        {/* CỘT TRÁI: THÔNG TIN KHÁCH HÀNG & DÒNG TIỀN (30% CHIỀU RỘNG) */}
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col lg:flex-row gap-4 items-start w-full"
+      >
+        {/* CỘT TRÁI: THÔNG TIN KHÁCH HÀNG & DÒNG TIỀN (30%) */}
         <div className="w-full lg:w-[30%] flex flex-col gap-4">
           {/* CARD: KHÁCH HÀNG */}
-          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="cyan">Khách hàng</TitleManagement>
             <div className="flex flex-col gap-5 mt-3">
               <FloatingInput
@@ -181,7 +181,7 @@ const EditOrderPage = () => {
           </div>
 
           {/* CARD: KHUYẾN MÃI */}
-          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="orange">Khuyến mãi</TitleManagement>
             <div className="flex gap-3 items-end mt-3">
               <div className="flex-1">
@@ -194,7 +194,7 @@ const EditOrderPage = () => {
               <button
                 type="button"
                 onClick={handleApplyCoupon}
-                className="h-[46px] px-4 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-lg text-xs font-bold hover:bg-sky-500/20 transition-all uppercase tracking-wider flex-shrink-0"
+                className="h-[46px] px-4 rounded-lg text-xs font-bold transition-all uppercase tracking-wider flex-shrink-0 border bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 dark:hover:bg-sky-500/20"
               >
                 K.tra
               </button>
@@ -202,24 +202,24 @@ const EditOrderPage = () => {
           </div>
 
           {/* CARD: THANH TOÁN */}
-          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md">
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="emerald">Thanh toán</TitleManagement>
             <div className="space-y-3 text-sm font-medium mt-4">
-              <div className="flex justify-between text-slate-400">
+              <div className="flex justify-between text-slate-600 dark:text-slate-400">
                 <span>Tạm tính:</span>
-                <span className="font-mono text-slate-300">
+                <span className="font-mono text-slate-800 dark:text-slate-300">
                   {formatCurrency(totalAmount)}
                 </span>
               </div>
-              <div className="flex justify-between text-slate-400">
+              <div className="flex justify-between text-slate-600 dark:text-slate-400">
                 <span>Giảm giá:</span>
-                <span className="font-mono text-rose-400">
+                <span className="font-mono text-rose-600 dark:text-rose-400 font-semibold">
                   -{formatCurrency(discount)}
                 </span>
               </div>
-              <div className="flex justify-between text-emerald-400 border-t border-slate-800/80 pt-3 text-base font-black">
+              <div className="flex justify-between text-emerald-600 dark:text-emerald-400 border-t pt-3 text-base font-black border-slate-200 dark:border-slate-800/80">
                 <span>Tổng cuối:</span>
-                <span className="font-mono bg-emerald-500/5 px-2.5 py-0.5 rounded-lg border border-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
+                <span className="font-mono px-2.5 py-0.5 rounded-lg border bg-emerald-50 border-emerald-200 dark:bg-emerald-500/5 dark:border-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
                   {discount !== 0
                     ? formatCurrency(final)
                     : formatCurrency(totalAmount)}
@@ -232,13 +232,13 @@ const EditOrderPage = () => {
         </div>
 
         {/* CỘT PHẢI: TRẠNG THÁI HỆ THỐNG & SẢN PHẨM MUA */}
-        <div className="flex-1 flex flex-col gap-4">
-          {/* CARD: TRẠNG THÁI HỆ THỐNG (ĐÃ FIX: Thêm relative z-20 để dropdown nổi lên trên) */}
-          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md relative z-20">
+        <div className="flex-1 flex flex-col gap-4 w-full">
+          {/* CARD: TRẠNG THÁI HỆ THỐNG */}
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 relative z-20 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="violet">
               Trạng thái hệ thống
             </TitleManagement>
-            <div className="flex gap-4 mt-3">
+            <div className="flex flex-col sm:flex-row gap-4 mt-3">
               <div className="flex-1">
                 <SelectPro
                   label="Phương thức"
@@ -276,8 +276,8 @@ const EditOrderPage = () => {
             </div>
           </div>
 
-          {/* CARD: DANH SÁCH SẢN PHẨM MUA (ĐÃ FIX: Thêm relative z-10 để nằm dưới tầng dropdown) */}
-          <div className="bg-[#0D121F]/40 border border-slate-900 rounded-xl p-5 shadow-xl backdrop-blur-md relative z-10">
+          {/* CARD: DANH SÁCH SẢN PHẨM MUA */}
+          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 relative z-10 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <div className="flex justify-between items-center mb-5">
               <TitleManagement color="blue">
                 Danh sách sản phẩm ({items.length})
@@ -295,7 +295,7 @@ const EditOrderPage = () => {
                     },
                   ])
                 }
-                className="bg-sky-500/10 text-sky-400 border border-sky-500/20 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-sky-500/20 shadow-[0_0_15px_rgba(14,165,233,0.05)] transition-all duration-150"
+                className="px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all duration-150 border bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 dark:hover:bg-sky-500/20 shadow-sm"
               >
                 <Plus size={16} strokeWidth={2.5} /> Thêm món
               </button>
@@ -306,7 +306,7 @@ const EditOrderPage = () => {
               {items.map((item, index) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-4 p-4 bg-[#111827]/40 border border-slate-800/60 rounded-xl relative transition-all duration-150"
+                  className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 p-4 rounded-xl border relative transition-all duration-150 bg-slate-50/80 border-slate-200 dark:bg-[#111827]/40 dark:border-slate-800/60"
                   style={{ zIndex: items.length - index }}
                 >
                   {/* Trường chọn biến thể sản phẩm */}
@@ -322,7 +322,7 @@ const EditOrderPage = () => {
                   </div>
 
                   {/* Số lượng */}
-                  <div className="w-24 flex-shrink-0">
+                  <div className="w-full sm:w-24 flex-shrink-0">
                     <FloatingInput
                       label="SL"
                       type="number"
@@ -334,7 +334,7 @@ const EditOrderPage = () => {
                   </div>
 
                   {/* Đơn giá mua */}
-                  <div className="w-36 flex-shrink-0">
+                  <div className="w-full sm:w-36 flex-shrink-0">
                     <FloatingInput
                       label="Giá"
                       type="number"
@@ -350,8 +350,8 @@ const EditOrderPage = () => {
                   </div>
 
                   {/* Tổng tiền của dòng sản phẩm */}
-                  <div className="w-[110px] text-right pr-2 flex-shrink-0">
-                    <span className="text-xs font-bold font-mono text-sky-400 bg-sky-500/5 px-2 py-1 rounded border border-sky-500/10">
+                  <div className="w-full sm:w-[110px] text-left sm:text-right pr-2 flex-shrink-0 flex items-center sm:block">
+                    <span className="text-xs font-bold font-mono px-2 py-1 rounded border bg-sky-50 text-sky-600 border-sky-200 dark:bg-sky-500/5 dark:text-sky-400 dark:border-sky-500/10">
                       {formatCurrency(item.quantity * item.price_at_purchase)}
                     </span>
                   </div>
@@ -362,7 +362,7 @@ const EditOrderPage = () => {
                     onClick={() =>
                       setItems(items.filter((i) => i.id !== item.id))
                     }
-                    className="p-2 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all duration-150 flex-shrink-0"
+                    className="p-2 self-end sm:self-auto text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:text-rose-400 dark:hover:bg-rose-500/10 rounded-lg transition-all duration-150 flex-shrink-0"
                   >
                     <Trash2 size={18} />
                   </button>

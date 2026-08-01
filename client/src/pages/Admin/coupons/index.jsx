@@ -25,7 +25,7 @@ import {
 } from "@/constants/management/coupon";
 
 const breadcrumbData = [
-  { title: <LayoutDashboard size={20} />, route: "" },
+  { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
   { title: "Quản lý kinh doanh", route: "" },
   { title: "Khuyến mãi", route: "/management/coupons" },
 ];
@@ -121,11 +121,12 @@ const CouponPage = () => {
   };
 
   return (
-    <>
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
-      <div className="flex items-center gap-3 my-4">
-        <form onSubmit={handleSearchSubmit} className="flex-1">
+      {/* THANH TÌM KIẾM & BỘ LỌC */}
+      <div className="flex flex-wrap items-center gap-3 my-4">
+        <form onSubmit={handleSearchSubmit} className="flex-1 min-w-[240px]">
           <SearchTable
             placeholder="Tìm kiếm mã khuyến mãi..."
             value={searchTerm}
@@ -138,8 +139,8 @@ const CouponPage = () => {
           onClick={() => setShowFilters(!showFilters)}
           className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
             hasActiveFilters
-              ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
-              : "bg-[#111827]/40 text-slate-400 border-slate-800 hover:bg-[#161F32] hover:text-slate-200"
+              ? "bg-sky-50 text-sky-600 border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20"
+              : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50 hover:text-slate-900 dark:bg-[#111827]/40 dark:text-slate-400 dark:border-slate-800 dark:hover:bg-[#161F32] dark:hover:text-slate-200"
           }`}
         >
           <Filter size={14} />
@@ -149,7 +150,9 @@ const CouponPage = () => {
           )}
           <ChevronDown
             size={14}
-            className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
+            className={`transition-transform duration-300 ${
+              showFilters ? "rotate-180" : ""
+            }`}
           />
         </button>
 
@@ -166,7 +169,7 @@ const CouponPage = () => {
         <BtnAdd route="/management/coupons/create" name="Thêm khuyến mãi" />
       </div>
 
-      {/* KHU VỰC BỘ LỌC NGANG SỬ DỤNG SIMPLE SELECT VÀ FLEXBOX */}
+      {/* KHU VỰC BỘ LỌC NGANG */}
       <div
         className={`transition-all duration-300 ease-in-out ${
           showFilters
@@ -174,14 +177,14 @@ const CouponPage = () => {
             : "max-h-0 opacity-0 overflow-hidden"
         }`}
       >
-        <div className="p-4 bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
+        <div className="p-4 rounded-xl border shadow-lg transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/80 dark:border-slate-800">
           <div className="flex flex-wrap items-end gap-4">
             {/* 1. Trạng thái */}
             <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[230px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Trạng thái
               </label>
-              <div className="flex items-center gap-0.5 p-0.5 bg-[#111827]/60 border border-slate-800 rounded-lg h-10">
+              <div className="flex items-center gap-0.5 p-0.5 rounded-lg h-10 border transition-colors duration-200 bg-slate-100 border-slate-200 dark:bg-[#111827]/60 dark:border-slate-800">
                 {ACTIVE_TABS.map((tab) => (
                   <button
                     key={tab.value}
@@ -189,8 +192,8 @@ const CouponPage = () => {
                     onClick={() => setFilter("is_active", tab.value)}
                     className={`flex-1 text-center py-1 text-[11px] font-bold rounded-md cursor-pointer transition-colors h-full ${
                       isActive === tab.value
-                        ? "bg-sky-500/10 text-sky-400 border border-sky-500/20"
-                        : "text-slate-500 hover:text-slate-300"
+                        ? "bg-sky-50 text-sky-600 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20"
+                        : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
                     }`}
                   >
                     {tab.label}
@@ -199,7 +202,7 @@ const CouponPage = () => {
               </div>
             </div>
 
-            {/* 2. Loại giảm giá (Đã thay sang SimpleSelect gọn gàng) */}
+            {/* 2. Loại giảm giá */}
             <div className="flex-1 min-w-[150px]">
               <SimpleSelect
                 label="Loại giảm giá"
@@ -212,33 +215,33 @@ const CouponPage = () => {
 
             {/* 3. Từ ngày */}
             <div className="flex-1 min-w-[140px]">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Từ ngày
               </label>
               <input
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setFilter("date_from", e.target.value)}
-                className="w-full h-10 px-2.5 text-sm rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 [color-scheme:dark]"
+                className="w-full h-10 px-2.5 text-sm rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 dark:focus:ring-1 dark:focus:ring-sky-500/20"
               />
             </div>
 
             {/* 4. Đến ngày */}
             <div className="flex-1 min-w-[140px]">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Đến ngày
               </label>
               <input
                 type="date"
                 value={dateTo}
                 onChange={(e) => setFilter("date_to", e.target.value)}
-                className="w-full h-10 px-2.5 text-sm rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 [color-scheme:dark]"
+                className="w-full h-10 px-2.5 text-sm rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 dark:focus:ring-1 dark:focus:ring-sky-500/20"
               />
             </div>
 
             {/* 5. Giá trị giảm */}
             <div className="w-[180px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Giá trị giảm
               </label>
               <div className="flex items-center gap-1">
@@ -247,25 +250,27 @@ const CouponPage = () => {
                   placeholder="Tối thiểu"
                   value={discountMin}
                   onChange={(e) => setFilter("discount_min", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
                 />
-                <span className="text-slate-600 shrink-0">–</span>
+                <span className="text-slate-400 dark:text-slate-600 shrink-0">
+                  –
+                </span>
                 <input
                   type="number"
                   placeholder="Tối đa"
                   value={discountMax}
                   onChange={(e) => setFilter("discount_max", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-[#111827]/40 border border-slate-800 text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-600"
+                  className="w-full h-10 px-2 text-xs rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
                 />
               </div>
             </div>
 
-            {/* 6. Nút Xóa bộ lọc nhỏ gọn */}
+            {/* 6. Nút Xóa bộ lọc */}
             {hasActiveFilters && (
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
+                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 dark:border-rose-500/20 dark:text-rose-400 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
                 Xoá bộ lọc
               </button>
@@ -274,14 +279,15 @@ const CouponPage = () => {
         </div>
       </div>
 
+      {/* TIÊU ĐỀ & NÚT REFRESH */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-100">
+        <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
           Danh sách mã giảm giá
         </h2>
         <button
           onClick={handleRefresh}
           disabled={revalidator.state === "loading"}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-1.5 rounded-lg transition-colors text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
           title="Tải lại"
         >
           <RefreshCw
@@ -290,49 +296,53 @@ const CouponPage = () => {
           />
         </button>
       </div>
-      <div className="mt-3 relative bg-[#0D121F]/80 border border-slate-800 rounded-xl shadow-lg">
+
+      {/* KHỐI BẢNG CONTAINER */}
+      <div className="mt-3 relative rounded-2xl shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/80 dark:border-slate-800">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-slate-200 min-w-[600px]">
-            <thead className="text-xs uppercase bg-[#161F32] border-b border-slate-800">
+          <table className="w-full text-sm text-left text-slate-800 dark:text-slate-200 min-w-[600px]">
+            <thead className="text-xs uppercase border-b transition-colors duration-200 bg-slate-100 border-slate-200 dark:bg-[#161F32] dark:border-slate-800">
               <tr>
-                <th className="px-6 py-4 font-black text-center text-slate-400">
+                <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
                   Mã Code
                 </th>
-                <th className="px-6 py-4 font-black text-center text-slate-400">
+                <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
                   Hiệu lực
                 </th>
-                <th className="px-6 py-4 font-black text-center text-slate-400">
+                <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
                   Giới hạn đơn
                 </th>
-                <th className="px-6 py-4 font-black text-center text-slate-400">
+                <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
                   Sử dụng
                 </th>
-                <th className="px-6 py-4 font-black text-center text-slate-400">
+                <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
                   Thao tác
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {coupons.length > 0 ? (
                 coupons.map((coupon) => (
                   <tr
                     key={coupon.id}
-                    className="hover:bg-[#161F32]/40 transition-colors duration-150"
+                    className="hover:bg-slate-50 dark:hover:bg-[#161F32]/40 transition-colors duration-150"
                   >
-                    <td className="px-6 py-4 text-center font-bold text-sky-400">
+                    <td className="px-6 py-4 text-center font-bold text-sky-600 dark:text-sky-400">
                       <Badge color={coupon.is_active ? "blue" : "red"}>
                         Code: {coupon.code}
                       </Badge>
                       {!coupon.is_active && (
-                        <Badge color="red">Đã hết hạn</Badge>
+                        <div className="mt-1">
+                          <Badge color="red">Đã hết hạn</Badge>
+                        </div>
                       )}
-                      <div className="flex items-center justify-center gap-1 mt-1">
-                        <span className="font-bold text-[12px] text-slate-300">
+                      <div className="flex items-center justify-center gap-1 mt-1.5">
+                        <span className="font-bold text-[12px] text-slate-600 dark:text-slate-300">
                           {coupon.discount_type === "CASH"
                             ? "Giảm tiền mặt"
                             : "Giảm phần trăm"}
                         </span>
-                        <span className="text-xs text-emerald-400 font-black">
+                        <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">
                           {coupon.discount_type === "CASH"
                             ? formatCurrency(coupon.discount_value)
                             : `${coupon.discount_value}%`}
@@ -340,18 +350,18 @@ const CouponPage = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center text-[12px]">
-                      <div className="text-slate-400">
+                      <div className="text-slate-500 dark:text-slate-400">
                         Từ: {formatDate(coupon.start_date)}
                       </div>
-                      <div className="text-rose-400 font-medium">
+                      <div className="text-rose-600 dark:text-rose-400 font-medium">
                         Đến: {formatDate(coupon.end_date)}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center text-[12px]">
-                      <div className="text-slate-400 italic">
+                      <div className="text-slate-500 dark:text-slate-400 italic">
                         Đơn tối thiểu: {formatCurrency(coupon.min_order_value)}
                       </div>
-                      <div className="font-bold text-slate-200">
+                      <div className="font-bold text-slate-800 dark:text-slate-200">
                         Giảm tối đa: {formatCurrency(coupon.max_discount)}
                       </div>
                     </td>
@@ -378,7 +388,7 @@ const CouponPage = () => {
                 <tr>
                   <td
                     colSpan="5"
-                    className="px-6 py-10 text-center text-slate-500 italic"
+                    className="px-6 py-10 text-center text-slate-400 dark:text-slate-500 italic"
                   >
                     Không tìm thấy mã khuyến mãi nào
                   </td>
@@ -394,13 +404,15 @@ const CouponPage = () => {
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmOpen(false)}
         />
-        <Pagination
-          totalPages={pagination.totalPages}
-          currentPage={pagination.currentPage}
-          onPageChange={handlePageChange}
-        />
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800">
+          <Pagination
+            totalPages={pagination.totalPages}
+            currentPage={pagination.currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
