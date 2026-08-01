@@ -12,8 +12,8 @@ const AddressSection = ({
   detailAddress,
   onDetailAddressChange,
 }) => (
-  <div className="bg-white border border-slate-200 rounded-sm p-5 space-y-4">
-    <h2 className="flex items-center gap-2 text-sm font-bold text-slate-700 uppercase tracking-wide">
+  <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4 transition-colors duration-200">
+    <h2 className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wide">
       <MapPin size={16} />
       Địa chỉ giao hàng
     </h2>

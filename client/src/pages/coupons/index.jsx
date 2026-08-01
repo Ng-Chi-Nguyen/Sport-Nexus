@@ -19,8 +19,8 @@ const CouponsPage = () => {
 
   if (savedCodes.length === 0) {
     return (
-      <div className="min-h-screen py-4 md:py-8">
-        <div className="mx-auto max-w-[1400px] mt-6 md:mt-8">
+      <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
+        <div className="mx-auto max-w-[1400px] mt-6 md:mt-8 px-4 sm:px-6">
           <Breadcrumbs
             data={[
               { title: "Trang chủ", route: "/" },
@@ -28,11 +28,11 @@ const CouponsPage = () => {
             ]}
           />
           <div className="flex flex-col items-center justify-center py-24 text-center">
-            <Bookmark className="w-12 h-12 text-slate-300 mb-4" />
-            <h3 className="text-lg font-semibold text-slate-800 mb-1">
+            <Bookmark className="w-12 h-12 text-slate-300 dark:text-slate-600 mb-4" />
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">
               Chưa lưu mã giảm giá nào
             </h3>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               Ghé trang chủ và bấm "Lưu mã" trên các mã giảm giá để dùng sau.
             </p>
           </div>
@@ -42,8 +42,8 @@ const CouponsPage = () => {
   }
 
   return (
-    <div className="min-h-screen py-4 md:py-8">
-      <div className="mx-auto max-w-[1400px] mt-6 md:mt-8">
+    <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
+      <div className="mx-auto max-w-[1400px] mt-6 md:mt-8 px-4 sm:px-6">
         <Breadcrumbs
           data={[
             { title: "Trang chủ", route: "/" },
@@ -51,7 +51,7 @@ const CouponsPage = () => {
           ]}
         />
 
-        <h1 className="text-xl font-bold text-slate-800 mb-4">
+        <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4">
           Mã của tôi ({savedCodes.length})
         </h1>
 
@@ -61,11 +61,11 @@ const CouponsPage = () => {
           </div>
         ) : coupons.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
-            <Bookmark className="w-12 h-12 text-slate-300 mb-4" />
-            <h3 className="text-lg font-semibold text-slate-800 mb-1">
+            <Bookmark className="w-12 h-12 text-slate-300 dark:text-slate-600 mb-4" />
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">
               Chưa lưu mã giảm giá nào
             </h3>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               Ghé trang chủ và bấm "Lưu mã" trên các mã giảm giá để dùng sau.
             </p>
           </div>

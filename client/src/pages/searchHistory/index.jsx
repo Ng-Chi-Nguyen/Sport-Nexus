@@ -72,8 +72,8 @@ const SearchHistoryPage = () => {
   ].filter((g) => g.items.length > 0);
 
   return (
-    <div className="min-h-screen py-4 md:py-8">
-      <div className="mx-auto max-w-5xl mt-6 md:mt-8 px-4">
+    <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
+      <div className="mx-auto max-w-5xl mt-6 md:mt-8 px-4 sm:px-6">
         <Breadcrumbs
           data={[
             { title: "Trang chủ", route: "/" },
@@ -81,52 +81,68 @@ const SearchHistoryPage = () => {
           ]}
         />
 
-        <h1 className="text-xl md:text-2xl font-bold text-slate-800 mt-4 mb-2">
+        <h1 className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 mt-6 mb-2 tracking-tight">
           Lịch sử tìm kiếm
         </h1>
 
         {history.length === 0 ? (
-          <div className="text-center py-20">
-            <Search size={48} className="mx-auto text-gray-300 mb-4" />
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">
+          <div className="text-center py-20 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md px-6">
+            <Search
+              size={48}
+              className="mx-auto text-slate-300 dark:text-slate-600 mb-4"
+            />
+            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2">
               Chưa có lịch sử tìm kiếm
             </h2>
-            <p className="text-gray-500">
-              Dùng ô tìm kiếm phía trên để tìm sản phẩm, lịch sử sẽ được lưu lại đây.
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Dùng ô tìm kiếm phía trên để tìm sản phẩm, lịch sử sẽ được lưu lại
+              đây.
             </p>
           </div>
         ) : (
-          <div className="mt-2">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm text-gray-500">
+          <div className="mt-4 space-y-6">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
                 {history.length} từ khóa đã tìm
               </p>
               <button
+                type="button"
                 onClick={clearAll}
-                className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+                className="text-xs font-bold text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 transition-colors cursor-pointer"
               >
                 Xóa tất cả
               </button>
             </div>
 
             {groupRows.map((group) => (
-              <div key={group.key} className="mb-6">
-                <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">
+              <div key={group.key} className="space-y-3">
+                <h2 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                   {group.label}
                 </h2>
-                <div className="bg-white border border-gray-100 rounded-xl overflow-hidden divide-y divide-gray-100">
+                <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md overflow-hidden divide-y divide-slate-200 dark:divide-slate-800">
                   {group.items.map((item) => (
                     <div key={item.term} className="group flex items-center">
                       <button
-                        onClick={() => navigate(`/tim-kiem?q=${encodeURIComponent(item.term)}`)}
-                        className="flex-1 flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors"
+                        type="button"
+                        onClick={() =>
+                          navigate(
+                            `/tim-kiem?q=${encodeURIComponent(item.term)}`,
+                          )
+                        }
+                        className="flex-1 flex items-center gap-3 px-5 py-3.5 text-left hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer"
                       >
-                        <Clock size={16} className="text-gray-400 shrink-0" />
-                        <span className="text-sm text-gray-800">{item.term}</span>
+                        <Clock
+                          size={16}
+                          className="text-slate-400 dark:text-slate-500 shrink-0"
+                        />
+                        <span className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                          {item.term}
+                        </span>
                       </button>
                       <button
+                        type="button"
                         onClick={() => deleteTerm(item.term)}
-                        className="p-2 mr-2 text-gray-300 hover:text-red-500 transition-colors"
+                        className="p-2.5 mr-3 rounded-xl text-slate-300 dark:text-slate-600 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors cursor-pointer"
                         aria-label={`Xóa ${item.term} khỏi lịch sử`}
                       >
                         <X size={16} />
@@ -140,8 +156,8 @@ const SearchHistoryPage = () => {
         )}
 
         {suggestions.length > 0 && (
-          <div className="mt-10">
-            <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-4">
+          <div className="mt-12 space-y-4">
+            <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
               Có thể bạn quan tâm
             </h2>
             {isLoading ? (

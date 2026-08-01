@@ -10,23 +10,26 @@ export const ProductSection = ({ title, products = [] }) => {
   const categoryId = products[0]?.category?.id || "";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-3">
-      <div className="bg-white dark:bg-[#1e293b] rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
-        <div className="flex items-center justify-between gap-4 px-6 pt-6 pb-4 border-b border-slate-50 dark:border-slate-800">
+    <div className="max-w-7xl mx-auto px-4 py-3 text-slate-800 dark:text-slate-100 transition-colors duration-200 border-t border-blue-600">
+      <div className="bg-transparent rounded-2xl overflow-hidden">
+        <div className="flex items-center justify-between gap-4 px-2 pt-4 pb-4">
           <div className="flex items-center gap-3">
-            <h2 className="text-xl md:text-2xl font-bold text-blue-600 flex items-center gap-2">
-              <span className="border-b border-blue-600">{title}</span>
+            <h2 className="text-xl md:text-2xl font-black text-sky-600 dark:text-sky-400 flex items-center gap-2 tracking-tight">
+              <span className="border-b-2 border-sky-600 dark:border-sky-400 pb-0.5">
+                {title}
+              </span>
             </h2>
           </div>
           <button
+            type="button"
             onClick={() => navigate(`/san-pham?category_ids=${categoryId}`)}
-            className="text-[12px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-0.5 transition-colors shrink-0"
+            className="text-xs font-bold text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 flex items-center gap-0.5 transition-colors shrink-0 cursor-pointer"
           >
             {t("view_all")} <ChevronRight size={14} />
           </button>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+        <div className="px-2 pb-6 space-y-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
             {products.map((p, idx) => (
               <ProductCard key={p.id} product={p} index={idx} />
             ))}
@@ -41,3 +44,5 @@ export const ProductSection = ({ title, products = [] }) => {
     </div>
   );
 };
+
+export default ProductSection;

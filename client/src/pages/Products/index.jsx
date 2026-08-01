@@ -66,16 +66,21 @@ const ProductsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans antialiased">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#090D16] font-sans antialiased text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Breadcrumb */}
         <div className="mb-4">
-          <nav className="text-xs text-slate-400 flex items-center gap-1.5">
-            <a href="/" className="hover:text-blue-600 transition-colors">
+          <nav className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+            <a
+              href="/"
+              className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+            >
               Trang chủ
             </a>
             <span>/</span>
-            <span className="text-slate-700 font-medium">Sản phẩm</span>
+            <span className="text-slate-700 dark:text-slate-200 font-medium">
+              Sản phẩm
+            </span>
           </nav>
         </div>
 
@@ -101,28 +106,32 @@ const ProductsPage = () => {
 
         {/* Results bar */}
         <div className="flex items-center justify-between mb-4">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             Hiển thị{" "}
-            <span className="font-semibold text-slate-700">
+            <span className="font-semibold text-slate-700 dark:text-slate-200">
               {products.length}
             </span>{" "}
             /{" "}
-            <span className="font-semibold text-slate-700">
+            <span className="font-semibold text-slate-700 dark:text-slate-200">
               {pagination.totalItems || 0}
             </span>{" "}
             sản phẩm
           </p>
           <div className="flex items-center gap-2">
-            <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+            <label className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
               Sắp xếp:
             </label>
             <select
               value={currentSort}
               onChange={(e) => setFilter("sort", e.target.value)}
-              className="text-[13px] py-1.5 px-3 rounded-lg border border-slate-200 text-slate-700 bg-white outline-none focus:border-blue-400 cursor-pointer"
+              className="text-[13px] py-1.5 px-3 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 bg-white dark:bg-[#111827]/40 outline-none focus:border-sky-500 dark:focus:border-sky-500 cursor-pointer shadow-sm transition-colors"
             >
               {SORT_OPTIONS.map((opt) => (
-                <option key={opt.slug} value={opt.slug}>
+                <option
+                  key={opt.slug}
+                  value={opt.slug}
+                  className="bg-white dark:bg-[#111827] text-slate-800 dark:text-slate-100"
+                >
                   {opt.name}
                 </option>
               ))}
@@ -137,62 +146,67 @@ const ProductsPage = () => {
           currentPriceMin ||
           currentAttrFilter) && (
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="text-[11px] font-semibold text-slate-400 uppercase">
+            <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase">
               Bộ lọc đang chọn:
             </span>
             {currentSearch && (
-              <span className="inline-flex items-center gap-1.5 text-[12px] bg-blue-100 text-blue-700 rounded-full px-3 py-1 font-medium">
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 rounded-full px-3 py-1 font-medium shadow-sm">
                 Tìm: "{currentSearch}"
                 <button
+                  type="button"
                   onClick={() => setFilter("search", "")}
-                  className="hover:text-blue-900 cursor-pointer"
+                  className="hover:text-sky-900 dark:hover:text-sky-200 cursor-pointer"
                 >
                   <X size={12} />
                 </button>
               </span>
             )}
             {currentCategoryIds && (
-              <span className="inline-flex items-center gap-1.5 text-[12px] bg-blue-100 text-blue-700 rounded-full px-3 py-1 font-medium">
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 rounded-full px-3 py-1 font-medium shadow-sm">
                 Danh mục ({currentCategoryIds.split(",").length})
                 <button
+                  type="button"
                   onClick={() => setFilter("category_ids", "")}
-                  className="hover:text-blue-900 cursor-pointer"
+                  className="hover:text-sky-900 dark:hover:text-sky-200 cursor-pointer"
                 >
                   <X size={12} />
                 </button>
               </span>
             )}
             {currentBrandIds && (
-              <span className="inline-flex items-center gap-1.5 text-[12px] bg-blue-100 text-blue-700 rounded-full px-3 py-1 font-medium">
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 rounded-full px-3 py-1 font-medium shadow-sm">
                 Thương hiệu ({currentBrandIds.split(",").length})
                 <button
+                  type="button"
                   onClick={() => setFilter("brand_ids", "")}
-                  className="hover:text-blue-900 cursor-pointer"
+                  className="hover:text-sky-900 dark:hover:text-sky-200 cursor-pointer"
                 >
                   <X size={12} />
                 </button>
               </span>
             )}
             {currentPriceMin && (
-              <span className="inline-flex items-center gap-1.5 text-[12px] bg-blue-100 text-blue-700 rounded-full px-3 py-1 font-medium">
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 rounded-full px-3 py-1 font-medium shadow-sm">
                 Giá: {Number(currentPriceMin).toLocaleString()}₫{" "}
                 {currentPriceMax
                   ? `- ${Number(currentPriceMax).toLocaleString()}₫`
                   : "+"}
                 <button
+                  type="button"
                   onClick={() => handlePriceRangeChange("", "")}
-                  className="hover:text-blue-900 cursor-pointer"
+                  className="hover:text-sky-900 dark:hover:text-sky-200 cursor-pointer"
                 >
                   <X size={12} />
                 </button>
               </span>
             )}
             {currentAttrFilter && (
-              <span className="inline-flex items-center gap-1.5 text-[12px] bg-blue-100 text-blue-700 rounded-full px-3 py-1 font-medium">
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 rounded-full px-3 py-1 font-medium shadow-sm">
                 Size ({(currentAttrFilter.match(/Size:/g) || []).length})
                 <button
+                  type="button"
                   onClick={() => handleAttrFilterChange("")}
-                  className="hover:text-blue-900 cursor-pointer"
+                  className="hover:text-sky-900 dark:hover:text-sky-200 cursor-pointer"
                 >
                   <X size={12} />
                 </button>
@@ -210,10 +224,10 @@ const ProductsPage = () => {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-slate-400 text-lg font-medium">
+            <p className="text-slate-400 dark:text-slate-500 text-lg font-medium">
               Không tìm thấy sản phẩm nào
             </p>
-            <p className="text-slate-400 text-sm mt-1">
+            <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">
               Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm
             </p>
           </div>
@@ -222,12 +236,12 @@ const ProductsPage = () => {
         {/* Pagination */}
         {pagination.totalPages > 1 && (
           <div className="mt-8">
-                <Pagination
-                  variant="light"
-                  totalPages={pagination.totalPages}
-                  currentPage={pagination.currentPage}
-                  onPageChange={handlePageChange}
-                />
+            <Pagination
+              variant="light"
+              totalPages={pagination.totalPages}
+              currentPage={pagination.currentPage}
+              onPageChange={handlePageChange}
+            />
           </div>
         )}
       </div>

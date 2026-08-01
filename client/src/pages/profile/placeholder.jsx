@@ -7,9 +7,7 @@ const ProfilePlaceholder = () => {
       <h3 className="text-lg font-semibold text-slate-800 mb-1">
         Tính năng đang phát triển
       </h3>
-      <p className="text-sm text-slate-500">
-        Trang này sẽ sớm được cập nhật.
-      </p>
+      <p className="text-sm text-slate-500">Trang này sẽ sớm được cập nhật.</p>
     </div>
   );
 };

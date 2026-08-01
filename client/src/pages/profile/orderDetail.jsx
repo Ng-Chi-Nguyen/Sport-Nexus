@@ -13,11 +13,13 @@ const OrderDetail = () => {
 
   if (!order) {
     return (
-      <div className="text-center py-12">
-        <p className="text-slate-500">Không tìm thấy đơn hàng</p>
+      <div className="text-center py-16 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md">
+        <p className="text-slate-500 dark:text-slate-400 font-medium">
+          Không tìm thấy đơn hàng
+        </p>
         <Link
           to="/tai-khoan/don-hang"
-          className="text-blue-600 hover:underline mt-2 inline-block"
+          className="text-sky-600 dark:text-sky-400 hover:underline mt-3 inline-block font-semibold text-sm"
         >
           Quay lại danh sách
         </Link>
@@ -29,146 +31,159 @@ const OrderDetail = () => {
     PAYMENT_METHOD_LABELS[order.payment_method] || order.payment_method;
 
   return (
-    <div>
+    <div className="text-slate-800 dark:text-slate-100 transition-colors duration-200 space-y-6">
       <Link
         to="/tai-khoan/don-hang"
-        className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 mb-4"
+        className="inline-flex items-center gap-1.5 text-sm text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 font-semibold transition-colors"
       >
         <ArrowLeft size={16} />
         Quay lại đơn hàng
       </Link>
 
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900">
+      <div className="flex items-center justify-between flex-wrap gap-4 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md">
+        <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
           Đơn hàng #{order.id}
         </h2>
         <span
-          className={`inline-block px-3 py-1 rounded-full text-sm font-medium border ${STATUS_BADGE[order.status] || ""}`}
+          className={`inline-block px-3 py-1 rounded-md text-sm font-medium border ${STATUS_BADGE[order.status] || ""}`}
         >
           {STATUS_LABELS[order.status] || order.status}
         </span>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-slate-50 rounded-lg">
-        <div>
-          <p className="text-xs text-slate-400 uppercase font-medium">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md">
+        <div className="space-y-1">
+          <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
             Ngày đặt
           </p>
-          <p className="text-sm font-medium">
+          <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
             {order.created_at ? formatFullDateTime(order.created_at) : "—"}
           </p>
         </div>
-        <div>
-          <p className="text-xs text-slate-400 uppercase font-medium">
+        <div className="space-y-1">
+          <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
             Phương thức thanh toán
           </p>
-          <p className="text-sm font-medium">{paymentMethodLabel}</p>
+          <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
+            {paymentMethodLabel}
+          </p>
         </div>
-        <div>
-          <p className="text-xs text-slate-400 uppercase font-medium">
+        <div className="space-y-1">
+          <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
             Trạng thái thanh toán
           </p>
           <span
-            className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium border ${PAYMENT_BADGE[order.payment_status] || ""}`}
+            className={`inline-block px-2.5 py-1 rounded-md text-xs font-medium border ${PAYMENT_BADGE[order.payment_status] || ""}`}
           >
             {STATUS_PAYMENT[order.payment_status] || order.payment_status}
           </span>
         </div>
-        <div>
-          <p className="text-xs text-slate-400 uppercase font-medium">
+        <div className="space-y-1">
+          <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
             Tạm tính
           </p>
-          <p className="text-sm font-medium">
+          <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
             {formatCurrency(order.total_amount)}
           </p>
         </div>
-        <div>
-          <p className="text-xs text-slate-400 uppercase font-medium">
+        <div className="sm:col-span-2 space-y-1">
+          <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
             Địa chỉ giao hàng
           </p>
-          <p className="text-sm font-medium">{order.shipping_address}</p>
+          <p className="text-sm font-medium text-slate-800 dark:text-slate-200 leading-relaxed">
+            {order.shipping_address}
+          </p>
         </div>
         {Number(order.discount_amount) > 0 && (
-          <div>
-            <p className="text-xs text-slate-400 uppercase font-medium">
+          <div className="space-y-1">
+            <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
               Giảm giá
             </p>
-            <p className="text-sm font-medium text-green-600">
+            <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
               -{formatCurrency(order.discount_amount)}
             </p>
           </div>
         )}
         {order.coupon_code && (
-          <div>
-            <p className="text-xs text-slate-400 uppercase font-medium">
+          <div className="space-y-1">
+            <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
               Mã giảm giá
             </p>
-            <p className="text-sm font-medium text-blue-600">
+            <p className="text-sm font-medium text-sky-600 dark:text-sky-400">
               {order.coupon_code}
             </p>
           </div>
         )}
-        <div>
-          <p className="text-xs text-slate-400 uppercase font-medium">
+        <div className="space-y-1 sm:col-span-2 pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+          <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
             Tổng cộng
           </p>
-          <p className="text-sm font-bold text-slate-900">
+          <p className="text-base font-bold text-rose-600 dark:text-rose-400">
             {formatCurrency(order.final_amount)}
           </p>
         </div>
       </div>
 
-      <h3 className="text-lg font-bold text-slate-900 mb-3">Sản phẩm đã đặt</h3>
-      <div className="border rounded-lg overflow-hidden">
-        <table className="w-full text-sm table-fixed">
-          <colgroup>
-            <col className="w-1/2" />
-            <col className="w-[15%]" />
-            <col className="w-[12%]" />
-            <col className="w-[23%]" />
-          </colgroup>
-          <thead>
-            <tr className="border-b bg-slate-50 text-slate-700 font-semibold">
-              <th className="py-3 px-4 text-left">Sản phẩm</th>
-              <th className="py-3 px-4 text-right">Đơn giá</th>
-              <th className="py-3 px-4 text-right">Số lượng</th>
-              <th className="py-3 px-4 text-right">Tạm tính</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {order.OrderItems?.map((item) => {
-              const variant = item.product_variant;
-              const attributes = variant?.VariableAttributes?.map(
-                (attr) => `${attr.attributeKey?.name}: ${attr.value}`,
-              ).join(", ");
-              return (
-                <tr key={item.id}>
-                  <td className="py-3 px-4">
-                    <div>
-                      <p className="font-medium text-slate-900">
-                        {variant?.product?.name || "Sản phẩm"}
-                      </p>
-                      {attributes && (
-                        <p className="text-xs text-slate-500 mt-0.5">
-                          {attributes}
+      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+          Sản phẩm đã đặt
+        </h3>
+        <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl custom-scrollbar">
+          <table className="w-full text-sm table-fixed">
+            <colgroup>
+              <col className="w-1/2" />
+              <col className="w-[15%]" />
+              <col className="w-[12%]" />
+              <col className="w-[23%]" />
+            </colgroup>
+            <thead>
+              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]/40 text-slate-700 dark:text-slate-300 font-semibold">
+                <th className="py-3.5 px-4 text-left">Sản phẩm</th>
+                <th className="py-3.5 px-4 text-right">Đơn giá</th>
+                <th className="py-3.5 px-4 text-right">Số lượng</th>
+                <th className="py-3.5 px-4 text-right">Tạm tính</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+              {order.OrderItems?.map((item) => {
+                const variant = item.product_variant;
+                const attributes = variant?.VariableAttributes?.map(
+                  (attr) => `${attr.attributeKey?.name}: ${attr.value}`,
+                ).join(", ");
+                return (
+                  <tr
+                    key={item.id}
+                    className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
+                  >
+                    <td className="py-3.5 px-4">
+                      <div className="space-y-1">
+                        <p className="font-medium text-slate-900 dark:text-slate-100">
+                          {variant?.product?.name || "Sản phẩm"}
                         </p>
+                        {attributes && (
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                            {attributes}
+                          </p>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-3.5 px-4 text-right text-slate-700 dark:text-slate-300">
+                      {formatCurrency(item.price_at_purchase)}
+                    </td>
+                    <td className="py-3.5 px-4 text-right text-slate-700 dark:text-slate-300">
+                      {item.quantity}
+                    </td>
+                    <td className="py-3.5 px-4 text-right font-medium text-slate-900 dark:text-slate-100">
+                      {formatCurrency(
+                        Number(item.price_at_purchase) * Number(item.quantity),
                       )}
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    {formatCurrency(item.price_at_purchase)}
-                  </td>
-                  <td className="py-3 px-4 text-right">{item.quantity}</td>
-                  <td className="py-3 px-4 text-right font-medium">
-                    {formatCurrency(
-                      Number(item.price_at_purchase) * Number(item.quantity),
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

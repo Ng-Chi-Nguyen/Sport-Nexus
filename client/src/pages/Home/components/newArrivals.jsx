@@ -9,7 +9,7 @@ export const NewArrivals = ({ products }) => {
     <div className="max-w-7xl mx-auto px-4 py-6">
       <h2 className="mb-6 text-xl md:text-2xl font-bold text-blue-600 flex items-center gap-2">
         <Clock className="tw-5 h-5 text-blue-600" strokeWidth={3} />
-        {t("new_arrivals")}
+        <p className="border-b border-blue-600">{t("new_arrivals")}</p>
       </h2>
       <div className="p-6">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">

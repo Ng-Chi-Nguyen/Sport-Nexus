@@ -54,29 +54,32 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="max-w-2xl font-sans">
-      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200">
+    <div className="max-w-2xl font-sans text-slate-800 dark:text-slate-100 transition-colors duration-200">
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="p-1.5 rounded text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+          className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           title="Quay lại"
         >
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900">
+          <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
             Chỉnh sửa thông tin cá nhân
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Cập nhật chi tiết hồ sơ tài khoản của bạn
           </p>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md"
+      >
         <div className="flex items-center gap-6">
-          <div className="relative group w-20 h-20 rounded-full border border-slate-200 overflow-hidden bg-slate-50 shrink-0">
+          <div className="relative group w-20 h-20 rounded-full border border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-50 dark:bg-slate-900 shrink-0 shadow-sm">
             {avatar ? (
               <img
                 src={URL.createObjectURL(avatar)}
@@ -90,7 +93,7 @@ const EditProfile = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-slate-400">
+              <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-600">
                 <User size={36} />
               </div>
             )}
@@ -112,8 +115,10 @@ const EditProfile = () => {
           </div>
 
           <div>
-            <p className="text-sm font-bold text-slate-800">Ảnh đại diện</p>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              Ảnh đại diện
+            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Hỗ trợ tệp định dạng JPG, PNG hoặc WEBP
             </p>
           </div>
@@ -121,7 +126,7 @@ const EditProfile = () => {
 
         <div className="space-y-4 max-w-lg text-sm">
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1.5">
               Họ tên
             </label>
             <input
@@ -131,12 +136,12 @@ const EditProfile = () => {
               onChange={(e) =>
                 setFormData({ ...formData, full_name: e.target.value })
               }
-              className="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-blue-600 text-slate-800"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-sky-500 dark:focus:border-sky-500 text-slate-800 dark:text-slate-100 transition-colors shadow-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1.5">
               Email
             </label>
             <input
@@ -145,12 +150,12 @@ const EditProfile = () => {
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
-              className="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-blue-600 text-slate-800"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-sky-500 dark:focus:border-sky-500 text-slate-800 dark:text-slate-100 transition-colors shadow-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1.5">
               Số điện thoại
             </label>
             <input
@@ -159,16 +164,16 @@ const EditProfile = () => {
               onChange={(e) =>
                 setFormData({ ...formData, phone_number: e.target.value })
               }
-              className="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-blue-600 text-slate-800"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-sky-500 dark:focus:border-sky-500 text-slate-800 dark:text-slate-100 transition-colors shadow-sm"
             />
           </div>
         </div>
 
-        <div className="flex items-center gap-3 pt-4 border-t border-slate-200 max-w-lg">
+        <div className="flex items-center gap-3 pt-4 border-t border-slate-200 dark:border-slate-800 max-w-lg">
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider rounded transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+            className="flex-1 py-3 bg-sky-600 dark:bg-sky-500 hover:bg-sky-700 dark:hover:bg-sky-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer shadow-sm"
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
             <span>{loading ? "Đang lưu..." : "Lưu thay đổi"}</span>
@@ -177,7 +182,7 @@ const EditProfile = () => {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="px-6 py-2.5 border border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider rounded hover:bg-slate-50 transition-colors"
+            className="px-6 py-3 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-sm"
           >
             Hủy
           </button>

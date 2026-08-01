@@ -11,7 +11,6 @@ import {
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import ShowToast from "@/components/ui/toast";
 import { LabelInput } from "@/components/ui/input";
-import axiosClient from "@/lib/axiosClient";
 import supportApi from "@/api/customer/settings/support";
 
 const Support = () => {
@@ -63,7 +62,7 @@ const Support = () => {
   };
 
   return (
-    <div className="min-h-screen pb-12">
+    <div className="min-h-screen pb-12 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <div className="mx-auto max-w-[1400px] px-4 pt-4 md:pt-6 mt-10">
         <Breadcrumbs
           data={[
@@ -73,15 +72,15 @@ const Support = () => {
         />
 
         {/* Header Section */}
-        <div className="mt-6 max-w-2xl">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600">
+        <div className="mt-6 max-w-2xl space-y-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-50 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-500/20 px-3 py-1 text-xs font-semibold text-sky-600 dark:text-sky-400">
             <HelpCircle className="w-3.5 h-3.5" />
             Trung tâm trợ giúp
           </span>
-          <h3 className="mt-2 text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+          <h3 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
             Liên Hệ & Hỗ Trợ
           </h3>
-          <p className="mt-2 text-sm md:text-base text-slate-500">
+          <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 leading-relaxed">
             Bạn có thắc mắc hoặc cần giúp đỡ? Hãy gửi yêu cầu cho chúng tôi, đội
             ngũ SportNexus sẽ phản hồi qua email sớm nhất!
           </p>
@@ -90,58 +89,64 @@ const Support = () => {
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cột trái: Thông tin liên hệ tĩnh */}
           <div className="space-y-6">
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-blue-600" />
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-900 bg-white dark:bg-[#0D121F]/40 p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+                <MessageSquare className="w-5 h-5 text-sky-600 dark:text-sky-400" />
                 Thông tin liên hệ
               </h2>
 
               <div className="space-y-4 text-sm">
                 <div className="flex items-start gap-3">
-                  <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+                  <div className="p-2.5 rounded-xl bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 shrink-0 border border-sky-100 dark:border-sky-500/20">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-800">Email hỗ trợ</p>
-                    <p className="text-slate-500 text-xs">
+                    <p className="font-semibold text-slate-900 dark:text-slate-100">
+                      Email hỗ trợ
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
                       support@sportnexus.com
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+                  <div className="p-2.5 rounded-xl bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 shrink-0 border border-sky-100 dark:border-sky-500/20">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-800">Hotline</p>
-                    <p className="text-slate-500 text-xs">
+                    <p className="font-semibold text-slate-900 dark:text-slate-100">
+                      Hotline
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
                       1900 123 456 (8:00 - 21:00)
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+                  <div className="p-2.5 rounded-xl bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 shrink-0 border border-sky-100 dark:border-sky-500/20">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-800">
+                    <p className="font-semibold text-slate-900 dark:text-slate-100">
                       Địa chỉ trụ sở
                     </p>
-                    <p className="text-slate-500 text-xs">Cần Thơ, Việt Nam</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
+                      Cần Thơ, Việt Nam
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+                  <div className="p-2.5 rounded-xl bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 shrink-0 border border-sky-100 dark:border-sky-500/20">
                     <Clock className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-800">
+                    <p className="font-semibold text-slate-900 dark:text-slate-100">
                       Thời gian làm việc
                     </p>
-                    <p className="text-slate-500 text-xs">
+                    <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
                       Thứ 2 - Chủ Nhật: 08:00 - 21:00
                     </p>
                   </div>
@@ -150,9 +155,9 @@ const Support = () => {
             </div>
 
             {/* Banner hỗ trợ nhanh */}
-            <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white shadow-md">
+            <div className="rounded-2xl bg-gradient-to-br from-sky-600 to-indigo-700 dark:from-sky-700 dark:to-indigo-900 p-6 text-white shadow-xl dark:shadow-2xl">
               <h3 className="font-bold text-base mb-1">Cần giải đáp gấp?</h3>
-              <p className="text-xs text-blue-100 leading-relaxed">
+              <p className="text-xs text-sky-100 leading-relaxed">
                 Kiểm tra phần Các câu hỏi thường gặp (FAQ) hoặc nhắn tin trực
                 tiếp qua Hotline để được phản hồi trong 5 phút.
               </p>
@@ -160,11 +165,11 @@ const Support = () => {
           </div>
 
           {/* Cột phải: Form gửi Email */}
-          <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-6 md:p-8 shadow-sm">
-            <h2 className="text-xl font-bold text-slate-900 mb-1">
+          <div className="lg:col-span-2 rounded-2xl border border-slate-200 dark:border-slate-900 bg-white dark:bg-[#0D121F]/40 p-6 md:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">
               Gửi yêu cầu hỗ trợ
             </h2>
-            <p className="text-xs text-slate-500 mb-6">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
               Điền thông tin bên dưới, chúng tôi sẽ phản hồi lại qua Email của
               bạn trong vòng 24h.
             </p>
@@ -214,12 +219,12 @@ const Support = () => {
                 />
               </div>
 
-              <div>
+              <div className="space-y-1.5">
                 <label
                   htmlFor="message"
-                  className="block text-xs font-semibold text-slate-700 mb-1"
+                  className="block text-xs font-semibold text-slate-700 dark:text-slate-300"
                 >
-                  Nội dung chi tiết <span className="text-red-500">*</span>
+                  Nội dung chi tiết <span className="text-rose-500">*</span>
                 </label>
                 <textarea
                   id="message"
@@ -229,14 +234,14 @@ const Support = () => {
                   onChange={handleChange}
                   placeholder="Mô tả chi tiết thắc mắc hoặc sự cố bạn gặp phải..."
                   required
-                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                  className="w-full rounded-xl border border-slate-200 dark:border-slate-800 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-[#111827]/40 outline-none transition placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-sky-500 dark:focus:border-sky-500 resize-none shadow-sm"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-sky-600 dark:bg-sky-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 dark:hover:bg-sky-600 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed shadow-sm cursor-pointer"
               >
                 {loading ? (
                   "Đang gửi..."

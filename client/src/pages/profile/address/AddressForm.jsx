@@ -132,9 +132,7 @@ const AddressForm = ({ initialData, onSubmit, onCancel, saving }) => {
       </div>
 
       <div className="flex items-center gap-3 pt-2">
-        <BtnSave loading={saving}>
-          Lưu
-        </BtnSave>
+        <BtnSave loading={saving}>Lưu</BtnSave>
         <button
           type="button"
           onClick={onCancel}

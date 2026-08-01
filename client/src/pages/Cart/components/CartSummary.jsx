@@ -21,8 +21,8 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
   const shipping = subtotal >= 500000 ? 0 : 30000;
 
   return (
-    <div className="bg-white border border-slate-200 rounded-sm p-5 space-y-4">
-      <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wide">
+    <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4 transition-colors duration-200 text-slate-800 dark:text-slate-100">
+      <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wide">
         Tổng cộng
       </h3>
 
@@ -32,59 +32,64 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
           value={couponCode}
           onChange={(e) => setCouponCode(e.target.value)}
           placeholder="Mã giảm giá"
-          className="flex-1 px-3 py-2 text-sm border border-slate-300 rounded-sm focus:outline-none focus:border-blue-400"
+          className="flex-1 px-3.5 py-2.5 text-sm bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-sky-500 dark:focus:border-sky-500 transition-colors"
         />
         <button
+          type="button"
           onClick={() => applyCoupon(subtotal, couponCode)}
           disabled={couponLoading || !couponCode}
-          className="px-4 py-2 bg-blue-600 text-white text-sm rounded-sm hover:bg-blue-700 transition-colors disabled:opacity-50"
+          className="px-4 py-2.5 bg-sky-600 dark:bg-sky-500 text-white text-sm font-medium rounded-xl hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm shrink-0"
         >
-          Áp dụng
+          {couponLoading ? "Đang xử lý..." : "Áp dụng"}
         </button>
       </div>
+
       {couponMsg && (
         <p
-          className={`text-xs ${couponMsg.type === "success" ? "text-green-600" : "text-red-500"}`}
+          className={`text-xs ${couponMsg.type === "success" ? "text-emerald-600 dark:text-emerald-400" : "text-rose-500 dark:text-rose-400"}`}
         >
           {couponMsg.text}
         </p>
       )}
+
       {couponData && (
         <button
+          type="button"
           onClick={clearCoupon}
-          className="text-xs text-blue-600 hover:underline"
+          className="text-xs text-sky-600 dark:text-sky-400 hover:underline cursor-pointer"
         >
           Xóa mã
         </button>
       )}
 
-      <div className="space-y-2 text-sm border-t border-slate-100 pt-3">
-        <div className="flex justify-between text-slate-600">
+      <div className="space-y-2.5 text-sm border-t border-slate-200 dark:border-slate-800 pt-3">
+        <div className="flex justify-between text-slate-600 dark:text-slate-400">
           <span>Tạm tính</span>
           <span>{formatCurrency(subtotal)}</span>
         </div>
         {discount > 0 && (
-          <div className="flex justify-between text-green-600">
+          <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
             <span>Giảm giá</span>
             <span>-{formatCurrency(discount)}</span>
           </div>
         )}
-        <div className="flex justify-between text-slate-600">
+        <div className="flex justify-between text-slate-600 dark:text-slate-400">
           <span>Phí vận chuyển</span>
           <span>{shipping === 0 ? "Miễn phí" : formatCurrency(shipping)}</span>
         </div>
-        <div className="flex justify-between font-bold text-slate-800 text-base border-t border-slate-200 pt-2">
+        <div className="flex justify-between font-bold text-slate-900 dark:text-slate-100 text-base border-t border-slate-200 dark:border-slate-800 pt-2.5">
           <span>Tổng cộng</span>
-          <span className="text-red-600">
+          <span className="text-rose-600 dark:text-rose-400">
             {formatCurrency(finalAmount + shipping)}
           </span>
         </div>
       </div>
 
       <button
+        type="button"
         onClick={() => onCheckout(selectedItems)}
         disabled={selectedItems.length === 0}
-        className="w-full py-3 bg-orange-500 text-white rounded-sm hover:bg-orange-600 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-3 bg-amber-500 dark:bg-amber-600 text-white rounded-xl hover:bg-amber-600 dark:hover:bg-amber-500 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
       >
         Tiến hành thanh toán ({selectedItems.length} sản phẩm)
       </button>

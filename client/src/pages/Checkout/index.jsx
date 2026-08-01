@@ -90,20 +90,32 @@ const Checkout = () => {
   const discount = couponData?.discount ?? 0;
   const finalAmount = couponData?.newAmount ?? totalAmount;
 
-  const orderPayload = useMemo(() => ({
-    total_amount: totalAmount,
-    final_amount: finalAmount,
-    discount_amount: discount,
-    shipping_address: fullAddress,
-    payment_method: paymentMethod,
-    coupon_code: couponCode || null,
-    user_email: email || null,
-    items: items.map((item) => ({
-      product_variant_id: item.product_variant_id,
-      quantity: item.quantity,
-      price_at_purchase: item.price_at_purchase,
-    })),
-  }), [totalAmount, finalAmount, discount, fullAddress, paymentMethod, couponCode, items]);
+  const orderPayload = useMemo(
+    () => ({
+      total_amount: totalAmount,
+      final_amount: finalAmount,
+      discount_amount: discount,
+      shipping_address: fullAddress,
+      payment_method: paymentMethod,
+      coupon_code: couponCode || null,
+      user_email: email || null,
+      items: items.map((item) => ({
+        product_variant_id: item.product_variant_id,
+        quantity: item.quantity,
+        price_at_purchase: item.price_at_purchase,
+      })),
+    }),
+    [
+      totalAmount,
+      finalAmount,
+      discount,
+      fullAddress,
+      paymentMethod,
+      couponCode,
+      email,
+      items,
+    ],
+  );
 
   const handlePlaceOrder = useCallback(() => {
     if (!fullAddress) return;
@@ -137,8 +149,8 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen py-4 md:py-8">
-      <div className="mx-auto max-w-5xl">
+    <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <Breadcrumbs
           data={[
             { title: "Trang chủ", route: "/" },
@@ -146,13 +158,16 @@ const Checkout = () => {
           ]}
         />
 
-        <h1 className="text-xl md:text-2xl font-bold text-slate-800 mt-4 mb-6">
+        <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-4 mb-6">
           Thanh toán đơn hàng
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
           <div className="md:col-span-3 space-y-6">
-            <ContactSection email={email} onChange={(e) => setEmail(e.target.value)} />
+            <ContactSection
+              email={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
             <AddressSection
               provinces={addressData}

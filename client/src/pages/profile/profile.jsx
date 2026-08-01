@@ -62,27 +62,26 @@ const Profile = () => {
   };
 
   if (!user) return null;
-  console.log(user.avatar);
 
   return (
-    <div className="space-y-8 font-sans">
+    <div className="space-y-8 font-sans text-slate-800 dark:text-slate-100 transition-colors duration-200">
       {/* Khối Thông Tin Tài Khoản */}
-      <div>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900">
+      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-6">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+          <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
             Tài khoản
           </h2>
           <Link
             to="/tai-khoan/chinh-sua-thong-tin-ca-nhan"
-            className="flex items-center gap-1.5 text-blue-500 hover:text-blue-700 text-sm italic transition-colors"
+            className="flex items-center gap-1.5 text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 text-sm font-semibold transition-colors"
           >
             <Pencil size={14} />
             <span>Chỉnh sửa</span>
           </Link>
         </div>
 
-        <div className="flex items-center gap-6 mb-6">
-          <div className="relative group w-20 h-20 rounded-full border-2 border-slate-200 overflow-hidden bg-slate-50 shrink-0">
+        <div className="flex items-center gap-6">
+          <div className="relative group w-20 h-20 rounded-full border-2 border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-50 dark:bg-slate-900 shrink-0 shadow-sm">
             {user.avatar ? (
               <img
                 src={user.avatar}
@@ -90,15 +89,16 @@ const Profile = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-slate-400">
+              <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-600">
                 <User size={36} />
               </div>
             )}
 
             <button
+              type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadingAvatar}
-              className="absolute inset-0 bg-slate-900/50 flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute inset-0 bg-slate-900/50 flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
               title="Đổi ảnh đại diện"
             >
               <Camera size={18} />
@@ -116,64 +116,73 @@ const Profile = () => {
             />
           </div>
 
-          <div className="text-sm text-slate-800">
-            <p className="font-bold text-base text-slate-900">
+          <div className="text-sm">
+            <p className="font-bold text-base text-slate-900 dark:text-slate-100">
               {user.full_name}
             </p>
-            <p className="text-slate-500 text-xs mt-0.5">
+            <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 font-medium">
               {user.role?.name || "Khách hàng"}
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
-          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-md">
-            <Mail size={14} className="text-blue-600 shrink-0" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl shadow-sm">
+            <Mail
+              size={16}
+              className="text-sky-600 dark:text-sky-400 shrink-0"
+            />
             <div className="min-w-0">
-              <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
                 Email
               </p>
-              <p className="text-xs font-medium text-slate-800 truncate">
+              <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate mt-0.5">
                 {user.email || "—"}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-md">
-            <Phone size={14} className="text-green-600 shrink-0" />
+          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl shadow-sm">
+            <Phone
+              size={16}
+              className="text-emerald-600 dark:text-emerald-400 shrink-0"
+            />
             <div className="min-w-0">
-              <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
                 Điện thoại
               </p>
-              <p className="text-xs font-medium text-slate-800">
+              <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                 {user.phone_number || "—"}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-md col-span-2 sm:col-span-1">
-            <MapPin size={14} className="text-red-600 shrink-0" />
-            <div className="min-w-0">
-              <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">
+          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl shadow-sm sm:col-span-2 lg:col-span-1">
+            <MapPin
+              size={16}
+              className="text-rose-600 dark:text-rose-400 shrink-0"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
                 Địa chỉ
               </p>
               {defaultAddr ? (
-                <div>
-                  <p className="text-xs font-medium text-slate-800 truncate">
+                <div className="mt-0.5">
+                  <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
                     {formatAddress(defaultAddr)}
                   </p>
                   <Link
                     to="/tai-khoan/dia-chi"
-                    className="text-[10px] text-blue-500 hover:underline mt-0.5 inline-block"
+                    className="text-[10px] text-sky-600 dark:text-sky-400 hover:underline mt-0.5 inline-block font-semibold"
                   >
                     Quản lý địa chỉ
                   </Link>
                 </div>
               ) : (
-                <p className="text-xs font-medium text-slate-800">
+                <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                   <Link
                     to="/tai-khoan/dia-chi/them"
-                    className="text-blue-500 hover:underline"
+                    className="text-sky-600 dark:text-sky-400 hover:underline"
                   >
                     + Thêm địa chỉ
                   </Link>
@@ -182,45 +191,52 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-md">
-            <ShieldCheck size={14} className="text-purple-600 shrink-0" />
+          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl shadow-sm">
+            <ShieldCheck
+              size={16}
+              className="text-purple-600 dark:text-purple-400 shrink-0"
+            />
             <div className="min-w-0">
-              <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
                 Vai trò
               </p>
-              <p className="text-xs font-medium text-slate-800">
+              <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                 {user.role?.name || "—"}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-md">
+          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl shadow-sm">
             <BadgeCheck
-              size={14}
-              className={
-                (user.is_verified ? "text-emerald-600" : "text-slate-300") +
-                " shrink-0"
-              }
+              size={16}
+              className={`${
+                user.is_verified
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-slate-300 dark:text-slate-600"
+              } shrink-0`}
             />
             <div className="min-w-0">
-              <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
                 Trạng thái
               </p>
               <p
-                className={`text-xs font-medium ${user.is_verified ? "text-emerald-600" : "text-slate-400"}`}
+                className={`text-xs font-semibold mt-0.5 ${user.is_verified ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400 dark:text-slate-500"}`}
               >
                 {user.is_verified ? "Đã xác thực" : "Chưa xác thực"}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-md">
-            <Calendar size={14} className="text-amber-600 shrink-0" />
+          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl shadow-sm">
+            <Calendar
+              size={16}
+              className="text-amber-600 dark:text-amber-400 shrink-0"
+            />
             <div className="min-w-0">
-              <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
                 Ngày tham gia
               </p>
-              <p className="text-xs font-medium text-slate-800">
+              <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                 {user.created_at ? formatDate(user.created_at) : "—"}
               </p>
             </div>
@@ -229,65 +245,67 @@ const Profile = () => {
       </div>
 
       {/* Khối Đơn Hàng Của Bạn */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900">
-            Đơn hàng của bạn
+      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+          <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
+            Đơn hàng gần đây
           </h2>
           <Link
             to="/tai-khoan/don-hang"
-            className="text-sm text-blue-600 hover:underline"
+            className="text-sm font-semibold text-sky-600 dark:text-sky-400 hover:underline"
           >
             Xem tất cả
           </Link>
         </div>
 
         {orders.length === 0 ? (
-          <div className="border rounded-lg p-6 text-center text-slate-500">
-            <p className="font-medium mb-1">Chưa có đơn hàng nào</p>
+          <div className="border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-[#111827]/40">
+            <p className="font-semibold mb-1 text-slate-700 dark:text-slate-300">
+              Chưa có đơn hàng nào
+            </p>
             <p className="text-xs">
               Khi bạn đặt hàng, đơn hàng sẽ xuất hiện tại đây
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto border rounded-lg">
+          <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl custom-scrollbar">
             <table className="w-full text-sm text-left">
               <thead>
-                <tr className="border-b bg-slate-50 text-slate-700 font-semibold">
-                  <th className="py-3 px-4">Mã đơn hàng</th>
-                  <th className="py-3 px-4">Ngày đặt</th>
-                  <th className="py-3 px-4">Thành tiền</th>
-                  <th className="py-3 px-4">Thanh toán</th>
-                  <th className="py-3 px-4">Trạng thái</th>
+                <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]/40 text-slate-700 dark:text-slate-300 font-semibold">
+                  <th className="py-3.5 px-4">Mã đơn hàng</th>
+                  <th className="py-3.5 px-4">Ngày đặt</th>
+                  <th className="py-3.5 px-4">Thành tiền</th>
+                  <th className="py-3.5 px-4">Thanh toán</th>
+                  <th className="py-3.5 px-4">Trạng thái</th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
                 {orders.slice(0, 5).map((order) => (
                   <tr
                     key={order.id}
                     onClick={() => navigate(`/tai-khoan/don-hang/${order.id}`)}
-                    className="text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                    className="text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer"
                   >
-                    <td className="py-3 px-4 font-semibold text-blue-600">
+                    <td className="py-3.5 px-4 font-semibold text-sky-600 dark:text-sky-400">
                       #{order.id}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       {order.created_at ? formatDate(order.created_at) : "—"}
                     </td>
-                    <td className="py-3 px-4 font-medium">
+                    <td className="py-3.5 px-4 font-medium text-slate-900 dark:text-slate-100">
                       {formatCurrency(order.final_amount)}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       <span
-                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium border ${PAYMENT_BADGE[order.payment_status] || ""}`}
+                        className={`inline-block px-2.5 py-1 rounded-md text-xs font-medium border ${PAYMENT_BADGE[order.payment_status] || ""}`}
                       >
                         {STATUS_PAYMENT[order.payment_status] ||
                           order.payment_status}
                       </span>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       <span
-                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium border ${STATUS_BADGE[order.status] || ""}`}
+                        className={`inline-block px-2.5 py-1 rounded-md text-xs font-medium border ${STATUS_BADGE[order.status] || ""}`}
                       >
                         {STATUS_LABELS[order.status] || order.status}
                       </span>

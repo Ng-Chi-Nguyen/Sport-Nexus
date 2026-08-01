@@ -128,11 +128,14 @@ const ProductDetail = () => {
 
   if (!loaderData?.success || !loaderData?.data) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <p className="text-slate-500 text-lg">Không tìm thấy sản phẩm</p>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-slate-800 dark:text-slate-100">
+        <p className="text-slate-500 dark:text-slate-400 text-lg">
+          Không tìm thấy sản phẩm
+        </p>
         <button
+          type="button"
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
+          className="flex items-center gap-2 text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 transition-colors font-medium cursor-pointer"
         >
           <ArrowLeft size={18} />
           Quay lại
@@ -142,79 +145,84 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="min-h-screen py-2 md:py-6 mt-10">
-      <Breadcrumbs
-        data={[
-          { title: "Trang chủ", route: "/" },
-          ...(product.category
-            ? [
-                {
-                  title: product.category.name,
-                  route: `/products?category=${product.category.slug || product.category.id}`,
-                },
-              ]
-            : []),
-          { title: product.name, route: "" },
-        ]}
-      />
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-2">
-        <ProductImages
-          thumbnail={product.thumbnail}
-          images={product.ProductImages}
+    <div className="min-h-screen py-4 md:py-8 mt-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
+        <Breadcrumbs
+          data={[
+            { title: "Trang chủ", route: "/" },
+            ...(product.category
+              ? [
+                  {
+                    title: product.category.name,
+                    route: `/products?category=${product.category.slug || product.category.id}`,
+                  },
+                ]
+              : []),
+            { title: product.name, route: "" },
+          ]}
         />
 
-        <div className="space-y-4">
-          <ProductInfo
-            product={product}
-            avgRating={avgRating}
-            totalReviews={ratings.length}
-            currentPrice={currentPrice}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mt-6">
+          <ProductImages
+            thumbnail={product.thumbnail}
+            images={product.ProductImages}
           />
 
-          <VariantSelector
-            attrKeys={attrKeys}
-            selectedAttrs={selectedAttrs}
-            onSelect={(key, value) => {
-              setSelectedAttrs((prev) => ({ ...prev, [key]: value }));
-              setQuantity(1);
-            }}
-          />
+          <div className="space-y-6 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md">
+            <ProductInfo
+              product={product}
+              avgRating={avgRating}
+              totalReviews={ratings.length}
+              currentPrice={currentPrice}
+              quantity={quantity}
+            />
 
-          <ActionBar
-            quantity={quantity}
-            maxStock={maxStock}
-            onQtyChange={setQuantity}
-            wishlisted={wishlisted}
-            onWishlist={() => product && toggleLike(product.id)}
-            onShare={async () => {
-              const url = window.location.href;
-              if (navigator.share)
-                await navigator.share({ title: product.name, url });
-              else await navigator.clipboard.writeText(url);
-            }}
-            currentStock={currentStock}
-            onAddToCart={handleAddToCart}
-            onBuyNow={handleBuyNow}
-          />
+            <VariantSelector
+              attrKeys={attrKeys}
+              selectedAttrs={selectedAttrs}
+              onSelect={(key, value) => {
+                setSelectedAttrs((prev) => ({ ...prev, [key]: value }));
+                setQuantity(1);
+              }}
+            />
 
-          <CouponInput
-            couponCode={couponCode}
-            onCodeChange={setCouponCode}
-            onApply={() => {
-              if (!couponCode.trim()) return;
-              setCouponMsg({
-                type: "success",
-                text: "Mã giảm giá không hợp lệ (demo)",
-              });
-            }}
-            message={couponMsg}
-          />
+            <ActionBar
+              quantity={quantity}
+              maxStock={maxStock}
+              onQtyChange={setQuantity}
+              wishlisted={wishlisted}
+              onWishlist={() => product && toggleLike(product.id)}
+              onShare={async () => {
+                const url = window.location.href;
+                if (navigator.share)
+                  await navigator.share({ title: product.name, url });
+                else await navigator.clipboard.writeText(url);
+              }}
+              currentStock={currentStock}
+              onAddToCart={handleAddToCart}
+              onBuyNow={handleBuyNow}
+            />
+
+            <CouponInput
+              couponCode={couponCode}
+              onCodeChange={setCouponCode}
+              onApply={() => {
+                if (!couponCode.trim()) return;
+                setCouponMsg({
+                  type: "success",
+                  text: "Mã giảm giá không hợp lệ (demo)",
+                });
+              }}
+              message={couponMsg}
+            />
+          </div>
+        </div>
+
+        <div className="mt-8 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md">
+          <ProductTabs description={product.description} />
+          <ReviewList reviews={ratings} />
         </div>
       </div>
-
-      <ProductTabs description={product.description} />
-      <ReviewList reviews={ratings} />
     </div>
   );
 };

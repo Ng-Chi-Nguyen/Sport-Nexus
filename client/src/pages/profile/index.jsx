@@ -44,94 +44,98 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-800 font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#090D16] text-slate-800 dark:text-slate-100 font-sans transition-colors duration-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Breadcrumb */}
-        <div className="mt-20">
+        <div className="mb-6">
           <Breadcrumbs data={breadcrumbsData} />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           {/* Sidebar Bên Trái */}
           <div className="md:col-span-3 pr-0 md:pr-4">
-            <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 mb-2">
-              Trang tài khoản
-            </h2>
-
-            <p className="text-sm font-medium text-slate-700 mb-6">
-              Xin chào,{" "}
-              <span className="text-blue-600 font-bold">
-                {user?.full_name || "khách hàng"} !
-              </span>
-            </p>
-
-            <nav className="space-y-3 text-sm font-medium">
+            <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md sticky top-6 space-y-6">
               <div>
-                <NavLink
-                  to="/tai-khoan"
-                  end
-                  className={({ isActive }) =>
-                    isActive
-                      ? "text-blue-600 font-bold block"
-                      : "text-slate-700 hover:text-blue-600 transition-colors block"
-                  }
-                >
-                  Thông tin tài khoản
-                </NavLink>
+                <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100 mb-1">
+                  Trang tài khoản
+                </h2>
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  Xin chào,{" "}
+                  <span className="text-sky-600 dark:text-sky-400 font-bold">
+                    {user?.full_name || "khách hàng"} !
+                  </span>
+                </p>
               </div>
 
-              <div>
-                <NavLink
-                  to="/tai-khoan/dia-chi"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "text-blue-600 font-bold block"
-                      : "text-slate-700 hover:text-blue-600 transition-colors block"
-                  }
-                >
-                  Sổ địa chỉ (1)
-                </NavLink>
-              </div>
+              <nav className="space-y-2 text-sm font-medium">
+                <div>
+                  <NavLink
+                    to="/tai-khoan"
+                    end
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-sky-600 dark:text-sky-400 font-bold block px-3 py-2 rounded-xl bg-sky-50 dark:bg-sky-500/15 transition-all"
+                        : "text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors block px-3 py-2 rounded-xl"
+                    }
+                  >
+                    Thông tin tài khoản
+                  </NavLink>
+                </div>
 
-              <div>
-                <NavLink
-                  to="/tai-khoan/don-hang"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "text-blue-600 font-bold block"
-                      : "text-slate-700 hover:text-blue-600 transition-colors block"
-                  }
-                >
-                  Đơn hàng
-                </NavLink>
-              </div>
+                <div>
+                  <NavLink
+                    to="/tai-khoan/dia-chi"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-sky-600 dark:text-sky-400 font-bold block px-3 py-2 rounded-xl bg-sky-50 dark:bg-sky-500/15 transition-all"
+                        : "text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors block px-3 py-2 rounded-xl"
+                    }
+                  >
+                    Sổ địa chỉ
+                  </NavLink>
+                </div>
 
-              <div>
-                <NavLink
-                  to="/tai-khoan/dat-lai-mat-khau"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "text-blue-600 font-bold block"
-                      : "text-slate-700 hover:text-blue-600 transition-colors block"
-                  }
-                >
-                  Đổi mật khẩu
-                </NavLink>
-              </div>
+                <div>
+                  <NavLink
+                    to="/tai-khoan/don-hang"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-sky-600 dark:text-sky-400 font-bold block px-3 py-2 rounded-xl bg-sky-50 dark:bg-sky-500/15 transition-all"
+                        : "text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors block px-3 py-2 rounded-xl"
+                    }
+                  >
+                    Đơn hàng
+                  </NavLink>
+                </div>
 
-              <div className="pt-2">
-                <button
-                  onClick={handleLogoutClick}
-                  className="text-red-600 hover:text-red-700 transition-colors font-medium text-sm"
-                >
-                  Đăng xuất
-                </button>
-              </div>
-            </nav>
+                <div>
+                  <NavLink
+                    to="/tai-khoan/dat-lai-mat-khau"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-sky-600 dark:text-sky-400 font-bold block px-3 py-2 rounded-xl bg-sky-50 dark:bg-sky-500/15 transition-all"
+                        : "text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors block px-3 py-2 rounded-xl"
+                    }
+                  >
+                    Đổi mật khẩu
+                  </NavLink>
+                </div>
+
+                <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
+                  <button
+                    type="button"
+                    onClick={handleLogoutClick}
+                    className="w-full text-left text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors font-medium text-sm px-3 py-2 rounded-xl cursor-pointer"
+                  >
+                    Đăng xuất
+                  </button>
+                </div>
+              </nav>
+            </div>
           </div>
 
           {/* Nội dung bên phải */}
-          <div className="md:col-span-9 md:border-l md:border-slate-200 md:pl-8">
+          <div className="md:col-span-9">
             <Outlet />
           </div>
         </div>
