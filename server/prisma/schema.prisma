@@ -1,473 +1,492 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    url      = env("DATABASE_URL")
-    provider = "mysql"
+  url      = env("DATABASE_URL")
+  provider = "mysql"
 }
 
 model Permissions {
-    id     Int     @id @default(autoincrement())
-    slug   String  @unique
-    name   String
-    module String
-    action String
-    Roles  Roles[]
-    Users  Users[]
+  id     Int     @id @default(autoincrement())
+  slug   String  @unique
+  name   String
+  module String
+  action String
+  Roles  Roles[]
+  Users  Users[]
 
-    @@map("permissions")
+  @@map("permissions")
 }
 
 // Roles Done
 model Roles {
-    id          Int           @id @default(autoincrement())
-    slug        String        @unique
-    name        String
-    permissions Permissions[]
-    Users       Users[]
+  id          Int           @id @default(autoincrement())
+  slug        String        @unique
+  name        String
+  permissions Permissions[]
+  Users       Users[]
 
-    @@map("roles")
+  @@map("roles")
 }
 
 // Users Done
 model Users {
-    id                 Int             @id @default(autoincrement())
-    full_name          String
-    email              String
-    password           String
-    phone_number       String?
-    avatar             String?         @db.Text
-    status             Boolean         @default(true)
-    is_verified        Boolean         @default(false)
-    verification_token String?
-    refresh_token      String?
-    created_at         DateTime        @default(now())
-    updated_at         DateTime        @updatedAt
-    deleted_at         DateTime        @default(dbgenerated("'1000-01-01 00:00:00'"))
-    role_id            Int
-    role               Roles           @relation(fields: [role_id], references: [id], onDelete: Cascade)
-    UserAddresses      UserAddresses[]
-    Orders             Orders[]
-    Coupons            Coupons[]
-    Carts              Carts[]
-    Reviews            Reviews[]
-    SystemLogs         SystemLogs[]
-    permissions        Permissions[]
+  id                 Int             @id @default(autoincrement())
+  full_name          String
+  email              String
+  password           String
+  phone_number       String?
+  avatar             String?         @db.Text
+  status             Boolean         @default(true)
+  is_verified        Boolean         @default(false)
+  verification_token String?
+  refresh_token      String?
+  created_at         DateTime        @default(now())
+  updated_at         DateTime        @updatedAt
+  deleted_at         DateTime        @default(dbgenerated("'1000-01-01 00:00:00'"))
+  role_id            Int
+  role               Roles           @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  UserAddresses      UserAddresses[]
+  Orders             Orders[]
+  Coupons            Coupons[]
+  UserCoupons        UserCoupons[]
+  Carts              Carts[]
+  Reviews            Reviews[]
+  SystemLogs         SystemLogs[]
+  permissions        Permissions[]
 
-    @@unique([email, deleted_at])
-    @@unique([phone_number, deleted_at])
-    @@map("users")
+  @@unique([email, deleted_at])
+  @@unique([phone_number, deleted_at])
+  @@map("users")
 }
 
 // UserAddresses Done
 model UserAddresses {
-    id              Int     @id @default(autoincrement())
-    recipient_name  String
-    recipient_phone String
-    location_data   Json
-    detail_address  String
-    is_default      Boolean @default(false)
-    type            String
-    user_id         Int
-    user            Users   @relation(fields: [user_id], references: [id])
+  id              Int     @id @default(autoincrement())
+  recipient_name  String
+  recipient_phone String
+  location_data   Json
+  detail_address  String
+  is_default      Boolean @default(false)
+  type            String
+  user_id         Int
+  user            Users   @relation(fields: [user_id], references: [id])
 
-    @@map("useraddresses")
+  @@map("useraddresses")
 }
 
 // Categories Done
 model Categories {
-    id         Int        @id @default(autoincrement())
-    name       String
-    slug       String
-    image      String?    @db.Text
-    is_active  Boolean    @default(true)
-    deleted_at DateTime   @default(dbgenerated("'1000-01-01 00:00:00'"))
-    Products   Products[]
+  id         Int        @id @default(autoincrement())
+  name       String
+  slug       String
+  image      String?    @db.Text
+  is_active  Boolean    @default(true)
+  deleted_at DateTime   @default(dbgenerated("'1000-01-01 00:00:00'"))
+  Products   Products[]
 
-    @@unique([slug, deleted_at])
-    @@map("categories")
+  @@unique([slug, deleted_at])
+  @@map("categories")
 }
 
 // Suppliers Done
 model Suppliers {
-    id             Int              @id @default(autoincrement())
-    contact_person String
-    email          String?
-    phone          String?
-    name           String
-    location_data  Json
-    logo_url       String?
-    deleted_at     DateTime         @default(dbgenerated("'1000-01-01 00:00:00'"))
-    Products       Products[]
-    PurchaseOrders PurchaseOrders[]
+  id             Int              @id @default(autoincrement())
+  contact_person String
+  email          String?
+  phone          String?
+  name           String
+  location_data  Json
+  logo_url       String?
+  deleted_at     DateTime         @default(dbgenerated("'1000-01-01 00:00:00'"))
+  Products       Products[]
+  PurchaseOrders PurchaseOrders[]
 
-    @@unique([name, deleted_at])
-    @@map("suppliers")
+  @@unique([name, deleted_at])
+  @@map("suppliers")
 }
 
 // Brands Done
 model Brands {
-    id         Int        @id @default(autoincrement())
-    name       String
-    logo       String?
-    origin     String?    @db.Text
-    deleted_at DateTime   @default(dbgenerated("'1000-01-01 00:00:00'"))
-    Products   Products[]
+  id         Int        @id @default(autoincrement())
+  name       String
+  logo       String?
+  origin     String?    @db.Text
+  deleted_at DateTime   @default(dbgenerated("'1000-01-01 00:00:00'"))
+  Products   Products[]
 
-    @@map("brands")
+  @@map("brands")
 }
 
 // Products Done
 model Products {
-    id                   Int                    @id @default(autoincrement())
-    name                 String
-    slug                 String
-    base_price           Decimal                @db.Decimal(10, 2)
-    is_active            Boolean                @default(true)
-    description          String                 @db.Text
-    thumbnail            String?                @db.Text
-    created_at           DateTime               @default(now())
-    updated_at           DateTime               @updatedAt
-    deleted_at           DateTime               @default(dbgenerated("'1000-01-01 00:00:00'"))
-    category_id          Int
-    category             Categories             @relation(fields: [category_id], references: [id], onDelete: Cascade)
-    supplier_id          Int
-    supplier             Suppliers              @relation(fields: [supplier_id], references: [id], onDelete: Cascade)
-    brand_id             Int
-    brand                Brands                 @relation(fields: [brand_id], references: [id], onDelete: Cascade)
-    ProductImages        ProductImages[]
-    ProductVariants      ProductVariants[]
-    ProductAttributeKeys ProductAttributeKeys[]
-    Reviews              Reviews[]
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  slug                 String
+  base_price           Decimal                @db.Decimal(10, 2)
+  is_active            Boolean                @default(true)
+  description          String                 @db.Text
+  thumbnail            String?                @db.Text
+  created_at           DateTime               @default(now())
+  updated_at           DateTime               @updatedAt
+  deleted_at           DateTime               @default(dbgenerated("'1000-01-01 00:00:00'"))
+  category_id          Int
+  category             Categories             @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  supplier_id          Int
+  supplier             Suppliers              @relation(fields: [supplier_id], references: [id], onDelete: Cascade)
+  brand_id             Int
+  brand                Brands                 @relation(fields: [brand_id], references: [id], onDelete: Cascade)
+  ProductImages        ProductImages[]
+  ProductVariants      ProductVariants[]
+  ProductAttributeKeys ProductAttributeKeys[]
+  Reviews              Reviews[]
 
-    @@unique([slug, deleted_at])
-    @@map("products")
+  @@unique([slug, deleted_at])
+  @@map("products")
 }
 
 // ProductsImages Done
 model ProductImages {
-    id         Int      @id @default(autoincrement())
-    url        String   @db.Text
-    is_primary Boolean  @default(false)
-    product_id Int
-    product    Products @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  id         Int      @id @default(autoincrement())
+  url        String   @db.Text
+  is_primary Boolean  @default(false)
+  product_id Int
+  product    Products @relation(fields: [product_id], references: [id], onDelete: Cascade)
 
-    @@map("productimages")
+  @@map("productimages")
 }
 
 // ProductVariants Done
 model ProductVariants {
-    id         Int      @id @default(autoincrement())
-    stock      Int
-    price      Decimal  @db.Decimal(10, 2)
-    deleted_at DateTime @default(dbgenerated("'1000-01-01 00:00:00'"))
-    product_id Int
-    product    Products @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  id         Int      @id @default(autoincrement())
+  stock      Int
+  price      Decimal  @db.Decimal(10, 2)
+  deleted_at DateTime @default(dbgenerated("'1000-01-01 00:00:00'"))
+  product_id Int
+  product    Products @relation(fields: [product_id], references: [id], onDelete: Cascade)
 
-    VariableAttributes VariableAttributes[]
+  VariableAttributes VariableAttributes[]
 
-    OrderItems         OrderItems[]
-    CartItems          CartItems[]
-    StockMovements     StockMovements[]
-    PurchaseOrderItems PurchaseOrderItems[]
+  OrderItems         OrderItems[]
+  CartItems          CartItems[]
+  StockMovements     StockMovements[]
+  PurchaseOrderItems PurchaseOrderItems[]
 
-    @@map("productvariants")
+  @@map("productvariants")
 }
 
 // AttributeKeys Done
 model AttributeKeys {
-    id                   Int                    @id @default(autoincrement())
-    name                 String                 @unique @db.VarChar(191)
-    unit                 String?                @db.VarChar(50)
-    VariableAttributes   VariableAttributes[]
-    ProductAttributeKeys ProductAttributeKeys[]
+  id                   Int                    @id @default(autoincrement())
+  name                 String                 @unique @db.VarChar(191)
+  unit                 String?                @db.VarChar(50)
+  VariableAttributes   VariableAttributes[]
+  ProductAttributeKeys ProductAttributeKeys[]
 
-    @@map("attributekeys")
+  @@map("attributekeys")
 }
 
 // AttributeKeys Done
 model VariableAttributes {
-    id               Int             @id @default(autoincrement())
-    variable_id      Int
-    variable         ProductVariants @relation(fields: [variable_id], references: [id], onDelete: Cascade)
-    attribute_key_id Int
-    attributeKey     AttributeKeys   @relation(fields: [attribute_key_id], references: [id], onDelete: Cascade)
-    value            String          @db.VarChar(191)
+  id               Int             @id @default(autoincrement())
+  variable_id      Int
+  variable         ProductVariants @relation(fields: [variable_id], references: [id], onDelete: Cascade)
+  attribute_key_id Int
+  attributeKey     AttributeKeys   @relation(fields: [attribute_key_id], references: [id], onDelete: Cascade)
+  value            String          @db.VarChar(191)
 
-    @@unique([variable_id, attribute_key_id])
-    @@map("variableattributes")
+  @@unique([variable_id, attribute_key_id])
+  @@map("variableattributes")
 }
 
 model ProductAttributeKeys {
-    id               Int           @id @default(autoincrement())
-    product_id       Int
-    product          Products      @relation(fields: [product_id], references: [id], onDelete: Cascade)
-    attribute_key_id Int
-    attributeKey     AttributeKeys @relation(fields: [attribute_key_id], references: [id], onDelete: Cascade)
+  id               Int           @id @default(autoincrement())
+  product_id       Int
+  product          Products      @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  attribute_key_id Int
+  attributeKey     AttributeKeys @relation(fields: [attribute_key_id], references: [id], onDelete: Cascade)
 
-    @@unique([product_id, attribute_key_id])
-    @@map("productattributekeys")
+  @@unique([product_id, attribute_key_id])
+  @@map("productattributekeys")
 }
 
 enum LogStatus {
-    SUCCESS
-    FAILED
+  SUCCESS
+  FAILED
 }
 
 enum DiscountType {
-    CASH
-    PERCENTAGE
+  CASH
+  PERCENTAGE
 }
 
 // Coupons Done
 model Coupons {
-    id              Int          @id @default(autoincrement())
-    code            String       @unique
-    discount_value  Int
-    discount_type   DiscountType @default(CASH)
-    max_discount    Int
-    min_order_value Int
-    start_date      DateTime
-    end_date        DateTime
-    usage_limit     Int
-    usage_count     Int          @default(0)
-    is_active       Boolean
-    deleted_at      DateTime     @default(dbgenerated("'1000-01-01 00:00:00'"))
-    Orders          Orders[]
-    Users           Users[]
-    created_at      DateTime     @default(now())
-    updated_at      DateTime     @updatedAt
+  id                Int           @id @default(autoincrement())
+  code              String        @unique
+  discount_value    Int
+  discount_type     DiscountType  @default(CASH)
+  max_discount      Int
+  min_order_value   Int
+  start_date        DateTime
+  end_date          DateTime
+  usage_limit       Int
+  usage_count       Int           @default(0)
+  is_active         Boolean
+  max_uses_per_user Int           @default(1)
+  deleted_at        DateTime      @default(dbgenerated("'1000-01-01 00:00:00'"))
+  Orders            Orders[]
+  Users             Users[]
+  UserCoupons       UserCoupons[]
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
 
-    @@map("coupons")
+  @@map("coupons")
+}
+
+// UserCoupons Done
+model UserCoupons {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  coupon_id  Int
+  used_count Int      @default(0)
+  is_gift    Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  coupon     Coupons  @relation(fields: [coupon_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, coupon_id])
+  @@map("user_coupons")
 }
 
 enum OrderStatus {
-    Processing
-    Shipping
-    Delivered
-    Cancelled
-    Refunded
+  Processing
+  Shipping
+  Delivered
+  Cancelled
+  Refunded
 }
 
 enum PaymentMethod {
-    COD // Thanh toán khi nhận hàng
-    BANK_TRANSFER // Chuyển khoản ngân hàng
-    MOMO // Ví MoMo
-    VNPAY // Cổng VNPay
-    CREDIT_CARD // Thẻ tín dụng
+  COD // Thanh toán khi nhận hàng
+  BANK_TRANSFER // Chuyển khoản ngân hàng
+  MOMO // Ví MoMo
+  VNPAY // Cổng VNPay
+  CREDIT_CARD // Thẻ tín dụng
 }
 
 enum PaymentStatus {
-    Pending // Đang chờ
-    Paid // Đã thanh toán
-    Failed // Thất bại
-    Refunded // Đã hoàn tiền
+  Pending // Đang chờ
+  Paid // Đã thanh toán
+  Failed // Thất bại
+  Refunded // Đã hoàn tiền
 }
 
 enum InvoiceStatus {
-    Pending // Đã phát hành, đơn chưa hoàn tất
-    Completed // Đơn đã Delivered/Paid
-    Cancelled // Đơn bị hủy
+  Pending // Đã phát hành, đơn chưa hoàn tất
+  Completed // Đơn đã Delivered/Paid
+  Cancelled // Đơn bị hủy
 }
 
 // Invoices - Hóa đơn bán hàng (1:1 với Orders)
 model Invoices {
-    id               Int           @id @default(autoincrement())
-    invoice_number   String        @unique
-    order_id         Int           @unique
-    order            Orders        @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  id             Int    @id @default(autoincrement())
+  invoice_number String @unique
+  order_id       Int    @unique
+  order          Orders @relation(fields: [order_id], references: [id], onDelete: Cascade)
 
-    customer_name    String
-    customer_email   String?
-    customer_phone   String?
-    shipping_address String
+  customer_name    String
+  customer_email   String?
+  customer_phone   String?
+  shipping_address String
 
-    subtotal         Decimal       @db.Decimal(10, 2)
-    discount_amount  Decimal       @db.Decimal(10, 2)
-    vat_rate         Decimal       @default(0.08) @db.Decimal(5, 2)
-    vat_amount       Decimal       @db.Decimal(10, 2)
-    total_amount     Decimal       @db.Decimal(10, 2)
+  subtotal        Decimal @db.Decimal(10, 2)
+  discount_amount Decimal @db.Decimal(10, 2)
+  vat_rate        Decimal @default(0.08) @db.Decimal(5, 2)
+  vat_amount      Decimal @db.Decimal(10, 2)
+  total_amount    Decimal @db.Decimal(10, 2)
 
-    status           InvoiceStatus @default(Pending)
-    issued_at        DateTime      @default(now())
-    note             String?       @db.Text
-    created_at       DateTime      @default(now())
-    updated_at       DateTime      @updatedAt
+  status     InvoiceStatus @default(Pending)
+  issued_at  DateTime      @default(now())
+  note       String?       @db.Text
+  created_at DateTime      @default(now())
+  updated_at DateTime      @updatedAt
 
-    @@map("invoices")
+  @@map("invoices")
 }
 
 // Orders Done
 model Orders {
-    id                  Int                   @id @default(autoincrement())
-    total_amount        Decimal               @db.Decimal(10, 2)
-    status              OrderStatus           @default(Processing)
-    shipping_address    String
-    payment_method      PaymentMethod         @default(COD)
-    payment_status      PaymentStatus         @default(Pending)
-    discount_amount     Decimal               @db.Decimal(10, 2)
-    final_amount        Decimal               @db.Decimal(10, 2)
-    created_at          DateTime              @default(now())
-    coupon_code         String?
-    coupon              Coupons?              @relation(fields: [coupon_code], references: [code], onDelete: Cascade)
-    user_email          String?
-    OrderItems          OrderItems[]
-    Reviews             Reviews[]
-    PaymentTransactions PaymentTransactions[]
-    Users               Users?                @relation(fields: [usersId], references: [id])
-    usersId             Int?
-    invoice             Invoices?
+  id                  Int                   @id @default(autoincrement())
+  total_amount        Decimal               @db.Decimal(10, 2)
+  status              OrderStatus           @default(Processing)
+  shipping_address    String
+  payment_method      PaymentMethod         @default(COD)
+  payment_status      PaymentStatus         @default(Pending)
+  discount_amount     Decimal               @db.Decimal(10, 2)
+  final_amount        Decimal               @db.Decimal(10, 2)
+  created_at          DateTime              @default(now())
+  coupon_code         String?
+  coupon              Coupons?              @relation(fields: [coupon_code], references: [code], onDelete: Cascade)
+  user_email          String?
+  OrderItems          OrderItems[]
+  Reviews             Reviews[]
+  PaymentTransactions PaymentTransactions[]
+  Users               Users?                @relation(fields: [usersId], references: [id])
+  usersId             Int?
+  invoice             Invoices?
 
-    @@map("orders")
+  @@map("orders")
 }
 
 // PaymentTransactions - Lịch sử thanh toán của 1 order
 model PaymentTransactions {
-    id                Int           @id @default(autoincrement())
-    order_id          Int
-    Orders            Orders        @relation(fields: [order_id], references: [id], onDelete: Cascade)
-    method            PaymentMethod
-    amount            Decimal       @db.Decimal(10, 2)
-    status            PaymentStatus @default(Pending)
-    provider_ref      String?
-    transaction_code  String?
-    receipt_image_url String?
-    note              String?
-    paid_at           DateTime?
-    created_at        DateTime      @default(now())
-    updated_at        DateTime      @updatedAt
+  id                Int           @id @default(autoincrement())
+  order_id          Int
+  Orders            Orders        @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  method            PaymentMethod
+  amount            Decimal       @db.Decimal(10, 2)
+  status            PaymentStatus @default(Pending)
+  provider_ref      String?
+  transaction_code  String?
+  receipt_image_url String?
+  note              String?
+  paid_at           DateTime?
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
 
-    @@index([order_id])
-    @@map("payment_transactions")
+  @@index([order_id])
+  @@map("payment_transactions")
 }
 
 // OrderItems Done
 model OrderItems {
-    id                 Int             @id @default(autoincrement())
-    quantity           Int
-    price_at_purchase  Decimal         @db.Decimal(10, 2)
-    order_id           Int
-    order              Orders          @relation(fields: [order_id], references: [id], onDelete: Cascade)
-    product_variant_id Int
-    product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
+  id                 Int             @id @default(autoincrement())
+  quantity           Int
+  price_at_purchase  Decimal         @db.Decimal(10, 2)
+  order_id           Int
+  order              Orders          @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  product_variant_id Int
+  product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
 
-    @@map("orderitems")
+  @@map("orderitems")
 }
 
 // Cart Done
 model Carts {
-    id         Int         @id @default(autoincrement())
-    updated_at DateTime    @updatedAt
-    user_id    Int
-    user       Users       @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    CartItems  CartItems[]
+  id         Int         @id @default(autoincrement())
+  updated_at DateTime    @updatedAt
+  user_id    Int
+  user       Users       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  CartItems  CartItems[]
 
-    @@map("carts")
+  @@map("carts")
 }
 
 // CartItems Done
 model CartItems {
-    id                 Int             @id @default(autoincrement())
-    quantity           Int
-    product_variant_id Int
-    product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
-    cart_id            Int
-    cart               Carts           @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+  id                 Int             @id @default(autoincrement())
+  quantity           Int
+  product_variant_id Int
+  product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
+  cart_id            Int
+  cart               Carts           @relation(fields: [cart_id], references: [id], onDelete: Cascade)
 
-    @@unique([cart_id, product_variant_id])
-    @@map("cartitems")
+  @@unique([cart_id, product_variant_id])
+  @@map("cartitems")
 }
 
 // Reviews Done
 model Reviews {
-    id            Int      @id @default(autoincrement())
-    rating        Int
-    comment       String?  @db.Text
-    media_urls    Json
-    reply_comment String?  @db.Text
-    is_hidden     Boolean  @default(true)
-    created_at    DateTime @default(now())
-    updated_at    DateTime @updatedAt
-    user_id       Int
-    user          Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    order_id      Int
-    order         Orders   @relation(fields: [order_id], references: [id], onDelete: Cascade)
-    product_id    Int
-    product       Products @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  id            Int      @id @default(autoincrement())
+  rating        Int
+  comment       String?  @db.Text
+  media_urls    Json
+  reply_comment String?  @db.Text
+  is_hidden     Boolean  @default(true)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  user_id       Int
+  user          Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  order_id      Int
+  order         Orders   @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  product_id    Int
+  product       Products @relation(fields: [product_id], references: [id], onDelete: Cascade)
 
-    @@map("reviews")
+  @@map("reviews")
 }
 
 enum TypeStock {
-    IN // Nhập
-    OUT // Xuất (Bán)
-    ADJUSTMENT // Điều chỉnh / Kiểm kê
+  IN // Nhập
+  OUT // Xuất (Bán)
+  ADJUSTMENT // Điều chỉnh / Kiểm kê
 }
 
 // StockMovements Done
 model StockMovements {
-    id              Int             @id @default(autoincrement())
-    variant_id      Int
-    variant         ProductVariants @relation(fields: [variant_id], references: [id], onDelete: Cascade)
-    type            TypeStock
-    quantity_change Int
-    reference_id    Int?
-    reason          String?         @db.VarChar(255)
-    created_at      DateTime        @default(now())
+  id              Int             @id @default(autoincrement())
+  variant_id      Int
+  variant         ProductVariants @relation(fields: [variant_id], references: [id], onDelete: Cascade)
+  type            TypeStock
+  quantity_change Int
+  reference_id    Int?
+  reason          String?         @db.VarChar(255)
+  created_at      DateTime        @default(now())
 
-    @@map("stockmovements")
+  @@map("stockmovements")
 }
 
 enum StatusPurchaseOrders {
-    PENDING // Đang chờ
-    RECEIVED // Đã nhận đủ
-    PARTIALLY_RECEIVED // Đã nhận một phần
-    CANCELLED // Đã hủy
+  PENDING // Đang chờ
+  RECEIVED // Đã nhận đủ
+  PARTIALLY_RECEIVED // Đã nhận một phần
+  CANCELLED // Đã hủy
 }
 
 // PurchaseOrders Done
 model PurchaseOrders {
-    id                     Int                  @id @default(autoincrement())
-    supplier_id            Int
-    supplier               Suppliers            @relation(fields: [supplier_id], references: [id], onDelete: Cascade)
-    order_date             DateTime             @default(now())
-    expected_delivery_date DateTime
-    status                 StatusPurchaseOrders @default(PENDING)
-    total_cost             Decimal              @db.Decimal(10, 2)
-    PurchaseOrderItems     PurchaseOrderItems[]
+  id                     Int                  @id @default(autoincrement())
+  supplier_id            Int
+  supplier               Suppliers            @relation(fields: [supplier_id], references: [id], onDelete: Cascade)
+  order_date             DateTime             @default(now())
+  expected_delivery_date DateTime
+  status                 StatusPurchaseOrders @default(PENDING)
+  total_cost             Decimal              @db.Decimal(10, 2)
+  PurchaseOrderItems     PurchaseOrderItems[]
 
-    @@map("purchaseorders")
+  @@map("purchaseorders")
 }
 
 // PurchaseOrderItems Done
 model PurchaseOrderItems {
-    id                 Int             @id @default(autoincrement())
-    purchase_order_id  Int
-    purchase_order     PurchaseOrders  @relation(fields: [purchase_order_id], references: [id], onDelete: Cascade)
-    product_variant_id Int
-    product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
-    quantity           Int
-    unit_cost_price    Decimal         @db.Decimal(10, 2)
-    quantity_received  Int             @default(0)
+  id                 Int             @id @default(autoincrement())
+  purchase_order_id  Int
+  purchase_order     PurchaseOrders  @relation(fields: [purchase_order_id], references: [id], onDelete: Cascade)
+  product_variant_id Int
+  product_variant    ProductVariants @relation(fields: [product_variant_id], references: [id], onDelete: Cascade)
+  quantity           Int
+  unit_cost_price    Decimal         @db.Decimal(10, 2)
+  quantity_received  Int             @default(0)
 
-    @@map("purchaseorderitems")
+  @@map("purchaseorderitems")
 }
 
 model SystemLogs {
-    id        Int      @id @default(autoincrement())
-    timestamp DateTime @default(now())
-    user_id   Int?
-    user      Users?   @relation(fields: [user_id], references: [id])
+  id        Int      @id @default(autoincrement())
+  timestamp DateTime @default(now())
+  user_id   Int?
+  user      Users?   @relation(fields: [user_id], references: [id])
 
-    action_type String     @db.VarChar(50) // Ví dụ: CREATE, UPDATE, DELETE, STOCK_ADJUSTMENT
-    entity_type String     @db.VarChar(50) // Ví dụ: ProductVariants, Orders, User
-    entity_id   Int? // ID của bản ghi bị ảnh hưởng
-    status      LogStatus? // SUCCESS hoặc FAILED
-    ip_address  String?    @db.VarChar(45) // IP của client
+  action_type String     @db.VarChar(50) // Ví dụ: CREATE, UPDATE, DELETE, STOCK_ADJUSTMENT
+  entity_type String     @db.VarChar(50) // Ví dụ: ProductVariants, Orders, User
+  entity_id   Int? // ID của bản ghi bị ảnh hưởng
+  status      LogStatus? // SUCCESS hoặc FAILED
+  ip_address  String?    @db.VarChar(45) // IP của client
 
-    // Sử dụng kiểu Json để lưu trữ cấu trúc dữ liệu phức tạp (ví dụ: {oldPrice: 100, newPrice: 120})
-    details Json?
+  // Sử dụng kiểu Json để lưu trữ cấu trúc dữ liệu phức tạp (ví dụ: {oldPrice: 100, newPrice: 120})
+  details Json?
 
-    @@map("systemlogs")
+  @@map("systemlogs")
 }
