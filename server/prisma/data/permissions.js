@@ -82,6 +82,18 @@ export const rolePermissions = [
   { slug: 'xem-vai-tro', name: 'Xem vai trò', module: 'permissions', action: 'xem' },
 ];
 
+export const reviewPermissions = [
+  { slug: 'them-danh-gia', name: 'Thêm đánh giá', module: 'reviews', action: 'them' },
+  { slug: 'sua-danh-gia', name: 'Sửa đánh giá', module: 'reviews', action: 'sua' },
+  { slug: 'xoa-danh-gia', name: 'Xóa đánh giá', module: 'reviews', action: 'xoa' },
+  { slug: 'xem-danh-gia', name: 'Xem đánh giá', module: 'reviews', action: 'xem' },
+];
+
+export const invoicePermissions = [
+  { slug: 'xem-hoa-don', name: 'Xem hóa đơn', module: 'invoices', action: 'xem' },
+  { slug: 'tao-hoa-don', name: 'Tạo hóa đơn', module: 'invoices', action: 'them' },
+];
+
 export const orderPermissions = [
   { slug: 'them-don-hang', name: 'Thêm đơn hàng', module: 'orders', action: 'them' },
   { slug: 'sua-don-hang', name: 'Sửa đơn hàng', module: 'orders', action: 'sua' },
@@ -89,11 +101,10 @@ export const orderPermissions = [
   { slug: 'xem-don-hang', name: 'Xem đơn hàng', module: 'orders', action: 'xem' },
 ];
 
-export const reviewPermissions = [
-  { slug: 'them-danh-gia', name: 'Thêm đánh giá', module: 'reviews', action: 'them' },
-  { slug: 'sua-danh-gia', name: 'Sửa đánh giá', module: 'reviews', action: 'sua' },
-  { slug: 'xoa-danh-gia', name: 'Xóa đánh giá', module: 'reviews', action: 'xoa' },
-  { slug: 'xem-danh-gia', name: 'Xem đánh giá', module: 'reviews', action: 'xem' },
+export const paymentPermissions = [
+  { slug: 'xem-giao-dich', name: 'Xem giao dịch thanh toán', module: 'payments', action: 'xem' },
+  { slug: 'xac-nhan-giao-dich', name: 'Xác nhận giao dịch', module: 'payments', action: 'xac-nhan' },
+  { slug: 'hoan-tien', name: 'Hoàn tiền giao dịch', module: 'payments', action: 'hoan-tien' },
 ];
 
 export const allPermissions = [
@@ -111,4 +122,6 @@ export const allPermissions = [
   ...rolePermissions,
   ...orderPermissions,
   ...reviewPermissions,
+  ...invoicePermissions,
+  ...paymentPermissions,
 ];

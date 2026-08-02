@@ -1,1 +1,0 @@
-ALTER TABLE `systemlogs` MODIFY COLUMN `status` ENUM('SUCCESS', 'FAILED') NULL;

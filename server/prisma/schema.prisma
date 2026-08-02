@@ -120,26 +120,26 @@ model Brands {
 
 // Products Done
 model Products {
-    id              Int               @id @default(autoincrement())
-    name            String
-    slug            String
-    base_price      Decimal           @db.Decimal(10, 2)
-    is_active       Boolean           @default(true)
-    description     String            @db.Text
-    thumbnail       String?           @db.Text
-    created_at      DateTime          @default(now())
-    updated_at      DateTime          @updatedAt
-    deleted_at      DateTime          @default(dbgenerated("'1000-01-01 00:00:00'"))
-    category_id     Int
-    category        Categories        @relation(fields: [category_id], references: [id], onDelete: Cascade)
-    supplier_id     Int
-    supplier        Suppliers         @relation(fields: [supplier_id], references: [id], onDelete: Cascade)
-    brand_id        Int
-    brand           Brands            @relation(fields: [brand_id], references: [id], onDelete: Cascade)
-    ProductImages   ProductImages[]
-    ProductVariants   ProductVariants[]
+    id                   Int                    @id @default(autoincrement())
+    name                 String
+    slug                 String
+    base_price           Decimal                @db.Decimal(10, 2)
+    is_active            Boolean                @default(true)
+    description          String                 @db.Text
+    thumbnail            String?                @db.Text
+    created_at           DateTime               @default(now())
+    updated_at           DateTime               @updatedAt
+    deleted_at           DateTime               @default(dbgenerated("'1000-01-01 00:00:00'"))
+    category_id          Int
+    category             Categories             @relation(fields: [category_id], references: [id], onDelete: Cascade)
+    supplier_id          Int
+    supplier             Suppliers              @relation(fields: [supplier_id], references: [id], onDelete: Cascade)
+    brand_id             Int
+    brand                Brands                 @relation(fields: [brand_id], references: [id], onDelete: Cascade)
+    ProductImages        ProductImages[]
+    ProductVariants      ProductVariants[]
     ProductAttributeKeys ProductAttributeKeys[]
-    Reviews           Reviews[]
+    Reviews              Reviews[]
 
     @@unique([slug, deleted_at])
     @@map("products")
@@ -177,9 +177,9 @@ model ProductVariants {
 
 // AttributeKeys Done
 model AttributeKeys {
-    id                 Int                  @id @default(autoincrement())
-    name               String               @unique @db.VarChar(191)
-    unit               String?              @db.VarChar(50)
+    id                   Int                    @id @default(autoincrement())
+    name                 String                 @unique @db.VarChar(191)
+    unit                 String?                @db.VarChar(50)
     VariableAttributes   VariableAttributes[]
     ProductAttributeKeys ProductAttributeKeys[]
 
@@ -200,11 +200,11 @@ model VariableAttributes {
 }
 
 model ProductAttributeKeys {
-    id               Int             @id @default(autoincrement())
+    id               Int           @id @default(autoincrement())
     product_id       Int
-    product          Products        @relation(fields: [product_id], references: [id], onDelete: Cascade)
+    product          Products      @relation(fields: [product_id], references: [id], onDelete: Cascade)
     attribute_key_id Int
-    attributeKey     AttributeKeys   @relation(fields: [attribute_key_id], references: [id], onDelete: Cascade)
+    attributeKey     AttributeKeys @relation(fields: [attribute_key_id], references: [id], onDelete: Cascade)
 
     @@unique([product_id, attribute_key_id])
     @@map("productattributekeys")
@@ -265,26 +265,81 @@ enum PaymentStatus {
     Refunded // Đã hoàn tiền
 }
 
+enum InvoiceStatus {
+    Pending // Đã phát hành, đơn chưa hoàn tất
+    Completed // Đơn đã Delivered/Paid
+    Cancelled // Đơn bị hủy
+}
+
+// Invoices - Hóa đơn bán hàng (1:1 với Orders)
+model Invoices {
+    id               Int           @id @default(autoincrement())
+    invoice_number   String        @unique
+    order_id         Int           @unique
+    order            Orders        @relation(fields: [order_id], references: [id], onDelete: Cascade)
+
+    customer_name    String
+    customer_email   String?
+    customer_phone   String?
+    shipping_address String
+
+    subtotal         Decimal       @db.Decimal(10, 2)
+    discount_amount  Decimal       @db.Decimal(10, 2)
+    vat_rate         Decimal       @default(0.08) @db.Decimal(5, 2)
+    vat_amount       Decimal       @db.Decimal(10, 2)
+    total_amount     Decimal       @db.Decimal(10, 2)
+
+    status           InvoiceStatus @default(Pending)
+    issued_at        DateTime      @default(now())
+    note             String?       @db.Text
+    created_at       DateTime      @default(now())
+    updated_at       DateTime      @updatedAt
+
+    @@map("invoices")
+}
+
 // Orders Done
 model Orders {
-    id               Int           @id @default(autoincrement())
-    total_amount     Decimal       @db.Decimal(10, 2)
-    status           OrderStatus   @default(Processing)
-    shipping_address String
-    payment_method   PaymentMethod @default(COD)
-    payment_status   PaymentStatus @default(Pending)
-    discount_amount  Decimal       @db.Decimal(10, 2)
-    final_amount     Decimal       @db.Decimal(10, 2)
-    created_at       DateTime      @default(now())
-    coupon_code      String?
-    coupon           Coupons?      @relation(fields: [coupon_code], references: [code], onDelete: Cascade)
-    user_email       String?
-    OrderItems       OrderItems[]
-    Reviews          Reviews[]
-    Users            Users?        @relation(fields: [usersId], references: [id])
-    usersId          Int?
+    id                  Int                   @id @default(autoincrement())
+    total_amount        Decimal               @db.Decimal(10, 2)
+    status              OrderStatus           @default(Processing)
+    shipping_address    String
+    payment_method      PaymentMethod         @default(COD)
+    payment_status      PaymentStatus         @default(Pending)
+    discount_amount     Decimal               @db.Decimal(10, 2)
+    final_amount        Decimal               @db.Decimal(10, 2)
+    created_at          DateTime              @default(now())
+    coupon_code         String?
+    coupon              Coupons?              @relation(fields: [coupon_code], references: [code], onDelete: Cascade)
+    user_email          String?
+    OrderItems          OrderItems[]
+    Reviews             Reviews[]
+    PaymentTransactions PaymentTransactions[]
+    Users               Users?                @relation(fields: [usersId], references: [id])
+    usersId             Int?
+    invoice             Invoices?
 
     @@map("orders")
+}
+
+// PaymentTransactions - Lịch sử thanh toán của 1 order
+model PaymentTransactions {
+    id                Int           @id @default(autoincrement())
+    order_id          Int
+    Orders            Orders        @relation(fields: [order_id], references: [id], onDelete: Cascade)
+    method            PaymentMethod
+    amount            Decimal       @db.Decimal(10, 2)
+    status            PaymentStatus @default(Pending)
+    provider_ref      String?
+    transaction_code  String?
+    receipt_image_url String?
+    note              String?
+    paid_at           DateTime?
+    created_at        DateTime      @default(now())
+    updated_at        DateTime      @updatedAt
+
+    @@index([order_id])
+    @@map("payment_transactions")
 }
 
 // OrderItems Done
@@ -405,11 +460,11 @@ model SystemLogs {
     user_id   Int?
     user      Users?   @relation(fields: [user_id], references: [id])
 
-    action_type String @db.VarChar(50) // Ví dụ: CREATE, UPDATE, DELETE, STOCK_ADJUSTMENT
-    entity_type String @db.VarChar(50) // Ví dụ: ProductVariants, Orders, User
+    action_type String     @db.VarChar(50) // Ví dụ: CREATE, UPDATE, DELETE, STOCK_ADJUSTMENT
+    entity_type String     @db.VarChar(50) // Ví dụ: ProductVariants, Orders, User
     entity_id   Int? // ID của bản ghi bị ảnh hưởng
     status      LogStatus? // SUCCESS hoặc FAILED
-    ip_address  String? @db.VarChar(45) // IP của client
+    ip_address  String?    @db.VarChar(45) // IP của client
 
     // Sử dụng kiểu Json để lưu trữ cấu trúc dữ liệu phức tạp (ví dụ: {oldPrice: 100, newPrice: 120})
     details Json?
