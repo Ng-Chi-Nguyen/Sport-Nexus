@@ -21,7 +21,7 @@ import Badge from "@/components/ui/badge";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import Pagination from "@/components/ui/pagination";
 import productdApi from "@/api/core/productApi";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import { queryClient } from "@/lib/react-query";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 import { useTranslation } from "react-i18next";
@@ -114,7 +114,7 @@ const ProductPage = () => {
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["products"] });
         revalidator.revalidate();
-        toast.success(response.message);
+        ShowToast("success", response.message);
         setIsConfirmOpen(false);
       }
     } catch (error) {
@@ -124,7 +124,7 @@ const ProductPage = () => {
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 

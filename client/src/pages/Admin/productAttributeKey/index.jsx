@@ -10,7 +10,7 @@ import productAttributeKeyApi from "@/api/management/productAttributeKeyApi";
 import LoaderProductAttributeKey from "@/loaders/management/productAttributeKeyLoader";
 import LoaderProduct from "@/loaders/core/productLoader";
 import { queryClient } from "@/lib/react-query";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import Pagination from "@/components/ui/pagination";
 import { useTranslation } from "react-i18next";
 
@@ -82,13 +82,13 @@ const ProductAttributeKey = () => {
         await queryClient.invalidateQueries({
           queryKey: ["product-attribute-keys"],
         });
-        toast.success(response.message);
+        ShowToast("success", response.message);
         setIsConfirmOpen(false);
         fetchData();
       }
     } catch (error) {
       setIsConfirmOpen(false);
-      toast.error(error.response?.data?.message || t("error_occurred"));
+      ShowToast("error", error.response?.data?.message || t("error_occurred"));
     }
   };
 

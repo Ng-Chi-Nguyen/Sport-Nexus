@@ -9,7 +9,7 @@ import { FloatingInput } from "@/components/ui/input";
 import { AnimatedCheckbox } from "@/components/ui/ckeckbox";
 import FloatingTextarea from "@/components/ui/textarea";
 import { Submit_GoBack } from "@/components/ui/button";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import productdApi from "@/api/core/productApi";
 import productImageApi from "@/api/core/productImageApi";
 import { queryClient } from "@/lib/react-query";
@@ -24,7 +24,10 @@ const CreateProductPage = () => {
 
   const breadcrumbData = [
     { title: <LayoutDashboard size={20} />, route: "" },
-    { title: t("product_management_no_warehouse"), route: "/management/products" },
+    {
+      title: t("product_management_no_warehouse"),
+      route: "/management/products",
+    },
     { title: t("add_product_breadcrumb"), route: "" },
   ];
 
@@ -96,7 +99,7 @@ const CreateProductPage = () => {
         }
 
         await queryClient.invalidateQueries({ queryKey: ["products"] });
-        toast.success(response.message);
+        ShowToast("success", response.message);
         navigate(-1);
       }
     } catch (error) {
@@ -106,7 +109,7 @@ const CreateProductPage = () => {
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
 
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 
@@ -124,7 +127,9 @@ const CreateProductPage = () => {
         {/* CỘT TRÁI (PHÂN LOẠI & FILE ẢNH) */}
         <div className="w-full lg:w-1/2 flex flex-col gap-4">
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <TitleManagement color="amber">{t("system_classification")}</TitleManagement>
+            <TitleManagement color="amber">
+              {t("system_classification")}
+            </TitleManagement>
             <div className="flex flex-col sm:flex-row gap-3 mt-3 mb-3">
               <div className="w-full sm:w-1/2">
                 <SelectPro
@@ -152,7 +157,9 @@ const CreateProductPage = () => {
           </div>
 
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <TitleManagement color="cyan">{t("thumbnail_title")}</TitleManagement>
+            <TitleManagement color="cyan">
+              {t("thumbnail_title")}
+            </TitleManagement>
             <div className="mt-3">
               <InputFile
                 value={thumbnail}
@@ -175,7 +182,9 @@ const CreateProductPage = () => {
 
         {/* CỘT PHẢI (THÔNG TIN CHI TIẾT SẢN PHẨM) */}
         <div className="w-full lg:w-1/2 rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900 flex flex-col gap-4">
-          <TitleManagement color="blue">{t("product_info_title")}</TitleManagement>
+          <TitleManagement color="blue">
+            {t("product_info_title")}
+          </TitleManagement>
 
           <div className="flex flex-col sm:flex-row gap-3 mt-2">
             <div className="flex-1">
@@ -214,9 +223,7 @@ const CreateProductPage = () => {
             <div className="border border-slate-200 dark:border-slate-800 w-full sm:w-[50%] p-3 rounded-lg bg-slate-50/50 dark:bg-[#111827]/40">
               <AnimatedCheckbox
                 id="is_active_checkbox"
-                label={
-                  isActive ? t("selling_label") : t("pause_label")
-                }
+                label={isActive ? t("selling_label") : t("pause_label")}
                 checked={isActive}
                 onChange={(e) => setIsActive(e.target.checked)}
               />

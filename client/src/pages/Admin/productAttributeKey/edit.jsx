@@ -7,7 +7,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import productAttributeKeyApi from "@/api/management/productAttributeKeyApi";
 import LoaderProduct from "@/loaders/core/productLoader";
 import LoaderAttr from "@/loaders/core/attributeKey";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
 import { useTranslation } from "react-i18next";
@@ -76,11 +76,12 @@ const EditProductAttributeKey = () => {
         await queryClient.invalidateQueries({
           queryKey: ["product-attribute-keys"],
         });
-        toast.success(response.message);
+        ShowToast("success", response.message);
         navigate(-1);
       }
     } catch (error) {
-      toast.error(
+      ShowToast(
+        "error",
         error.response?.data?.message || error.message || t("error_occurred"),
       );
     }

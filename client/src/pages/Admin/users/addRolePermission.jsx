@@ -1,8 +1,8 @@
 import { useMemo, useState, useRef, useEffect } from "react"; // THÊM: useRef, useEffect để quản lý đóng mở Popover
 import { LayoutDashboard, HelpCircle } from "lucide-react"; // THÊM: HelpCircle icon cho nút tra cứu
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 // components
+import ShowToast from "@/components/ui/toast";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import PermissionTable from "@/components/permissionTable";
 // constants
@@ -54,13 +54,11 @@ const AddRolePermissionPage = () => {
         permissionIds: selectedIds,
       });
       if (response.success) {
-        toast.success(t("update_success"));
+        ShowToast("success", t("update_success"));
       }
     } catch (error) {
       console.error("Lỗi:", error);
-      toast.error(
-        error.response?.data?.message || t("update_failed"),
-      );
+      ShowToast("error", error.response?.data?.message || t("update_failed"));
     }
   };
 

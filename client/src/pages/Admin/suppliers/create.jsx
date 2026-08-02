@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 // components
+import ShowToast from "@/components/ui/toast";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { FloatingInput } from "@/components/ui/input";
 import { InputFile } from "@/components/ui/input";
@@ -71,7 +71,7 @@ const CreateSupplierPage = () => {
 
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["suppliers"] });
-        toast.success(response.message);
+        ShowToast("success", response.message);
         navigate(-1);
       }
     } catch (error) {
@@ -82,7 +82,7 @@ const CreateSupplierPage = () => {
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
 
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 
@@ -173,9 +173,7 @@ const CreateSupplierPage = () => {
         {/* PHẦN LOGO & NÚT SUBMIT (BÊN PHẢI) */}
         <div className="w-full lg:w-[35%] flex flex-col gap-4">
           <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
-            <TitleManagement color="cyan">
-              {t("logo_title")}
-            </TitleManagement>
+            <TitleManagement color="cyan">{t("logo_title")}</TitleManagement>
             <div className="mt-3">
               <InputFile value={logo} onChange={(file) => setLogo(file)} />
             </div>

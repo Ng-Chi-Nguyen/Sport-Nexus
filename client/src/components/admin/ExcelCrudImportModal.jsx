@@ -7,9 +7,9 @@ import {
   Upload,
   X,
 } from "lucide-react";
-import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import excelCrudImportApi from "@/api/management/excelCrudImportApi";
+import ShowToast from "@/components/ui/toast";
 
 const ExcelCrudImportModal = ({
   isOpen,
@@ -25,7 +25,9 @@ const ExcelCrudImportModal = ({
   const [loading, setLoading] = useState(false);
   const [importing, setImporting] = useState(false);
   const fileInputRef = useRef(null);
-  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
 
   if (!isOpen) return null;
 
@@ -36,10 +38,9 @@ const ExcelCrudImportModal = ({
       const res = await excelCrudImportApi.preview(basePath, f);
       setPreview(res);
     } catch (err) {
-      toast.error(
-        err?.response?.data?.message ||
-          err.message ||
-          t("read_file_error"),
+      ShowToast(
+        "error",
+        err?.response?.data?.message || err.message || t("read_file_error"),
       );
     } finally {
       setLoading(false);
@@ -59,7 +60,7 @@ const ExcelCrudImportModal = ({
     const f = e.dataTransfer.files?.[0];
     if (!f) return;
     if (!f.name.endsWith(".xlsx") && !f.name.endsWith(".xls")) {
-      toast.error(t("only_support_xlsx"));
+      ShowToast("error", t("only_support_xlsx"));
       return;
     }
     setFile(f);
@@ -71,14 +72,13 @@ const ExcelCrudImportModal = ({
     setImporting(true);
     try {
       const res = await excelCrudImportApi.import(basePath, file);
-      toast.success(res.message || t("import_success"));
+      ShowToast("success", res.message || t("import_success"));
       onSuccess?.();
       onClose();
     } catch (err) {
-      toast.error(
-        err?.response?.data?.message ||
-          err.message ||
-          t("import_error"),
+      ShowToast(
+        "error",
+        err?.response?.data?.message || err.message || t("import_error"),
       );
     } finally {
       setImporting(false);
@@ -160,9 +160,7 @@ const ExcelCrudImportModal = ({
                   <span className="text-emerald-400 font-medium">
                     {preview.success}
                   </span>
-                  <span className="text-slate-400">
-                    {t("success_suffix")}
-                  </span>
+                  <span className="text-slate-400">{t("success_suffix")}</span>
                 </div>
                 {preview.failed > 0 ? (
                   <div className="flex items-center gap-1.5 text-sm">
@@ -170,9 +168,7 @@ const ExcelCrudImportModal = ({
                     <span className="text-amber-400 font-medium">
                       {preview.failed}
                     </span>
-                    <span className="text-slate-400">
-                      {t("error_suffix")}
-                    </span>
+                    <span className="text-slate-400">{t("error_suffix")}</span>
                   </div>
                 ) : null}
                 <div className="text-sm text-slate-500">
@@ -193,8 +189,8 @@ const ExcelCrudImportModal = ({
                     >
                       <span className="text-amber-500 shrink-0">•</span>
                       <span>
-                        {t("row_label")} {err.row}:{" "}
-                        <strong>{err.field}</strong> — {err.message}
+                        {t("row_label")} {err.row}: <strong>{err.field}</strong>{" "}
+                        — {err.message}
                       </span>
                     </p>
                   ))}
@@ -225,9 +221,7 @@ const ExcelCrudImportModal = ({
             {importing
               ? t("importing")
               : `${t("import")}${
-                  preview
-                    ? ` ${preview.success} ${t("rows_suffix")}`
-                    : ""
+                  preview ? ` ${preview.success} ${t("rows_suffix")}` : ""
                 }`}
           </button>
         </div>

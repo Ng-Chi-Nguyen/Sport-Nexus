@@ -11,7 +11,7 @@ import {
   useRevalidator,
   useSearchParams,
 } from "react-router-dom";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import { Download, Loader2 } from "lucide-react";
 import { getStockBadgeClass } from "@/utils/statusStyles";
 import excelCrudImportApi from "@/api/management/excelCrudImportApi";
@@ -98,9 +98,9 @@ const StockPage = () => {
       a.download = "ton-kho.xlsx";
       a.click();
       window.URL.revokeObjectURL(url);
-      toast.success(t("export_success"));
+      ShowToast("success", t("export_success"));
     } catch (err) {
-      toast.error(err?.message || t("export_failed"));
+      ShowToast("error", err?.message || t("export_failed"));
     } finally {
       setExportLoading(false);
     }
@@ -336,8 +336,7 @@ const StockPage = () => {
                   stocks.map((stock) => {
                     const product = stock.product;
                     const thumbnail = product?.thumbnail;
-                    const productName =
-                      product?.name || t("unknown_product");
+                    const productName = product?.name || t("unknown_product");
                     const price = stock.price ? Number(stock.price) : 0;
                     const currentStock = stock.stock ?? 0;
 
@@ -424,7 +423,8 @@ const StockPage = () => {
                       className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
                     >
                       {t("no_data")}
-                    </td>                  </tr>
+                    </td>{" "}
+                  </tr>
                 )}
               </tbody>
             </table>

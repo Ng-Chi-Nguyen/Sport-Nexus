@@ -4,7 +4,7 @@ import { Submit_GoBack } from "@/components/ui/button";
 import { LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import attributeKeyApi from "@/api/core/attributrKeyApi";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import { queryClient } from "@/lib/react-query";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { TitleManagement } from "@/components/ui/title";
@@ -51,7 +51,7 @@ const EditAttributeKey = () => {
       );
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["attribute-keys"] });
-        toast.success(response.message || t("update_success"));
+        ShowToast("success", response.message || t("update_success"));
         navigate(-1);
       }
     } catch (error) {
@@ -61,7 +61,7 @@ const EditAttributeKey = () => {
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
 
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     } finally {
       setIsSubmitting(false);
     }

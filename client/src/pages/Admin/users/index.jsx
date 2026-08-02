@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useLoaderData, useRevalidator, Link } from "react-router-dom";
 import { LayoutDashboard, ShieldAlert, RefreshCw } from "lucide-react";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
 import { SimpleSelect } from "@/components/ui/select";
@@ -88,11 +88,12 @@ const UserPage = () => {
         await queryClient.invalidateQueries({ queryKey: ["users"] });
         revalidator.revalidate();
         setIsConfirmOpen(false);
-        toast.success(response.message || t("delete_success"));
+        ShowToast("success", response.message || t("delete_success"));
       }
     } catch (error) {
       setIsConfirmOpen(false);
-      toast.error(
+      ShowToast(
+        "error",
         error.message ||
           error.response?.data?.message ||
           error.response?.data?.errors?.[0] ||

@@ -6,10 +6,10 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { queryClient } from "@/lib/react-query";
-import { toast } from "sonner";
 import productVariantdApi from "@/api/core/productVariantApi";
 
 // components
+import ShowToast from "@/components/ui/toast";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
@@ -113,7 +113,7 @@ const VariantPage = () => {
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["product-variants"] });
         revalidator.revalidate();
-        toast.success(response.message);
+        ShowToast("success", response.message);
         setIsConfirmOpen(false);
       }
     } catch (error) {
@@ -123,7 +123,7 @@ const VariantPage = () => {
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 
@@ -354,7 +354,9 @@ const VariantPage = () => {
 
                     <td className="px-6 py-4 text-center">
                       {variant.stock > 0 ? (
-                        <Badge color="success">{t("in_stock_suffix")} {variant.stock}</Badge>
+                        <Badge color="success">
+                          {t("in_stock_suffix")} {variant.stock}
+                        </Badge>
                       ) : (
                         <Badge color="error">{t("out_of_stock")}</Badge>
                       )}

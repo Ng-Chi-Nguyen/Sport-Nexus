@@ -5,7 +5,7 @@ import {
   useRevalidator,
   useSearchParams,
 } from "react-router-dom";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd } from "@/components/ui/button";
@@ -86,7 +86,7 @@ const CategoryPage = () => {
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["categories"] });
         revalidator.revalidate();
-        toast.success(response.message || t("delete_success"));
+        ShowToast("success", response.message || t("delete_success"));
         setIsConfirmOpen(false);
       }
     } catch (error) {
@@ -97,7 +97,7 @@ const CategoryPage = () => {
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
 
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 

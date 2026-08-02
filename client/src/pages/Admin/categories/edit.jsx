@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { useNavigate, useLoaderData } from "react-router-dom";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { InputFile, FloatingInput } from "@/components/ui/input";
@@ -57,7 +57,7 @@ const EditCategoryPage = () => {
       const response = await categoryApi.update(responseOld.data.id, formData);
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["categories"] });
-        toast.success(response.message || t("update_success"));
+        ShowToast("success", response.message || t("update_success"));
         navigate(-1);
       }
     } catch (error) {
@@ -68,7 +68,7 @@ const EditCategoryPage = () => {
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
 
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     } finally {
       setIsSubmitting(false);
     }

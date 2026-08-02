@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { LayoutDashboard, Plus, Trash2 } from "lucide-react";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 // components
 import { FloatingInput } from "@/components/ui/input";
 import { TitleManagement } from "@/components/ui/title";
@@ -100,12 +100,15 @@ const EditOrderPage = () => {
         code: code,
       });
       if (resCoupon.success) {
-        toast.success(resCoupon.message);
+        ShowToast("success", resCoupon.message);
         setDiscount(resCoupon.data.discount);
         setFinal(resCoupon.data.newAmount);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || t("coupon_check_error"));
+      ShowToast(
+        "error",
+        error.response?.data?.message || t("coupon_check_error"),
+      );
     }
   };
 
@@ -136,12 +139,12 @@ const EditOrderPage = () => {
           queryClient.setQueryData(["order", orderData.id], response.data),
           queryClient.resetQueries({ queryKey: ["orders"] }),
         ]);
-        toast.success(res.message);
+        ShowToast("success", res.message);
         navigate("/management/orders");
       }
     } catch (error) {
       console.error(error.message);
-      toast.error(error.response?.data?.message || t("update_failed"));
+      ShowToast("error", error.response?.data?.message || t("update_failed"));
     }
   };
 

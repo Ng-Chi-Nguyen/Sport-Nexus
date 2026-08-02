@@ -13,7 +13,7 @@ import {
 } from "@/utils/formatters";
 import Badge from "@/components/ui/badge";
 import Pagination from "@/components/ui/pagination";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import purchaseOrderdApi from "@/api/management/purchaseOrderApi";
 import { queryClient } from "@/lib/react-query";
@@ -84,12 +84,13 @@ const PurchaseOrderPage = () => {
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["purchase-order"] });
         revalidator.revalidate();
-        toast.success(response.message);
+        ShowToast("success", response.message);
       }
       setIsConfirmOpen(false);
     } catch (error) {
       setIsConfirmOpen(false);
-      toast.error(
+      ShowToast(
+        "error",
         error.message ||
           error.response?.data?.message ||
           error.response?.data?.errors?.[0] ||
@@ -259,7 +260,8 @@ const PurchaseOrderPage = () => {
                       </td>
                       <td className="px-6 py-4 text-center">
                         <Badge color="blue">
-                          {purchase.PurchaseOrderItems.length} {t("items_suffix")}
+                          {purchase.PurchaseOrderItems.length}{" "}
+                          {t("items_suffix")}
                         </Badge>
                       </td>
                       <td className="px-6 py-4 text-center">

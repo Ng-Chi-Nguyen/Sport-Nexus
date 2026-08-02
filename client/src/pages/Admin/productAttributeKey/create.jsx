@@ -67,11 +67,12 @@ const CreateProductAttributeKey = () => {
         await queryClient.invalidateQueries({
           queryKey: ["product-attribute-keys"],
         });
-        toast.success(response.message);
+        ShowToast("success", response.message);
         navigate(-1);
       }
     } catch (error) {
-      toast.error(
+      ShowToast(
+        "error",
         error.response?.data?.message || error.message || t("error_occurred"),
       );
     }

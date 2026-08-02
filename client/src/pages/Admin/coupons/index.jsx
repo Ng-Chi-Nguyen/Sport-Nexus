@@ -13,7 +13,7 @@ import { ConfirmDelete } from "@/components/ui/confirm";
 import Pagination from "@/components/ui/pagination";
 import { useState, useEffect } from "react";
 import { queryClient } from "@/lib/react-query";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import couponApi from "@/api/management/couponApi";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 import { SimpleSelect } from "@/components/ui/select";
@@ -107,7 +107,7 @@ const CouponPage = () => {
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["coupons"] });
         revalidator.revalidate();
-        toast.success(response.message || t("delete_success"));
+        ShowToast("success", response.message || t("delete_success"));
         setIsConfirmOpen(false);
       }
     } catch (error) {
@@ -117,7 +117,7 @@ const CouponPage = () => {
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 

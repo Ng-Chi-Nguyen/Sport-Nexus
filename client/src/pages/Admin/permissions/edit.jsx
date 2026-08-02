@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 // components
+import ShowToast from "@/components/ui/toast";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { FloatingInput } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -29,7 +29,6 @@ const EditPermissionPage = () => {
     { title: t("edit_breadcrumb"), route: "#" },
   ];
 
-
   // Dữ liệu gửi đi
   const [selectedRole, setSelectedRole] = useState(permissionData.module);
   const [selectedAction, setSelectedAction] = useState(permissionData.action);
@@ -51,7 +50,7 @@ const EditPermissionPage = () => {
       );
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["permissions"] });
-        toast.success(response.message);
+        ShowToast("success", response.message);
         navigate(-1);
       }
     } catch (error) {
@@ -61,7 +60,7 @@ const EditPermissionPage = () => {
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 
@@ -82,9 +81,7 @@ const EditPermissionPage = () => {
 
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
         <div className="col-span-12 lg:col-span-8 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 transition-colors duration-200">
-          <TitleManagement color="violet">
-            {t("config_title")}
-          </TitleManagement>
+          <TitleManagement color="violet">{t("config_title")}</TitleManagement>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6 mt-2">
             <div className="flex flex-col gap-1">

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { Submit_GoBack } from "@/components/ui/button";
 import { FloatingInput, InputFile } from "@/components/ui/input";
@@ -60,7 +60,7 @@ const EditBrandPage = () => {
       const response = await brandApi.update(brand.id, formData);
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["brands"] });
-        toast.success(response.message || t("update_success"));
+        ShowToast("success", response.message || t("update_success"));
         navigate(-1);
       }
     } catch (error) {
@@ -70,7 +70,7 @@ const EditBrandPage = () => {
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
 
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     } finally {
       setIsSubmitting(false);
     }

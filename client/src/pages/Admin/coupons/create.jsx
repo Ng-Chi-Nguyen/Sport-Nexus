@@ -6,7 +6,7 @@ import { TitleManagement } from "@/components/ui/title";
 import { SelectPro } from "@/components/ui/select";
 import { AnimatedCheckbox } from "@/components/ui/ckeckbox";
 import { useState } from "react";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import { useNavigate } from "react-router-dom";
 import couponApi from "@/api/management/couponApi";
 import { queryClient } from "@/lib/react-query";
@@ -63,7 +63,7 @@ const CreateCouponPage = () => {
       const response = await couponApi.create(dataToSend);
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["coupons"] });
-        toast.success(response.message || t("create_success"));
+        ShowToast("success", response.message || t("create_success"));
         navigate(-1);
       }
     } catch (error) {
@@ -74,7 +74,7 @@ const CreateCouponPage = () => {
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
 
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     } finally {
       setIsSubmitting(false);
     }

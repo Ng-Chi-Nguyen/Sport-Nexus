@@ -8,7 +8,7 @@ import {
   CheckCircle,
   Loader2,
 } from "lucide-react";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import categoryImportApi from "@/api/management/categoryImportApi";
 import { useTranslation } from "react-i18next";
 
@@ -31,7 +31,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }) => {
       setFile(f);
       handlePreview(f);
     } else {
-      toast.error(t("only_xlsx"));
+      ShowToast("error", t("only_xlsx"));
     }
   };
 
@@ -52,7 +52,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }) => {
     } catch (err) {
       const msg =
         err?.response?.data?.message || err.message || t("file_read_failed");
-      toast.error(msg);
+      ShowToast("error", msg);
     } finally {
       setLoading(false);
     }
@@ -63,13 +63,13 @@ const ImportModal = ({ isOpen, onClose, onSuccess }) => {
     setImporting(true);
     try {
       const res = await categoryImportApi.import(file);
-      toast.success(res.message || t("import_success"));
+      ShowToast("success", res.message || t("import_success"));
       onSuccess();
       onClose();
     } catch (err) {
       const msg =
         err?.response?.data?.message || err.message || t("import_failed");
-      toast.error(msg);
+      ShowToast("error", msg);
     } finally {
       setImporting(false);
     }
@@ -86,7 +86,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }) => {
       window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error("Download template error:", err);
-      toast.error(err?.message || t("template_download_failed"));
+      ShowToast("error", err?.message || t("template_download_failed"));
     }
   };
 
@@ -99,10 +99,10 @@ const ImportModal = ({ isOpen, onClose, onSuccess }) => {
       a.download = "danh-muc.xlsx";
       a.click();
       window.URL.revokeObjectURL(url);
-      toast.success(t("export_success"));
+      ShowToast("success", t("export_success"));
     } catch (err) {
       console.error("Export error:", err);
-      toast.error(err?.message || t("export_failed"));
+      ShowToast("error", err?.message || t("export_failed"));
     }
   };
 
@@ -165,12 +165,8 @@ const ImportModal = ({ isOpen, onClose, onSuccess }) => {
             <p className="text-sm font-medium text-slate-300">
               {t("drag_drop")}
             </p>
-            <p className="text-xs text-slate-500 mt-1">
-              {t("click_select")}
-            </p>
-            <p className="text-xs text-slate-600 mt-2">
-              {t("support_note")}
-            </p>
+            <p className="text-xs text-slate-500 mt-1">{t("click_select")}</p>
+            <p className="text-xs text-slate-600 mt-2">{t("support_note")}</p>
             {file && (
               <p className="mt-3 text-sm text-sky-400 font-medium flex items-center justify-center gap-2">
                 <FileSpreadsheet size={16} /> {file.name}
@@ -222,8 +218,8 @@ const ImportModal = ({ isOpen, onClose, onSuccess }) => {
                     >
                       <span className="text-amber-500 shrink-0">•</span>
                       <span>
-                        {t("row_error", { row: err.row })} <strong>{err.field}</strong> —{" "}
-                        {err.message}
+                        {t("row_error", { row: err.row })}{" "}
+                        <strong>{err.field}</strong> — {err.message}
                       </span>
                     </p>
                   ))}

@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { LayoutDashboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 // components
+import ShowToast from "@/components/ui/toast";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import {
   FloatingInputPassword,
@@ -37,7 +37,6 @@ const CreateUserPage = () => {
     { slug: "customer", name: t("role_customer") },
   ];
 
-
   // state form
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -62,7 +61,7 @@ const CreateUserPage = () => {
       const response = await userApi.create(formData);
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["users"] });
-        toast.success(response.message);
+        ShowToast("success", response.message);
         navigate(-1);
       }
     } catch (error) {
@@ -71,7 +70,7 @@ const CreateUserPage = () => {
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 
@@ -94,7 +93,9 @@ const CreateUserPage = () => {
 
         {/* KHỐI 2: THÔNG TIN CƠ BẢN (5 CỘT) */}
         <div className="col-span-12 md:col-span-8 lg:col-span-5 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-5 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md h-fit transition-colors duration-200">
-          <TitleManagement color="green">{t("basic_info_title")}</TitleManagement>
+          <TitleManagement color="green">
+            {t("basic_info_title")}
+          </TitleManagement>
           <div className="space-y-5 mt-2">
             <FloatingInput
               id="full_name"
@@ -130,7 +131,9 @@ const CreateUserPage = () => {
 
         {/* KHỐI 3: PHÂN QUYỀN TÀI KHOẢN (4 CỘT) */}
         <div className="col-span-12 md:col-span-12 lg:col-span-4 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-5 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 h-fit transition-colors duration-200">
-          <TitleManagement color="blue">{t("role_status_title")}</TitleManagement>
+          <TitleManagement color="blue">
+            {t("role_status_title")}
+          </TitleManagement>
           <div className="space-y-6 mt-2">
             <Select
               label={t("account_type_label")}

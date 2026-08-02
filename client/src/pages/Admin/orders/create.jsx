@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { LayoutDashboard, Plus, Trash2 } from "lucide-react";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 // components
 import { FloatingInput } from "@/components/ui/input";
 import { TitleManagement } from "@/components/ui/title";
@@ -49,7 +49,7 @@ const CreateOrderPage = () => {
 
   const handleAddItem = () => {
     if (items.length >= 10) {
-      toast.error(t("many_items_error"));
+      ShowToast("error", t("many_items_error"));
       return;
     }
 
@@ -121,7 +121,7 @@ const CreateOrderPage = () => {
     try {
       const resCoupon = await couponApi.check(dataCouponToSend);
       if (resCoupon.success) {
-        toast.success(resCoupon.message);
+        ShowToast("success", resCoupon.message);
         setDiscount(resCoupon.data.discount);
         setFinal(resCoupon.data.newAmount);
       }
@@ -132,7 +132,7 @@ const CreateOrderPage = () => {
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 
@@ -159,7 +159,7 @@ const CreateOrderPage = () => {
       const response = await orderApi.create(dataToSend);
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["orders"] });
-        toast.success(response.message);
+        ShowToast("success", response.message);
         navigate(-1);
       }
     } catch (error) {
@@ -169,7 +169,7 @@ const CreateOrderPage = () => {
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 
@@ -188,7 +188,9 @@ const CreateOrderPage = () => {
         <div className="w-full lg:w-[30%] flex flex-col gap-4">
           {/* CARD: THÔNG TIN KHÁCH HÀNG */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <TitleManagement color="cyan">{t("customer_info_title")}</TitleManagement>
+            <TitleManagement color="cyan">
+              {t("customer_info_title")}
+            </TitleManagement>
             <div className="flex flex-col gap-5 mt-3">
               <FloatingInput
                 label={t("customer_email")}
@@ -228,7 +230,9 @@ const CreateOrderPage = () => {
 
           {/* CARD: TỔNG KẾT ĐƠN HÀNG */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <TitleManagement color="emerald">{t("order_summary")}</TitleManagement>
+            <TitleManagement color="emerald">
+              {t("order_summary")}
+            </TitleManagement>
             <div className="space-y-3 text-sm font-medium mt-4">
               <div className="flex justify-between text-slate-600 dark:text-slate-400">
                 <span>{t("subtotal")}</span>

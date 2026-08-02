@@ -4,9 +4,9 @@ import {
   useRevalidator,
   useSearchParams,
 } from "react-router-dom";
-import { toast } from "sonner";
 import { LayoutDashboard, HelpCircle, RefreshCw } from "lucide-react";
 // components
+import ShowToast from "@/components/ui/toast";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
 import Pagination from "@/components/ui/pagination";
@@ -87,14 +87,14 @@ const PermissionPage = () => {
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["permissions"] });
         revalidator.revalidate();
-        toast.success(response.message);
+        ShowToast("success", response.message);
         setIsConfirmOpen(false);
       }
     } catch (error) {
       setIsConfirmOpen(false);
       const errorMessage =
         error.message || error.response?.data?.message || t("error_occurred");
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 
@@ -150,7 +150,10 @@ const PermissionPage = () => {
           )}
         </div>
 
-        <BtnAdd route={"/management/permissions/create"} name={t("add_permission")} />
+        <BtnAdd
+          route={"/management/permissions/create"}
+          name={t("add_permission")}
+        />
       </div>
 
       {/* KHỐI LAYOUT CHỦ ĐẠO */}

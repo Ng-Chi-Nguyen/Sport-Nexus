@@ -6,7 +6,7 @@ import { LayoutDashboard, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { PURCHASE_STATUS_OPTIONS } from "@/constants/management/purchaseOrder";
 import { useLoaderData, useNavigate, useParams } from "react-router-dom";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import purchaseOrderApi from "@/api/management/purchaseOrderApi";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
@@ -26,7 +26,6 @@ const EditPurchaseOrder = () => {
     { title: t("purchase_title"), route: "/management/purchase" },
     { title: t("edit_breadcrumb"), route: "" },
   ];
-
 
   const purchaseOld = response?.purchase?.data;
 
@@ -119,7 +118,7 @@ const EditPurchaseOrder = () => {
   const handleAddItem = (e) => {
     e.preventDefault();
     if (items.length >= 10) {
-      toast.error(t("max_items_error"));
+      ShowToast("error", t("max_items_error"));
       return;
     }
     setItems([
@@ -143,7 +142,7 @@ const EditPurchaseOrder = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectSupplier || !expectedDate) {
-      toast.error(t("missing_info_error2"));
+      ShowToast("error", t("missing_info_error2"));
       return;
     }
 
@@ -163,11 +162,11 @@ const EditPurchaseOrder = () => {
       const res = await purchaseOrderApi.update(purchaseId, dataToSend);
       if (res.success) {
         await queryClient.invalidateQueries({ queryKey: ["purchase-order"] });
-        toast.success(res.message);
+        ShowToast("success", res.message);
         navigate("/management/purchase");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || t("update_error"));
+      ShowToast("error", error.response?.data?.message || t("update_error"));
     }
   };
 
@@ -187,7 +186,9 @@ const EditPurchaseOrder = () => {
           <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-4 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-md space-y-3.5 transition-colors duration-200">
             {/* PHẦN 1: NHÀ CUNG CẤP */}
             <div>
-              <TitleManagement color="blue">{t("supplier_title")}</TitleManagement>
+              <TitleManagement color="blue">
+                {t("supplier_title")}
+              </TitleManagement>
               <div className="mt-1">
                 <SelectPro
                   value={selectSupplier}
@@ -200,7 +201,9 @@ const EditPurchaseOrder = () => {
 
             {/* PHẦN 2: TRẠNG THÁI */}
             <div className="border-t border-slate-200 dark:border-white/5 pt-3">
-              <TitleManagement color="green">{t("status_order_title")}</TitleManagement>
+              <TitleManagement color="green">
+                {t("status_order_title")}
+              </TitleManagement>
               <div className="mt-1">
                 <SelectPro
                   value={selectStatus}
@@ -244,7 +247,9 @@ const EditPurchaseOrder = () => {
         {/* CỘT PHẢI: CHI TIẾT MÓN HÀNG */}
         <div className="flex-1 w-full bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-5 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 transition-colors duration-200">
           <div className="flex items-center justify-between mb-6">
-            <TitleManagement color="violet">{t("items_detail_title")}</TitleManagement>
+            <TitleManagement color="violet">
+              {t("items_detail_title")}
+            </TitleManagement>
             <button
               type="button"
               onClick={handleAddItem}

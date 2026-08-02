@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import productVariantdApi from "@/api/core/productVariantApi";
 import productAttributeKeyApi from "@/api/management/productAttributeKeyApi";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
 import { useTranslation } from "react-i18next";
@@ -115,7 +115,7 @@ const EditProductVariant = () => {
     );
 
     if (validAttrs.length === 0) {
-      toast.error(t("add_attribute_error"));
+      ShowToast("error", t("add_attribute_error"));
       return;
     }
 
@@ -136,7 +136,7 @@ const EditProductVariant = () => {
       );
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["product-variants"] });
-        toast.success(response.message);
+        ShowToast("success", response.message);
         navigate(-1);
       }
     } catch (error) {
@@ -145,7 +145,7 @@ const EditProductVariant = () => {
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 
@@ -160,7 +160,9 @@ const EditProductVariant = () => {
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6 w-full">
         {/* CỘT TRÁI: GIÁ & KHO HÀNG */}
         <div className="col-span-12 lg:col-span-4 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md h-fit transition-colors duration-200">
-          <TitleManagement color="green">{t("price_stock_title")}</TitleManagement>
+          <TitleManagement color="green">
+            {t("price_stock_title")}
+          </TitleManagement>
 
           <div className="space-y-5 mt-2">
             <FloatingInput
@@ -180,7 +182,9 @@ const EditProductVariant = () => {
 
         {/* CỘT PHẢI: CẤU HÌNH THUỘC TÍNH */}
         <div className="col-span-12 lg:col-span-8 flex flex-col bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md relative z-20 transition-colors duration-200">
-          <TitleManagement color="blue">{t("config_attributes_title")}</TitleManagement>
+          <TitleManagement color="blue">
+            {t("config_attributes_title")}
+          </TitleManagement>
           <div className="w-full mb-5 mt-2">
             <SelectPro
               value={selectProdut}

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Plus, Trash2 } from "lucide-react";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { FloatingInput } from "@/components/ui/input";
 import { SelectPro } from "@/components/ui/select";
@@ -25,7 +25,6 @@ const CreatePurchaseOrder = () => {
     { title: t("purchase_title"), route: "/management/purchase" },
     { title: t("create_breadcrumb"), route: "" },
   ];
-
 
   // 1. State quản lý thông tin chung
   const [selectSupplier, setSelectSupplier] = useState("");
@@ -76,7 +75,7 @@ const CreatePurchaseOrder = () => {
   const handleAddItem = (e) => {
     e.preventDefault();
     if (items.length >= 10) {
-      toast.error(t("max_items_error"));
+      ShowToast("error", t("max_items_error"));
       return;
     }
     setItems([
@@ -100,7 +99,7 @@ const CreatePurchaseOrder = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectSupplier || !expectedDate) {
-      toast.error(t("missing_info_error"));
+      ShowToast("error", t("missing_info_error"));
       return;
     }
 
@@ -120,11 +119,11 @@ const CreatePurchaseOrder = () => {
       const response = await purchaseOrderdApi.create(dataToSend);
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["purchase"] });
-        toast.success(response.message);
+        ShowToast("success", response.message);
         navigate("/management/purchase");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || t("error_occurred"));
+      ShowToast("error", error.response?.data?.message || t("error_occurred"));
     }
   };
 
@@ -144,7 +143,9 @@ const CreatePurchaseOrder = () => {
           <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-4 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-md space-y-3.5 transition-colors duration-200">
             {/* PHẦN 1: NHÀ CUNG CẤP */}
             <div>
-              <TitleManagement color="blue">{t("supplier_title")}</TitleManagement>
+              <TitleManagement color="blue">
+                {t("supplier_title")}
+              </TitleManagement>
               <div className="mt-1">
                 <SelectPro
                   value={selectSupplier}

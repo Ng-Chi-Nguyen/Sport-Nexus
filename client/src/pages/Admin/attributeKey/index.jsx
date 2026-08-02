@@ -14,7 +14,7 @@ import { ConfirmDelete } from "@/components/ui/confirm";
 import attributeKeyApi from "@/api/core/attributrKeyApi";
 import LoaderAttr from "@/loaders/core/attributeKey";
 import { queryClient } from "@/lib/react-query";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import Pagination from "@/components/ui/pagination";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 import { useTranslation } from "react-i18next";
@@ -77,7 +77,7 @@ const AttributeKey = () => {
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["attribute-keys"] });
         revalidator.revalidate();
-        toast.success(response.message);
+        ShowToast("success", response.message);
         setIsConfirmOpen(false);
       }
     } catch (error) {
@@ -86,7 +86,7 @@ const AttributeKey = () => {
         error.message ||
         error.response?.data?.message ||
         t("attributeKey.error_occurred");
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 

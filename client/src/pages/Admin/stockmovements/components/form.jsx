@@ -6,7 +6,7 @@ import { Submit_GoBack } from "@/components/ui/button";
 import FloatingTextarea from "@/components/ui/textarea";
 import { TitleManagement } from "@/components/ui/title";
 import { formatDate } from "@/utils/formatters";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import purchaseOrderdApi from "@/api/management/purchaseOrderApi";
 import { getRemainingQuantity, resolveSelectedQuantity } from "./form.utils";
 import stockMovementApi from "@/api/management/stockMovementApi";
@@ -60,7 +60,8 @@ const FormStock = (props) => {
           setSelectedQuantities(initialSelectedQuantities);
         }
       } catch (error) {
-        toast.error(
+        ShowToast(
+          "error",
           error.response?.data?.message || t("fetch_items_error"),
         );
         console.error("Lỗi fetch:", error);
@@ -116,7 +117,7 @@ const FormStock = (props) => {
     e.preventDefault();
 
     if (formData.type !== "ADJUSTMENT" && !formData.order) {
-      toast.error(t("select_order_error"));
+      ShowToast("error", t("select_order_error"));
       return;
     }
 
@@ -152,11 +153,11 @@ const FormStock = (props) => {
           }),
         ]);
 
-        toast.success(response.message || t("update_success"));
+        ShowToast("success", response.message || t("update_success"));
         navigate("/management/stocks");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || t("submit_failed"));
+      ShowToast("error", error.response?.data?.message || t("submit_failed"));
     }
   };
 
@@ -168,7 +169,9 @@ const FormStock = (props) => {
       <div className="flex flex-col gap-4 w-full lg:w-2/5 relative z-20">
         <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-6 transition-colors duration-200">
           <div>
-            <TitleManagement color="emerald">{t("movement_type_title")}</TitleManagement>
+            <TitleManagement color="emerald">
+              {t("movement_type_title")}
+            </TitleManagement>
             <div className="mt-3">
               <SelectPro
                 label={t("type_label")}
@@ -185,7 +188,9 @@ const FormStock = (props) => {
 
           {formData.type !== "ADJUSTMENT" && (
             <div className="border-t border-slate-200 dark:border-white/5 pt-4">
-              <TitleManagement color="violet">{t("details_title")}</TitleManagement>
+              <TitleManagement color="violet">
+                {t("details_title")}
+              </TitleManagement>
               <div className="mt-3">
                 <SelectPro
                   label={t("order_label")}
@@ -210,7 +215,9 @@ const FormStock = (props) => {
       <div className="w-full lg:w-3/5 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md min-h-[420px] relative z-10 transition-colors duration-200">
         {formData.type === "ADJUSTMENT" ? (
           <div className="space-y-4">
-            <TitleManagement color="blue">{t("adjustment_reason_title")}</TitleManagement>
+            <TitleManagement color="blue">
+              {t("adjustment_reason_title")}
+            </TitleManagement>
             <div className="pt-2">
               <FloatingTextarea
                 id="reason_textarea"
@@ -228,7 +235,9 @@ const FormStock = (props) => {
           <div className="flex flex-col h-full">
             <TitleManagement color="blue">
               {t("items_title_prefix")}
-              {formData.type === "IN" ? t("items_title_in") : t("items_title_out")}
+              {formData.type === "IN"
+                ? t("items_title_in")
+                : t("items_title_out")}
               {t("items_title_suffix")}
             </TitleManagement>
 

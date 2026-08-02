@@ -5,8 +5,8 @@ import {
   useRevalidator,
   useSearchParams,
 } from "react-router-dom";
-import { toast } from "sonner";
 // components
+import ShowToast from "@/components/ui/toast";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
@@ -100,7 +100,7 @@ const SupplierPage = () => {
       if (response.success) {
         await queryClient.invalidateQueries({ queryKey: ["suppliers"] });
         revalidator.revalidate();
-        toast.success(response.message);
+        ShowToast("success", response.message);
         setIsConfirmOpen(false);
       }
     } catch (error) {
@@ -111,7 +111,7 @@ const SupplierPage = () => {
         error.response?.data?.message ||
         error.response?.data?.errors?.[0] ||
         t("error_occurred");
-      toast.error(errorMessage);
+      ShowToast("error", errorMessage);
     }
   };
 
