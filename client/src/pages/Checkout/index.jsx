@@ -4,6 +4,7 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import addressData from "@/assets/data/addressVN_afterUpdate.json";
 import orderApi from "@/api/customer/orderApi";
 import addressApi from "@/api/customer/addressApi";
+import paymentApi from "@/api/customer/paymentApi";
 import useCoupon from "@/hooks/useCoupon";
 import EmptyCart from "./components/EmptyCart";
 import OrderSuccess from "./components/OrderSuccess";
@@ -27,6 +28,7 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [submitting, setSubmitting] = useState(false);
   const [orderResult, setOrderResult] = useState(null);
+  const [paymentInfo, setPaymentInfo] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
@@ -38,10 +40,54 @@ const Checkout = () => {
         if (!Array.isArray(list) || list.length === 0) return;
         const addr = list.find((a) => a.is_default) || list[0];
         const loc = addr.location_data || {};
-        const pCode = loc.province?.code?.toString().padStart(2, "0");
-        const wCode = loc.ward?.code?.toString().padStart(5, "0");
-        if (pCode) setProvinceCode(pCode);
-        if (wCode) setWardCode(wCode);
+
+        const norm = (s = "") =>
+          s
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/^(thanh pho|tinh|tp\.?\s*)/, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+        const findProvince = () => {
+          const code = loc.province?.code?.toString().padStart(2, "0");
+          if (code) {
+            const byCode = addressData.find((p) => p.Code === code);
+            if (byCode) return byCode;
+          }
+          const name =
+            typeof loc.province === "string"
+              ? loc.province
+              : loc.province?.name;
+          if (name) {
+            const key = norm(name);
+            return addressData.find((p) => norm(p.FullName) === key);
+          }
+          return null;
+        };
+
+        const province = findProvince();
+        if (province) setProvinceCode(province.Code);
+
+        const wards = province?.Wards || [];
+        const findWard = () => {
+          const code = loc.ward?.code?.toString().padStart(5, "0");
+          if (code) {
+            const byCode = wards.find((w) => w.Code === code);
+            if (byCode) return byCode;
+          }
+          const name =
+            typeof loc.ward === "string" ? loc.ward : loc.ward?.name;
+          if (name) {
+            const key = norm(name);
+            return wards.find((w) => norm(w.FullName) === key);
+          }
+          return null;
+        };
+
+        const ward = findWard();
+        if (ward) setWardCode(ward.Code);
         if (addr.detail_address) setDetailAddress(addr.detail_address);
       })
       .catch(() => {});
@@ -127,8 +173,26 @@ const Checkout = () => {
     setSubmitting(true);
     try {
       const res = await orderApi.create(orderPayload);
-      if (res.success) {
-        setOrderResult(res.data);
+      if (!res.success) throw new Error(res.message || "Tạo đơn thất bại");
+      const order = res.data;
+      setOrderResult(order);
+
+      const isOnline = ["BANK_TRANSFER", "MOMO", "CREDIT_CARD", "VNPAY"].includes(
+        paymentMethod,
+      );
+      if (!isOnline) {
+        setShowConfirm(false);
+        return;
+      }
+
+      const payRes = await paymentApi.createPayment(order.id, {
+        method: paymentMethod,
+        channel: paymentMethod,
+      });
+      if (payRes?.data?.checkoutUrl) {
+        window.location.href = payRes.data.checkoutUrl;
+      } else {
+        setPaymentInfo(payRes?.data || null);
         setShowConfirm(false);
       }
     } catch (error) {
@@ -138,14 +202,20 @@ const Checkout = () => {
     } finally {
       setSubmitting(false);
     }
-  }, [orderPayload]);
+  }, [orderPayload, paymentMethod]);
 
   if (!items.length) {
     return <EmptyCart />;
   }
 
   if (orderResult) {
-    return <OrderSuccess orderId={orderResult.id} />;
+    return (
+      <OrderSuccess
+        orderId={orderResult.id}
+        paymentMethod={paymentMethod}
+        paymentInfo={paymentInfo}
+      />
+    );
   }
 
   return (

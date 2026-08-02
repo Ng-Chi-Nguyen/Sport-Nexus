@@ -8,6 +8,8 @@ import {
   profileLoader,
   ordersLoader,
   orderDetailLoader,
+  invoicesLoader,
+  invoiceDetailLoader,
   productsLoader,
 } from "./webLoader";
 import Support from "@/pages/settings/supports";
@@ -15,6 +17,7 @@ import Support from "@/pages/settings/supports";
 const HomePage = lazy(() => import("@/pages/Home/"));
 const ProductDetail = lazy(() => import("@/pages/ProductDetail"));
 const CheckoutPage = lazy(() => import("@/pages/Checkout"));
+const PaymentSuccessPage = lazy(() => import("@/pages/Checkout/PaymentSuccess"));
 const CartPage = lazy(() => import("@/pages/Cart"));
 const SearchPage = lazy(() => import("@/pages/Search"));
 const ProductsPage = lazy(() => import("@/pages/Products"));
@@ -32,6 +35,8 @@ const FavoritesPage = lazy(() => import("@/pages/favorites"));
 const CouponsPage = lazy(() => import("@/pages/coupons"));
 const SearchHistoryPage = lazy(() => import("@/pages/searchHistory"));
 const ProfilePlaceholder = lazy(() => import("@/pages/profile/placeholder"));
+const Invoice = lazy(() => import("@/pages/invoices"));
+const InvoiceDetail = lazy(() => import("@/pages/invoices/detail"));
 
 export const webRoutes = {
   children: [
@@ -61,6 +66,10 @@ export const webRoutes = {
     {
       path: "thanh-toan",
       element: <CheckoutPage />,
+    },
+    {
+      path: "thanh-toan/success",
+      element: <PaymentSuccessPage />,
     },
     {
       path: "he-thong-cua-hang",
@@ -115,7 +124,13 @@ export const webRoutes = {
     },
     {
       path: "hoa-don",
-      element: <ProfilePlaceholder />,
+      element: <Invoice />,
+      loader: invoicesLoader,
+    },
+    {
+      path: "hoa-don/:id",
+      element: <InvoiceDetail />,
+      loader: invoiceDetailLoader,
     },
     {
       path: "khuyen-mai",
