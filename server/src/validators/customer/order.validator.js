@@ -13,7 +13,7 @@ const orderSchema = {
             'any.required': 'Địa chỉ giao hàng là bắt buộc',
         }),
 
-        payment_method: Joi.string().valid('COD', 'BANK_TRANSFER', 'MOMO', 'VNPAY').required().messages({
+        payment_method: Joi.string().valid('COD', 'BANK_TRANSFER', 'MOMO', 'VNPAY', 'CREDIT_CARD').required().messages({
             'any.only': 'Phương thức thanh toán không hợp lệ',
         }),
 
@@ -49,7 +49,7 @@ const orderSchema = {
 
         shipping_address: Joi.string(),
 
-        payment_method: Joi.string().valid('COD', 'BANK_TRANSFER', 'MOMO', 'VNPAY').messages({
+        payment_method: Joi.string().valid('COD', 'BANK_TRANSFER', 'MOMO', 'VNPAY', 'CREDIT_CARD').messages({
             'any.only': 'Phương thức thanh toán không hợp lệ',
         }),
 

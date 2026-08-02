@@ -1,4 +1,5 @@
 import prisma from "../../db/prisma.js";
+import paymentService from "./payment.service.js";
 
 const orderService = {
     createOrder: async (orderData) => {
@@ -17,61 +18,99 @@ const orderService = {
             }
         }
 
-        let newOrder = await prisma.Orders.create({
-            data: {
-                total_amount: total_amount,
-                status: status,
-                shipping_address: shipping_address,
-                payment_method: payment_method,
-                payment_status: payment_status,
-                discount_amount: discount_amount,
-                final_amount: final_amount,
-                coupon: coupon_code
-                    ? { connect: { code: coupon_code } }
-                    : undefined,
-                user_email: user_email || null,
+        const generateInvoiceNumber = async () => {
+            const year = new Date().getFullYear();
+            const start = new Date(`${year}-01-01T00:00:00Z`);
+            const end = new Date(`${year + 1}-01-01T00:00:00Z`);
+            const count = await prisma.invoices.count({ where: { issued_at: { gte: start, lt: end } } });
+            return `HD-${year}-${String(count + 1).padStart(6, '0')}`;
+        };
 
-                OrderItems: {
-                    create: items.map(item => ({
-                        product_variant_id: item.product_variant_id,
-                        quantity: item.quantity,
-                        price_at_purchase: item.price_at_purchase
-                    }))
+        return await prisma.$transaction(async (tx) => {
+            const customer = user_email
+                ? await tx.users.findFirst({ where: { email: user_email }, select: { full_name: true, email: true, phone_number: true } })
+                : null;
+
+            const subtotal = Number(total_amount) + Number(discount_amount);
+            const vatRate = Number(process.env.VAT_RATE) || 0.08;
+            const vatAmount = Math.round((subtotal - Number(discount_amount)) * vatRate * 100) / 100;
+            const invoiceTotal = Math.round((subtotal - Number(discount_amount) + vatAmount) * 100) / 100;
+
+            const invoiceNumber = await generateInvoiceNumber();
+
+            const newOrder = await tx.orders.create({
+                data: {
+                    total_amount: total_amount,
+                    status: status,
+                    shipping_address: shipping_address,
+                    payment_method: payment_method,
+                    payment_status: payment_status,
+                    discount_amount: discount_amount,
+                    final_amount: final_amount,
+                    coupon: coupon_code
+                        ? { connect: { code: coupon_code } }
+                        : undefined,
+                    user_email: user_email || null,
+
+                    OrderItems: {
+                        create: items.map(item => ({
+                            product_variant_id: item.product_variant_id,
+                            quantity: item.quantity,
+                            price_at_purchase: item.price_at_purchase
+                        }))
+                    },
+
+                    invoice: {
+                        create: {
+                            invoice_number: invoiceNumber,
+                            customer_name: customer?.full_name || user_email || 'Khách vãng lai',
+                            customer_email: customer?.email || null,
+                            customer_phone: customer?.phone_number || null,
+                            shipping_address: shipping_address,
+                            subtotal: subtotal,
+                            discount_amount: Number(discount_amount),
+                            vat_rate: vatRate,
+                            vat_amount: vatAmount,
+                            total_amount: invoiceTotal,
+                            note: payment_method ? `Phương thức thanh toán: ${payment_method}` : null
+                        }
+                    }
                 },
-            },
-            include: {
-                OrderItems: {
-                    include: {
-                        product_variant: {
-                            include: {
-                                product: { select: { name: true } },
-                                VariableAttributes: {
-                                    include: {
-                                        attributeKey: { select: { name: true } }
+                include: {
+                    invoice: true,
+                    OrderItems: {
+                        include: {
+                            product_variant: {
+                                include: {
+                                    product: { select: { name: true } },
+                                    VariableAttributes: {
+                                        include: {
+                                            attributeKey: { select: { name: true } }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+            })
+
+            if (coupon_code) {
+                await tx.coupons.update({
+                    where: { code: coupon_code },
+                    data: { usage_count: { increment: 1 } }
+                })
             }
-        })
 
-        if (coupon_code) {
-            await prisma.coupons.update({
-                where: { code: coupon_code },
-                data: { usage_count: { increment: 1 } }
-            })
-        }
+            for (const item of items) {
+                await tx.productVariants.update({
+                    where: { id: item.product_variant_id },
+                    data: { stock: { decrement: item.quantity } }
+                })
+            }
 
-        for (const item of items) {
-            await prisma.productVariants.update({
-                where: { id: item.product_variant_id },
-                data: { stock: { decrement: item.quantity } }
-            })
-        }
-
-        return newOrder;
+            return newOrder;
+        });
     },
 
     getOrderDropdown: async () => {
@@ -226,7 +265,7 @@ const orderService = {
         const discount = Number(dataUpdate.discount_amount) || 0;
 
         // 2. Dùng Nested Write để xóa/tạo item trong 1 lệnh duy nhất
-        return await prisma.orders.update({
+        const updatedOrder = await prisma.orders.update({
             where: { id: Number(orderId) },
             data: {
                 shipping_address: dataUpdate.shipping_address,
@@ -256,6 +295,25 @@ const orderService = {
                 OrderItems: true
             }
         });
+
+        // 3. Nếu đơn bị hủy → cập nhật hóa đơn sang Cancelled
+        if (dataUpdate.status === 'Cancelled') {
+            await prisma.invoices.updateMany({
+                where: { order_id: Number(orderId), status: { in: ['Pending', 'Completed'] } },
+                data: { status: 'Cancelled' }
+            });
+        }
+
+        // 4. Nếu đơn giao thành công → đánh dấu thanh toán COD là Paid
+        if (dataUpdate.status === 'Delivered') {
+            try {
+                await paymentService.markCodPaid(Number(orderId));
+            } catch (err) {
+                console.error("[PAYMENT] Không đánh dấu COD Paid:", err.message);
+            }
+        }
+
+        return updatedOrder;
     },
 
     deleteOrder: async (orderId) => {
