@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import {
@@ -89,12 +89,12 @@ const ProductDetail = () => {
 
   const handleAddToCart = useCallback(() => {
     if (attrKeys.length > 0 && !selectedVariant) {
-      toast.warning("Vui lòng chọn đầy đủ phân loại");
+      ShowToast("warning", "Vui lòng chọn đầy đủ phân loại");
       return;
     }
     const variantId = selectedVariant?.id || variants[0]?.id;
     if (!variantId) {
-      toast.error("Sản phẩm không có biến thể");
+      ShowToast("error", "Sản phẩm không có biến thể");
       return;
     }
     addItem(variantId, quantity, product, selectedVariant || variants[0]);
@@ -102,12 +102,12 @@ const ProductDetail = () => {
 
   const handleBuyNow = useCallback(() => {
     if (attrKeys.length > 0 && !selectedVariant) {
-      toast.warning("Vui lòng chọn đầy đủ phân loại");
+      ShowToast("warning", "Vui lòng chọn đầy đủ phân loại");
       return;
     }
     const variantId = selectedVariant?.id || variants[0]?.id;
     if (!variantId) {
-      toast.error("Sản phẩm không có biến thể");
+      ShowToast("error", "Sản phẩm không có biến thể");
       return;
     }
     const variant = selectedVariant || variants[0];

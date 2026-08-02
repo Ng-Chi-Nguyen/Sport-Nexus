@@ -67,7 +67,11 @@ const RegisterForm = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         rightElement={
-          <button type="button" onClick={() => setShowPass(!showPass)} tabIndex={-1}>
+          <button
+            type="button"
+            onClick={() => setShowPass(!showPass)}
+            tabIndex={-1}
+          >
             {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         }
@@ -83,16 +87,16 @@ const RegisterForm = () => {
         onChange={(e) => setPhone(e.target.value)}
       />
 
-      <BtnSave
-        loading={loading}
-        className="!w-full !py-3 !rounded-xl !text-sm"
-      >
+      <BtnSave loading={loading} className="!w-full !py-3 !rounded-xl !text-sm">
         Đăng ký ngay
       </BtnSave>
 
       <p className="text-center text-gray-400 text-xs pt-2">
         Đã có tài khoản?{" "}
-        <Link to="/auth/login" className="text-blue-500 hover:text-blue-600 font-bold hover:underline transition-colors">
+        <Link
+          to="/auth/login"
+          className="text-blue-500 hover:text-blue-600 font-bold hover:underline transition-colors"
+        >
           Đăng nhập
         </Link>
       </p>

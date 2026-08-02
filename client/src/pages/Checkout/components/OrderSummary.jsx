@@ -24,7 +24,7 @@ const OrderSummary = ({
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4 transition-colors duration-200">
+    <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4 transition-colors duration-200">
       <h2 className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wide">
         <ShoppingBag size={16} />
         Đơn hàng ({items.length} sản phẩm)
@@ -76,7 +76,7 @@ const OrderSummary = ({
         type="button"
         onClick={onPlaceOrder}
         disabled={submitting || !fullAddress || !email.trim()}
-        className="w-full py-3 bg-sky-600 dark:bg-sky-500 text-white rounded-xl hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
+        className="w-full py-3 bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
       >
         {submitting ? "Đang xử lý..." : "Đặt hàng"}
       </button>

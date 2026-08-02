@@ -37,8 +37,8 @@ const ForgotPassword = () => {
         <CheckCircle size={48} className="mx-auto text-green-500" />
         <h3 className="text-lg font-bold text-slate-800">Đã gửi email!</h3>
         <p className="text-sm text-slate-500 leading-relaxed">
-          Link đặt lại mật khẩu đã được gửi vào <strong>{email}</strong>.
-          Vui lòng kiểm tra hộp thư (và thư mục Spam).
+          Link đặt lại mật khẩu đã được gửi vào <strong>{email}</strong>. Vui
+          lòng kiểm tra hộp thư (và thư mục Spam).
         </p>
         <Link
           to="/auth/login"

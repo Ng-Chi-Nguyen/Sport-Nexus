@@ -17,7 +17,7 @@ const InfoPage = () => {
   return (
     <div className="py-10 md:py-14 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <nav className="flex items-center space-x-2 text-sm mb-6">
+        <nav className="flex items-center space-x-2 text-sm mb-6 mt-10">
           <Link
             to="/"
             className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"

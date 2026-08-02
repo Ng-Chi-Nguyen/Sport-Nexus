@@ -18,17 +18,17 @@ const CartItem = ({
 
   return (
     <>
-      <div className="p-4 sm:p-5 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
+      <div className="p-4 sm:p-5 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
         {/* Row 1: checkbox + image + info + delete */}
         <div className="flex items-start gap-3.5 mb-3">
           <input
             type="checkbox"
             checked={selected}
             onChange={() => onToggleSelect(item.product_variant_id)}
-            className="mt-1 shrink-0 accent-sky-600 dark:accent-sky-500 cursor-pointer w-4 h-4 rounded"
+            className="mt-1 shrink-0 accent-sky-600 dark:accent-sky-500 cursor-pointer w-4 h-4"
           />
           <Link to={`/san-pham/${item.product?.slug}`} className="shrink-0">
-            <div className="w-16 sm:w-20 h-16 sm:h-20 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+            <div className="w-16 sm:w-20 h-16 sm:h-20 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden">
               {item.product?.thumbnail ? (
                 <img
                   src={item.product.thumbnail}
@@ -54,7 +54,7 @@ const CartItem = ({
                 {attributes.map((a, i) => (
                   <span
                     key={i}
-                    className="text-[11px] text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-200/60 dark:border-slate-700/60"
+                    className="text-[11px] text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 border border-slate-200/60 dark:border-slate-700/60"
                   >
                     {a.attributeKey?.name}: {a.value}
                   </span>
@@ -81,7 +81,7 @@ const CartItem = ({
 
         {/* Row 2: quantity + subtotal (mobile row) */}
         <div className="flex items-center justify-between mt-3 sm:mt-0 sm:ml-10 sm:pl-0">
-          <div className="flex items-center border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-slate-50 dark:bg-[#111827]/40">
+          <div className="flex items-center border border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-50 dark:bg-[#111827]/40">
             <button
               type="button"
               onClick={() =>

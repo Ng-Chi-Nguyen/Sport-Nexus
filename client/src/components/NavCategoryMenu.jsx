@@ -56,10 +56,10 @@ export const NavCategoryMenu = ({
       }`}
     >
       {/* 1. TOP NAV BAR */}
-      <div className="bg-slate-900 text-slate-300 border-b border-slate-800">
+      <div className="bg-slate-900 text-slate-300 border-b border-slate-800 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 h-12 flex items-center justify-between gap-4">
           {/* Search Box cho Mobile */}
-          <div className="flex-1 sm:hidden relative flex items-center rounded-full overflow-hidden bg-slate-800 border border-slate-700 focus-within:border-blue-500">
+          <div className="flex-1 sm:hidden relative flex items-center rounded-full overflow-hidden bg-slate-800 border border-slate-700 focus-within:border-sky-500">
             <Search
               size={14}
               className="absolute left-3 text-slate-400 pointer-events-none"
@@ -71,7 +71,7 @@ export const NavCategoryMenu = ({
             />
             <button
               type="button"
-              className="absolute right-0 h-full px-3 bg-blue-600 text-white text-xs font-medium hover:bg-blue-500 transition-colors"
+              className="absolute right-0 h-full px-3 bg-sky-600 dark:bg-sky-500 text-white text-xs font-semibold hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
             >
               {t("search_btn")}
             </button>
@@ -88,7 +88,7 @@ export const NavCategoryMenu = ({
                   to={link.to}
                   className={`h-8 px-3 flex items-center gap-2 text-xs font-medium rounded-lg transition-colors ${
                     isActive
-                      ? "bg-blue-600 text-white"
+                      ? "bg-sky-600 dark:bg-sky-500 text-white font-semibold shadow-sm"
                       : "hover:text-white hover:bg-slate-800"
                   }`}
                 >
@@ -104,7 +104,7 @@ export const NavCategoryMenu = ({
             {t("hotline")}:{" "}
             <a
               href="tel:0812312831"
-              className="text-blue-400 font-bold hover:underline"
+              className="text-sky-400 font-bold hover:underline"
             >
               0812312831
             </a>
@@ -114,11 +114,11 @@ export const NavCategoryMenu = ({
 
       {/* 2. MEGA DROPDOWN MENU */}
       {isOpenMenu && (
-        <div className="absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-2xl animate-in fade-in slide-in-from-top-1 duration-150 z-50">
+        <div className="absolute top-full left-0 w-full bg-white dark:bg-[#0D121F] border-b border-slate-200 dark:border-slate-900 shadow-2xl animate-in fade-in slide-in-from-top-1 duration-150 z-50 transition-colors duration-200">
           <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Lưới Danh Mục Chiếm 3 Cột */}
             <div className="md:col-span-3">
-              <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
+              <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
                 <Grid size={14} />
                 <span>
                   {t("categories_title", { count: categories.length })}
@@ -126,7 +126,7 @@ export const NavCategoryMenu = ({
               </div>
 
               {categories.length === 0 ? (
-                <p className="py-8 text-center text-xs text-slate-400">
+                <p className="py-8 text-center text-xs text-slate-400 dark:text-slate-500">
                   {t("no_categories")}
                 </p>
               ) : (
@@ -136,10 +136,13 @@ export const NavCategoryMenu = ({
                       key={cat.id || cat.slug}
                       to={`/products?category=${cat.slug || cat.name}`}
                       onClick={() => setIsOpenMenu(false)}
-                      className="flex items-center justify-between p-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
+                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-sky-600 dark:hover:text-sky-400 transition-colors cursor-pointer"
                     >
                       <span className="truncate">{cat.name}</span>
-                      <ChevronRight size={12} className="text-slate-300" />
+                      <ChevronRight
+                        size={12}
+                        className="text-slate-300 dark:text-slate-600"
+                      />
                     </Link>
                   ))}
                 </div>
@@ -147,19 +150,19 @@ export const NavCategoryMenu = ({
             </div>
 
             {/* Banner Quảng Cáo Chiếm 1 Cột */}
-            <div className="md:col-span-1 border-t md:border-t-0 md:border-l border-slate-100 pt-4 md:pt-0 md:pl-6 flex flex-col justify-between">
-              <div className="p-4 rounded-xl bg-slate-900 text-white space-y-2">
-                <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">
+            <div className="md:col-span-1 border-t md:border-t-0 md:border-l border-slate-100 dark:border-slate-800 pt-4 md:pt-0 md:pl-6 flex flex-col justify-between">
+              <div className="p-5 rounded-2xl bg-slate-900 dark:bg-[#111827] border border-slate-800 text-white space-y-2.5 shadow-xl">
+                <span className="text-[10px] font-bold text-sky-400 uppercase tracking-widest">
                   Sport Nexus
                 </span>
-                <h4 className="text-xs font-semibold">{t("banner_title")}</h4>
+                <h4 className="text-xs font-bold">{t("banner_title")}</h4>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                   {t("banner_desc")}
                 </p>
                 <Link
                   to="/products"
                   onClick={() => setIsOpenMenu(false)}
-                  className="inline-flex items-center gap-1 text-xs font-medium text-blue-400 hover:text-blue-300 pt-2"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-sky-400 hover:text-sky-300 pt-2 transition-colors cursor-pointer"
                 >
                   <span>{t("view_all")}</span>
                   <ArrowUpRight size={14} />
@@ -172,3 +175,5 @@ export const NavCategoryMenu = ({
     </div>
   );
 };
+
+export default NavCategoryMenu;

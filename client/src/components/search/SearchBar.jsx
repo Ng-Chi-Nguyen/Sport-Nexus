@@ -112,7 +112,7 @@ const SearchBar = () => {
   return (
     <div ref={wrapperRef} className="relative flex-1 max-w-2xl hidden sm:block">
       {/* Container bọc ngoài */}
-      <div className="relative flex items-center rounded-full overflow-hidden border border-gray-200 dark:border-slate-700 focus-within:border-primary transition-colors">
+      <div className="relative flex items-center overflow-hidden border border-gray-200 dark:border-slate-700 focus-within:border-primary transition-colors">
         <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-slate-400 pointer-events-none z-10"
           strokeWidth={2}
@@ -160,7 +160,7 @@ const SearchBar = () => {
       {isOpen &&
         !query.trim() &&
         (history.length > 0 ? (
-          <div className="absolute top-full mt-2 w-full bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-50 overflow-hidden">
+          <div className="absolute top-full w-[85%] bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 shadow-lg z-50 overflow-hidden">
             <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-100 dark:border-slate-700">
               <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">
                 {t("history_title")}
@@ -186,7 +186,10 @@ const SearchBar = () => {
                   onMouseDown={() => handleSubmit(item.term)}
                   className="flex-1 flex items-center gap-3 py-2.5 px-2 text-left outline-none focus:outline-none"
                 >
-                  <Clock size={16} className="text-gray-400 dark:text-slate-500 shrink-0" />
+                  <Clock
+                    size={16}
+                    className="text-gray-400 dark:text-slate-500 shrink-0"
+                  />
                   <span className="text-sm text-gray-700 dark:text-slate-200 truncate">
                     {item.term}
                   </span>
@@ -221,7 +224,9 @@ const SearchBar = () => {
               onMouseDown={() => handleSelect(item.slug)}
               onMouseEnter={() => setActiveIdx(idx)}
               className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors outline-none focus:outline-none ${
-                idx === activeIdx ? "bg-primary/5" : "hover:bg-gray-50 dark:hover:bg-slate-800"
+                idx === activeIdx
+                  ? "bg-primary/5"
+                  : "hover:bg-gray-50 dark:hover:bg-slate-800"
               }`}
             >
               <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 overflow-hidden shrink-0">

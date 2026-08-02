@@ -100,7 +100,11 @@ const ResetForgotPassword = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         rightElement={
-          <button type="button" onClick={() => setShow((s) => ({ ...s, pass: !s.pass }))} tabIndex={-1}>
+          <button
+            type="button"
+            onClick={() => setShow((s) => ({ ...s, pass: !s.pass }))}
+            tabIndex={-1}
+          >
             {show.pass ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         }
@@ -115,7 +119,11 @@ const ResetForgotPassword = () => {
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         rightElement={
-          <button type="button" onClick={() => setShow((s) => ({ ...s, confirm: !s.confirm }))} tabIndex={-1}>
+          <button
+            type="button"
+            onClick={() => setShow((s) => ({ ...s, confirm: !s.confirm }))}
+            tabIndex={-1}
+          >
             {show.confirm ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         }

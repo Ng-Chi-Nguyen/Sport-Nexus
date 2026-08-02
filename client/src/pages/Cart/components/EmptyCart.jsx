@@ -7,7 +7,7 @@ const EmptyCart = () => (
     <p className="text-slate-500 dark:text-slate-400 text-lg">Giỏ hàng trống</p>
     <Link
       to="/"
-      className="px-6 py-2.5 bg-sky-600 dark:bg-sky-500 text-white rounded-xl hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors text-sm font-medium shadow-sm"
+      className="px-6 py-2.5 bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors text-sm font-medium shadow-sm"
     >
       Mua sắm ngay
     </Link>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { Confirm } from "@/components/ui/confirm";
 import authApi from "@/api/auth/auth";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import { breadcrumbNameMap } from "@/constants/web/profile";
 import { clearAuth } from "@/lib/authStorage";
 
@@ -30,7 +30,7 @@ const ProfilePage = () => {
 
   const confirmLogout = async () => {
     try {
-      toast.dismiss();
+      ShowToast("dismiss");
       if (user?.id) {
         await authApi.logout(user.id);
       }
@@ -47,14 +47,14 @@ const ProfilePage = () => {
     <div className="min-h-screen bg-slate-50 dark:bg-[#090D16] text-slate-800 dark:text-slate-100 font-sans transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Breadcrumb */}
-        <div className="mb-6">
+        <div className="mb-6 mt-10">
           <Breadcrumbs data={breadcrumbsData} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           {/* Sidebar Bên Trái */}
           <div className="md:col-span-3 pr-0 md:pr-4">
-            <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md sticky top-6 space-y-6">
+            <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 shadow-xl dark:shadow-2xl backdrop-blur-md sticky top-6 space-y-6">
               <div>
                 <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100 mb-1">
                   Trang tài khoản

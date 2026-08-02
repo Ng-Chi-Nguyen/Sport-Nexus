@@ -13,7 +13,7 @@ const EmptyCart = () => {
       <button
         type="button"
         onClick={() => navigate("/")}
-        className="px-6 py-2.5 bg-sky-600 dark:bg-sky-500 text-white rounded-xl hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors text-sm font-medium cursor-pointer shadow-sm"
+        className="px-6 py-2.5 bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors text-sm font-medium cursor-pointer shadow-sm"
       >
         Mua sắm ngay
       </button>

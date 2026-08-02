@@ -205,6 +205,7 @@ const LabelInput = ({
   id,
   className = "",
   rightElement,
+  square = false,
   ...props
 }) => (
   <div>
@@ -220,7 +221,7 @@ const LabelInput = ({
       <input
         id={id}
         required={required}
-        className={`w-full px-3 py-2 border rounded text-sm focus:outline-none transition-colors duration-200
+        className={`w-full px-3 py-2 border ${square ? "rounded-none" : "rounded"} text-sm focus:outline-none transition-colors duration-200
                    bg-slate-50 border-slate-300 text-slate-800 focus:border-sky-500 focus:bg-white
                    dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 ${
                      rightElement ? "pr-10" : ""

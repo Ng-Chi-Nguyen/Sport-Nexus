@@ -9,10 +9,13 @@ const ProvinceSelect = ({
   wards = [],
   wardValue,
   onWardChange,
+  square = false,
 }) => {
   const [provinceOpen, setProvinceOpen] = useState(false);
   const [wardOpen, setWardOpen] = useState(false);
   const { t } = useTranslation("translation", { keyPrefix: "component.common" });
+
+  const fieldClass = square ? "rounded-none" : "rounded";
 
   const provinceRef = useRef(null);
   const wardRef = useRef(null);
@@ -48,9 +51,9 @@ const ProvinceSelect = ({
             setProvinceOpen(!provinceOpen);
             setWardOpen(false);
           }}
-          className="w-full px-3 py-2 border rounded text-sm flex items-center justify-between transition-colors duration-200
+          className={`w-full px-3 py-2 border ${fieldClass} text-sm flex items-center justify-between transition-colors duration-200
                      bg-slate-50 border-slate-300 text-slate-800 focus:outline-none focus:border-sky-500 focus:bg-white
-                     dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50"
+                     dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50`}
         >
           <span
             className={
@@ -73,9 +76,9 @@ const ProvinceSelect = ({
 
         {provinceOpen && (
           <div
-            className="absolute z-20 mt-1 w-full rounded border shadow-lg max-h-48 overflow-y-auto custom-scrollbar
+            className={`absolute z-20 mt-1 w-full ${fieldClass} border shadow-lg max-h-48 overflow-y-auto custom-scrollbar
                           bg-white border-slate-200 
-                          dark:bg-[#0D121F] dark:border-slate-800 dark:shadow-2xl animate-in fade-in zoom-in-95 duration-150"
+                          dark:bg-[#0D121F] dark:border-slate-800 dark:shadow-2xl animate-in fade-in zoom-in-95 duration-150`}
           >
             {provinces.map((p) => (
               <button
@@ -113,11 +116,11 @@ const ProvinceSelect = ({
             setWardOpen(!wardOpen);
             setProvinceOpen(false);
           }}
-          className="w-full px-3 py-2 border rounded text-sm flex items-center justify-between transition-colors duration-200
+          className={`w-full px-3 py-2 border ${fieldClass} text-sm flex items-center justify-between transition-colors duration-200
                      bg-slate-50 border-slate-300 text-slate-800 focus:outline-none focus:border-sky-500 focus:bg-white
                      disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed
                      dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50
-                     dark:disabled:bg-slate-900/40 dark:disabled:text-slate-600"
+                     dark:disabled:bg-slate-900/40 dark:disabled:text-slate-600`}
         >
           <span
             className={
@@ -140,9 +143,9 @@ const ProvinceSelect = ({
 
         {wardOpen && (
           <div
-            className="absolute z-20 mt-1 w-full rounded border shadow-lg max-h-48 overflow-y-auto custom-scrollbar
+            className={`absolute z-20 mt-1 w-full ${fieldClass} border shadow-lg max-h-48 overflow-y-auto custom-scrollbar
                           bg-white border-slate-200 
-                          dark:bg-[#0D121F] dark:border-slate-800 dark:shadow-2xl animate-in fade-in zoom-in-95 duration-150"
+                          dark:bg-[#0D121F] dark:border-slate-800 dark:shadow-2xl animate-in fade-in zoom-in-95 duration-150`}
           >
             {wards.map((w) => (
               <button

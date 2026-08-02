@@ -14,7 +14,7 @@ import {
 import { formatDate, formatCurrency } from "@/utils/formatters";
 import { STATUS_LABELS, STATUS_PAYMENT } from "@/constants/order";
 import { STATUS_BADGE, PAYMENT_BADGE } from "@/constants/web/profile";
-import { toast } from "sonner";
+import ShowToast from "@/components/ui/toast";
 import userApi from "@/api/customer/userApi";
 
 const Profile = () => {
@@ -28,7 +28,7 @@ const Profile = () => {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      toast.error("Vui lòng chọn tệp hình ảnh hợp lệ!");
+      ShowToast("error", "Vui lòng chọn tệp hình ảnh hợp lệ!");
       return;
     }
 
@@ -40,12 +40,15 @@ const Profile = () => {
       if (newAvatarUrl) {
         const updatedUser = { ...user, avatar: newAvatarUrl };
         localStorage.setItem("user", JSON.stringify(updatedUser));
-        toast.success("Cập nhật ảnh đại diện thành công!");
+        ShowToast("success", "Cập nhật ảnh đại diện thành công!");
       } else {
-        toast.error("Không nhận được đường dẫn ảnh từ máy chủ!");
+        ShowToast("error", "Không nhận được đường dẫn ảnh từ máy chủ!");
       }
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Tải ảnh đại diện thất bại!");
+      ShowToast(
+        "error",
+        err?.response?.data?.message || "Tải ảnh đại diện thất bại!",
+      );
     } finally {
       setUploadingAvatar(false);
     }
@@ -66,7 +69,7 @@ const Profile = () => {
   return (
     <div className="space-y-8 font-sans text-slate-800 dark:text-slate-100 transition-colors duration-200">
       {/* Khối Thông Tin Tài Khoản */}
-      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-6">
+      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-6">
         <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
           <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
             Tài khoản
@@ -81,7 +84,7 @@ const Profile = () => {
         </div>
 
         <div className="flex items-center gap-6">
-          <div className="relative group w-20 h-20 rounded-full border-2 border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-50 dark:bg-slate-900 shrink-0 shadow-sm">
+          <div className="relative group w-20 h-20 border-2 border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-50 dark:bg-slate-900 shrink-0 shadow-sm">
             {user.avatar ? (
               <img
                 src={user.avatar}
@@ -127,7 +130,7 @@ const Profile = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl shadow-sm">
+          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 shadow-sm">
             <Mail
               size={16}
               className="text-sky-600 dark:text-sky-400 shrink-0"
@@ -142,7 +145,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl shadow-sm">
+          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 shadow-sm">
             <Phone
               size={16}
               className="text-emerald-600 dark:text-emerald-400 shrink-0"
@@ -157,7 +160,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl shadow-sm sm:col-span-2 lg:col-span-1">
+          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 shadow-sm sm:col-span-2 lg:col-span-1">
             <MapPin
               size={16}
               className="text-rose-600 dark:text-rose-400 shrink-0"
@@ -191,7 +194,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl shadow-sm">
+          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 shadow-sm">
             <ShieldCheck
               size={16}
               className="text-purple-600 dark:text-purple-400 shrink-0"
@@ -206,7 +209,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl shadow-sm">
+          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 shadow-sm">
             <BadgeCheck
               size={16}
               className={`${
@@ -227,7 +230,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl shadow-sm">
+          <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 shadow-sm">
             <Calendar
               size={16}
               className="text-amber-600 dark:text-amber-400 shrink-0"
@@ -245,7 +248,7 @@ const Profile = () => {
       </div>
 
       {/* Khối Đơn Hàng Của Bạn */}
-      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4">
+      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4">
         <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
           <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
             Đơn hàng gần đây
@@ -259,7 +262,7 @@ const Profile = () => {
         </div>
 
         {orders.length === 0 ? (
-          <div className="border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-[#111827]/40">
+          <div className="border border-slate-200 dark:border-slate-800 p-8 text-center text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-[#111827]/40">
             <p className="font-semibold mb-1 text-slate-700 dark:text-slate-300">
               Chưa có đơn hàng nào
             </p>
@@ -268,7 +271,7 @@ const Profile = () => {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl custom-scrollbar">
+          <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 custom-scrollbar">
             <table className="w-full text-sm text-left">
               <thead>
                 <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]/40 text-slate-700 dark:text-slate-300 font-semibold">
@@ -297,7 +300,7 @@ const Profile = () => {
                     </td>
                     <td className="py-3.5 px-4">
                       <span
-                        className={`inline-block px-2.5 py-1 rounded-md text-xs font-medium border ${PAYMENT_BADGE[order.payment_status] || ""}`}
+                        className={`inline-block px-2.5 py- text-xs font-medium border ${PAYMENT_BADGE[order.payment_status] || ""}`}
                       >
                         {STATUS_PAYMENT[order.payment_status] ||
                           order.payment_status}
@@ -305,7 +308,7 @@ const Profile = () => {
                     </td>
                     <td className="py-3.5 px-4">
                       <span
-                        className={`inline-block px-2.5 py-1 rounded-md text-xs font-medium border ${STATUS_BADGE[order.status] || ""}`}
+                        className={`inline-block px-2.5 py-1 text-xs font-medium border ${STATUS_BADGE[order.status] || ""}`}
                       >
                         {STATUS_LABELS[order.status] || order.status}
                       </span>

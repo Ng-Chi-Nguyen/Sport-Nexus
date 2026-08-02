@@ -12,9 +12,12 @@ import { useCoupons } from "@/contexts/CouponContext";
 import { formatDate, formatCurrency } from "@/utils/formatters";
 import { SportNexusLogoIcon } from "@/components/logo";
 import { useTranslation } from "react-i18next";
+import { printElement } from "@/utils/printUtils";
 
-const CouponCard = ({ coupon }) => {
-  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
+const CouponCard = ({ coupon, showPrint = true }) => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
   const { isSaved, toggleSave } = useCoupons();
   const [copiedCode, setCopiedCode] = useState(null);
   const [now] = useState(() => Date.now());
@@ -42,93 +45,18 @@ const CouponCard = ({ coupon }) => {
     setTimeout(() => setCopiedCode(null), 2000);
   };
 
-  // Logic in tháº» giá»‘ng há»‡t 100% giao diá»‡n mĂ n hĂ¬nh
-  // Logic in phiáº¿u vá»«a váº·n kĂ­ch thÆ°á»›c tháº­t
   const handlePrint = () => {
-    if (disabled) return;
+    if (disabled || !showPrint) return;
 
     const couponElement = document.getElementById(`coupon-card-${coupon.code}`);
     if (!couponElement) return;
 
-    const printWindow = window.open("", "_blank", "width=800,height=600");
-    if (!printWindow) return;
-
-    // Thu tháº­p táº¥t cáº£ StyleSheet/Tailwind tá»« document chĂ­nh
-    const styleSheets = Array.from(document.styleSheets)
-      .map((sheet) => {
-        try {
-          return Array.from(sheet.cssRules)
-            .map((rule) => rule.cssText)
-            .join("");
-        } catch (e) {
-          return "";
-        }
-      })
-      .join("");
-
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>In Phiáº¿u Giáº£m GiĂ¡ - ${coupon.code}</title>
-          <style>
-            ${styleSheets}
-            
-            /* THIáº¾T Láº¬P KHá»” GIáº¤Y Vá»ªA Váº¶N MĂY IN */
-            @page {
-              size: 105mm 45mm; /* KĂ­ch thÆ°á»›c vá»«a khĂ­t phiáº¿u */
-              margin: 0;       /* Loáº¡i bá» lá» tráº¯ng máº·c Ä‘á»‹nh cá»§a mĂ¡y in */
-            }
-
-            html, body {
-              width: 100%;
-              height: 100%;
-              margin: 0;
-              padding: 0;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              background-color: #ffffff;
-              -webkit-print-color-adjust: exact !important;
-              print-color-adjust: exact !important;
-            }
-
-            /* Container Ă´m sĂ¡t phiáº¿u */
-            .print-container {
-              width: 100mm;
-              height: 40mm;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            }
-
-            /* Ă‰p tháº» coupon láº¥p Ä‘áº§y khung in */
-            .print-container > div {
-              width: 100% !important;
-              height: 100% !important;
-              box-shadow: none !important;
-            }
-
-            .no-print {
-              display: none !important;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="print-container">
-            ${couponElement.outerHTML}
-          </div>
-          <script>
-            setTimeout(() => {
-              window.print();
-              window.close();
-            }, 300);
-          </script>
-        </body>
-      </html>
-    `);
-
-    printWindow.document.close();
+    printElement(couponElement, {
+      title: `In Phiếu Giảm Giá - ${coupon.code}`,
+      pageSize: "105mm 45mm",
+      containerWidth: "100mm",
+      containerHeight: "40mm",
+    });
   };
 
   return (
@@ -173,7 +101,7 @@ const CouponCard = ({ coupon }) => {
         aria-hidden="true"
       />
 
-      {/* Badge Tráº¡ng thĂ¡i */}
+      {/* Badge Trạng thái */}
       {statusLabel && (
         <span className="absolute top-1.5 right-2 z-10 rounded-full bg-black/30 px-2 py-0.5 text-[9px] font-semibold backdrop-blur-sm">
           {statusLabel}
@@ -181,20 +109,22 @@ const CouponCard = ({ coupon }) => {
       )}
 
       <div className="relative flex h-full items-stretch">
-        {/* Cá»™t TrĂ¡i: NĂºt In + GiĂ¡ trá»‹ giáº£m */}
+        {/* Cột Trái: Nút In + Giá trị giảm */}
         <div className="flex w-[115px] shrink-0 flex-col justify-center items-center gap-0.5 px-1 py-2 text-center border-r border-dashed border-white/30">
-          {/* NĂºt In phiáº¿u (áº¨n khi in ra giáº¥y nhá» class no-print) */}
-          <button
-            onClick={handlePrint}
-            disabled={disabled}
-            className="no-print inline-flex items-center justify-center gap-1 px-2 py-0.5 mb-1 rounded border border-white/60 bg-white/10 hover:bg-white hover:text-blue-600 text-[10px] font-semibold text-white transition-colors"
-            title={t("print_store_voucher")}
-          >
-            <Printer className="w-3 h-3" />
-            <span>{t("print_voucher")}</span>
-          </button>
+          {/* Nút In phiếu (Chỉ hiển thị khi showPrint = true) */}
+          {showPrint && (
+            <button
+              onClick={handlePrint}
+              disabled={disabled}
+              className="no-print inline-flex items-center justify-center gap-1 px-2 py-0.5 mb-1 rounded border border-white/60 bg-white/10 hover:bg-white hover:text-blue-600 text-[10px] font-semibold text-white transition-colors cursor-pointer"
+              title={t("print_store_voucher")}
+            >
+              <Printer className="w-3 h-3" />
+              <span>{t("print_voucher")}</span>
+            </button>
+          )}
 
-          <span className="text-[10px] font-medium uppercase tracking-wider text-white/80">
+          <span className="text-[10px] font-medium uppercase tracking-wider text-white/85">
             {t("discount_voucher")}
           </span>
           <span className="text-xl font-black leading-none drop-shadow-sm my-0.5">
@@ -202,14 +132,14 @@ const CouponCard = ({ coupon }) => {
               ? `-${coupon.discount_value}%`
               : `-${formatCurrency(coupon.discount_value)}`}
           </span>
-          <span className="text-[10px] font-medium uppercase tracking-tight text-white/80">
+          <span className="text-[10px] font-medium uppercase tracking-tight text-white/85">
             {t("on_order")}
           </span>
         </div>
 
-        {/* Cá»™t Pháº£i: ThĂ´ng tin & HĂ nh Ä‘á»™ng */}
+        {/* Cột Phải: Thông tin & Hành động */}
         <div className="flex flex-1 flex-col justify-between p-2.5 pl-3.5">
-          {/* HĂ ng 1: MĂ£ Code + NĂºt Sao chĂ©p */}
+          {/* Hàng 1: Mã Code + Nút Sao chép */}
           <div className="flex items-center gap-1.5 h-7">
             <span className="flex-1 truncate rounded bg-white/15 px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white text-center">
               {coupon.code}
@@ -217,7 +147,7 @@ const CouponCard = ({ coupon }) => {
             <button
               onClick={handleCopy}
               disabled={disabled}
-              className="no-print shrink-0 inline-flex items-center justify-center gap-1 h-full rounded border border-white/60 px-2 text-[10px] font-semibold text-white hover:bg-white hover:text-blue-600 transition-colors"
+              className="no-print shrink-0 inline-flex items-center justify-center gap-1 h-full rounded border border-white/60 px-2 text-[10px] font-semibold text-white hover:bg-white hover:text-blue-600 transition-colors cursor-pointer"
             >
               {copiedCode === coupon.code ? (
                 <>
@@ -233,27 +163,23 @@ const CouponCard = ({ coupon }) => {
             </button>
           </div>
 
-          {/* HĂ ng 2: Chi tiáº¿t Ä‘iá»u kiá»‡n */}
-          <div className="flex flex-col gap-0.5 text-[11px] text-white/90 leading-tight my-auto">
+          {/* Hàng 2: Chi tiết điều kiện */}
+          <div className="flex flex-col gap-0.5 text-[11px] text-white/95 leading-tight my-auto">
             <p className="truncate">
               {coupon.discount_type === "PERCENTAGE"
-                ? `${t("max_discount")} ${formatCurrency(
-                    coupon.max_discount,
-                  )}`
+                ? `${t("max_discount")} ${formatCurrency(coupon.max_discount)}`
                 : t("direct_discount")}
             </p>
             <p className="truncate">
-              {t("min_order")}{" "}
-              {formatCurrency(coupon.min_order_value)}
+              {t("min_order")} {formatCurrency(coupon.min_order_value)}
             </p>
             <p className="truncate">
-              {t("expiry")}:{" "}
-              {formatDate(coupon.end_date)} Â· {coupon.usage_count}/
-              {coupon.usage_limit}
+              {t("expiry")}: {formatDate(coupon.end_date)} ·{" "}
+              {coupon.usage_count}/{coupon.usage_limit}
             </p>
           </div>
 
-          {/* HĂ ng 3: NĂºt LÆ°u / ÄĂ£ lÆ°u + XĂ³a (áº¨n khi in nhá» class no-print) */}
+          {/* Hàng 3: Nút Lưu / Đã lưu + Xóa */}
           <div className="no-print h-7 w-full">
             {saved ? (
               <div className="flex h-full w-full items-stretch rounded-lg overflow-hidden border border-white shadow-sm">
@@ -265,7 +191,7 @@ const CouponCard = ({ coupon }) => {
                   onClick={() => toggleSave(coupon)}
                   disabled={disabled}
                   title={t("remove_from_saved")}
-                  className="flex items-center justify-center bg-blue-600/80 hover:bg-red-600 px-2.5 text-white/90 hover:text-white transition-colors border-l border-blue-400/30"
+                  className="flex items-center justify-center bg-blue-600/80 hover:bg-red-600 px-2.5 text-white/90 hover:text-white transition-colors border-l border-blue-400/30 cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -274,7 +200,7 @@ const CouponCard = ({ coupon }) => {
               <button
                 onClick={() => toggleSave(coupon)}
                 disabled={disabled}
-                className="h-full w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-white/60 bg-white/5 px-2.5 text-[11px] font-semibold text-white transition-all hover:bg-white/15 disabled:cursor-not-allowed"
+                className="h-full w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-white/60 bg-white/5 px-2.5 text-[11px] font-semibold text-white transition-all hover:bg-white/15 disabled:cursor-not-allowed cursor-pointer"
               >
                 <Bookmark className="w-3.5 h-3.5" />
                 <span>{t("save_code")}</span>

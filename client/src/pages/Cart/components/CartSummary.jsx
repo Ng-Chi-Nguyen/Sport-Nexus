@@ -21,7 +21,7 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
   const shipping = subtotal >= 500000 ? 0 : 30000;
 
   return (
-    <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4 transition-colors duration-200 text-slate-800 dark:text-slate-100">
+    <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4 transition-colors duration-200 text-slate-800 dark:text-slate-100">
       <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wide">
         Tổng cộng
       </h3>
@@ -32,13 +32,13 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
           value={couponCode}
           onChange={(e) => setCouponCode(e.target.value)}
           placeholder="Mã giảm giá"
-          className="flex-1 px-3.5 py-2.5 text-sm bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-sky-500 dark:focus:border-sky-500 transition-colors"
+          className="flex-1 px-3.5 py-2.5 text-sm bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 focus:outline-none focus:border-sky-500 dark:focus:border-sky-500 transition-colors"
         />
         <button
           type="button"
           onClick={() => applyCoupon(subtotal, couponCode)}
           disabled={couponLoading || !couponCode}
-          className="px-4 py-2.5 bg-sky-600 dark:bg-sky-500 text-white text-sm font-medium rounded-xl hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm shrink-0"
+          className="px-4 py-2.5 bg-sky-600 dark:bg-sky-500 text-white text-sm font-medium hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm shrink-0"
         >
           {couponLoading ? "Đang xử lý..." : "Áp dụng"}
         </button>
@@ -89,7 +89,7 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
         type="button"
         onClick={() => onCheckout(selectedItems)}
         disabled={selectedItems.length === 0}
-        className="w-full py-3 bg-amber-500 dark:bg-amber-600 text-white rounded-xl hover:bg-amber-600 dark:hover:bg-amber-500 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
+        className="w-full py-3 bg-amber-500 dark:bg-amber-600 text-white hover:bg-amber-600 dark:hover:bg-amber-500 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
       >
         Tiến hành thanh toán ({selectedItems.length} sản phẩm)
       </button>
