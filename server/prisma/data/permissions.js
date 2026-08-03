@@ -31,6 +31,7 @@ export const couponPermissions = [
   { slug: 'sua-ma-giam-gia', name: 'Sửa mã giảm giá', module: 'coupons', action: 'sua' },
   { slug: 'xoa-ma-giam-gia', name: 'Xóa mã giảm giá', module: 'coupons', action: 'xoa' },
   { slug: 'xem-ma-giam-gia', name: 'Xem mã giảm giá', module: 'coupons', action: 'xem' },
+  { slug: 'tang-ma-giam-gia', name: 'Tặng mã giảm giá', module: 'coupons', action: 'tang' },
 ];
 
 export const stockPermissions = [

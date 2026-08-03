@@ -2,7 +2,7 @@ export const ROLE_DEFAULT_PERMISSIONS = {
   admin: [],
   sales_staff: [
     "them-don-hang", "sua-don-hang", "xem-don-hang",
-    "them-ma-giam-gia", "sua-ma-giam-gia", "xem-ma-giam-gia",
+    "them-ma-giam-gia", "sua-ma-giam-gia", "xem-ma-giam-gia", "tang-ma-giam-gia",
     "them-danh-gia", "sua-danh-gia", "xem-danh-gia",
     "xem-san-pham", "xem-bien-the-san-pham", "xem-danh-muc", "xem-thuong-hieu",
   ],
