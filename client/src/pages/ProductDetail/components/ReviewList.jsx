@@ -4,7 +4,7 @@ import { formatDate } from "@/utils/formatters";
 const ReviewItem = ({ review }) => (
   <div className="pb-4 border-b border-slate-200 dark:border-slate-800 last:border-b-0">
     <div className="flex items-center gap-3 mb-2">
-      <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden shrink-0">
+      <div className="w-8 h-8 bg-slate-200 dark:bg-slate-800 overflow-hidden shrink-0">
         {review.user?.avatar ? (
           <img
             src={review.user.avatar}

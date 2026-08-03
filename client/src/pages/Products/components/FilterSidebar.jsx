@@ -15,7 +15,7 @@ const SHOE_SIZES = Array.from({ length: 7 }, (_, i) => String(35 + i));
 const CLOTHING_SIZES = ["XS", "S", "M", "L", "XL", "2XL", "3XL"];
 
 const CheckboxGroup = ({ title, options, selected, onChange }) => (
-  <div className="bg-white dark:bg-[#0D121F]/40 rounded-2xl border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md p-4 min-w-[180px] transition-colors duration-200">
+  <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md p-4 min-w-[180px] transition-colors duration-200">
     <h4 className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">
       {title}
     </h4>
@@ -124,7 +124,7 @@ const FilterBar = ({
   };
 
   return (
-    <div className="bg-white dark:bg-[#0D121F]/40 rounded-2xl border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200 text-slate-800 dark:text-slate-100">
+    <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200 text-slate-800 dark:text-slate-100">
       <div className="flex items-center justify-between px-5 py-3 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center gap-3">
           <button
@@ -149,7 +149,7 @@ const FilterBar = ({
               value={searchInput}
               onChange={(e) => handleSearchInput(e.target.value)}
               placeholder="Tìm sản phẩm..."
-              className="w-52 pl-9 pr-8 py-1.5 text-[13px] rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-[#111827]/40 outline-none focus:border-sky-500 dark:focus:border-sky-500 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-colors shadow-sm"
+              className="w-52 pl-9 pr-8 py-1.5 text-[13px] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-[#111827]/40 outline-none focus:border-sky-500 dark:focus:border-sky-500 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-colors shadow-sm"
             />
             {searchInput && (
               <button
@@ -168,7 +168,7 @@ const FilterBar = ({
             <button
               type="button"
               onClick={onClear}
-              className="text-[12px] font-semibold text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 border border-sky-300 dark:border-sky-500/30 hover:bg-sky-50 dark:hover:bg-sky-500/10 rounded-xl px-3.5 py-1.5 transition-colors cursor-pointer shadow-sm"
+              className="text-[12px] font-semibold text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 border border-sky-300 dark:border-sky-500/30 hover:bg-sky-50 dark:hover:bg-sky-500/10 px-3.5 py-1.5 transition-colors cursor-pointer shadow-sm"
             >
               Xóa bộ lọc
             </button>

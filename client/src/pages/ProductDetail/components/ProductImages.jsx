@@ -19,7 +19,7 @@ const ProductImages = ({ thumbnail, images }) => {
               key={i}
               type="button"
               onClick={() => setSelected(i)}
-              className={`w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-xl overflow-hidden border-2 transition-all cursor-pointer shadow-sm ${
+              className={`w-14 h-14 md:w-16 md:h-16 shrink-0 overflow-hidden border-2 transition-all cursor-pointer shadow-sm ${
                 i === selected
                   ? "border-sky-500 shadow-sky-500/20"
                   : "border-slate-200 dark:border-slate-800 hover:border-sky-300 dark:hover:border-sky-500/50 bg-slate-50 dark:bg-[#111827]/40"
@@ -34,7 +34,7 @@ const ProductImages = ({ thumbnail, images }) => {
           ))}
         </div>
       )}
-      <div className="w-80 h-80 md:w-96 md:h-96 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-900 bg-white dark:bg-[#0D121F]/40 shadow-xl dark:shadow-2xl backdrop-blur-md flex items-center justify-center">
+      <div className="w-80 h-80 md:w-96 md:h-96 overflow-hidden border border-slate-200 dark:border-slate-900 bg-white dark:bg-[#0D121F]/40 shadow-xl dark:shadow-2xl backdrop-blur-md flex items-center justify-center">
         {list[selected]?.url ? (
           <img
             src={list[selected].url}

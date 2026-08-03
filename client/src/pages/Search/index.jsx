@@ -5,6 +5,7 @@ import searchApi from "@/api/web/searchApi";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { ProductCard } from "@/components/ui/card";
+import { TitleWithIcon } from "@/components/ui/title";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -56,9 +57,7 @@ const SearchPage = () => {
           ]}
         />
 
-        <h1 className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 mt-6 mb-2 tracking-tight">
-          Kết quả tìm kiếm cho &ldquo;{q}&rdquo;
-        </h1>
+        <TitleWithIcon icon={Search} title={`Kết quả tìm kiếm cho "${q}"`} />
         {pagination && (
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 font-medium">
             {pagination.totalItems} kết quả

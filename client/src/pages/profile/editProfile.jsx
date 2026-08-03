@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Loader2, Camera, User } from "lucide-react";
+import { ArrowLeft, Loader2, Camera, User, UserCog } from "lucide-react";
 import ShowToast from "@/components/ui/toast";
 import userApi from "@/api/customer/userApi";
+import { TitleWithIcon } from "@/components/ui/title";
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -65,9 +66,7 @@ const EditProfile = () => {
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
-            Chỉnh sửa thông tin cá nhân
-          </h2>
+          <TitleWithIcon icon={UserCog} title="Chỉnh sửa thông tin cá nhân" />
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Cập nhật chi tiết hồ sơ tài khoản của bạn
           </p>

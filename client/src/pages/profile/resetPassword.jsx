@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, KeyRound } from "lucide-react";
 import { LabelInput } from "@/components/ui/input";
 import { BtnSave } from "@/components/ui/button";
 import ShowToast from "@/components/ui/toast";
 import axiosClient from "@/lib/axiosClient";
+import { TitleWithIcon } from "@/components/ui/title";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -85,16 +86,14 @@ const ResetPassword = () => {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="p-1.5 rounded text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+          className="p-1.5 rounded text-slate-500 hover:text-slate-800 hover:bg-blue-500 transition-colors"
           title="Quay lại"
         >
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900">
-            Đổi mật khẩu
-          </h2>
-          <p className="text-xs text-slate-500">
+          <TitleWithIcon icon={KeyRound} title="Đổi mật khẩu" />
+          <p className="text-xs text-slate-500 -mt-5">
             Cập nhật mật khẩu đăng nhập tài khoản của bạn
           </p>
         </div>
@@ -105,7 +104,7 @@ const ResetPassword = () => {
         {renderPass("new_password", "Mật khẩu mới", 6)}
         {renderPass("confirm_password", "Xác nhận mật khẩu mới", 6)}
 
-        <div className="flex items-center gap-3 pt-4 border-t border-slate-200">
+        <div className="flex items-center gap-3 pt-4">
           <BtnSave loading={loading} className="flex-1">
             Đổi mật khẩu
           </BtnSave>

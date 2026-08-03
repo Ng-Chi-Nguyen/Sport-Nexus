@@ -6,14 +6,16 @@ import {
   PAYMENT_BADGE,
   PAYMENT_METHOD_LABELS,
 } from "@/constants/web/profile";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, PackageCheck } from "lucide-react";
+import { TitleWithIcon } from "@/components/ui/title";
+import Badge from "@/components/ui/badge";
 
 const OrderDetail = () => {
   const { order } = useLoaderData();
 
   if (!order) {
     return (
-      <div className="text-center py-16 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md">
+      <div className="text-center py-16 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md">
         <p className="text-slate-500 dark:text-slate-400 font-medium">
           Không tìm thấy đơn hàng
         </p>
@@ -26,6 +28,20 @@ const OrderDetail = () => {
       </div>
     );
   }
+
+  const ORDER_COLOR_MAP = {
+    pending: "warning", // Chờ xử lý (màu vàng/cam)
+    confirmed: "info", // Đã xác nhận (màu xanh dương)
+    shipping: "indigo", // Đang giao hàng (màu chàm)
+    completed: "success", // Hoàn thành (màu xanh lá)
+    cancelled: "error", // Đã hủy (màu đỏ)
+  };
+  const PAYMENT_COLOR_MAP = {
+    Paid: "success", // Đã thanh toán (màu xanh lá)
+    Pending: "warning", // Chờ thanh toán (màu vàng/cam)
+    Failed: "error", // Thất bại (màu đỏ)
+    Refunded: "purple", // Hoàn tiền (màu tím)
+  };
 
   const paymentMethodLabel =
     PAYMENT_METHOD_LABELS[order.payment_method] || order.payment_method;
@@ -40,18 +56,14 @@ const OrderDetail = () => {
         Quay lại đơn hàng
       </Link>
 
-      <div className="flex items-center justify-between flex-wrap gap-4 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md">
-        <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
-          Đơn hàng #{order.id}
-        </h2>
-        <span
-          className={`inline-block px-3 py-1 rounded-md text-sm font-medium border ${STATUS_BADGE[order.status] || ""}`}
-        >
+      <div className="flex items-center justify-between flex-wrap gap-4 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md">
+        <TitleWithIcon icon={PackageCheck} title={`Đơn hàng #${order.id}`} />
+        <Badge color={ORDER_COLOR_MAP[order.status] || "gray"}>
           {STATUS_LABELS[order.status] || order.status}
-        </span>
+        </Badge>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md">
         <div className="space-y-1">
           <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
             Ngày đặt
@@ -72,11 +84,9 @@ const OrderDetail = () => {
           <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
             Trạng thái thanh toán
           </p>
-          <span
-            className={`inline-block px-2.5 py-1 rounded-md text-xs font-medium border ${PAYMENT_BADGE[order.payment_status] || ""}`}
-          >
+          <Badge color={PAYMENT_COLOR_MAP[order.payment_status] || "gray"}>
             {STATUS_PAYMENT[order.payment_status] || order.payment_status}
-          </span>
+          </Badge>
         </div>
         <div className="space-y-1">
           <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
@@ -124,11 +134,11 @@ const OrderDetail = () => {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4">
+      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4">
         <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
           Sản phẩm đã đặt
         </h3>
-        <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl custom-scrollbar">
+        <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 custom-scrollbar">
           <table className="w-full text-sm table-fixed">
             <colgroup>
               <col className="w-1/2" />

@@ -25,20 +25,20 @@ export default {
         'tiny': ['0.625rem', { lineHeight: '1rem' }],
       },
       colors: {
-        primary: '#4facf3',
+        primary: '#4421f6',
         // Tối ưu hóa hệ thống màu sắc
         light: {
           bg: '#f8fafc',      // Slate 50
           sidebar: '#ffffff', // Trắng thuần
           border: '#e2e8f0',   // Slate 200
-          text: '#0f172a',     // Slate 900
+          text: '#0f172a',    // Slate 900
           muted: '#64748b',    // Slate 500
         },
         dark: {
           bg: '#080C14',       // Xám đen sâu
           sidebar: '#0D121F',  // Sidebar tối
           border: '#1e293b',   // Slate 800
-          text: '#f8fafc',     // Slate 50
+          text: '#f8fafc',    // Slate 50
           muted: '#94a3b8',    // Slate 400
         }
       },
@@ -61,12 +61,17 @@ export default {
           '0%': { transform: 'rotate(var(--r)) translateX(0) scale(1)', opacity: '1' },
           '100%': { transform: 'rotate(var(--r)) translateX(30px) scale(0)', opacity: '0' }
         },
+        infiniteScroll: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' }
+        }
       },
       animation: {
         border1: 'borderFlow1 2s linear infinite',
         border2: 'borderFlow2 2s linear infinite',
         border3: 'borderFlow3 2s linear infinite',
         border4: 'borderFlow4 2s linear infinite',
+        'infinite-scroll': 'infiniteScroll 30s linear infinite',
       }
     },
   },

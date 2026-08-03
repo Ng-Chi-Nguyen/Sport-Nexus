@@ -1,9 +1,10 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { Plus, Pencil, Trash2, MapPin, Check } from "lucide-react";
+import { Plus, Pencil, Trash2, MapPin, Check, BookUser } from "lucide-react";
 import ShowToast from "@/components/ui/toast";
 import addressApi from "@/api/customer/addressApi";
 import Badge from "@/components/ui/badge";
 import { TYPE_LABEL, TYPE_ICON } from "@/constants/web/profile";
+import { TitleWithIcon } from "@/components/ui/title";
 
 const AddressList = () => {
   const navigate = useNavigate();
@@ -56,9 +57,7 @@ const AddressList = () => {
     <div className="text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div className="flex-1">
-          <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
-            Sổ địa chỉ
-          </h2>
+          <TitleWithIcon icon={BookUser} title="Sổ địa chỉ" />
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Quản lý địa chỉ giao hàng của bạn
           </p>

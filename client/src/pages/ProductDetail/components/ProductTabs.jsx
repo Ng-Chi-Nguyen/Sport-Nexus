@@ -34,7 +34,7 @@ const DescriptionTab = ({ description }) => {
         <button
           type="button"
           onClick={() => setExpanded((p) => !p)}
-          className="mt-2 flex items-center gap-1 text-sm font-medium text-sky-600 dark:text-sky-400 bg-white dark:bg-[#111827]/60 py-1.5 px-4 border border-sky-200 dark:border-sky-500/30 rounded-full hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all shadow-sm cursor-pointer"
+          className="mt-2 flex items-center gap-1 text-sm font-medium text-sky-600 dark:text-sky-400 bg-white dark:bg-[#111827]/60 py-1.5 px-4 border border-sky-200 dark:border-sky-500/30 hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all shadow-sm cursor-pointer"
         >
           {expanded ? (
             <>

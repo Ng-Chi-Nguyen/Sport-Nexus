@@ -5,6 +5,8 @@ import { useCart } from "@/contexts/CartContext";
 import CartItem from "./components/CartItem";
 import CartSummary from "./components/CartSummary";
 import EmptyCart from "./components/EmptyCart";
+import { TitleWithIcon } from "@/components/ui/title";
+import { ShoppingBag } from "lucide-react";
 
 const CartPage = () => {
   const { items, updateQty, removeItem, count } = useCart();
@@ -36,17 +38,14 @@ const CartPage = () => {
 
   return (
     <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 mt-[30px]">
         <Breadcrumbs
           data={[
             { title: "Trang chủ", route: "/" },
             { title: "Giỏ hàng", route: "" },
           ]}
         />
-        <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-4 mb-6">
-          Giỏ hàng ({count} sản phẩm)
-        </h1>
-
+        <TitleWithIcon icon={ShoppingBag} title={`Giỏ hàng`} />
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
           <div className="md:col-span-3 space-y-3">
             <div className="flex items-center gap-3 px-1 py-2">

@@ -3,6 +3,9 @@ import { formatDate, formatCurrency } from "@/utils/formatters";
 import { STATUS_LABELS, STATUS_PAYMENT } from "@/constants/order";
 import { STATUS_BADGE, PAYMENT_BADGE } from "@/constants/web/profile";
 import Pagination from "@/components/ui/pagination";
+import { Package } from "lucide-react";
+import { TitleWithIcon } from "@/components/ui/title";
+import Badge from "@/components/ui/badge";
 
 const Order = () => {
   const { orders, pagination, user } = useLoaderData();
@@ -18,12 +21,24 @@ const Order = () => {
     setSearchParams({ page: String(page) });
   };
 
+  const PAYMENT_COLOR_MAP = {
+    Paid: "success",
+    Pending: "warning",
+    Failed: "error",
+    Refunded: "purple",
+  };
+
+  const ORDER_COLOR_MAP = {
+    completed: "success",
+    pending: "warning",
+    cancelled: "error",
+    shipping: "info",
+  };
+
   return (
     <div className="text-slate-800 dark:text-slate-100 transition-colors duration-200">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
-          Đơn hàng của tôi
-        </h2>
+      <div className="flex items-center justify-between">
+        <TitleWithIcon icon={Package} title="Đơn hàng của tôi" />
       </div>
 
       {orders.length === 0 ? (
@@ -37,7 +52,7 @@ const Order = () => {
         </div>
       ) : (
         <div className="space-y-6">
-          <div className="overflow-x-auto border border-slate-200 dark:border-slate-900 rounded-2xl bg-white dark:bg-[#0D121F]/40 shadow-xl dark:shadow-2xl backdrop-blur-md custom-scrollbar">
+          <div className="overflow-x-auto border border-slate-200 dark:border-slate-900 bg-white dark:bg-[#0D121F]/40 shadow-xl dark:shadow-2xl backdrop-blur-md custom-scrollbar">
             <table className="w-full text-sm text-left">
               <thead>
                 <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]/40 text-slate-700 dark:text-slate-300 font-semibold">
@@ -65,19 +80,30 @@ const Order = () => {
                       {formatCurrency(order.final_amount)}
                     </td>
                     <td className="py-3.5 px-4">
-                      <span
-                        className={`inline-block px-2.5 py-1 rounded-md text-xs font-medium border ${PAYMENT_BADGE[order.payment_status] || ""}`}
+                      <Badge
+                        color={
+                          order.payment_status === "Paid"
+                            ? "success"
+                            : "warning"
+                        }
                       >
                         {STATUS_PAYMENT[order.payment_status] ||
                           order.payment_status}
-                      </span>
+                      </Badge>
                     </td>
+
                     <td className="py-3.5 px-4">
-                      <span
-                        className={`inline-block px-2.5 py-1 rounded-md text-xs font-medium border ${STATUS_BADGE[order.status] || ""}`}
+                      <Badge
+                        color={
+                          order.status === "completed"
+                            ? "success"
+                            : order.status === "cancelled"
+                              ? "error"
+                              : "nexus"
+                        }
                       >
                         {STATUS_LABELS[order.status] || order.status}
-                      </span>
+                      </Badge>
                     </td>
                   </tr>
                 ))}

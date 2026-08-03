@@ -10,12 +10,14 @@ import {
   Calendar,
   ShieldCheck,
   BadgeCheck,
+  UserCheck,
 } from "lucide-react";
 import { formatDate, formatCurrency } from "@/utils/formatters";
 import { STATUS_LABELS, STATUS_PAYMENT } from "@/constants/order";
 import { STATUS_BADGE, PAYMENT_BADGE } from "@/constants/web/profile";
 import ShowToast from "@/components/ui/toast";
 import userApi from "@/api/customer/userApi";
+import { TitleWithIcon } from "@/components/ui/title";
 
 const Profile = () => {
   const { user, orders, addresses } = useLoaderData();
@@ -71,9 +73,7 @@ const Profile = () => {
       {/* Khối Thông Tin Tài Khoản */}
       <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-6">
         <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
-          <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
-            Tài khoản
-          </h2>
+          <TitleWithIcon icon={UserCheck} title="Tài khoản" />
           <Link
             to="/tai-khoan/chinh-sua-thong-tin-ca-nhan"
             className="flex items-center gap-1.5 text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 text-sm font-semibold transition-colors"

@@ -62,6 +62,28 @@ const ProductDetail = () => {
     return Object.values(map);
   }, [variants]);
 
+  const availableValues = useMemo(() => {
+    const result = {};
+    attrKeys.forEach((k) => {
+      result[k.name] = new Set();
+    });
+    const entries = Object.entries(selectedAttrs);
+    attrKeys.forEach((attr) => {
+      const others = entries.filter(([k]) => k !== attr.name);
+      variants.forEach((v) => {
+        if (Number(v.stock || 0) <= 0) return;
+        const attrs = v.VariableAttributes || [];
+        const matchesOthers = others.every(([k, val]) =>
+          attrs.some((va) => va.attributeKey.name === k && va.value === val),
+        );
+        if (!matchesOthers) return;
+        const va = attrs.find((a) => a.attributeKey.name === attr.name);
+        if (va) result[attr.name].add(va.value);
+      });
+    });
+    return result;
+  }, [variants, selectedAttrs, attrKeys]);
+
   const selectedVariant = useMemo(() => {
     const entries = Object.entries(selectedAttrs);
     if (entries.length === 0 || entries.length < attrKeys.length) return null;
@@ -84,7 +106,22 @@ const ProductDetail = () => {
         ? Number(product.base_price)
         : 0;
 
-  const currentStock = selectedVariant?.stock ?? null;
+  const currentStock = useMemo(() => {
+    if (selectedVariant) return Number(selectedVariant.stock ?? 0);
+    if (variants.length === 0) return null;
+    const entries = Object.entries(selectedAttrs);
+    let pool = variants;
+    for (const [key, val] of entries) {
+      pool = pool.filter((v) =>
+        (v.VariableAttributes || []).some(
+          (va) => va.attributeKey.name === key && va.value === val,
+        ),
+      );
+    }
+    if (pool.length === 0) return null;
+    return pool.reduce((sum, v) => sum + Number(v.stock || 0), 0);
+  }, [selectedVariant, selectedAttrs, variants]);
+
   const maxStock = currentStock ?? 999;
 
   const handleAddToCart = useCallback(() => {
@@ -168,7 +205,7 @@ const ProductDetail = () => {
             images={product.ProductImages}
           />
 
-          <div className="space-y-6 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md">
+          <div className="space-y-6 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md">
             <ProductInfo
               product={product}
               avgRating={avgRating}
@@ -180,8 +217,14 @@ const ProductDetail = () => {
             <VariantSelector
               attrKeys={attrKeys}
               selectedAttrs={selectedAttrs}
+              availableValues={availableValues}
               onSelect={(key, value) => {
-                setSelectedAttrs((prev) => ({ ...prev, [key]: value }));
+                setSelectedAttrs((prev) => {
+                  const next = { ...prev };
+                  if (value === "") delete next[key];
+                  else next[key] = value;
+                  return next;
+                });
                 setQuantity(1);
               }}
             />
@@ -218,7 +261,7 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        <div className="mt-8 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md">
+        <div className="mt-8 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md">
           <ProductTabs description={product.description} />
           <ReviewList reviews={ratings} />
         </div>
