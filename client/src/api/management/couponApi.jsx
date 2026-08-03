@@ -24,6 +24,11 @@ const couponApi = {
     const url = `/management/coupon/check`;
     return axiosClient.post(url, data);
   },
+
+  gift: (data) => {
+    const url = "/management/coupon/gift";
+    return axiosClient.post(url, data);
+  },
 };
 
 export default couponApi;

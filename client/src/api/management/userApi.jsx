@@ -1,6 +1,11 @@
 import axiosClient from "@/lib/axiosClient";
 
 const userApi = {
+  getAll: (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    const url = `/management/user${query ? `?${query}` : ""}`;
+    return axiosClient.get(url);
+  },
   create: (data) => {
     const url = "/management/user";
     return axiosClient.post(url, data, {
