@@ -1,4 +1,4 @@
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { Outlet, useLocation, useLoaderData } from "react-router-dom";
 
 import Header from "@/components/header";
@@ -22,6 +22,23 @@ function App() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const lastPathRef = useRef(null);
+  const savedScrollRef = useRef({});
+
+  useEffect(() => {
+    if (lastPathRef.current != null) {
+      savedScrollRef.current[lastPathRef.current] = window.scrollY;
+    }
+    lastPathRef.current = location.pathname;
+
+    if (location.pathname === "/") {
+      const saved = savedScrollRef.current["/"] ?? 0;
+      requestAnimationFrame(() => window.scrollTo(0, saved));
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname]);
 
   // Kiểm tra nếu đường dẫn bắt đầu bằng "/management"
   // Bạn có thể thêm các đường dẫn khác vào mảng này

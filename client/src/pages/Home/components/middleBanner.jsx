@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import logoDefault from "@/assets/images/logodefault.jpg";
+import logoDefault from "@/assets/images/logo-sportnexus-dark-icon.svg";
 
 export const MiddleBanner = ({ brands = [] }) => {
   const containerRef = useRef(null);
@@ -58,7 +58,7 @@ export const MiddleBanner = ({ brands = [] }) => {
   ));
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 md:py-14">
+    <div className="max-w-7xl mx-auto px-4 py-10 md:py-14 border-t border-blue-600">
       <div className="bg-gradient-to-r from-blue-50 via-white to-blue-50 dark:from-[#1e293b] dark:via-[#1e293b] dark:to-[#1e293b] rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm py-8 md:py-10 px-4">
         <div className="relative overflow-hidden">
           <div className="flex">

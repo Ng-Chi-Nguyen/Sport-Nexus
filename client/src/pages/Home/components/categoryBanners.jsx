@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { CarouselPagination } from "@/components/ui/pagination";
+
 const CATEGORY_STYLES = [
   { gradient: "from-blue-600 to-blue-800" },
   { gradient: "from-emerald-600 to-emerald-800" },
@@ -8,10 +11,21 @@ const CATEGORY_STYLES = [
 ];
 
 export const CategoryBanners = ({ categories }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const itemsPerPage = 6;
+
+  if (!categories || categories.length === 0) return null;
+
+  const totalPages = Math.ceil(categories.length / itemsPerPage);
+  const displayedCategories = categories.slice(
+    currentIndex * itemsPerPage,
+    (currentIndex + 1) * itemsPerPage,
+  );
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {categories.slice(0, 6).map((cat, idx) => {
+        {displayedCategories.map((cat, idx) => {
           const style = CATEGORY_STYLES[idx % CATEGORY_STYLES.length];
           return (
             <div
@@ -31,6 +45,13 @@ export const CategoryBanners = ({ categories }) => {
           );
         })}
       </div>
+
+      <CarouselPagination
+        className="mt-6"
+        totalPages={totalPages}
+        current={currentIndex}
+        onChange={setCurrentIndex}
+      />
     </div>
   );
 };

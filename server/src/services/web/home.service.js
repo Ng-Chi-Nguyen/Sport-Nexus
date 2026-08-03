@@ -9,6 +9,7 @@ const productSelect = {
     brand: { select: { id: true, name: true, logo: true } },
     ProductVariants: {
         select: { id: true, price: true },
+        where: { stock: { gt: 0 }, deleted_at: ACTIVE },
         orderBy: { price: "asc" },
         take: 1,
     },
@@ -45,12 +46,13 @@ const mapProduct = (p) => {
 
 const homeService = {
     getHomePageData: async () => {
-        const [newestProducts, categories, brands, bestSellers, topRated, productsByCategory, coupons] =
+        const [newestProducts, categories, brands, bestSellersThisMonth, bestSellersAllTime, topRated, productsByCategory, coupons] =
             await Promise.all([
                 homeService.getNewestProducts(),
                 homeService.getCategories(),
                 homeService.getBrands(),
-                homeService.getBestSellers(),
+                homeService.getBestSellersThisMonth(),
+                homeService.getBestSellersAllTime(),
                 homeService.getTopRated(),
                 homeService.getProductsByCategory(),
                 couponWebService.getActiveCoupons(),
@@ -60,7 +62,8 @@ const homeService = {
             newestProducts,
             categories,
             brands,
-            bestSellers,
+            bestSellersThisMonth,
+            bestSellersAllTime,
             topRated,
             productsByCategory,
             coupons,
@@ -69,7 +72,11 @@ const homeService = {
 
     getNewestProducts: async (limit = 6) => {
         const products = await prisma.Products.findMany({
-            where: { is_active: true, deleted_at: ACTIVE },
+            where: {
+                is_active: true,
+                deleted_at: ACTIVE,
+                ProductVariants: { some: { stock: { gt: 0 }, deleted_at: ACTIVE } },
+            },
             orderBy: { created_at: "desc" },
             take: limit,
             select: productSelect,
@@ -92,10 +99,15 @@ const homeService = {
         });
     },
 
-    getBestSellers: async (limit = 6) => {
+    getBestSellers: async (limit = 12, { since } = {}) => {
+        const where = since
+            ? { order: { created_at: { gte: since } } }
+            : undefined;
+
         const topVariants = await prisma.OrderItems.groupBy({
             by: ["product_variant_id"],
             _sum: { quantity: true },
+            where,
             orderBy: { _sum: { quantity: "desc" } },
             take: limit * 2,
         });
@@ -123,9 +135,24 @@ const homeService = {
             .map((v) => mapProduct(v.product));
     },
 
+    getBestSellersThisMonth: async (limit = 12) => {
+        const now = new Date();
+        const since = new Date(now.getFullYear(), now.getMonth(), 1);
+        return homeService.getBestSellers(limit, { since });
+    },
+
+    getBestSellersAllTime: async (limit = 12) => {
+        return homeService.getBestSellers(limit);
+    },
+
     getTopRated: async (limit = 6) => {
         const products = await prisma.Products.findMany({
-            where: { is_active: true, deleted_at: ACTIVE, Reviews: { some: {} } },
+            where: {
+                is_active: true,
+                deleted_at: ACTIVE,
+                Reviews: { some: {} },
+                ProductVariants: { some: { stock: { gt: 0 }, deleted_at: ACTIVE } },
+            },
             select: productSelect,
         });
 
@@ -135,7 +162,7 @@ const homeService = {
             .slice(0, limit);
     },
 
-    getProductsByCategory: async (limit = 5, maxCategories = 5) => {
+    getProductsByCategory: async (limit = 12, maxCategories = 5) => {
         const categories = await prisma.Categories.findMany({
             where: { is_active: true, deleted_at: ACTIVE },
             take: maxCategories,
@@ -146,7 +173,12 @@ const homeService = {
         const result = await Promise.all(
             categories.map(async (cat) => {
                 const products = await prisma.Products.findMany({
-                    where: { is_active: true, deleted_at: ACTIVE, category_id: cat.id },
+                    where: {
+                        is_active: true,
+                        deleted_at: ACTIVE,
+                        category_id: cat.id,
+                        ProductVariants: { some: { stock: { gt: 0 }, deleted_at: ACTIVE } },
+                    },
                     orderBy: { created_at: "desc" },
                     take: limit,
                     select: productSelect,
