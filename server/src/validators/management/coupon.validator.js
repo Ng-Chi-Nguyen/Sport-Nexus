@@ -27,6 +27,11 @@ const couponSchema = {
                 'number.base': 'Giới hạn sử dụng phải là số nguyên.',
                 'number.min': 'Giới hạn sử dụng phải ít nhất là 1.',
             }),
+        max_uses_per_user: Joi.number().integer().min(1).default(1)
+            .messages({
+                'number.base': 'Số lần dùng tối đa/user phải là số nguyên.',
+                'number.min': 'Số lần dùng tối đa/user phải ít nhất là 1.',
+            }),
         max_discount: Joi.number().min(0).optional()
             .messages({
                 'number.base': 'Giảm tối đa phải là số.',
@@ -69,6 +74,10 @@ const couponSchema = {
             'number.base': 'Giới hạn sử dụng phải là số nguyên.',
             'number.min': 'Giới hạn sử dụng phải ít nhất là 1.',
         }),
+        max_uses_per_user: Joi.number().integer().min(1).messages({
+            'number.base': 'Số lần dùng tối đa/user phải là số nguyên.',
+            'number.min': 'Số lần dùng tối đa/user phải ít nhất là 1.',
+        }),
         max_discount: Joi.number().min(0).optional().messages({
             'number.base': 'Giảm tối đa phải là số.',
         }),
@@ -96,7 +105,18 @@ const couponSchema = {
             'string.empty': 'Mã giảm giá không được để trống',
             'any.required': 'Vui lòng cung cấp mã giảm giá'
         })
-    }).unknown(false).min(2)
+    }).unknown(false).min(2),
+
+    giftCoupon: Joi.object({
+        coupon_id: Joi.number().integer().required().messages({
+            'number.base': 'ID mã giảm giá không hợp lệ.',
+            'any.required': 'Thiếu ID mã giảm giá.',
+        }),
+        user_id: Joi.number().integer().required().messages({
+            'number.base': 'ID người dùng không hợp lệ.',
+            'any.required': 'Thiếu ID người dùng.',
+        }),
+    }).unknown(false).min(2),
 }
 
 export default couponSchema;
