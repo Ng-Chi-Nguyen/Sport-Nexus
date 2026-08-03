@@ -76,7 +76,7 @@ const Profile = () => {
           <TitleWithIcon icon={UserCheck} title="Tài khoản" />
           <Link
             to="/tai-khoan/chinh-sua-thong-tin-ca-nhan"
-            className="flex items-center gap-1.5 text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 text-sm font-semibold transition-colors"
+            className="flex items-center gap-1.5 text-primary dark:text-primary hover:primaryHOver dark:hover:primaryHover text-sm font-semibold transition-colors"
           >
             <Pencil size={14} />
             <span>Chỉnh sửa</span>
@@ -255,7 +255,7 @@ const Profile = () => {
           </h2>
           <Link
             to="/tai-khoan/don-hang"
-            className="text-sm font-semibold text-sky-600 dark:text-sky-400 hover:underline"
+            className="text-sm font-semibold text-primary dark:text-primary hover:underline"
           >
             Xem tất cả
           </Link>
@@ -289,7 +289,7 @@ const Profile = () => {
                     onClick={() => navigate(`/tai-khoan/don-hang/${order.id}`)}
                     className="text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer"
                   >
-                    <td className="py-3.5 px-4 font-semibold text-sky-600 dark:text-sky-400">
+                    <td className="py-3.5 px-4 font-semibold text-primary dark:text-primary">
                       #{order.id}
                     </td>
                     <td className="py-3.5 px-4">

@@ -25,7 +25,8 @@ export default {
         'tiny': ['0.625rem', { lineHeight: '1rem' }],
       },
       colors: {
-        primary: '#4421f6',
+        primary: '#2563eb',
+        primaryHover: '#1d4ed8',
         // Tối ưu hóa hệ thống màu sắc
         light: {
           bg: '#f8fafc',      // Slate 50

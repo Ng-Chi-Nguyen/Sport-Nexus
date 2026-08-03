@@ -93,7 +93,7 @@ const ResetPassword = () => {
         </button>
         <div>
           <TitleWithIcon icon={KeyRound} title="Đổi mật khẩu" />
-          <p className="text-xs text-slate-500 -mt-5">
+          <p className="text-xs text-slate-500">
             Cập nhật mật khẩu đăng nhập tài khoản của bạn
           </p>
         </div>

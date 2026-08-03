@@ -14,7 +14,7 @@ const Breadcrumbs = (props) => {
               to={item.route}
               className={`transition-colors duration-200 my-2 ${
                 isLast
-                  ? "text-[#4facf3] font-bold uppercase italic tracking-tighter"
+                  ? "text-primary font-bold uppercase italic tracking-tighter"
                   : "text-slate-400 hover:text-slate-300"
               }`}
             >

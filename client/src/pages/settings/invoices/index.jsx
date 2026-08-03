@@ -82,7 +82,7 @@ const Invoice = () => {
                       onClick={() => navigate(`/hoa-don/${invoice.id}`)}
                       className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer"
                     >
-                      <td className="py-3.5 px-4 font-semibold text-sky-600 dark:text-sky-400">
+                      <td className="py-3.5 px-4 font-semibold text-primary dark:text-primary">
                         {invoice.invoice_number}
                       </td>
                       <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300">

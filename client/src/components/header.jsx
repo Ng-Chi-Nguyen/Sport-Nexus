@@ -243,7 +243,10 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
                         <Languages size={18} strokeWidth={1.5} />
                         <span>{t("language")}</span>
                       </div>
-                      <ChevronRight size={16} className="text-gray-400 dark:text-slate-500" />
+                      <ChevronRight
+                        size={16}
+                        className="text-gray-400 dark:text-slate-500"
+                      />
                     </button>
 
                     {/* Submenu chọn Tiếng Việt / English */}

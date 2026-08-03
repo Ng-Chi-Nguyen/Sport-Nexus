@@ -104,7 +104,7 @@ export const NavCategoryMenu = ({
             {t("hotline")}:{" "}
             <a
               href="tel:0812312831"
-              className="text-sky-400 font-bold hover:underline"
+              className="text-primary font-bold hover:underline"
             >
               0812312831
             </a>

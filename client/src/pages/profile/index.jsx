@@ -61,7 +61,7 @@ const ProfilePage = () => {
                 </h2>
                 <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
                   Xin chào,{" "}
-                  <span className="text-sky-600 dark:text-sky-400 font-bold">
+                  <span className="text-primary dark:text-primary font-bold">
                     {user?.full_name || "khách hàng"} !
                   </span>
                 </p>
