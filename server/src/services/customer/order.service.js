@@ -1,10 +1,18 @@
 import prisma from "../../db/prisma.js";
 import paymentService from "./payment.service.js";
+import { computeCouponDiscount } from "./coupon.service.js";
+import { ACTIVE } from "../../utils/prisma.js";
 
 const orderService = {
-    createOrder: async (orderData) => {
+    createOrder: async (orderData, authUser) => {
         let { total_amount, status, shipping_address, payment_method,
             payment_status, discount_amount, final_amount, coupon_code, user_email, items } = orderData;
+
+        if (coupon_code && !authUser) {
+            const err = new Error("Vui lòng đăng nhập để dùng mã giảm giá");
+            err.code = 'COUPON_REQUIRES_LOGIN';
+            throw err;
+        }
 
         for (const item of items) {
             const variant = await prisma.productVariants.findUnique({
@@ -27,8 +35,60 @@ const orderService = {
         };
 
         return await prisma.$transaction(async (tx) => {
-            const customer = user_email
-                ? await tx.users.findFirst({ where: { email: user_email }, select: { full_name: true, email: true, phone_number: true } })
+            // ---- Validate coupon + tính lại discount phía server ----
+            if (coupon_code) {
+                const coupon = await tx.coupons.findFirst({
+                    where: { code: coupon_code, deleted_at: ACTIVE }
+                });
+                if (!coupon) {
+                    const err = new Error("Mã giảm giá không tồn tại");
+                    err.code = 'COUPON_INVALID';
+                    throw err;
+                }
+                if (!coupon.is_active) {
+                    const err = new Error("Mã giảm giá đã hết hiệu lực");
+                    err.code = 'COUPON_INVALID';
+                    throw err;
+                }
+                const now = new Date();
+                if (now < coupon.start_date || now > coupon.end_date) {
+                    const err = new Error("Mã giảm giá không trong thời hạn sử dụng");
+                    err.code = 'COUPON_INVALID';
+                    throw err;
+                }
+                if (coupon.usage_count >= coupon.usage_limit) {
+                    const err = new Error("Mã giảm giá đã hết lượt sử dụng");
+                    err.code = 'COUPON_INVALID';
+                    throw err;
+                }
+                if (Number(total_amount) < coupon.min_order_value) {
+                    const err = new Error(`Đơn hàng giá tối thiểu là ${coupon.min_order_value}đ mới có hiệu lực`);
+                    err.code = 'COUPON_INVALID';
+                    throw err;
+                }
+
+                discount_amount = computeCouponDiscount(coupon, Number(total_amount));
+                final_amount = Number(total_amount) - discount_amount;
+
+                await tx.userCoupons.upsert({
+                    where: { user_id_coupon_id: { user_id: authUser.id, coupon_id: coupon.id } },
+                    create: { user_id: authUser.id, coupon_id: coupon.id, used_count: 0 },
+                    update: {}
+                });
+                const incr = await tx.userCoupons.updateMany({
+                    where: { user_id: authUser.id, coupon_id: coupon.id, used_count: { lt: coupon.max_uses_per_user } },
+                    data: { used_count: { increment: 1 } }
+                });
+                if (incr.count === 0) {
+                    const err = new Error("Bạn đã dùng hết số lần của mã giảm giá này");
+                    err.code = 'COUPON_LIMIT_REACHED';
+                    throw err;
+                }
+            }
+
+            const orderEmail = authUser?.email || user_email || null;
+            const customer = orderEmail
+                ? await tx.users.findFirst({ where: { email: orderEmail }, select: { full_name: true, email: true, phone_number: true } })
                 : null;
 
             const subtotal = Number(total_amount) + Number(discount_amount);
@@ -50,7 +110,7 @@ const orderService = {
                     coupon: coupon_code
                         ? { connect: { code: coupon_code } }
                         : undefined,
-                    user_email: user_email || null,
+                    user_email: orderEmail,
 
                     OrderItems: {
                         create: items.map(item => ({
@@ -63,7 +123,7 @@ const orderService = {
                     invoice: {
                         create: {
                             invoice_number: invoiceNumber,
-                            customer_name: customer?.full_name || user_email || 'Khách vãng lai',
+                            customer_name: customer?.full_name || orderEmail || 'Khách vãng lai',
                             customer_email: customer?.email || null,
                             customer_phone: customer?.phone_number || null,
                             shipping_address: shipping_address,

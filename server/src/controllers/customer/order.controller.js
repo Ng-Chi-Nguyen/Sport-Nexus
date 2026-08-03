@@ -27,30 +27,28 @@ const PAYMENT_STATUS_LABELS = {
 const orderController = {
     createOrder: async (req, res) => {
         let orderData = req.body;
-        // console.log(orderData)
         try {
-            let newOrder = await orderService.createOrder(orderData);
+            const authUser = req.user?.id ? { id: req.user.id, email: req.user.email } : null;
+            let newOrder = await orderService.createOrder(orderData, authUser);
             let emailResult = null;
 
-            if (orderData.user_email) {
-                // console.log("email: ", orderData.user_email)
+            if (newOrder.user_email) {
                 try {
-                    // console.log("OK")
                     emailResult = await emailService.sendOrderConfirmationEmail(
-                        orderData.user_email,
-                        orderData.user_name || "Khách hàng",
+                        newOrder.user_email,
+                        newOrder.user_email || "Khách hàng",
                         newOrder,
                         newOrder.OrderItems || [],
                         PAYMENT_LABELS[orderData.payment_method] || orderData.payment_method,
                         STATUS_LABELS[newOrder.status] || newOrder.status,
                         PAYMENT_STATUS_LABELS[newOrder.payment_status] || newOrder.payment_status,
                     );
-                    console.log(`Email xác nhận đã gửi đến ${orderData.user_email}`);
+                    console.log(`Email xác nhận đã gửi đến ${newOrder.user_email}`);
                 } catch (emailErr) {
                     console.error(`Gửi email thất bại:`, emailErr.message);
                 }
             }
-            // console.log("Hoàn thânhf")
+
             return res.status(201).json({
                 success: true,
                 message: "Đơn hàng đã được tạo.",
@@ -58,7 +56,8 @@ const orderController = {
                 email_sent: !!emailResult,
             })
         } catch (error) {
-            const status = error.code === 'INSUFFICIENT_STOCK' ? 400 : 500;
+            const couponErrors = ['COUPON_REQUIRES_LOGIN', 'COUPON_INVALID', 'COUPON_LIMIT_REACHED'];
+            const status = error.code === 'INSUFFICIENT_STOCK' || couponErrors.includes(error.code) ? 400 : 500;
             return res.status(status).json({
                 success: false,
                 message: error.message || "Lỗi server nội bộ.",

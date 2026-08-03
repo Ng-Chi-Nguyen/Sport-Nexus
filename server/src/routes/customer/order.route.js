@@ -6,6 +6,7 @@ import { logAction } from "../../middlewares/log.middleware.js";
 import { createDetails, updateDetails, deleteDetails, fetchEntity } from "../../middlewares/log.helpers.js";
 import orderService from "../../services/customer/order.service.js";
 import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js";
+import { verifyTokenOptional } from "../../middlewares/verifyToken.middlware.js";
 
 const orderRoute = express.Router();
 
@@ -13,7 +14,7 @@ attachExcelCrudImportRoutes(orderRoute, { moduleKey: "orders", exportPermission:
 
 orderRoute
 
-    .post("/", validate(orderSchema.createOrder),
+    .post("/", verifyTokenOptional, validate(orderSchema.createOrder),
       logAction({ actionType: "CREATE", entityType: "Orders", getEntityId: (_, body) => body.data?.id, getChanges: createDetails }),
       orderController.createOrder)
     .get("/all-dropdown", orderController.getOrderDropdown)
