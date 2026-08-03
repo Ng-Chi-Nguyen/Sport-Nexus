@@ -427,6 +427,11 @@
     "usage_conditions_title": "Điều kiện sử dụng",
     "min_order_input": "Đơn hàng tối thiểu",
     "usage_limit_input": "Giới hạn sử dụng",
+    "max_uses_per_user_label": "Số lần dùng tối đa/user",
+    "gift_btn": "Tặng",
+    "gift_modal_title": "Tặng mã giảm giá",
+    "search_user_placeholder": "Tìm user theo email hoặc tên...",
+    "gift_send_btn": "Gửi tặng",
     "create_success": "Thêm mới thành công!",
     "error_occurred": "Đã có lỗi xảy ra!"
   },

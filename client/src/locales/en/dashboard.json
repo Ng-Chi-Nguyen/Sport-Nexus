@@ -427,6 +427,11 @@
     "usage_conditions_title": "Usage Conditions",
     "min_order_input": "Minimum Order",
     "usage_limit_input": "Usage Limit",
+    "max_uses_per_user_label": "Max uses per user",
+    "gift_btn": "Gift",
+    "gift_modal_title": "Gift coupon",
+    "search_user_placeholder": "Search user by email or name...",
+    "gift_send_btn": "Send gift",
     "create_success": "Created successfully!",
     "error_occurred": "An error occurred!"
   },
