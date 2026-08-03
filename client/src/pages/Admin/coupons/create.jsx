@@ -24,6 +24,7 @@ const CreateCouponPage = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [usageLimit, setUsageLimit] = useState(1);
+  const [maxUsesPerUser, setMaxUsesPerUser] = useState(1);
   const [isActive, setIsActive] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -52,6 +53,7 @@ const CreateCouponPage = () => {
       discount_value: Number(discountValue),
       discount_type: discountType,
       usage_limit: Number(usageLimit),
+      max_uses_per_user: Number(maxUsesPerUser) || 1,
       max_discount: Number(maxDiscount),
       min_order_value: Number(minOrderValue),
       end_date: endDate,
@@ -186,6 +188,13 @@ const CreateCouponPage = () => {
                 type="number"
                 value={usageLimit}
                 onChange={(e) => setUsageLimit(e.target.value)}
+              />
+              <FloatingInput
+                label={t("max_uses_per_user_label")}
+                min={1}
+                type="number"
+                value={maxUsesPerUser}
+                onChange={(e) => setMaxUsesPerUser(e.target.value)}
               />
             </div>
             <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800/80">
