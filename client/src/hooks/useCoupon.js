@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import couponApi from "@/api/management/couponApi";
+import couponApi from "@/api/customer/couponApi";
 
 const useCoupon = () => {
   const [couponCode, setCouponCode] = useState("");
@@ -10,6 +10,15 @@ const useCoupon = () => {
   const applyCoupon = useCallback(async (amount, code) => {
     if (!code.trim()) return;
 
+    if (!localStorage.getItem("accessToken")) {
+      setCouponData(null);
+      setCouponMsg({
+        type: "error",
+        text: "Vui lòng đăng nhập để dùng mã giảm giá",
+      });
+      return;
+    }
+
     setLoading(true);
     setCouponMsg(null);
 
@@ -18,10 +27,16 @@ const useCoupon = () => {
 
       if (res.data?.discount !== undefined) {
         setCouponData(res.data);
-        setCouponMsg({ type: "success", text: "Áp dụng mã giảm giá thành công" });
+        setCouponMsg({
+          type: "success",
+          text: "Áp dụng mã giảm giá thành công",
+        });
       } else {
         setCouponData(null);
-        setCouponMsg({ type: "error", text: res.data?.message || "Mã giảm giá không hợp lệ" });
+        setCouponMsg({
+          type: "error",
+          text: res.data?.message || "Mã giảm giá không hợp lệ",
+        });
       }
     } catch (error) {
       setCouponData(null);
@@ -43,7 +58,15 @@ const useCoupon = () => {
     setCouponMsg(null);
   }, []);
 
-  return { couponCode, setCouponCode, couponMsg, couponData, loading, applyCoupon, clearCoupon };
+  return {
+    couponCode,
+    setCouponCode,
+    couponMsg,
+    couponData,
+    loading,
+    applyCoupon,
+    clearCoupon,
+  };
 };
 
 export default useCoupon;

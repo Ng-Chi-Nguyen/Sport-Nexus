@@ -13,6 +13,9 @@ import AddressSection from "./components/AddressSection";
 import PaymentSection from "./components/PaymentSection";
 import OrderSummary from "./components/OrderSummary";
 import ConfirmModal from "./components/ConfirmModal";
+import ShowToast from "@/components/ui/toast";
+import { CreditCard } from "lucide-react";
+import { TitleWithIcon } from "@/components/ui/title";
 
 const Checkout = () => {
   const location = useLocation();
@@ -77,8 +80,7 @@ const Checkout = () => {
             const byCode = wards.find((w) => w.Code === code);
             if (byCode) return byCode;
           }
-          const name =
-            typeof loc.ward === "string" ? loc.ward : loc.ward?.name;
+          const name = typeof loc.ward === "string" ? loc.ward : loc.ward?.name;
           if (name) {
             const key = norm(name);
             return wards.find((w) => norm(w.FullName) === key);
@@ -164,10 +166,14 @@ const Checkout = () => {
   );
 
   const handlePlaceOrder = useCallback(() => {
+    if (couponCode && !localStorage.getItem("accessToken")) {
+      ShowToast("error", "Vui lòng đăng nhập để dùng mã giảm giá");
+      return;
+    }
     if (!fullAddress) return;
     if (!email.trim()) return;
     setShowConfirm(true);
-  }, [fullAddress, email]);
+  }, [fullAddress, email, couponCode]);
 
   const handleConfirmOrder = useCallback(async () => {
     setSubmitting(true);
@@ -177,9 +183,12 @@ const Checkout = () => {
       const order = res.data;
       setOrderResult(order);
 
-      const isOnline = ["BANK_TRANSFER", "MOMO", "CREDIT_CARD", "VNPAY"].includes(
-        paymentMethod,
-      );
+      const isOnline = [
+        "BANK_TRANSFER",
+        "MOMO",
+        "CREDIT_CARD",
+        "VNPAY",
+      ].includes(paymentMethod);
       if (!isOnline) {
         setShowConfirm(false);
         return;
@@ -228,9 +237,7 @@ const Checkout = () => {
           ]}
         />
 
-        <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-4 mb-6">
-          Thanh toán đơn hàng
-        </h1>
+        <TitleWithIcon icon={CreditCard} title="Thanh toán đơn hàng" />
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
           <div className="md:col-span-3 space-y-6">
