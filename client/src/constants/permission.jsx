@@ -20,6 +20,7 @@ export const PERMISSION_TRANSLATIONS = {
     read: "permission.action.read",
     update: "permission.action.update",
     delete: "permission.action.delete",
+    gift: "permission.action.gift",
   },
 };
 
@@ -37,6 +38,9 @@ export const MODULE_LABELS = {
   brands: "permission.module_label.brands",
   attributekeys: "permission.module_label.attributekeys",
   productimages: "permission.module_label.productimages",
+  productvariants: "permission.module_label.productvariants",
+  invoices: "permission.module_label.invoices",
+  payments: "permission.module_label.payments",
 
   // Kinh doanh & Vận hành
   orders: "permission.module_label.orders",
@@ -55,4 +59,5 @@ export const ACTION_OPTIONS = [
   { slug: "read", name: "permission.action_option.read" },
   { slug: "update", name: "permission.action_option.update" },
   { slug: "delete", name: "permission.action_option.delete" },
+  { slug: "gift", name: "permission.action_option.gift" },
 ];

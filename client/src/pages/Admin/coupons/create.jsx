@@ -175,7 +175,7 @@ const CreateCouponPage = () => {
             <TitleManagement color="red">
               {t("usage_conditions_title")}
             </TitleManagement>
-            <div className="flex flex-col sm:flex-row gap-4 mt-3">
+            <div className="flex flex-col gap-4 mt-3">
               <FloatingInput
                 label={t("min_order_input")}
                 type="number"

@@ -10,6 +10,7 @@ const couponWebService = {
                 is_active: true,
                 start_date: { lte: now },
                 end_date: { gte: now },
+                UserCoupons: { none: { is_gift: true } },
             },
             orderBy: { created_at: 'desc' },
         });

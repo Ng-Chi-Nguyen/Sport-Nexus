@@ -38,6 +38,8 @@ export const ACTION_COLOR_MAP = {
   read: "info",
   update: "warning",
   delete: "error",
+  tang: "nexus",
+  gift: "nexus",
 };
 
 export const getActionColor = (action) =>

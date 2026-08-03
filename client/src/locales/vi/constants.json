@@ -65,6 +65,9 @@
       "brands": "🏷️ Thương hiệu",
       "attributekeys": "⚙️ Thuộc tính Sản phẩm",
       "productimages": "🖼️ Thư viện Hình ảnh",
+      "productvariants": "🧬 Biến thể Sản phẩm",
+      "invoices": "🧾 Hóa đơn",
+      "payments": "💳 Thanh toán",
       "orders": "🛒 Đơn bán hàng",
       "coupons": "🎟️ Mã giảm giá",
       "reviews": "⭐ Đánh giá khách hàng",
@@ -77,7 +80,8 @@
       "create": "✨ Thêm mới (Create)",
       "read": "👁️ Xem dữ liệu (Read)",
       "update": "📝 Chỉnh sửa (Update)",
-      "delete": "🗑️ Xóa dữ liệu (Delete)"
+      "delete": "🗑️ Xóa dữ liệu (Delete)",
+      "gift": "🎁 Tặng (Gift)"
     }
   }
 }

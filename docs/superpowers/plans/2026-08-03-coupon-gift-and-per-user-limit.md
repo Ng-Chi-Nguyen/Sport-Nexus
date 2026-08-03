@@ -9,6 +9,7 @@
 **Tech Stack:** Prisma (PostgreSQL), Express 5, JWT, React 19 + Vite, TanStack Query, i18next, axios.
 
 **Quy ước chung:**
+
 - Backend KHÔNG có test suite. Với mỗi thay đổi JS phía server, verify bằng `node --check <file>` (bước "Syntax check"). Kiểm tra chức năng bằng curl ở Task cuối (Task 14).
 - Frontend verify bằng `npm run build --prefix client` và `npm run lint --prefix client`.
 - Chạy mọi lệnh từ thư mục gốc `D:\Programming\SportNexus` trừ khi ghi rõ khác.
@@ -19,6 +20,7 @@
 ### Task 1: Schema Prisma — `max_uses_per_user` + model `UserCoupons`
 
 **Files:**
+
 - Modify: `server/prisma/schema.prisma`
 
 - [ ] **Step 1: Sửa model `Coupons`**
@@ -143,6 +145,7 @@ Nếu không muốn empty commit thì bỏ qua bước commit này (không có f
 ### Task 3: Permission `tang-ma-giam-gia`
 
 **Files:**
+
 - Modify: `server/prisma/data/permissions.js`
 - Modify: `server/src/config/rolePermissions.js`
 
@@ -152,12 +155,37 @@ Tại dòng 29-34 của `server/prisma/data/permissions.js`, sửa thành:
 
 ```js
 export const couponPermissions = [
-  { slug: 'them-ma-giam-gia', name: 'Thêm mã giảm giá', module: 'coupons', action: 'them' },
-  { slug: 'sua-ma-giam-gia', name: 'Sửa mã giảm giá', module: 'coupons', action: 'sua' },
-  { slug: 'xoa-ma-giam-gia', name: 'Xóa mã giảm giá', module: 'coupons', action: 'xoa' },
-  { slug: 'xem-ma-giam-gia', name: 'Xem mã giảm giá', module: 'coupons', action: 'xem' },
-  { slug: 'tang-ma-giam-gia', name: 'Tặng mã giảm giá', module: 'coupons', action: 'tang' },
-]
+  {
+    slug: "them-ma-giam-gia",
+    name: "Thêm mã giảm giá",
+    module: "coupons",
+    action: "them",
+  },
+  {
+    slug: "sua-ma-giam-gia",
+    name: "Sửa mã giảm giá",
+    module: "coupons",
+    action: "sua",
+  },
+  {
+    slug: "xoa-ma-giam-gia",
+    name: "Xóa mã giảm giá",
+    module: "coupons",
+    action: "xoa",
+  },
+  {
+    slug: "xem-ma-giam-gia",
+    name: "Xem mã giảm giá",
+    module: "coupons",
+    action: "xem",
+  },
+  {
+    slug: "tang-ma-giam-gia",
+    name: "Tặng mã giảm giá",
+    module: "coupons",
+    action: "tang",
+  },
+];
 ```
 
 - [ ] **Step 2: Cấp permission tặng cho `sales_staff`**
@@ -203,6 +231,7 @@ git commit -m "feat(coupon): add tang-ma-giam-gia permission"
 ### Task 4: Validator coupon — `max_uses_per_user` + schema gift
 
 **Files:**
+
 - Modify: `server/src/validators/management/coupon.validator.js`
 
 - [ ] **Step 1: Thêm `max_uses_per_user` vào `createCoupon`**
@@ -261,53 +290,54 @@ git commit -m "feat(coupon): validate max_uses_per_user and gift schema"
 ### Task 5: Middleware `verifyTokenOptional`
 
 **Files:**
+
 - Modify: `server/src/middlewares/verifyToken.middlware.js`
 
 - [ ] **Step 1: Thêm `verifyTokenOptional` cuối file**
 
 ```js
 export const verifyTokenOptional = async (req, res, next) => {
-    try {
-        const authHeader = req.headers.authorization;
-        const token = authHeader && authHeader.split(" ")[1];
+  try {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1];
 
-        if (!token) {
-            req.user = null;
-            return next();
-        }
-
-        const secret = process.env.JWT_ACCESS_SECRET;
-        const decoded = jwt.verify(token, secret);
-        const user = await prisma.Users.findUnique({
-            where: { id: decoded.id },
-            include: {
-                role: true,
-                permissions: true
-            }
-        });
-
-        if (!user) {
-            req.user = null;
-            return next();
-        }
-
-        const userPermissionSlugs = user.permissions.map(p => p.slug);
-        req.user = {
-            ...user,
-            permissionSlugs: userPermissionSlugs
-        };
-
-        next();
-    } catch (error) {
-        if (error.name === "TokenExpiredError") {
-            return res.status(401).json({
-                message: "Phiên đăng nhập đã hết hạn",
-                code: "TOKEN_EXPIRED"
-            });
-        }
-        req.user = null;
-        next();
+    if (!token) {
+      req.user = null;
+      return next();
     }
+
+    const secret = process.env.JWT_ACCESS_SECRET;
+    const decoded = jwt.verify(token, secret);
+    const user = await prisma.Users.findUnique({
+      where: { id: decoded.id },
+      include: {
+        role: true,
+        permissions: true,
+      },
+    });
+
+    if (!user) {
+      req.user = null;
+      return next();
+    }
+
+    const userPermissionSlugs = user.permissions.map((p) => p.slug);
+    req.user = {
+      ...user,
+      permissionSlugs: userPermissionSlugs,
+    };
+
+    next();
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        message: "Phiên đăng nhập đã hết hạn",
+        code: "TOKEN_EXPIRED",
+      });
+    }
+    req.user = null;
+    next();
+  }
 };
 ```
 
@@ -327,6 +357,7 @@ git commit -m "feat(auth): add verifyTokenOptional middleware"
 ### Task 6: Customer coupon API — `check` + `gifted`
 
 **Files:**
+
 - Create: `server/src/services/customer/coupon.service.js`
 - Create: `server/src/controllers/customer/coupon.controller.js`
 - Create: `server/src/validators/customer/coupon.validator.js`
@@ -342,62 +373,66 @@ import prisma from "../../db/prisma.js";
 import { ACTIVE } from "../../utils/prisma.js";
 
 export const computeCouponDiscount = (coupon, amount) => {
-    let discount = 0;
-    if (coupon.discount_type === "CASH") {
-        discount = coupon.discount_value;
+  let discount = 0;
+  if (coupon.discount_type === "CASH") {
+    discount = coupon.discount_value;
+  }
+  if (coupon.discount_type === "PERCENTAGE") {
+    discount = amount * (coupon.discount_value / 100);
+    if (discount > coupon.max_discount) {
+      discount = coupon.max_discount;
     }
-    if (coupon.discount_type === "PERCENTAGE") {
-        discount = amount * (coupon.discount_value / 100);
-        if (discount > coupon.max_discount) {
-            discount = coupon.max_discount;
-        }
-    }
-    return Math.round(discount);
+  }
+  return Math.round(discount);
 };
 
 const couponCustomerService = {
-    checkCoupon: async ({ userId, amount, code }) => {
-        const coupon = await prisma.coupons.findFirst({
-            where: { code: code, deleted_at: ACTIVE }
-        });
+  checkCoupon: async ({ userId, amount, code }) => {
+    const coupon = await prisma.coupons.findFirst({
+      where: { code: code, deleted_at: ACTIVE },
+    });
 
-        if (!coupon) return { message: "Mã giảm giá không tồn tại" };
-        if (!coupon.is_active) return { message: "Mã giảm giá đã hết hiệu lực" };
+    if (!coupon) return { message: "Mã giảm giá không tồn tại" };
+    if (!coupon.is_active) return { message: "Mã giảm giá đã hết hiệu lực" };
 
-        const now = new Date();
-        if (now < coupon.start_date) return { message: "Mã giảm giá chưa đến thời hạn sử dụng" };
-        if (now > coupon.end_date) return { message: "Mã giảm giá đã hết hạn" };
-        if (coupon.usage_count >= coupon.usage_limit) return { message: "Mã giảm giá đã hết lượt sử dụng" };
-        if (amount < coupon.min_order_value) {
-            return { message: `Đơn hàng giá tối thiểu là ${coupon.min_order_value}đ mới có hiệu lực` };
-        }
-
-        const used = await prisma.userCoupons.findUnique({
-            where: { user_id_coupon_id: { user_id: userId, coupon_id: coupon.id } },
-            select: { used_count: true }
-        });
-        const usedCount = used?.used_count ?? 0;
-        if (usedCount >= coupon.max_uses_per_user) {
-            return { message: "Bạn đã dùng hết số lần của mã giảm giá này" };
-        }
-
-        const discount = computeCouponDiscount(coupon, amount);
-        return {
-            discount,
-            newAmount: amount - discount,
-            remainingUses: coupon.max_uses_per_user - usedCount,
-            max_uses_per_user: coupon.max_uses_per_user
-        };
-    },
-
-    getGiftedCoupons: async (userId) => {
-        const list = await prisma.userCoupons.findMany({
-            where: { user_id: userId, is_gift: true },
-            include: { coupon: true },
-            orderBy: { created_at: "desc" }
-        });
-        return list.map((uc) => uc.coupon);
+    const now = new Date();
+    if (now < coupon.start_date)
+      return { message: "Mã giảm giá chưa đến thời hạn sử dụng" };
+    if (now > coupon.end_date) return { message: "Mã giảm giá đã hết hạn" };
+    if (coupon.usage_count >= coupon.usage_limit)
+      return { message: "Mã giảm giá đã hết lượt sử dụng" };
+    if (amount < coupon.min_order_value) {
+      return {
+        message: `Đơn hàng giá tối thiểu là ${coupon.min_order_value}đ mới có hiệu lực`,
+      };
     }
+
+    const used = await prisma.userCoupons.findUnique({
+      where: { user_id_coupon_id: { user_id: userId, coupon_id: coupon.id } },
+      select: { used_count: true },
+    });
+    const usedCount = used?.used_count ?? 0;
+    if (usedCount >= coupon.max_uses_per_user) {
+      return { message: "Bạn đã dùng hết số lần của mã giảm giá này" };
+    }
+
+    const discount = computeCouponDiscount(coupon, amount);
+    return {
+      discount,
+      newAmount: amount - discount,
+      remainingUses: coupon.max_uses_per_user - usedCount,
+      max_uses_per_user: coupon.max_uses_per_user,
+    };
+  },
+
+  getGiftedCoupons: async (userId) => {
+    const list = await prisma.userCoupons.findMany({
+      where: { user_id: userId, is_gift: true },
+      include: { coupon: true },
+      orderBy: { created_at: "desc" },
+    });
+    return list.map((uc) => uc.coupon);
+  },
 };
 
 export default couponCustomerService;
@@ -411,17 +446,19 @@ export default couponCustomerService;
 import Joi from "Joi";
 
 const couponSchema = {
-    checkCoupon: Joi.object({
-        amount: Joi.number().min(0).required().messages({
-            'number.base': 'Tổng tiền đơn hàng phải là định dạng số',
-            'number.min': 'Tổng tiền không được là số âm',
-            'any.required': 'Hệ thống cần biết tổng tiền để áp dụng mã'
-        }),
-        code: Joi.string().trim().uppercase().required().messages({
-            'string.empty': 'Mã giảm giá không được để trống',
-            'any.required': 'Vui lòng cung cấp mã giảm giá'
-        })
-    }).unknown(false).min(2)
+  checkCoupon: Joi.object({
+    amount: Joi.number().min(0).required().messages({
+      "number.base": "Tổng tiền đơn hàng phải là định dạng số",
+      "number.min": "Tổng tiền không được là số âm",
+      "any.required": "Hệ thống cần biết tổng tiền để áp dụng mã",
+    }),
+    code: Joi.string().trim().uppercase().required().messages({
+      "string.empty": "Mã giảm giá không được để trống",
+      "any.required": "Vui lòng cung cấp mã giảm giá",
+    }),
+  })
+    .unknown(false)
+    .min(2),
 };
 
 export default couponSchema;
@@ -435,48 +472,50 @@ export default couponSchema;
 import couponCustomerService from "../../services/customer/coupon.service.js";
 
 const couponCustomerController = {
-    checkCoupon: async (req, res) => {
-        try {
-            const { amount, code } = req.body;
-            const result = await couponCustomerService.checkCoupon({
-                userId: req.user.id,
-                amount,
-                code
-            });
+  checkCoupon: async (req, res) => {
+    try {
+      const { amount, code } = req.body;
+      const result = await couponCustomerService.checkCoupon({
+        userId: req.user.id,
+        amount,
+        code,
+      });
 
-            if (result.message) {
-                return res.status(400).json({ success: false, message: result.message });
-            }
+      if (result.message) {
+        return res
+          .status(400)
+          .json({ success: false, message: result.message });
+      }
 
-            return res.json({
-                success: true,
-                data: result,
-                message: "Thêm mã giảm giá thành công"
-            });
-        } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: "Lỗi server nội bộ",
-                error: error.message
-            });
-        }
-    },
-
-    getGiftedCoupons: async (req, res) => {
-        try {
-            const coupons = await couponCustomerService.getGiftedCoupons(req.user.id);
-            return res.status(200).json({
-                success: true,
-                data: { coupons }
-            });
-        } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: "Lỗi server nội bộ",
-                error: error.message
-            });
-        }
+      return res.json({
+        success: true,
+        data: result,
+        message: "Thêm mã giảm giá thành công",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Lỗi server nội bộ",
+        error: error.message,
+      });
     }
+  },
+
+  getGiftedCoupons: async (req, res) => {
+    try {
+      const coupons = await couponCustomerService.getGiftedCoupons(req.user.id);
+      return res.status(200).json({
+        success: true,
+        data: { coupons },
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Lỗi server nội bộ",
+        error: error.message,
+      });
+    }
+  },
 };
 
 export default couponCustomerController;
@@ -496,8 +535,13 @@ import { verifyToken } from "../../middlewares/verifyToken.middlware.js";
 const couponCustomerRoute = express.Router();
 
 couponCustomerRoute
-    .post("/check", verifyToken, validate(couponSchema.checkCoupon), couponCustomerController.checkCoupon)
-    .get("/gifted", verifyToken, couponCustomerController.getGiftedCoupons);
+  .post(
+    "/check",
+    verifyToken,
+    validate(couponSchema.checkCoupon),
+    couponCustomerController.checkCoupon,
+  )
+  .get("/gifted", verifyToken, couponCustomerController.getGiftedCoupons);
 
 export default couponCustomerRoute;
 ```
@@ -513,7 +557,7 @@ import customerCouponRoute from "./customer/coupon.route.js";
 Và đăng ký trong khối Customer, sau dòng `app.use(\`${api_prefix_v1}customer/order/\`, orderRoute)`:
 
 ```js
-    app.use(`${api_prefix_v1}customer/coupon/`, customerCouponRoute)
+app.use(`${api_prefix_v1}customer/coupon/`, customerCouponRoute);
 ```
 
 - [ ] **Step 6: Syntax check + Commit**
@@ -536,6 +580,7 @@ git commit -m "feat(coupon): add customer coupon check and gifted endpoints"
 ### Task 7: Management gift API
 
 **Files:**
+
 - Modify: `server/src/services/management/coupon.service.js`
 - Modify: `server/src/controllers/management/coupons.controller.js`
 - Modify: `server/src/routes/management/coupon.route.js`
@@ -653,6 +698,7 @@ git commit -m "feat(coupon): add management gift coupon endpoint"
 ### Task 8: `createOrder` — server-side validation + per-user limit + tính lại discount
 
 **Files:**
+
 - Modify: `server/src/services/customer/order.service.js`
 - Modify: `server/src/controllers/customer/order.controller.js`
 - Modify: `server/src/routes/customer/order.route.js`
@@ -920,6 +966,7 @@ git commit -m "feat(order): enforce per-user coupon limit and server-side discou
 ### Task 9: Client API layer
 
 **Files:**
+
 - Create: `client/src/api/customer/couponApi.jsx`
 - Modify: `client/src/api/management/couponApi.jsx`
 - Modify: `client/src/api/management/userApi.jsx`
@@ -984,6 +1031,7 @@ git commit -m "feat(client): add coupon gift and customer coupon APIs"
 ### Task 10: Hook `useCoupon` + gate login ở checkout
 
 **Files:**
+
 - Modify: `client/src/hooks/useCoupon.js`
 - Modify: `client/src/pages/Checkout/index.jsx`
 
@@ -1021,10 +1069,16 @@ const useCoupon = () => {
 
       if (res.data?.discount !== undefined) {
         setCouponData(res.data);
-        setCouponMsg({ type: "success", text: "Áp dụng mã giảm giá thành công" });
+        setCouponMsg({
+          type: "success",
+          text: "Áp dụng mã giảm giá thành công",
+        });
       } else {
         setCouponData(null);
-        setCouponMsg({ type: "error", text: res.data?.message || "Mã giảm giá không hợp lệ" });
+        setCouponMsg({
+          type: "error",
+          text: res.data?.message || "Mã giảm giá không hợp lệ",
+        });
       }
     } catch (error) {
       setCouponData(null);
@@ -1046,7 +1100,15 @@ const useCoupon = () => {
     setCouponMsg(null);
   }, []);
 
-  return { couponCode, setCouponCode, couponMsg, couponData, loading, applyCoupon, clearCoupon };
+  return {
+    couponCode,
+    setCouponCode,
+    couponMsg,
+    couponData,
+    loading,
+    applyCoupon,
+    clearCoupon,
+  };
 };
 
 export default useCoupon;
@@ -1057,10 +1119,10 @@ export default useCoupon;
 Trong `client/src/pages/Checkout/index.jsx`, tìm hàm xử lý submit đơn hàng (nơi kiểm tra trước khi gọi `orderApi.create`), thêm block kiểm tra trước khi gửi:
 
 ```jsx
-  if (couponCode && !localStorage.getItem("accessToken")) {
-    ShowToast("error", "Vui lòng đăng nhập để dùng mã giảm giá");
-    return;
-  }
+if (couponCode && !localStorage.getItem("accessToken")) {
+  ShowToast("error", "Vui lòng đăng nhập để dùng mã giảm giá");
+  return;
+}
 ```
 
 Nếu file Checkout chưa import `ShowToast`, thêm dòng import (kiểm tra đường dẫn đúng trong dự án):
@@ -1090,6 +1152,7 @@ git commit -m "feat(client): require login for coupon checkout"
 ### Task 11: Admin — nút "Tặng" + modal
 
 **Files:**
+
 - Create: `client/src/components/admin/GiftCouponModal.jsx`
 - Modify: `client/src/pages/Admin/coupons/index.jsx`
 
@@ -1160,9 +1223,7 @@ const GiftCouponModal = ({ isOpen, coupon, onClose, onSuccess }) => {
       onClose();
     } catch (error) {
       const message =
-        error.response?.data?.message ||
-        error.message ||
-        "Đã có lỗi xảy ra";
+        error.response?.data?.message || error.message || "Đã có lỗi xảy ra";
       ShowToast("error", message);
     } finally {
       setSubmitting(false);
@@ -1179,14 +1240,20 @@ const GiftCouponModal = ({ isOpen, coupon, onClose, onSuccess }) => {
             <Gift size={16} className="text-sky-500" />
             Tặng mã giảm giá: {coupon.code}
           </h3>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer">
+          <button
+            onClick={onClose}
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+          >
             <X size={18} />
           </button>
         </div>
 
         <div className="p-5 space-y-4">
           <div className="relative">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search
+              size={15}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+            />
             <input
               type="text"
               value={searchTerm}
@@ -1211,7 +1278,9 @@ const GiftCouponModal = ({ isOpen, coupon, onClose, onSuccess }) => {
                       : "hover:bg-slate-50 dark:hover:bg-slate-800/40"
                   }`}
                 >
-                  <div className="font-semibold text-slate-800 dark:text-slate-100">{u.full_name}</div>
+                  <div className="font-semibold text-slate-800 dark:text-slate-100">
+                    {u.full_name}
+                  </div>
                   <div className="text-xs text-slate-500">{u.email}</div>
                 </button>
               ))}
@@ -1225,10 +1294,16 @@ const GiftCouponModal = ({ isOpen, coupon, onClose, onSuccess }) => {
           {selectedUser && (
             <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-emerald-50 dark:bg-emerald-500/10">
               <div>
-                <div className="text-sm font-semibold text-slate-800 dark:text-slate-100">{selectedUser.full_name}</div>
-                <div className="text-xs text-slate-500">{selectedUser.email}</div>
+                <div className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                  {selectedUser.full_name}
+                </div>
+                <div className="text-xs text-slate-500">
+                  {selectedUser.email}
+                </div>
               </div>
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">Đã chọn</span>
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                Đã chọn
+              </span>
             </div>
           )}
 
@@ -1252,6 +1327,7 @@ export default GiftCouponModal;
 - [ ] **Step 2: Gắn nút "Tặng" vào bảng coupon**
 
 Trong `client/src/pages/Admin/coupons/index.jsx`:
+
 - Thêm import (KHÔNG dùng `BtnGift` — component này không tồn tại trong `client/src/components/ui/button.jsx`, dùng `<button>` thường):
 
 ```jsx
@@ -1261,53 +1337,56 @@ import GiftCouponModal from "@/components/admin/GiftCouponModal";
 - Thêm import icon và state (icon `Gift` trong import lucide hiện có, dòng 5):
 
 ```jsx
-import { LayoutDashboard, ChevronDown, Filter, RefreshCw, Gift } from "lucide-react";
+import {
+  LayoutDashboard,
+  ChevronDown,
+  Filter,
+  RefreshCw,
+  Gift,
+} from "lucide-react";
 ```
 
 ```jsx
-  const [giftCoupon, setGiftCoupon] = useState(null);
+const [giftCoupon, setGiftCoupon] = useState(null);
 
-  const openGift = (coupon) => {
-    setGiftCoupon(coupon);
-  };
+const openGift = (coupon) => {
+  setGiftCoupon(coupon);
+};
 ```
 
 - Trong ô `<td className="px-6 py-4">` của mỗi dòng (dòng 373-384), thêm nút Tặng cạnh `BtnEdit`/`BtnDelete`:
 
 ```jsx
-                    <td className="px-6 py-4">
-                      <div className="flex gap-2 justify-center">
-                        <button
-                          type="button"
-                          onClick={() => openGift(coupon)}
-                          className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-amber-200 bg-amber-50 text-amber-600 hover:bg-amber-100 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-400 dark:hover:bg-amber-500/20 transition-colors cursor-pointer"
-                        >
-                          <Gift size={14} />
-                          {t("gift_btn")}
-                        </button>
-                        <BtnEdit
-                          route={`/management/coupons/edit/${coupon.id}`}
-                          name={t("edit_btn")}
-                        />
-                        <BtnDelete
-                          name={t("delete_btn")}
-                          onClick={() => openConfirm(coupon.id)}
-                        />
-                      </div>
-                    </td>
+<td className="px-6 py-4">
+  <div className="flex gap-2 justify-center">
+    <button
+      type="button"
+      onClick={() => openGift(coupon)}
+      className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-amber-200 bg-amber-50 text-amber-600 hover:bg-amber-100 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-400 dark:hover:bg-amber-500/20 transition-colors cursor-pointer"
+    >
+      <Gift size={14} />
+      {t("gift_btn")}
+    </button>
+    <BtnEdit
+      route={`/management/coupons/edit/${coupon.id}`}
+      name={t("edit_btn")}
+    />
+    <BtnDelete name={t("delete_btn")} onClick={() => openConfirm(coupon.id)} />
+  </div>
+</td>
 ```
 
 - Trước thẻ đóng `</div>` cuối cùng (sau `<Pagination .../>` block, dòng 407-413), thêm modal:
 
 ```jsx
-        <GiftCouponModal
-          isOpen={!!giftCoupon}
-          coupon={giftCoupon}
-          onClose={() => setGiftCoupon(null)}
-          onSuccess={() => {
-            queryClient.invalidateQueries({ queryKey: ["coupons"] });
-          }}
-        />
+<GiftCouponModal
+  isOpen={!!giftCoupon}
+  coupon={giftCoupon}
+  onClose={() => setGiftCoupon(null)}
+  onSuccess={() => {
+    queryClient.invalidateQueries({ queryKey: ["coupons"] });
+  }}
+/>
 ```
 
 - [ ] **Step 3: Build + Lint**
@@ -1331,6 +1410,7 @@ git commit -m "feat(admin): add gift coupon button and modal"
 ### Task 12: Admin — trường `max_uses_per_user` ở form coupon
 
 **Files:**
+
 - Modify: `client/src/pages/Admin/coupons/create.jsx`
 - Modify: `client/src/pages/Admin/coupons/edit.jsx`
 
@@ -1339,7 +1419,7 @@ git commit -m "feat(admin): add gift coupon button and modal"
 Trong cả `create.jsx` và `edit.jsx`, sau dòng `const [usageLimit, setUsageLimit] = useState(1);` thêm:
 
 ```jsx
-  const [maxUsesPerUser, setMaxUsesPerUser] = useState(1);
+const [maxUsesPerUser, setMaxUsesPerUser] = useState(1);
 ```
 
 - [ ] **Step 2: Thêm field vào payload submit**
@@ -1355,13 +1435,13 @@ Trong `dataToSend` của cả 2 file, thêm:
 Trong cả 2 file, trong card "Điều kiện sử dụng" (`usage_conditions_title`), cạnh `FloatingInput usage_limit_input` (dòng ~183-189), thêm input thứ hai:
 
 ```jsx
-              <FloatingInput
-                label={t("max_uses_per_user_label")}
-                min={1}
-                type="number"
-                value={maxUsesPerUser}
-                onChange={(e) => setMaxUsesPerUser(e.target.value)}
-              />
+<FloatingInput
+  label={t("max_uses_per_user_label")}
+  min={1}
+  type="number"
+  value={maxUsesPerUser}
+  onChange={(e) => setMaxUsesPerUser(e.target.value)}
+/>
 ```
 
 - [ ] **Step 4: Build + Lint + Commit**
@@ -1381,6 +1461,7 @@ git commit -m "feat(admin): add max_uses_per_user field to coupon form"
 ### Task 13: User — section "Coupon được tặng" trên trang "Mã của tôi"
 
 **Files:**
+
 - Modify: `client/src/pages/coupons/index.jsx`
 
 - [ ] **Step 1: Sửa trang coupons**
@@ -1414,7 +1495,8 @@ const CouponsPage = () => {
   });
 
   const coupons = data?.success ? data.data.coupons : [];
-  const giftedCoupons = isLoggedIn && giftedData?.success ? giftedData.data.coupons : [];
+  const giftedCoupons =
+    isLoggedIn && giftedData?.success ? giftedData.data.coupons : [];
 
   return (
     <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
@@ -1506,6 +1588,7 @@ git commit -m "feat(client): show gifted coupons section on my coupons page"
 ### Task 14: i18n keys (vi + en)
 
 **Files:**
+
 - Modify: `client/src/locales/vi/dashboard.json`
 - Modify: `client/src/locales/en/dashboard.json`
 
@@ -1576,21 +1659,27 @@ Kỳ vọng: log khởi động không lỗi import/syntax. Dừng server.
 Với server đang chạy (lấy `VITE_API_URL`/port từ `.env`, ví dụ `http://localhost:5000`), lần lượt:
 
 1. **Tặng coupon thành công** (admin token):
+
 ```
 curl -X POST http://localhost:5000/api/v1/management/coupon/gift -H "Content-Type: application/json" -H "Authorization: Bearer <ADMIN_TOKEN>" -d "{\"coupon_id\":1,\"user_id\":3}"
 ```
+
 Kỳ vọng: HTTP 201, `success: true`.
 
 2. **Tặng trùng bị chặn**:
+
 ```
 curl -X POST http://localhost:5000/api/v1/management/coupon/gift -H "Content-Type: application/json" -H "Authorization: Bearer <ADMIN_TOKEN>" -d "{\"coupon_id\":1,\"user_id\":3}"
 ```
+
 Kỳ vọng: HTTP 409, message `"Coupon này đã được tặng cho user này rồi"`.
 
 3. **Check coupon với user** (customer token):
+
 ```
 curl -X POST http://localhost:5000/api/v1/customer/coupon/check -H "Content-Type: application/json" -H "Authorization: Bearer <USER_TOKEN>" -d "{\"amount\":500000,\"code\":\"<CODE>\"}"
 ```
+
 Kỳ vọng: HTTP 200, `data.discount > 0`.
 
 4. **Dùng hết lượt bị chặn**: tạo đơn có coupon 1 lần (POST `/customer/order` với `coupon_code`, có user token), lặp lại lần 2 → kỳ vọng lần 2 trả HTTP 400 message `"Bạn đã dùng hết số lần của mã giảm giá này"`.

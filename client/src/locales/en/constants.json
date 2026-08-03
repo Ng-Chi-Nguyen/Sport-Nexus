@@ -65,6 +65,9 @@
       "brands": "🏷️ Brands",
       "attributekeys": "⚙️ Product Attributes",
       "productimages": "🖼️ Image Library",
+      "productvariants": "🧬 Product Variants",
+      "invoices": "🧾 Invoices",
+      "payments": "💳 Payments",
       "orders": "🛒 Sales Orders",
       "coupons": "🎟️ Coupons",
       "reviews": "⭐ Customer Reviews",
@@ -77,7 +80,8 @@
       "create": "✨ Create new (Create)",
       "read": "👁️ View data (Read)",
       "update": "📝 Edit (Update)",
-      "delete": "🗑️ Delete data (Delete)"
+      "delete": "🗑️ Delete data (Delete)",
+      "gift": "🎁 Gift (Gift)"
     }
   }
 }

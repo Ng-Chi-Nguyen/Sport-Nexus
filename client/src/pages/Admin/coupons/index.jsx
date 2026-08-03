@@ -1,17 +1,12 @@
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnDelete, BtnEdit } from "@/components/ui/button";
-import { SearchTable } from "@/components/ui/search";
 import Badge from "@/components/ui/badge";
-import { LayoutDashboard, ChevronDown, Filter, RefreshCw, Gift } from "lucide-react";
-import {
-  useLoaderData,
-  useRevalidator,
-  useSearchParams,
-} from "react-router-dom";
+import { LayoutDashboard, RefreshCw, Gift } from "lucide-react";
+import { useLoaderData, useRevalidator } from "react-router-dom";
 import { formatDate, formatCurrency } from "@/utils/formatters";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import Pagination from "@/components/ui/pagination";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { queryClient } from "@/lib/react-query";
 import ShowToast from "@/components/ui/toast";
 import couponApi from "@/api/management/couponApi";
@@ -23,17 +18,28 @@ import {
   DISCOUNT_TYPE_OPTIONS,
 } from "@/constants/management/coupon";
 import { useTranslation } from "react-i18next";
+import FilterPanel from "@/components/ui/FilterPanel";
+import useTableFilters from "@/hooks/useTableFilters";
 
 const CouponPage = () => {
   const { t } = useTranslation("translation", { keyPrefix: "coupon" });
   const { t: tc } = useTranslation("translation", { keyPrefix: "constants" });
   const responses = useLoaderData();
   const revalidator = useRevalidator();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const {
+    searchParams,
+    setSearchParams,
+    searchInput,
+    setSearchInput,
+    showFilters,
+    setShowFilters,
+    hasActiveFilters,
+    setFilter,
+    clearAllFilters,
+  } = useTableFilters();
 
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
-  const [showFilters, setShowFilters] = useState(false);
   const [giftCoupon, setGiftCoupon] = useState(null);
 
   const breadcrumbData = [
@@ -42,54 +48,19 @@ const CouponPage = () => {
     { title: t("coupon_management"), route: "/management/coupons" },
   ];
 
-  const currentSearch = searchParams.get("search") || "";
-  const isActive = searchParams.get("is_active") || "";
+  const isActive = searchParams.get("is_active") ?? "";
   const discountType = searchParams.get("discount_type") || "";
   const dateFrom = searchParams.get("date_from") || "";
   const dateTo = searchParams.get("date_to") || "";
   const discountMin = searchParams.get("discount_min") || "";
   const discountMax = searchParams.get("discount_max") || "";
 
-  const [searchTerm, setSearchTerm] = useState(currentSearch);
-  useEffect(() => {
-    setSearchTerm(currentSearch);
-  }, [currentSearch]);
-
   const coupons = responses?.data?.list_coupons || [];
   const pagination = responses?.data?.pagination || {};
-
-  const hasActiveFilters =
-    isActive ||
-    discountType ||
-    dateFrom ||
-    dateTo ||
-    discountMin ||
-    discountMax;
-
-  const setFilter = (key, value) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", "1");
-    if (value) params.set(key, value);
-    else params.delete(key);
-    setSearchParams(params);
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    setFilter("search", searchTerm.trim() || "");
-  };
 
   const handlePageChange = (newPage) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", String(newPage));
-    setSearchParams(params);
-  };
-
-  const clearAllFilters = () => {
-    const params = new URLSearchParams();
-    const search = searchParams.get("search");
-    if (search) params.set("search", search);
-    params.set("page", "1");
     setSearchParams(params);
   };
 
@@ -132,155 +103,123 @@ const CouponPage = () => {
       <Breadcrumbs data={breadcrumbData} />
 
       {/* THANH TÌM KIẾM & BỘ LỌC */}
-      <div className="flex flex-wrap items-center gap-3 my-4">
-        <form onSubmit={handleSearchSubmit} className="flex-1 min-w-[240px]">
-          <SearchTable
-            placeholder={t("search_placeholder")}
-            value={searchTerm}
-            onChange={setSearchTerm}
-          />
-        </form>
-
-        <button
-          type="button"
-          onClick={() => setShowFilters(!showFilters)}
-          className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
-            hasActiveFilters
-              ? "bg-sky-50 text-sky-600 border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20"
-              : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50 hover:text-slate-900 dark:bg-[#111827]/40 dark:text-slate-400 dark:border-slate-800 dark:hover:bg-[#161F32] dark:hover:text-slate-200"
-          }`}
+      <div className="my-4">
+        <FilterPanel
+          searchValue={searchInput}
+          onSearchChange={setSearchInput}
+          showFilters={showFilters}
+          onToggleFilters={() => setShowFilters(!showFilters)}
+          hasActiveFilters={hasActiveFilters}
+          onClearFilters={clearAllFilters}
+          searchPlaceholder={t("search_placeholder")}
+          addButton={
+            <div className="flex items-center gap-2 flex-wrap justify-end">
+              <ExcelCrudActions
+                basePath="/management/coupon"
+                title={t("import_export_title")}
+                templateFileName="template-ma-giam-gia.xlsx"
+                exportFileName="ma-giam-gia.xlsx"
+                onSuccess={() => {
+                  queryClient.invalidateQueries({ queryKey: ["coupons"] });
+                  revalidator.revalidate();
+                }}
+              />
+              <BtnAdd
+                route="/management/coupons/create"
+                name={t("add_coupon_btn")}
+              />
+            </div>
+          }
         >
-          <Filter size={14} />
-          {t("filter_btn")}
-          {hasActiveFilters && (
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
-          )}
-          <ChevronDown
-            size={14}
-            className={`transition-transform duration-300 ${
-              showFilters ? "rotate-180" : ""
-            }`}
-          />
-        </button>
+          <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[230px] shrink-0">
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              {t("status_label")}
+            </label>
+            <div className="flex items-center gap-0.5 p-0.5 rounded-lg h-10 border transition-colors duration-200 bg-slate-100 border-slate-200 dark:bg-[#111827]/60 dark:border-slate-800">
+              {ACTIVE_TABS.map((tab) => {
+                // Ép kiểu về String để so sánh an toàn tuyệt đối
+                const isTabActive = String(isActive) === String(tab.value);
 
-        <ExcelCrudActions
-          basePath="/management/coupon"
-          title={t("import_export_title")}
-          templateFileName="template-ma-giam-gia.xlsx"
-          exportFileName="ma-giam-gia.xlsx"
-          onSuccess={() => {
-            queryClient.invalidateQueries({ queryKey: ["coupons"] });
-            revalidator.revalidate();
-          }}
-        />
-        <BtnAdd route="/management/coupons/create" name={t("add_coupon_btn")} />
-      </div>
-
-      {/* KHU VỰC BỘ LỌC NGANG */}
-      <div
-        className={`transition-all duration-300 ease-in-out ${
-          showFilters
-            ? "max-h-[500px] opacity-100 mb-4 overflow-visible"
-            : "max-h-0 opacity-0 overflow-hidden"
-        }`}
-      >
-        <div className="p-4 rounded-xl border shadow-lg transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/80 dark:border-slate-800">
-          <div className="flex flex-wrap items-end gap-4">
-            <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[230px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("status_label")}
-              </label>
-              <div className="flex items-center gap-0.5 p-0.5 rounded-lg h-10 border transition-colors duration-200 bg-slate-100 border-slate-200 dark:bg-[#111827]/60 dark:border-slate-800">
-                {ACTIVE_TABS.map((tab) => (
+                return (
                   <button
                     key={tab.value}
                     type="button"
                     onClick={() => setFilter("is_active", tab.value)}
                     className={`flex-1 text-center py-1 text-[11px] font-bold rounded-md cursor-pointer transition-colors h-full ${
-                      isActive === tab.value
+                      isTabActive
                         ? "bg-sky-50 text-sky-600 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20"
-                        : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
+                        : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 border border-transparent"
                     }`}
                   >
                     {tc(tab.label)}
                   </button>
-                ))}
-              </div>
+                );
+              })}
             </div>
-
-            <div className="flex-1 min-w-[150px]">
-              <SimpleSelect
-                label={t("discount_type_label")}
-                options={DISCOUNT_TYPE_OPTIONS.map((o) => ({
-                  slug: o.slug,
-                  name: tc(o.name),
-                }))}
-                value={discountType}
-                onChange={(val) => setFilter("discount_type", val)}
-                placeholder={t("all_placeholder")}
-              />
-            </div>
-
-            <div className="flex-1 min-w-[140px]">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("date_from_label")}
-              </label>
-              <input
-                type="date"
-                value={dateFrom}
-                onChange={(e) => setFilter("date_from", e.target.value)}
-                className="w-full h-10 px-2.5 text-sm rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 dark:focus:ring-1 dark:focus:ring-sky-500/20"
-              />
-            </div>
-
-            <div className="flex-1 min-w-[140px]">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("date_to_label")}
-              </label>
-              <input
-                type="date"
-                value={dateTo}
-                onChange={(e) => setFilter("date_to", e.target.value)}
-                className="w-full h-10 px-2.5 text-sm rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 dark:focus:ring-1 dark:focus:ring-sky-500/20"
-              />
-            </div>
-
-            <div className="w-[180px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("discount_value_label")}
-              </label>
-              <div className="flex items-center gap-1">
-                <input
-                  type="number"
-                  placeholder={t("min_placeholder")}
-                  value={discountMin}
-                  onChange={(e) => setFilter("discount_min", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
-                />
-                <span className="text-slate-400 dark:text-slate-600 shrink-0">
-                  –
-                </span>
-                <input
-                  type="number"
-                  placeholder={t("max_placeholder")}
-                  value={discountMax}
-                  onChange={(e) => setFilter("discount_max", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
-                />
-              </div>
-            </div>
-
-            {hasActiveFilters && (
-              <button
-                type="button"
-                onClick={clearAllFilters}
-                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 dark:border-rose-500/20 dark:text-rose-400 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 transition-colors cursor-pointer"
-              >
-                {t("clear_filter_btn")}
-              </button>
-            )}
           </div>
-        </div>
+
+          <div className="flex-1 min-w-[150px]">
+            <SimpleSelect
+              label={t("discount_type_label")}
+              options={DISCOUNT_TYPE_OPTIONS.map((o) => ({
+                slug: o.slug,
+                name: tc(o.name),
+              }))}
+              value={discountType}
+              onChange={(val) => setFilter("discount_type", val)}
+              placeholder={t("all_placeholder")}
+            />
+          </div>
+
+          <div className="flex-1 min-w-[140px]">
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              {t("date_from_label")}
+            </label>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setFilter("date_from", e.target.value)}
+              className="w-full h-10 px-2.5 text-sm rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 dark:focus:ring-1 dark:focus:ring-sky-500/20"
+            />
+          </div>
+
+          <div className="flex-1 min-w-[140px]">
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              {t("date_to_label")}
+            </label>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setFilter("date_to", e.target.value)}
+              className="w-full h-10 px-2.5 text-sm rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 dark:focus:ring-1 dark:focus:ring-sky-500/20"
+            />
+          </div>
+
+          <div className="w-[180px] shrink-0">
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              {t("discount_value_label")}
+            </label>
+            <div className="flex items-center gap-1">
+              <input
+                type="number"
+                placeholder={t("min_placeholder")}
+                value={discountMin}
+                onChange={(e) => setFilter("discount_min", e.target.value)}
+                className="w-full h-10 px-2 text-xs rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
+              />
+              <span className="text-slate-400 dark:text-slate-600 shrink-0">
+                –
+              </span>
+              <input
+                type="number"
+                placeholder={t("max_placeholder")}
+                value={discountMax}
+                onChange={(e) => setFilter("discount_max", e.target.value)}
+                className="w-full h-10 px-2 text-xs rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
+              />
+            </div>
+          </div>
+        </FilterPanel>
       </div>
 
       {/* TIÊU ĐỀ & NÚT REFRESH */}
@@ -381,7 +320,7 @@ const CouponPage = () => {
                         <button
                           type="button"
                           onClick={() => openGift(coupon)}
-                          className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-amber-200 bg-amber-50 text-amber-600 hover:bg-amber-100 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-400 dark:hover:bg-amber-500/20 transition-colors cursor-pointer"
+                          className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500/20 transition-colors cursor-pointer"
                         >
                           <Gift size={14} />
                           {t("gift_btn")}
