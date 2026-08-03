@@ -80,31 +80,27 @@ const InvoiceDetail = () => {
             </div>
 
             <div className="flex flex-col items-center">
-              {/* Phiếu hóa đơn kiểu siêu thị */}
+              {/* Phiếu hóa đơn kiểu to hơn */}
               <div
                 ref={receiptRef}
                 id="invoice-receipt"
-                className="w-full max-w-[340px] bg-white text-black font-mono text-[11px] leading-snug px-4 py-5 shadow-xl"
+                className="mt-[-50px] w-full max-w-[450px] bg-white text-black font-mono text-sm leading-relaxed p-8 shadow-xl mx-auto"
               >
                 <div className="text-center">
-                  <p className="text-base font-bold tracking-widest">
+                  <p className="text-2xl font-bold tracking-widest">
                     SPORTNEXUS
                   </p>
-                  <p className="text-[10px] mt-0.5">
-                    Cửa hàng thể thao chính hãng
-                  </p>
-                  <p className="text-[10px]">123 Nguyễn Huệ, Q.1, TP.HCM</p>
-                  <p className="text-[10px]">Hotline: 1900 0000</p>
+                  <p className="text-xs mt-1">Cửa hàng thể thao chính hãng</p>
+                  <p className="text-xs">123 Nguyễn Huệ, Q.1, TP.HCM</p>
+                  <p className="text-xs">Hotline: 1900 0000</p>
                 </div>
 
-                <div className="border-t border-dashed border-black my-2" />
+                <div className="border-t border-dashed border-black my-4" />
 
-                <div className="space-y-0.5">
+                <div className="space-y-1.5 text-xs">
                   <div className="flex justify-between">
                     <span>Hóa đơn:</span>
-                    <span className="font-bold">
-                      {invoice.invoice_number}
-                    </span>
+                    <span className="font-bold">{invoice.invoice_number}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Ngày:</span>
@@ -116,7 +112,9 @@ const InvoiceDetail = () => {
                   </div>
                   <div className="flex justify-between">
                     <span>Trạng thái:</span>
-                    <span>{INVOICE_LABELS[invoice.status] || invoice.status}</span>
+                    <span>
+                      {INVOICE_LABELS[invoice.status] || invoice.status}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Khách:</span>
@@ -132,9 +130,9 @@ const InvoiceDetail = () => {
                   )}
                 </div>
 
-                <div className="border-t border-dashed border-black my-2" />
+                <div className="border-t border-dashed border-black my-4" />
 
-                <div className="space-y-1.5">
+                <div className="space-y-3 text-xs">
                   {invoice.order?.OrderItems?.map((item) => {
                     const variant = item.product_variant;
                     const attributes = variant?.VariableAttributes?.map(
@@ -142,13 +140,15 @@ const InvoiceDetail = () => {
                     ).join(", ");
                     return (
                       <div key={item.id}>
-                        <p className="font-bold">
+                        <p className="font-bold text-sm">
                           {variant?.product?.name || "Sản phẩm"}
                         </p>
                         {attributes && (
-                          <p className="text-[10px]">{attributes}</p>
+                          <p className="text-[11px] text-gray-600">
+                            {attributes}
+                          </p>
                         )}
-                        <div className="flex justify-between">
+                        <div className="flex justify-between mt-0.5">
                           <span>
                             {item.quantity} x{" "}
                             {formatCurrency(item.price_at_purchase)}
@@ -165,9 +165,9 @@ const InvoiceDetail = () => {
                   })}
                 </div>
 
-                <div className="border-t border-dashed border-black my-2" />
+                <div className="border-t border-dashed border-black my-4" />
 
-                <div className="space-y-0.5">
+                <div className="space-y-1.5 text-xs">
                   <div className="flex justify-between">
                     <span>Tạm tính</span>
                     <span>{formatCurrency(invoice.subtotal)}</span>
@@ -175,28 +175,26 @@ const InvoiceDetail = () => {
                   {Number(invoice.discount_amount) > 0 && (
                     <div className="flex justify-between">
                       <span>Giảm giá</span>
-                      <span>
-                        -{formatCurrency(invoice.discount_amount)}
-                      </span>
+                      <span>-{formatCurrency(invoice.discount_amount)}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
                     <span>VAT ({Number(invoice.vat_rate) * 100}%)</span>
                     <span>{formatCurrency(invoice.vat_amount)}</span>
                   </div>
-                  <div className="flex justify-between text-sm font-black pt-1">
+                  <div className="flex justify-between text-base font-black pt-2 border-t border-black/10">
                     <span>TỔNG CỘNG</span>
                     <span>{formatCurrency(invoice.total_amount)}</span>
                   </div>
                 </div>
 
-                <div className="border-t border-dashed border-black my-2" />
+                <div className="border-t border-dashed border-black my-4" />
 
                 <div className="text-center">
-                  <p className="text-[10px]">
+                  <p className="text-xs font-medium">
                     Cảm ơn quý khách đã mua hàng tại SportNexus!
                   </p>
-                  <p className="text-[10px] mt-1">
+                  <p className="text-[11px] text-gray-600 mt-1">
                     Hàng đã mua chỉ đổi trả khi còn hóa đơn
                   </p>
                 </div>

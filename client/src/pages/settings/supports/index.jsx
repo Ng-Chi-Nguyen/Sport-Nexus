@@ -7,11 +7,13 @@ import {
   MessageSquare,
   HelpCircle,
   Clock,
+  Headphones,
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import ShowToast from "@/components/ui/toast";
 import { LabelInput } from "@/components/ui/input";
 import supportApi from "@/api/customer/settings/support";
+import { TitleWithIcon } from "@/components/ui/title";
 
 const Support = () => {
   const [formData, setFormData] = useState({
@@ -77,9 +79,7 @@ const Support = () => {
             <HelpCircle className="w-3.5 h-3.5" />
             Trung tâm trợ giúp
           </span>
-          <h3 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-            Liên Hệ & Hỗ Trợ
-          </h3>
+          <TitleWithIcon icon={Headphones} title="Liên Hệ & Hỗ Trợ" />
           <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 leading-relaxed">
             Bạn có thắc mắc hoặc cần giúp đỡ? Hãy gửi yêu cầu cho chúng tôi, đội
             ngũ SportNexus sẽ phản hồi qua email sớm nhất!

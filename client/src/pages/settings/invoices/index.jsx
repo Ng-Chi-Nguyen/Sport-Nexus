@@ -2,6 +2,8 @@ import { useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 import { formatDate, formatCurrency } from "@/utils/formatters";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import Pagination from "@/components/ui/pagination";
+import { Receipt } from "lucide-react";
+import { TitleWithIcon } from "@/components/ui/title";
 
 const INVOICE_LABELS = {
   Pending: "Chờ xử lý",
@@ -10,9 +12,19 @@ const INVOICE_LABELS = {
 };
 
 const INVOICE_BADGE = {
-  Pending: "bg-amber-50 text-amber-600 border-amber-200",
-  Completed: "bg-emerald-50 text-emerald-600 border-emerald-200",
-  Cancelled: "bg-rose-50 text-rose-600 border-rose-200",
+  Pending:
+    "bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20",
+  Completed:
+    "bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20",
+  Cancelled:
+    "bg-rose-50 text-rose-700 border-rose-200/80 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20",
+};
+
+// Màu sắc cho chấm tròn đi kèm
+const INVOICE_DOT = {
+  Pending: "bg-amber-500",
+  Completed: "bg-emerald-500",
+  Cancelled: "bg-rose-500",
 };
 
 const Invoice = () => {
@@ -39,11 +51,7 @@ const Invoice = () => {
           ]}
         />
 
-        <div className="flex items-center justify-between mb-6 mt-4">
-          <h1 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
-            Hóa đơn của tôi
-          </h1>
-        </div>
+        <TitleWithIcon icon={Receipt} title="Hóa đơn của tôi" />
 
         {invoices.length === 0 ? (
           <div className="border border-slate-200 dark:border-slate-900 p-8 text-center text-slate-400 dark:text-slate-500 bg-white dark:bg-[#0D121F]/40">
@@ -78,15 +86,25 @@ const Invoice = () => {
                         {invoice.invoice_number}
                       </td>
                       <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300">
-                        {invoice.issued_at ? formatDate(invoice.issued_at) : "—"}
+                        {invoice.issued_at
+                          ? formatDate(invoice.issued_at)
+                          : "—"}
                       </td>
                       <td className="py-3.5 px-4 font-medium text-slate-900 dark:text-slate-100">
                         {formatCurrency(invoice.total_amount)}
                       </td>
                       <td className="py-3.5 px-4">
                         <span
-                          className={`inline-block px-2.5 py-1 text-xs font-medium border ${INVOICE_BADGE[invoice.status] || ""}`}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full border transition-colors ${
+                            INVOICE_BADGE[invoice.status] ||
+                            "bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700"
+                          }`}
                         >
+                          {/* Chấm tròn biểu tượng trạng thái */}
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${INVOICE_DOT[invoice.status] || "bg-slate-400"}`}
+                          />
+
                           {INVOICE_LABELS[invoice.status] || invoice.status}
                         </span>
                       </td>

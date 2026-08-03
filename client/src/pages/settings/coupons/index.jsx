@@ -40,10 +40,10 @@ const CouponsPage = () => {
 
         {giftedCoupons.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
-              <Gift size={18} className="text-amber-500" />
-              Coupon được tặng ({giftedCoupons.length})
-            </h2>
+            <TitleWithIcon
+              icon={Gift}
+              title={`Coupon được tặng (${giftedCoupons.length})`}
+            />
             {giftedLoading ? (
               <div className="py-10 flex justify-center">
                 <LoadingSpinner />

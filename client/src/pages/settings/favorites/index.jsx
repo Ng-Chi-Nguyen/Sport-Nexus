@@ -5,6 +5,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { ProductCard } from "@/components/ui/card";
+import { TitleWithIcon } from "@/components/ui/title";
 
 const FavoritesPage = () => {
   const { ids } = useWishlist();
@@ -51,20 +52,21 @@ const FavoritesPage = () => {
           ]}
         />
 
-        <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4">
-          Sản phẩm đã thích ({ids.length})
-        </h1>
+        <TitleWithIcon
+          icon={Heart}
+          title={`Sản phẩm đã thích (${ids.length})`}
+        />
 
         {isLoading ? (
           <div className="py-20 flex justify-center">
             <LoadingSpinner />
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-20 text-slate-500 dark:text-slate-400">
+          <div className="text-center py-20 text-slate-500 dark:text-slate-400 mt-2">
             Không tìm thấy sản phẩm
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4 mt-2">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

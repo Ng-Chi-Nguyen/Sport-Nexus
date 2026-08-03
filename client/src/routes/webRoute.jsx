@@ -31,12 +31,12 @@ const Address = lazy(() => import("@/pages/profile/address"));
 const AddAddress = lazy(() => import("@/pages/profile/address/AddAddress"));
 const EditAddress = lazy(() => import("@/pages/profile/address/EditAddress"));
 const EditProfile = lazy(() => import("@/pages/profile/editProfile"));
-const FavoritesPage = lazy(() => import("@/pages/favorites"));
-const CouponsPage = lazy(() => import("@/pages/coupons"));
-const SearchHistoryPage = lazy(() => import("@/pages/searchHistory"));
-const ProfilePlaceholder = lazy(() => import("@/pages/profile/placeholder"));
-const Invoice = lazy(() => import("@/pages/invoices"));
-const InvoiceDetail = lazy(() => import("@/pages/invoices/detail"));
+const FavoritesPage = lazy(() => import("@/pages/settings/favorites"));
+const CouponsPage = lazy(() => import("@/pages/settings/coupons"));
+const SearchHistoryPage = lazy(() => import("@/pages/settings/searchHistory"));
+const ProfilePlaceholder = lazy(() => import("@/pages/settings/placeholder"));
+const Invoice = lazy(() => import("@/pages/settings/invoices"));
+const InvoiceDetail = lazy(() => import("@/pages/settings/invoices/detail"));
 
 export const webRoutes = {
   children: [

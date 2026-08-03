@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Clock, Search, X } from "lucide-react";
+import { Clock, History, Search, X } from "lucide-react";
 import dayjs from "dayjs";
 import {
   clearSearchHistory,
@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import searchApi from "@/api/web/searchApi";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { ProductCard } from "@/components/ui/card";
+import { TitleWithIcon } from "@/components/ui/title";
 
 const groupByTime = (items) => {
   const today = dayjs().startOf("day");
@@ -81,9 +82,7 @@ const SearchHistoryPage = () => {
           ]}
         />
 
-        <h1 className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 mt-6 mb-2 tracking-tight">
-          Lịch sử tìm kiếm
-        </h1>
+        <TitleWithIcon icon={History} title="Lịch sử tìm kiếm" />
 
         {history.length === 0 ? (
           <div className="text-center py-20 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md px-6">
