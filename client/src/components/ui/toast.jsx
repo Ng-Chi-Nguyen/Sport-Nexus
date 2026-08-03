@@ -3,7 +3,6 @@ import { toast } from "sonner";
 const ShowToast = (status, message) => {
   const options = {
     closeButton: true, // Hiển thị nút 'x' để người dùng chủ động tắt
-    duration: Infinity, // Giữ thông báo không tự biến mất
   };
 
   switch (status) {

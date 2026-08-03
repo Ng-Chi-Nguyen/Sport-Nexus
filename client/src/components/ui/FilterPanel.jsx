@@ -13,7 +13,9 @@ const FilterPanel = ({
   addButton,
   children,
 }) => {
-  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
   return (
     <>
       <div className="flex items-center gap-4">
@@ -30,7 +32,7 @@ const FilterPanel = ({
         <button
           type="button"
           onClick={onToggleFilters}
-          className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
+          className={`flex items-center gap-1.5 px-3 py-2.5 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
             hasActiveFilters
               ? "bg-sky-50 text-sky-600 border-sky-300 dark:bg-[#4facf3]/10 dark:text-[#4facf3] dark:border-[#4facf3]/20"
               : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100 dark:bg-[#111827]/40 dark:text-slate-400 dark:border-slate-800 dark:hover:bg-[#161F32] dark:hover:text-slate-200"

@@ -217,7 +217,9 @@ const AdminLayout = () => {
                             {item.icon}
                           </span>
                           {!isCollapsed && (
-                            <span className="truncate">{tMenu(item.label)}</span>
+                            <span className="truncate">
+                              {tMenu(item.label)}
+                            </span>
                           )}
                         </NavLink>
                       </li>
@@ -236,10 +238,11 @@ const AdminLayout = () => {
             {/* Popover Menu */}
             {isOpenSettings && (
               <div
-                className={`absolute bottom-full left-0 mb-2 bg-white/95 dark:bg-[#0D121F]/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-xl p-2 z-50 flex flex-col gap-0.5 ${
+                className={`absolute bottom-[80%] left-0 mb-2 bg-white/95 dark:bg-[#0D121F]/95 border border-slate-200 dark:border-slate-800 shadow-xl dark:shadow-2xl backdrop-blur-xl p-2 z-50 flex flex-col gap-0.5 ${
                   isCollapsed ? "w-[200px]" : "w-full"
                 }`}
               >
+                <div className="absolute -bottom-2 left-6 w-4 h-4 bg-white dark:bg-[#0D121F] border-r border-b border-slate-200 dark:border-slate-800 transform rotate-45 pointer-events-none" />
                 {!isCollapsed && (
                   <div className="px-3 py-2 border-b border-slate-100 dark:border-white/5 mb-1">
                     <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
@@ -294,7 +297,7 @@ const AdminLayout = () => {
                   </button>
 
                   {isHoverSettings && (
-                    <div className="absolute left-full top-0 ml-1 w-56 bg-white/95 dark:bg-[#0D121F]/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-xl p-2 z-50 flex flex-col gap-0.5">
+                    <div className="absolute left-[98%] -top-1 ml-1 w-56 bg-white/95 dark:bg-[#0D121F]/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-xl p-2 z-50 flex flex-col gap-0.5">
                       <button
                         type="button"
                         onClick={toggleTheme}
@@ -333,7 +336,7 @@ const AdminLayout = () => {
                         </button>
 
                         {isLangHovered && (
-                          <div className="absolute left-full top-0 ml-1 w-48 max-h-64 overflow-y-auto bg-white/95 dark:bg-[#0D121F]/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-xl p-1 z-50 flex flex-col custom-scrollbar">
+                          <div className="absolute left-[98%] top-0 ml-1 w-48 max-h-64 overflow-y-auto bg-white/95 dark:bg-[#0D121F]/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl dark:shadow-2xl backdrop-blur-xl p-1 z-50 flex flex-col custom-scrollbar">
                             {LANGUAGES.map((lang) => {
                               const isActive = currentLang === lang.code;
                               return (

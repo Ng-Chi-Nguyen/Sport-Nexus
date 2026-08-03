@@ -1,23 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { SearchTable } from "@/components/ui/search";
 import { BtnDelete, BtnEdit, BtnAdd } from "@/components/ui/button";
 import { SimpleSelect } from "@/components/ui/select";
 import {
   LayoutDashboard,
   PackageCheck,
   PackageX,
-  Filter,
-  ChevronDown,
   RefreshCw,
 } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
-import {
-  useLoaderData,
-  useRevalidator,
-  useSearchParams,
-} from "react-router-dom";
+import { useLoaderData, useRevalidator } from "react-router-dom";
 import Badge from "@/components/ui/badge";
+import FilterPanel from "@/components/ui/FilterPanel";
+import useTableFilters from "@/hooks/useTableFilters";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import Pagination from "@/components/ui/pagination";
 import productdApi from "@/api/core/productApi";
@@ -29,8 +24,18 @@ import { useTranslation } from "react-i18next";
 const ProductPage = () => {
   const { t } = useTranslation("translation", { keyPrefix: "product" });
   const responses = useLoaderData();
-  const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
+  const {
+    searchParams,
+    setSearchParams,
+    searchInput,
+    setSearchInput,
+    showFilters,
+    setShowFilters,
+    hasActiveFilters,
+    setFilter,
+    clearAllFilters,
+  } = useTableFilters();
 
   const breadcrumbData = [
     {
@@ -49,57 +54,13 @@ const ProductPage = () => {
 
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState({ id: "", name: "" });
-  const [showFilters, setShowFilters] = useState(false);
 
-  const currentSearch = searchParams.get("search") || "";
   const currentIsActive = searchParams.get("is_active") || "";
   const currentCategory = searchParams.get("category_id") || "";
   const currentBrand = searchParams.get("brand_id") || "";
   const currentSupplier = searchParams.get("supplier_id") || "";
   const currentPriceMin = searchParams.get("price_min") || "";
   const currentPriceMax = searchParams.get("price_max") || "";
-
-  const [searchInput, setSearchInput] = useState(currentSearch);
-  const isFirstRender = useRef(true);
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    const timer = setTimeout(() => {
-      const params = new URLSearchParams(searchParams);
-      params.set("page", "1");
-      if (searchInput) params.set("search", searchInput);
-      else params.delete("search");
-      setSearchParams(params);
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [searchInput]);
-
-  const hasActiveFilters =
-    currentIsActive ||
-    currentCategory ||
-    currentBrand ||
-    currentSupplier ||
-    currentPriceMin ||
-    currentPriceMax;
-
-  const setFilter = (key, value) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", "1");
-    if (value) params.set(key, value);
-    else params.delete(key);
-    setSearchParams(params);
-  };
-
-  const clearAllFilters = () => {
-    const params = new URLSearchParams();
-    const search = searchParams.get("search");
-    if (search) params.set("search", search);
-    params.set("page", "1");
-    setSearchParams(params);
-  };
 
   const products = responses?.data?.list_products || [];
 
@@ -148,161 +109,129 @@ const ProductPage = () => {
     <div className="text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
-      <div className="flex items-center gap-3 my-4">
-        <div className="flex-1">
-          <SearchTable
-            placeholder={t("search_product_placeholder")}
-            value={searchInput}
-            onChange={(val) => setSearchInput(val)}
-          />
-        </div>
-        <button
-          type="button"
-          onClick={() => setShowFilters(!showFilters)}
-          className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
-            hasActiveFilters
-              ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-300 dark:border-sky-500/20"
-              : "bg-white dark:bg-[#111827]/40 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-[#161F32] hover:text-slate-900 dark:hover:text-slate-200"
-          }`}
+      <div className="my-4">
+        <FilterPanel
+          searchValue={searchInput}
+          onSearchChange={setSearchInput}
+          showFilters={showFilters}
+          onToggleFilters={() => setShowFilters(!showFilters)}
+          hasActiveFilters={hasActiveFilters}
+          onClearFilters={clearAllFilters}
+          searchPlaceholder={t("search_product_placeholder")}
+          addButton={
+            <div className="flex items-center gap-2 flex-wrap justify-end">
+              <ExcelCrudActions
+                basePath="/core/product"
+                title={t("import_export_product")}
+                templateFileName="template-san-pham.xlsx"
+                exportFileName="san-pham.xlsx"
+              />
+              <BtnAdd
+                route="/management/products/create"
+                name={t("add_product")}
+              />
+            </div>
+          }
         >
-          <Filter size={14} />
-          {t("filter")}
-          {hasActiveFilters && (
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
-          )}
-          <ChevronDown
-            size={14}
-            className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
-          />
-        </button>
-        <ExcelCrudActions
-          basePath="/core/product"
-          title={t("import_export_product")}
-          templateFileName="template-san-pham.xlsx"
-          exportFileName="san-pham.xlsx"
-        />
-        <BtnAdd route="/management/products/create" name={t("add_product")} />
-      </div>
-
-      <div
-        className={`transition-all duration-300 ease-in-out ${
-          showFilters
-            ? "max-h-[500px] opacity-100 mb-4 overflow-visible"
-            : "max-h-0 opacity-0 overflow-hidden"
-        }`}
-      >
-        <div className="p-4 bg-white dark:bg-[#0D121F]/80 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg transition-colors duration-200">
-          <div className="flex flex-wrap items-end gap-4">
-            <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[230px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("status")}
-              </label>
-              <div className="flex items-center gap-0.5 p-0.5 bg-slate-100 dark:bg-[#111827]/60 border border-slate-200 dark:border-slate-800 rounded-lg h-10">
-                {[
-                  { value: "", label: t("all") },
-                  { value: "true", label: t("in_stock") },
-                  { value: "false", label: t("out_of_stock") },
-                ].map((tab) => (
-                  <button
-                    key={tab.value}
-                    type="button"
-                    onClick={() => setFilter("is_active", tab.value)}
-                    className={`flex-1 text-center py-1 text-[11px] font-bold rounded-md cursor-pointer transition-colors h-full ${
-                      currentIsActive === tab.value
-                        ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-300 dark:border-sky-500/20"
-                        : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-300"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
+          <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[230px] shrink-0">
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              {t("status")}
+            </label>
+            <div className="flex items-center gap-0.5 p-0.5 bg-slate-100 dark:bg-[#111827]/60 border border-slate-200 dark:border-slate-800 rounded-lg h-10">
+              {[
+                { value: "", label: t("all") },
+                { value: "true", label: t("in_stock") },
+                { value: "false", label: t("out_of_stock") },
+              ].map((tab) => (
+                <button
+                  key={tab.value}
+                  type="button"
+                  onClick={() => setFilter("is_active", tab.value)}
+                  className={`flex-1 text-center py-1 text-[11px] font-bold rounded-md cursor-pointer transition-colors h-full ${
+                    currentIsActive === tab.value
+                      ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-300 dark:border-sky-500/20"
+                      : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-300"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
             </div>
-
-            <div className="flex-1 min-w-[150px]">
-              <SimpleSelect
-                label={t("category_label")}
-                value={currentCategory}
-                onChange={(val) => setFilter("category_id", val)}
-                options={[
-                  { slug: "", name: t("all") },
-                  ...(responses.categories || []).map((c) => ({
-                    slug: String(c.id),
-                    name: c.name,
-                  })),
-                ]}
-                placeholder={t("all")}
-              />
-            </div>
-
-            <div className="flex-1 min-w-[150px]">
-              <SimpleSelect
-                label={t("brand_label")}
-                value={currentBrand}
-                onChange={(val) => setFilter("brand_id", val)}
-                options={[
-                  { slug: "", name: t("all") },
-                  ...(responses.brands || []).map((b) => ({
-                    slug: String(b.id),
-                    name: b.name,
-                  })),
-                ]}
-                placeholder={t("all")}
-              />
-            </div>
-
-            <div className="flex-1 min-w-[150px]">
-              <SimpleSelect
-                label={t("supplier_label")}
-                value={currentSupplier}
-                onChange={(val) => setFilter("supplier_id", val)}
-                options={[
-                  { slug: "", name: t("all") },
-                  ...(responses.suppliers || []).map((s) => ({
-                    slug: String(s.id),
-                    name: s.name,
-                  })),
-                ]}
-                placeholder={t("all")}
-              />
-            </div>
-
-            <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("price_range")}
-              </label>
-              <div className="flex items-center gap-1">
-                <input
-                  type="number"
-                  placeholder={t("min_price_placeholder")}
-                  value={currentPriceMin}
-                  onChange={(e) => setFilter("price_min", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                />
-                <span className="text-slate-400 dark:text-slate-600 shrink-0">
-                  –
-                </span>
-                <input
-                  type="number"
-                  placeholder={t("max_price_placeholder")}
-                  value={currentPriceMax}
-                  onChange={(e) => setFilter("price_max", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                />
-              </div>
-            </div>
-
-            {hasActiveFilters && (
-              <button
-                type="button"
-                onClick={clearAllFilters}
-                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-500 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
-              >
-                {t("clear_filter")}
-              </button>
-            )}
           </div>
-        </div>
+
+          <div className="flex-1 min-w-[150px]">
+            <SimpleSelect
+              label={t("category_label")}
+              value={currentCategory}
+              onChange={(val) => setFilter("category_id", val)}
+              options={[
+                { slug: "", name: t("all") },
+                ...(responses.categories || []).map((c) => ({
+                  slug: String(c.id),
+                  name: c.name,
+                })),
+              ]}
+              placeholder={t("all")}
+            />
+          </div>
+
+          <div className="flex-1 min-w-[150px]">
+            <SimpleSelect
+              label={t("brand_label")}
+              value={currentBrand}
+              onChange={(val) => setFilter("brand_id", val)}
+              options={[
+                { slug: "", name: t("all") },
+                ...(responses.brands || []).map((b) => ({
+                  slug: String(b.id),
+                  name: b.name,
+                })),
+              ]}
+              placeholder={t("all")}
+            />
+          </div>
+
+          <div className="flex-1 min-w-[150px]">
+            <SimpleSelect
+              label={t("supplier_label")}
+              value={currentSupplier}
+              onChange={(val) => setFilter("supplier_id", val)}
+              options={[
+                { slug: "", name: t("all") },
+                ...(responses.suppliers || []).map((s) => ({
+                  slug: String(s.id),
+                  name: s.name,
+                })),
+              ]}
+              placeholder={t("all")}
+            />
+          </div>
+
+          <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              {t("price_range")}
+            </label>
+            <div className="flex items-center gap-1">
+              <input
+                type="number"
+                placeholder={t("min_price_placeholder")}
+                value={currentPriceMin}
+                onChange={(e) => setFilter("price_min", e.target.value)}
+                className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
+              />
+              <span className="text-slate-400 dark:text-slate-600 shrink-0">
+                –
+              </span>
+              <input
+                type="number"
+                placeholder={t("max_price_placeholder")}
+                value={currentPriceMax}
+                onChange={(e) => setFilter("price_max", e.target.value)}
+                className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
+              />
+            </div>
+          </div>
+        </FilterPanel>
       </div>
 
       <div className="flex items-center justify-between">

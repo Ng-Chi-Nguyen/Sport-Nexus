@@ -80,3 +80,50 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
 };
 
 export default Pagination;
+
+export const CarouselPagination = ({
+  totalPages,
+  current,
+  onChange,
+  className = "",
+}) => {
+  if (totalPages <= 1) return null;
+
+  const progressPercentage = ((current + 1) / totalPages) * 100;
+  const buttonClass =
+    "p-2 rounded-xl bg-primary text-white transition-all cursor-pointer shadow-sm hover:brightness-95 disabled:opacity-40 disabled:cursor-not-allowed";
+
+  return (
+    <div className={`flex items-center gap-6 ${className}`}>
+      {/* Thanh tiến trình */}
+      <div className="flex-1 h-0.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden relative">
+        <div
+          className="absolute top-0 left-0 h-full bg-primary transition-all duration-300 ease-out rounded-full"
+          style={{ width: `${progressPercentage}%` }}
+        />
+      </div>
+
+      {/* Cặp nút cùng màu, khoá ở biên */}
+      <div className="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          onClick={() => onChange(Math.max(current - 1, 0))}
+          disabled={current === 0}
+          className={buttonClass}
+          aria-label="Previous page"
+        >
+          <ChevronLeft size={16} />
+        </button>
+        <button
+          type="button"
+          onClick={() => onChange(Math.min(current + 1, totalPages - 1))}
+          disabled={current === totalPages - 1}
+          className={buttonClass}
+          aria-label="Next page"
+        >
+          <ChevronRight size={16} />
+        </button>
+      </div>
+    </div>
+  );
+};

@@ -1,21 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd } from "@/components/ui/button";
-import { SearchTable } from "@/components/ui/search";
 import Pagination from "@/components/ui/pagination";
 import { SimpleSelect } from "@/components/ui/select";
-import { LayoutDashboard, Filter, ChevronDown, RefreshCw } from "lucide-react";
+import { LayoutDashboard, RefreshCw } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  useLoaderData,
-  useRevalidator,
-  useSearchParams,
-} from "react-router-dom";
+import { useLoaderData, useRevalidator } from "react-router-dom";
 import ShowToast from "@/components/ui/toast";
 import { Download, Loader2 } from "lucide-react";
 import { getStockBadgeClass } from "@/utils/statusStyles";
 import excelCrudImportApi from "@/api/management/excelCrudImportApi";
 import { useTranslation } from "react-i18next";
+import FilterPanel from "@/components/ui/FilterPanel";
+import useTableFilters from "@/hooks/useTableFilters";
 
 const StockPage = () => {
   const { t } = useTranslation("translation", { keyPrefix: "stockMovement" });
@@ -28,9 +25,18 @@ const StockPage = () => {
   ];
 
   const revalidator = useRevalidator();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const {
+    searchParams,
+    setSearchParams,
+    searchInput,
+    setSearchInput,
+    showFilters,
+    setShowFilters,
+    hasActiveFilters,
+    setFilter,
+    clearAllFilters,
+  } = useTableFilters();
 
-  const currentSearch = searchParams.get("search") || "";
   const currentProductId = searchParams.get("product_id") || "";
   const currentStockMin = searchParams.get("stock_min") || "";
   const currentStockMax = searchParams.get("stock_max") || "";
@@ -39,48 +45,7 @@ const StockPage = () => {
 
   const queryClient = useQueryClient();
 
-  const [searchInput, setSearchInput] = useState(currentSearch);
-  const [showFilters, setShowFilters] = useState(false);
   const [exportLoading, setExportLoading] = useState(false);
-  const isFirstRender = useRef(true);
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    const timer = setTimeout(() => {
-      const params = new URLSearchParams(searchParams);
-      params.set("page", "1");
-      if (searchInput) params.set("search", searchInput);
-      else params.delete("search");
-      setSearchParams(params);
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [searchInput]);
-
-  const hasActiveFilters =
-    currentProductId ||
-    currentStockMin ||
-    currentStockMax ||
-    currentPriceMin ||
-    currentPriceMax;
-
-  const setFilter = (key, value) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", "1");
-    if (value) params.set(key, value);
-    else params.delete(key);
-    setSearchParams(params);
-  };
-
-  const clearAllFilters = () => {
-    const params = new URLSearchParams();
-    const search = searchParams.get("search");
-    if (search) params.set("search", search);
-    params.set("page", "1");
-    setSearchParams(params);
-  };
 
   const stocks = response?.data?.list_stocks || [];
   const paginationInfo = response?.data?.pagination || {
@@ -121,135 +86,101 @@ const StockPage = () => {
     <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
-      <div className="flex items-center gap-4">
-        <div className="flex-1 relative group">
-          <SearchTable
-            placeholder={t("search_placeholder")}
-            value={searchInput}
-            onChange={(val) => setSearchInput(val)}
+      <FilterPanel
+        searchValue={searchInput}
+        onSearchChange={setSearchInput}
+        showFilters={showFilters}
+        onToggleFilters={() => setShowFilters(!showFilters)}
+        hasActiveFilters={hasActiveFilters}
+        onClearFilters={clearAllFilters}
+        searchPlaceholder={t("search_placeholder")}
+        addButton={
+          <div className="flex items-center gap-2 flex-wrap justify-end">
+            <button
+              onClick={handleExport}
+              disabled={exportLoading}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-emerald-600 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded-xl hover:bg-emerald-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              {exportLoading ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <Download size={16} />
+              )}
+              {exportLoading ? t("exporting") : t("export_btn")}
+            </button>
+            <BtnAdd
+              route={"/management/stocks/create"}
+              name={t("add_movement")}
+            />
+          </div>
+        }
+      >
+        <div className="flex-1 min-w-[180px]">
+          <SimpleSelect
+            label={t("product_label")}
+            value={currentProductId}
+            onChange={(val) => setFilter("product_id", val)}
+            options={[
+              { slug: "", name: t("all") },
+              ...(response.products || []).map((p) => ({
+                slug: String(p.id),
+                name: p.name,
+              })),
+            ]}
+            placeholder={t("all")}
           />
         </div>
-        <button
-          type="button"
-          onClick={() => setShowFilters(!showFilters)}
-          className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
-            hasActiveFilters
-              ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-300 dark:border-sky-500/20"
-              : "bg-white dark:bg-[#111827]/40 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-[#161F32] hover:text-slate-900 dark:hover:text-slate-200"
-          }`}
-        >
-          <Filter size={14} />
-          {t("filter_btn")}
-          {hasActiveFilters && (
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
-          )}
-          <ChevronDown
-            size={14}
-            className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
-          />
-        </button>
-        <button
-          onClick={handleExport}
-          disabled={exportLoading}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-emerald-600 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded-xl hover:bg-emerald-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-        >
-          {exportLoading ? (
-            <Loader2 size={16} className="animate-spin" />
-          ) : (
-            <Download size={16} />
-          )}
-          {exportLoading ? t("exporting") : t("export_btn")}
-        </button>
-        <BtnAdd route={"/management/stocks/create"} name={t("add_movement")} />
-      </div>
 
-      <div
-        className={`transition-all duration-300 ease-in-out ${
-          showFilters
-            ? "max-h-[500px] opacity-100 mb-4 overflow-visible"
-            : "max-h-0 opacity-0 overflow-hidden"
-        }`}
-      >
-        <div className="p-4 bg-white dark:bg-[#0D121F]/80 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg transition-colors duration-200">
-          <div className="flex flex-wrap items-end gap-4">
-            <div className="flex-1 min-w-[180px]">
-              <SimpleSelect
-                label={t("product_label")}
-                value={currentProductId}
-                onChange={(val) => setFilter("product_id", val)}
-                options={[
-                  { slug: "", name: t("all") },
-                  ...(response.products || []).map((p) => ({
-                    slug: String(p.id),
-                    name: p.name,
-                  })),
-                ]}
-                placeholder={t("all")}
-              />
-            </div>
-
-            <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("stock_label")}
-              </label>
-              <div className="flex items-center gap-1">
-                <input
-                  type="number"
-                  placeholder={t("min_placeholder")}
-                  value={currentStockMin}
-                  onChange={(e) => setFilter("stock_min", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                />
-                <span className="text-slate-400 dark:text-slate-600 shrink-0">
-                  –
-                </span>
-                <input
-                  type="number"
-                  placeholder={t("max_placeholder")}
-                  value={currentStockMax}
-                  onChange={(e) => setFilter("stock_max", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                />
-              </div>
-            </div>
-
-            <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("price_range")}
-              </label>
-              <div className="flex items-center gap-1">
-                <input
-                  type="number"
-                  placeholder={t("min_placeholder")}
-                  value={currentPriceMin}
-                  onChange={(e) => setFilter("price_min", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                />
-                <span className="text-slate-400 dark:text-slate-600 shrink-0">
-                  –
-                </span>
-                <input
-                  type="number"
-                  placeholder={t("max_placeholder")}
-                  value={currentPriceMax}
-                  onChange={(e) => setFilter("price_max", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                />
-              </div>
-            </div>
-
-            {hasActiveFilters && (
-              <button
-                type="button"
-                onClick={clearAllFilters}
-                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-500 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
-              >
-                {t("clear_filter")}
-              </button>
-            )}
+        <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
+          <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+            {t("stock_label")}
+          </label>
+          <div className="flex items-center gap-1">
+            <input
+              type="number"
+              placeholder={t("min_placeholder")}
+              value={currentStockMin}
+              onChange={(e) => setFilter("stock_min", e.target.value)}
+              className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
+            />
+            <span className="text-slate-400 dark:text-slate-600 shrink-0">
+              –
+            </span>
+            <input
+              type="number"
+              placeholder={t("max_placeholder")}
+              value={currentStockMax}
+              onChange={(e) => setFilter("stock_max", e.target.value)}
+              className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
+            />
           </div>
         </div>
-      </div>
+
+        <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
+          <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+            {t("price_range")}
+          </label>
+          <div className="flex items-center gap-1">
+            <input
+              type="number"
+              placeholder={t("min_placeholder")}
+              value={currentPriceMin}
+              onChange={(e) => setFilter("price_min", e.target.value)}
+              className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
+            />
+            <span className="text-slate-400 dark:text-slate-600 shrink-0">
+              –
+            </span>
+            <input
+              type="number"
+              placeholder={t("max_placeholder")}
+              value={currentPriceMax}
+              onChange={(e) => setFilter("price_max", e.target.value)}
+              className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
+            />
+          </div>
+        </div>
+      </FilterPanel>
 
       {/* KHỐI NỀN TỔNG - Hỗ trợ sáng/tối */}
       <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">

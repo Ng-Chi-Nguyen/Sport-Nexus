@@ -4,16 +4,12 @@ import { useTranslation } from "react-i18next";
 import countryData from "@/assets/data/countries.json";
 import addressData from "@/assets/data/addressVN_afterUpdate.json";
 
-// 1. COMPONENT SELECT TIĂU CHUáº¨N
-const Select = ({
-  options,
-  value,
-  onChange,
-  placeholder,
-  label,
-}) => {
+// 1. COMPONENT SELECT TIÊU CHUẨN
+const Select = ({ options, value, onChange, placeholder, label }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
 
   const safeOptions = useMemo(() => {
     if (Array.isArray(options)) return options;
@@ -36,7 +32,7 @@ const Select = ({
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      {/* NHĂƒN (LABEL) */}
+      {/* NHÃN (LABEL) */}
       {label && (
         <label
           className={`absolute -top-2 left-3 bg-slate-50 dark:bg-[#0D121F] px-1.5 font-semibold text-[11px] transition-all duration-200 z-[120] tracking-wide ${
@@ -47,22 +43,24 @@ const Select = ({
         </label>
       )}
 
-      {/* TRIGGER KHUNG Báº¤M */}
+      {/* TRIGGER KHUNG BẤM */}
       <div
-        className={`h-10 px-3 rounded-lg relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
+        className={`h-10 px-3 rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
           isOpen
-            ? "border-sky-500 bg-white dark:border-sky-500/50 dark:bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.1)]"
-            : "border-slate-300 bg-white dark:border-slate-800 dark:bg-[#111827]/40"
+            ? "border-sky-500 bg-white dark:border-sky-500/50 dark:bg-[#0D121F] shadow-[0_0_15px_rgba(14,165,233,0.1)]"
+            : "border-slate-300 bg-white dark:border-slate-800 dark:bg-[#0D121F]/40"
         }`}
       >
         <span
           className={`truncate mr-2 ${
             selectedOption
-              ? "text-slate-800 dark:text-slate-200"
+              ? "text-slate-800 dark:text-slate-100"
               : "text-slate-400 dark:text-slate-500"
           }`}
         >
-          {selectedOption ? selectedOption.name : placeholder ?? t("select_option")}
+          {selectedOption
+            ? selectedOption.name
+            : (placeholder ?? t("select_option"))}
         </span>
         <ChevronDown
           size={14}
@@ -76,9 +74,9 @@ const Select = ({
 
       {/* DROPDOWN MENU CON */}
       <div
-        className={`flex flex-col rounded-xl p-1 shadow-xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
+        className={`flex flex-col rounded-xl p-1.5 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#111827]/95 dark:border-slate-800"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1 z-[-1]"
         }`}
       >
@@ -89,10 +87,10 @@ const Select = ({
               onChange(option.slug);
               setIsOpen(false);
             }}
-            className={`rounded-lg p-[8px_12px] text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
+            className={`rounded-lg p-2 text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
               value === option.slug
-                ? "text-sky-600 font-bold bg-sky-50 dark:text-sky-400 dark:bg-sky-500/10 dark:border dark:border-sky-500/20"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-[#161F32] dark:hover:text-slate-100"
+                ? "text-sky-600 font-bold bg-sky-50 dark:text-sky-400 dark:bg-sky-500/15"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/60 dark:hover:text-white"
             }`}
           >
             {option.name}
@@ -103,10 +101,12 @@ const Select = ({
   );
 };
 
-// 2. COMPONENT SELECTPRO CHUYĂN Dá»¤NG (Cáº¥u trĂºc object { id, name })
+// 2. COMPONENT SELECTPRO CHUYÊN DỤNG (Cấu trúc object { id, name })
 const SelectPro = ({ options = [], label, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
   const selectedOption = options?.find((opt) => opt.id === value);
 
   return (
@@ -130,15 +130,15 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
       <div
         className={`p-[11px_15px] h-full rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
           isOpen
-            ? "border-sky-500 bg-white dark:border-sky-500/50 dark:bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
-            : "border-slate-300 bg-white dark:border-slate-800 dark:bg-[#111827]/40"
+            ? "border-sky-500 bg-white dark:border-sky-500/50 dark:bg-[#0D121F] shadow-[0_0_15px_rgba(14,165,233,0.08)]"
+            : "border-slate-300 bg-white dark:border-slate-800 dark:bg-[#0D121F]/40"
         }`}
       >
         <span
           className={`truncate mr-4 ${
             selectedOption
-              ? "text-slate-800 dark:text-slate-200"
-              : "text-slate-400 dark:text-slate-600"
+              ? "text-slate-800 dark:text-slate-100"
+              : "text-slate-400 dark:text-slate-500"
           }`}
         >
           {selectedOption ? selectedOption.name : t("choose")}
@@ -154,9 +154,9 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
       </div>
 
       <div
-        className={`flex flex-col rounded-xl p-1 shadow-xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
+        className={`flex flex-col rounded-xl p-1.5 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#111827]/95 dark:border-slate-800"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1"
         }`}
       >
@@ -167,10 +167,10 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
               if (onChange) onChange(option.id);
               setIsOpen(false);
             }}
-            className={`rounded-lg p-[8px_12px] text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
+            className={`rounded-lg p-2 text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
               value === option.id
-                ? "text-sky-600 font-bold bg-sky-50 dark:text-sky-400 dark:bg-sky-500/10 dark:border dark:border-sky-500/20"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-[#161F32] dark:hover:text-slate-100"
+                ? "text-sky-600 font-bold bg-sky-50 dark:text-sky-400 dark:bg-sky-500/15"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/60 dark:hover:text-white"
             }`}
           >
             {option.name}
@@ -181,10 +181,12 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
   );
 };
 
-// 3. COMPONENT CHá»ŒN QUá»C GIA (XUáº¤T Xá»¨)
+// 3. COMPONENT CHỌN QUỐC GIA (XUẤT XỨ)
 const CountrySelect = ({ value, onChange, label }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
 
   const selectedName = useMemo(() => {
     const found = countryData.find((c) => c.name === value);
@@ -205,23 +207,22 @@ const CountrySelect = ({ value, onChange, label }) => {
             isOpen ? "text-sky-600 dark:text-sky-400" : "text-slate-500"
           }`}
         >
-          {label ?? t("origin_label")}{" "}
-          <span className="text-rose-500">*</span>
+          {label ?? t("origin_label")} <span className="text-rose-500">*</span>
         </label>
       )}
 
       <div
         className={`p-[11px_15px] rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
           isOpen
-            ? "border-sky-500 bg-white dark:border-sky-500/50 dark:bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
-            : "border-slate-300 bg-white dark:border-slate-800 dark:bg-[#111827]/40"
+            ? "border-sky-500 bg-white dark:border-sky-500/50 dark:bg-[#0D121F] shadow-[0_0_15px_rgba(14,165,233,0.08)]"
+            : "border-slate-300 bg-white dark:border-slate-800 dark:bg-[#0D121F]/40"
         }`}
       >
         <span
           className={`truncate mr-2 inline-flex items-center gap-2 ${
             value
-              ? "text-slate-800 dark:text-slate-200"
-              : "text-slate-400 dark:text-slate-600"
+              ? "text-slate-800 dark:text-slate-100"
+              : "text-slate-400 dark:text-slate-500"
           }`}
         >
           {value && (
@@ -246,9 +247,9 @@ const CountrySelect = ({ value, onChange, label }) => {
       </div>
 
       <div
-        className={`flex flex-col rounded-xl p-1 shadow-xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
+        className={`flex flex-col rounded-xl p-1.5 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#111827]/95 dark:border-slate-800"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1"
         }`}
       >
@@ -259,10 +260,10 @@ const CountrySelect = ({ value, onChange, label }) => {
               onChange(country.name);
               setIsOpen(false);
             }}
-            className={`rounded-lg p-[8px_12px] text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap inline-flex items-center gap-2 ${
+            className={`rounded-lg p-2 text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap inline-flex items-center gap-2 ${
               value === country.name
-                ? "text-sky-600 font-bold bg-sky-50 dark:text-sky-400 dark:bg-sky-500/10 dark:border dark:border-sky-500/20"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-[#161F32] dark:hover:text-slate-100"
+                ? "text-sky-600 font-bold bg-sky-50 dark:text-sky-400 dark:bg-sky-500/15"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/60 dark:hover:text-white"
             }`}
           >
             <img
@@ -278,19 +279,21 @@ const CountrySelect = ({ value, onChange, label }) => {
   );
 };
 
-// 4. COMPONENT Äá»A CHá»ˆ VIá»†T NAM LIĂN Káº¾T
+// 4. COMPONENT ĐỊA CHỈ VIỆT NAM LIÊN KẾT
 const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
-  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
 
   useEffect(() => {
     if (initialProvince) {
       const cleanInitialProvince = initialProvince
         .toLowerCase()
         .replace("tp.", "")
-        .replace("thĂ nh phá»‘", "")
-        .replace("tá»‰nh", "")
+        .replace("thành phố", "")
+        .replace("tỉnh", "")
         .trim();
 
       const foundProvince = addressData.find((p) => {
@@ -309,7 +312,7 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
           const searchVariants = [lowerWard];
 
           const stripped = lowerWard
-            .replace(/^(quáº­n|huyá»‡n|phÆ°á»ng|xĂ£|thá»‹ tráº¥n)\s+/i, "")
+            .replace(/^(quận|huyện|phường|xã|thị trấn)\s+/i, "")
             .trim();
           if (stripped && stripped !== lowerWard) searchVariants.push(stripped);
 
@@ -405,9 +408,7 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
           options={wardOptions}
           value={selectedWard}
           placeholder={
-            selectedProvince
-              ? t("choose_ward")
-              : t("select_province_first")
+            selectedProvince ? t("choose_ward") : t("select_province_first")
           }
           onChange={(val) => setSelectedWard(val)}
         />
@@ -417,15 +418,11 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
 };
 
 // 5. SIMPLE SELECT
-const SimpleSelect = ({
-  options,
-  value,
-  onChange,
-  placeholder,
-  label,
-}) => {
+const SimpleSelect = ({ options, value, onChange, placeholder, label }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
 
   const safeOptions = useMemo(() => {
     if (Array.isArray(options)) return options;
@@ -459,20 +456,22 @@ const SimpleSelect = ({
       )}
 
       <div
-        className={`h-10 px-3 rounded-lg relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
+        className={`h-10 px-3 rounded-xl relative z-[100] text-sm flex items-center justify-between border transition-all duration-200 ${
           isOpen
-            ? "border-sky-500 bg-white dark:border-sky-500/50 dark:bg-[#161F32]/60 shadow-[0_0_15px_rgba(14,165,233,0.08)]"
-            : "border-slate-300 bg-white dark:border-slate-800 dark:bg-[#111827]/40"
+            ? "border-sky-500 bg-white dark:border-sky-500/50 dark:bg-[#0D121F] shadow-[0_0_15px_rgba(14,165,233,0.08)]"
+            : "border-slate-300 bg-white dark:border-slate-800 dark:bg-[#0D121F]/40"
         }`}
       >
         <span
           className={`truncate mr-2 ${
             selectedOption
-              ? "text-slate-800 dark:text-slate-200"
+              ? "text-slate-800 dark:text-slate-100"
               : "text-slate-400 dark:text-slate-500"
           }`}
         >
-          {selectedOption ? selectedOption.name : placeholder ?? t("select_option")}
+          {selectedOption
+            ? selectedOption.name
+            : (placeholder ?? t("select_option"))}
         </span>
         <ChevronDown
           size={14}
@@ -485,9 +484,9 @@ const SimpleSelect = ({
       </div>
 
       <div
-        className={`flex flex-col rounded-lg p-1 shadow-xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
+        className={`flex flex-col rounded-xl p-1.5 shadow-2xl absolute left-0 top-[35px] w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#111827]/98 dark:border-slate-800/80"
+            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1 z-[-1]"
         }`}
       >
@@ -498,10 +497,10 @@ const SimpleSelect = ({
               onChange(option.slug);
               setIsOpen(false);
             }}
-            className={`rounded px-3 py-2 text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
+            className={`rounded-lg p-2 text-xs transition-colors duration-150 w-full cursor-pointer whitespace-nowrap ${
               value === option.slug
-                ? "text-sky-600 font-semibold bg-sky-50 dark:text-slate-100 dark:bg-slate-800/80"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-[#161F32] dark:hover:text-slate-200"
+                ? "text-sky-600 font-bold bg-sky-50 dark:text-sky-400 dark:bg-sky-500/15"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/60 dark:hover:text-white"
             }`}
           >
             {option.name}

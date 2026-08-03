@@ -70,10 +70,21 @@ const TitleManagement = (props) => {
 const SectionTitle = ({ children }) => {
   return (
     <div className="mb-6">
-      <h3 className="text-xl md:text-2xl font-bold text-slate-900">{children}</h3>
+      <h3 className="text-xl md:text-2xl font-bold text-slate-900">
+        {children}
+      </h3>
       <div className="mt-1.5 h-0.5 w-auto rounded-full bg-blue-600" />
     </div>
   );
 };
 
-export { TitleManagement, SectionTitle };
+const TitleWithIcon = ({ icon: Icon, title }) => {
+  return (
+    <h2 className="text-xl md:text-2xl font-bold text-blue-600 flex items-center gap-2 mb-2">
+      {Icon && <Icon className="w-5 h-5 text-blue-600" strokeWidth={3} />}
+      <p className="border-b border-blue-600">{title}</p>
+    </h2>
+  );
+};
+
+export { TitleManagement, SectionTitle, TitleWithIcon };

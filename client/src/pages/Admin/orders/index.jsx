@@ -1,15 +1,12 @@
-import { LayoutDashboard, ChevronDown, Filter, RefreshCw } from "lucide-react";
-import {
-  useLoaderData,
-  useSearchParams,
-  useRevalidator,
-} from "react-router-dom";
-import { useState, useEffect, useMemo } from "react";
+import { LayoutDashboard, RefreshCw } from "lucide-react";
+import { useLoaderData, useRevalidator } from "react-router-dom";
+import { useMemo } from "react";
 // components
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
 import { queryClient } from "@/lib/react-query";
-import { SearchTable } from "@/components/ui/search";
+import FilterPanel from "@/components/ui/FilterPanel";
+import useTableFilters from "@/hooks/useTableFilters";
 import Pagination from "@/components/ui/pagination";
 import Badge from "@/components/ui/badge";
 import { formatFullDateTime, formatCurrency } from "@/utils/formatters";
@@ -33,8 +30,18 @@ import {
 const OrderPage = () => {
   const { t } = useTranslation("translation", { keyPrefix: "order" });
   const responses = useLoaderData();
-  const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
+  const {
+    searchParams,
+    setSearchParams,
+    searchInput,
+    setSearchInput,
+    showFilters,
+    setShowFilters,
+    hasActiveFilters,
+    setFilter,
+    clearAllFilters,
+  } = useTableFilters();
   const orders = responses?.data?.orders || [];
 
   const breadcrumbData = [
@@ -43,10 +50,7 @@ const OrderPage = () => {
     { title: t("order_management"), route: "/management/orders" },
   ];
 
-  const [showFilters, setShowFilters] = useState(false);
-
   // Đọc dữ liệu từ URL params
-  const currentSearch = searchParams.get("search") || "";
   const currentStatus = searchParams.get("status") || "";
   const currentPaymentStatus = searchParams.get("payment_status") || "";
   const currentPaymentMethod = searchParams.get("payment_method") || "";
@@ -55,55 +59,14 @@ const OrderPage = () => {
   const currentAmountMin = searchParams.get("amount_min") || "";
   const currentAmountMax = searchParams.get("amount_max") || "";
 
-  // State tạm giữ từ khóa tìm kiếm
-  const [searchTerm, setSearchTerm] = useState(currentSearch);
-
-  useEffect(() => {
-    setSearchTerm(currentSearch);
-  }, [currentSearch]);
-
-  const hasActiveFilters =
-    currentStatus ||
-    currentPaymentStatus ||
-    currentPaymentMethod ||
-    currentDateFrom ||
-    currentDateTo ||
-    currentAmountMin ||
-    currentAmountMax;
-
   const handleRefresh = () => {
     queryClient.invalidateQueries({ queryKey: ["orders"] });
     setTimeout(() => revalidator.revalidate(), 0);
   };
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    const params = new URLSearchParams(searchParams);
-    params.set("page", "1");
-    if (searchTerm.trim()) params.set("search", searchTerm);
-    else params.delete("search");
-    setSearchParams(params);
-  };
-
   const handlePageChange = (newPage) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", newPage);
-    setSearchParams(params);
-  };
-
-  const handleDropdownFilterChange = (field, value) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", "1");
-    if (value) params.set(field, value);
-    else params.delete(field);
-    setSearchParams(params);
-  };
-
-  const clearAllFilters = () => {
-    const params = new URLSearchParams();
-    const search = searchParams.get("search");
-    if (search) params.set("search", search);
-    params.set("page", "1");
     setSearchParams(params);
   };
 
@@ -145,64 +108,38 @@ const OrderPage = () => {
       <Breadcrumbs data={breadcrumbData} />
 
       {/* THANH TÌM KIẾM & THAO TÁC NÚT BỘ LỌC */}
-      <div className="flex flex-wrap items-center gap-3 my-4">
-        <form onSubmit={handleSearchSubmit} className="flex-1 min-w-[240px]">
-          <SearchTable
-            placeholder={t("search_order_placeholder")}
-            value={searchTerm}
-            onChange={(val) => setSearchTerm(val)}
-          />
-        </form>
-
-        <button
-          type="button"
-          onClick={() => setShowFilters(!showFilters)}
-          className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
-            hasActiveFilters
-              ? "bg-sky-50 text-sky-600 border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20"
-              : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50 hover:text-slate-900 dark:bg-[#111827]/40 dark:text-slate-400 dark:border-slate-800 dark:hover:bg-[#161F32] dark:hover:text-slate-200"
-          }`}
+      <div className="my-4">
+        <FilterPanel
+          searchValue={searchInput}
+          onSearchChange={setSearchInput}
+          showFilters={showFilters}
+          onToggleFilters={() => setShowFilters(!showFilters)}
+          hasActiveFilters={hasActiveFilters}
+          onClearFilters={clearAllFilters}
+          searchPlaceholder={t("search_order_placeholder")}
+          addButton={
+            <div className="flex items-center gap-2 flex-wrap justify-end">
+              <ExcelCrudActions
+                basePath="/customer/order"
+                title={t("import_export_order")}
+                templateFileName="template-don-hang.xlsx"
+                exportFileName="don-hang.xlsx"
+                sheetNote="Workbook gồm 2 sheet: Orders và OrderItems"
+              />
+              <BtnAdd
+                route={"/management/orders/create"}
+                name={t("add_order")}
+              />
+            </div>
+          }
         >
-          <Filter size={14} />
-          {t("filter")}
-          {hasActiveFilters && (
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
-          )}
-          <ChevronDown
-            size={14}
-            className={`transition-transform duration-300 ${
-              showFilters ? "rotate-180" : ""
-            }`}
-          />
-        </button>
-
-        <ExcelCrudActions
-          basePath="/customer/order"
-          title={t("import_export_order")}
-          templateFileName="template-don-hang.xlsx"
-          exportFileName="don-hang.xlsx"
-          sheetNote="Workbook gồm 2 sheet: Orders và OrderItems"
-        />
-        <BtnAdd route={"/management/orders/create"} name={t("add_order")} />
-      </div>
-
-      {/* KHU VỰC CÁC Ô LỌC HÀNG NGANG */}
-      <div
-        className={`transition-all duration-300 ease-in-out ${
-          showFilters
-            ? "max-h-[500px] opacity-100 mb-4 overflow-visible"
-            : "max-h-0 opacity-0 overflow-hidden"
-        }`}
-      >
-        <div className="p-4 rounded-xl border shadow-lg transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/80 dark:border-slate-800">
-          <div className="flex flex-wrap items-end gap-4">
-            {/* 1. Dropdown Vận chuyển */}
+          {/* 1. Dropdown Vận chuyển */}
             <div className="flex-1 min-w-[150px]">
               <SimpleSelect
                 label={t("shipping_label")}
                 options={statusOptionsMapped}
                 value={currentStatus}
-                onChange={(val) => handleDropdownFilterChange("status", val)}
+                onChange={(val) => setFilter("status", val)}
                 placeholder={t("all_status")}
               />
             </div>
@@ -214,7 +151,7 @@ const OrderPage = () => {
                 options={paymentOptionsMapped}
                 value={currentPaymentStatus}
                 onChange={(val) =>
-                  handleDropdownFilterChange("payment_status", val)
+                  setFilter("payment_status", val)
                 }
                 placeholder={t("all_payment_status")}
               />
@@ -227,7 +164,7 @@ const OrderPage = () => {
                 options={methodOptionsMapped}
                 value={currentPaymentMethod}
                 onChange={(val) =>
-                  handleDropdownFilterChange("payment_method", val)
+                  setFilter("payment_method", val)
                 }
                 placeholder={t("all_methods")}
               />
@@ -242,7 +179,7 @@ const OrderPage = () => {
                 type="date"
                 value={currentDateFrom}
                 onChange={(e) =>
-                  handleDropdownFilterChange("date_from", e.target.value)
+                  setFilter("date_from", e.target.value)
                 }
                 className="w-full h-10 px-2.5 text-sm rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 dark:focus:ring-1 dark:focus:ring-sky-500/20"
               />
@@ -257,7 +194,7 @@ const OrderPage = () => {
                 type="date"
                 value={currentDateTo}
                 onChange={(e) =>
-                  handleDropdownFilterChange("date_to", e.target.value)
+                  setFilter("date_to", e.target.value)
                 }
                 className="w-full h-10 px-2.5 text-sm rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 dark:focus:ring-1 dark:focus:ring-sky-500/20"
               />
@@ -274,7 +211,7 @@ const OrderPage = () => {
                   placeholder={t("amount_from")}
                   value={currentAmountMin}
                   onChange={(e) =>
-                    handleDropdownFilterChange("amount_min", e.target.value)
+                    setFilter("amount_min", e.target.value)
                   }
                   className="w-full h-10 px-2 text-xs rounded-lg outline-none font-mono transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
                 />
@@ -286,25 +223,13 @@ const OrderPage = () => {
                   placeholder={t("amount_to")}
                   value={currentAmountMax}
                   onChange={(e) =>
-                    handleDropdownFilterChange("amount_max", e.target.value)
+                    setFilter("amount_max", e.target.value)
                   }
                   className="w-full h-10 px-2 text-xs rounded-lg outline-none font-mono transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
                 />
               </div>
             </div>
-
-            {/* 7. Nút Xóa bộ lọc */}
-            {hasActiveFilters && (
-              <button
-                type="button"
-                onClick={clearAllFilters}
-                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 dark:border-rose-500/20 dark:text-rose-400 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 transition-colors cursor-pointer"
-              >
-                {t("clear_filter")}
-              </button>
-            )}
-          </div>
-        </div>
+        </FilterPanel>
       </div>
 
       {/* KHỐI BẢNG CONTAINER */}
@@ -431,9 +356,12 @@ const OrderPage = () => {
                                 order.status,
                               )}`}
                             >
-                              {t(`status_${String(order.status).toLowerCase()}`, {
-                                defaultValue: order.status,
-                              })}
+                              {t(
+                                `status_${String(order.status).toLowerCase()}`,
+                                {
+                                  defaultValue: order.status,
+                                },
+                              )}
                             </span>
                           </div>
                           <div className="flex items-center gap-2">

@@ -1,10 +1,6 @@
-import { useState, useEffect, useRef } from "react";
-import { LayoutDashboard, Filter, ChevronDown, RefreshCw } from "lucide-react";
-import {
-  useLoaderData,
-  useRevalidator,
-  useSearchParams,
-} from "react-router-dom";
+import { useState } from "react";
+import { LayoutDashboard, RefreshCw } from "lucide-react";
+import { useLoaderData, useRevalidator } from "react-router-dom";
 import { queryClient } from "@/lib/react-query";
 import productVariantdApi from "@/api/core/productVariantApi";
 
@@ -12,19 +8,30 @@ import productVariantdApi from "@/api/core/productVariantApi";
 import ShowToast from "@/components/ui/toast";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnActions } from "@/components/ui/button";
-import { SearchTable } from "@/components/ui/search";
 import { SimpleSelect } from "@/components/ui/select";
 import Badge from "@/components/ui/badge";
 import Pagination from "@/components/ui/pagination";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
 import { useTranslation } from "react-i18next";
+import FilterPanel from "@/components/ui/FilterPanel";
+import useTableFilters from "@/hooks/useTableFilters";
 
 const VariantPage = () => {
   const { t } = useTranslation("translation", { keyPrefix: "productVariant" });
   const responses = useLoaderData();
-  const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
+  const {
+    searchParams,
+    setSearchParams,
+    searchInput,
+    setSearchInput,
+    showFilters,
+    setShowFilters,
+    hasActiveFilters,
+    setFilter,
+    clearAllFilters,
+  } = useTableFilters();
 
   const breadcrumbData = [
     { title: <LayoutDashboard size={20} />, route: "" },
@@ -34,55 +41,12 @@ const VariantPage = () => {
 
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState({ id: "", name: "" });
-  const [showFilters, setShowFilters] = useState(false);
 
-  const currentSearch = searchParams.get("search") || "";
   const currentProductId = searchParams.get("product_id") || "";
   const currentStockMin = searchParams.get("stock_min") || "";
   const currentStockMax = searchParams.get("stock_max") || "";
   const currentPriceMin = searchParams.get("price_min") || "";
   const currentPriceMax = searchParams.get("price_max") || "";
-
-  const [searchInput, setSearchInput] = useState(currentSearch);
-  const isFirstRender = useRef(true);
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    const timer = setTimeout(() => {
-      const params = new URLSearchParams(searchParams);
-      params.set("page", "1");
-      if (searchInput) params.set("search", searchInput);
-      else params.delete("search");
-      setSearchParams(params);
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [searchInput]);
-
-  const hasActiveFilters =
-    currentProductId ||
-    currentStockMin ||
-    currentStockMax ||
-    currentPriceMin ||
-    currentPriceMax;
-
-  const setFilter = (key, value) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", "1");
-    if (value) params.set(key, value);
-    else params.delete(key);
-    setSearchParams(params);
-  };
-
-  const clearAllFilters = () => {
-    const params = new URLSearchParams();
-    const search = searchParams.get("search");
-    if (search) params.set("search", search);
-    params.set("page", "1");
-    setSearchParams(params);
-  };
 
   const variants = responses?.data?.variants || [];
 
@@ -131,131 +95,96 @@ const VariantPage = () => {
     <div className="text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
-      <div className="flex items-center gap-3 my-4">
-        <div className="flex-1">
-          <SearchTable
-            placeholder={t("search_product_placeholder")}
-            value={searchInput}
-            onChange={(val) => setSearchInput(val)}
-          />
-        </div>
-        <button
-          type="button"
-          onClick={() => setShowFilters(!showFilters)}
-          className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border cursor-pointer transition-colors ${
-            hasActiveFilters
-              ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-300 dark:border-sky-500/20"
-              : "bg-white dark:bg-[#111827]/40 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-[#161F32] hover:text-slate-900 dark:hover:text-slate-200"
-          }`}
-        >
-          <Filter size={14} />
-          {t("filter")}
-          {hasActiveFilters && (
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
-          )}
-          <ChevronDown
-            size={14}
-            className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
-          />
-        </button>
-        <ExcelCrudActions
-          basePath="/core/product-variant"
-          title={t("import_export_variant")}
-          templateFileName="template-bien-the.xlsx"
-          exportFileName="bien-the.xlsx"
-        />
-        <BtnAdd
-          route="/management/product-variants/create"
-          name={t("add_variant")}
-        />
-      </div>
-
-      <div
-        className={`transition-all duration-300 ease-in-out ${
-          showFilters
-            ? "max-h-[500px] opacity-100 mb-4 overflow-visible"
-            : "max-h-0 opacity-0 overflow-hidden"
-        }`}
-      >
-        <div className="p-4 bg-white dark:bg-[#0D121F]/80 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg transition-colors duration-200">
-          <div className="flex flex-wrap items-end gap-4">
-            <div className="flex-1 min-w-[180px]">
-              <SimpleSelect
-                label={t("product_label")}
-                value={currentProductId}
-                onChange={(val) => setFilter("product_id", val)}
-                options={[
-                  { slug: "", name: t("all") },
-                  ...(responses.products || []).map((p) => ({
-                    slug: String(p.id),
-                    name: p.name,
-                  })),
-                ]}
-                placeholder={t("all")}
+      <div className="my-4">
+        <FilterPanel
+          searchValue={searchInput}
+          onSearchChange={setSearchInput}
+          showFilters={showFilters}
+          onToggleFilters={() => setShowFilters(!showFilters)}
+          hasActiveFilters={hasActiveFilters}
+          onClearFilters={clearAllFilters}
+          searchPlaceholder={t("search_product_placeholder")}
+          addButton={
+            <div className="flex items-center gap-2 flex-wrap justify-end">
+              <ExcelCrudActions
+                basePath="/core/product-variant"
+                title={t("import_export_variant")}
+                templateFileName="template-bien-the.xlsx"
+                exportFileName="bien-the.xlsx"
+              />
+              <BtnAdd
+                route="/management/product-variants/create"
+                name={t("add_variant")}
               />
             </div>
-
-            <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("stock_label")}
-              </label>
-              <div className="flex items-center gap-1">
-                <input
-                  type="number"
-                  placeholder={t("min_placeholder")}
-                  value={currentStockMin}
-                  onChange={(e) => setFilter("stock_min", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                />
-                <span className="text-slate-400 dark:text-slate-600 shrink-0">
-                  –
-                </span>
-                <input
-                  type="number"
-                  placeholder={t("max_placeholder")}
-                  value={currentStockMax}
-                  onChange={(e) => setFilter("stock_max", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                />
-              </div>
-            </div>
-
-            <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("price_range")}
-              </label>
-              <div className="flex items-center gap-1">
-                <input
-                  type="number"
-                  placeholder={t("min_placeholder")}
-                  value={currentPriceMin}
-                  onChange={(e) => setFilter("price_min", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                />
-                <span className="text-slate-400 dark:text-slate-600 shrink-0">
-                  –
-                </span>
-                <input
-                  type="number"
-                  placeholder={t("max_placeholder")}
-                  value={currentPriceMax}
-                  onChange={(e) => setFilter("price_max", e.target.value)}
-                  className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                />
-              </div>
-            </div>
-
-            {hasActiveFilters && (
-              <button
-                type="button"
-                onClick={clearAllFilters}
-                className="h-10 shrink-0 px-3 text-xs font-bold rounded-lg border border-rose-500/20 text-rose-500 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors cursor-pointer"
-              >
-                {t("clear_filter")}
-              </button>
-            )}
+          }
+        >
+          <div className="flex-1 min-w-[180px]">
+            <SimpleSelect
+              label={t("product_label")}
+              value={currentProductId}
+              onChange={(val) => setFilter("product_id", val)}
+              options={[
+                { slug: "", name: t("all") },
+                ...(responses.products || []).map((p) => ({
+                  slug: String(p.id),
+                  name: p.name,
+                })),
+              ]}
+              placeholder={t("all")}
+            />
           </div>
-        </div>
+
+          <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              {t("stock_label")}
+            </label>
+            <div className="flex items-center gap-1">
+              <input
+                type="number"
+                placeholder={t("min_placeholder")}
+                value={currentStockMin}
+                onChange={(e) => setFilter("stock_min", e.target.value)}
+                className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
+              />
+              <span className="text-slate-400 dark:text-slate-600 shrink-0">
+                –
+              </span>
+              <input
+                type="number"
+                placeholder={t("max_placeholder")}
+                value={currentStockMax}
+                onChange={(e) => setFilter("stock_max", e.target.value)}
+                className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
+              />
+            </div>
+          </div>
+
+          <div className="w-full sm:w-auto sm:min-w-[200px] lg:w-[220px] shrink-0">
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              {t("price_range")}
+            </label>
+            <div className="flex items-center gap-1">
+              <input
+                type="number"
+                placeholder={t("min_placeholder")}
+                value={currentPriceMin}
+                onChange={(e) => setFilter("price_min", e.target.value)}
+                className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
+              />
+              <span className="text-slate-400 dark:text-slate-600 shrink-0">
+                –
+              </span>
+              <input
+                type="number"
+                placeholder={t("max_placeholder")}
+                value={currentPriceMax}
+                onChange={(e) => setFilter("price_max", e.target.value)}
+                className="w-full h-10 px-2 text-xs rounded-lg bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
+              />
+            </div>
+          </div>
+        </FilterPanel>
       </div>
 
       <div className="flex items-center justify-between">

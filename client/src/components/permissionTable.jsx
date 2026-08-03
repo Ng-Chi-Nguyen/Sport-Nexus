@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Save, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { MODULE_LABELS } from "@/constants/permission";
 
 const PermissionTable = ({
   allPermissions = {},
@@ -9,8 +10,9 @@ const PermissionTable = ({
   onSave,
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "permission" });
+  const { t: tc } = useTranslation("translation", { keyPrefix: "constants" });
   const navigate = useNavigate();
-  const actions = ["Read", "Create", "Update", "Delete"];
+  const actions = ["Read", "Create", "Update", "Delete", "Gift"];
 
   // State chỉ quản lý các quyền do bạn chủ động chọn trên giao diện để cấp cho user
   const [selectedIds, setSelectedIds] = useState([]);
@@ -60,7 +62,7 @@ const PermissionTable = ({
                   key={action}
                   className="px-6 py-4 text-center border-b border-slate-200 dark:border-slate-800"
                 >
-                  {action}
+                  {t(`action.${action.toLowerCase()}`)}
                 </th>
               ))}
             </tr>
@@ -72,7 +74,7 @@ const PermissionTable = ({
                 className="hover:bg-slate-50 dark:hover:bg-[#161F32]/30 transition-colors duration-100 group"
               >
                 <td className="px-6 py-4 font-bold text-slate-700 dark:text-slate-300 capitalize bg-slate-50/50 dark:bg-[#0D121F]/20 border-r border-slate-200 dark:border-slate-900/40 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
-                  {moduleName}
+                  {MODULE_LABELS[moduleName] ? tc(MODULE_LABELS[moduleName]) : moduleName}
                 </td>
 
                 {actions.map((action) => {
@@ -112,6 +114,13 @@ const PermissionTable = ({
                         (dbValue === "xoa" ||
                           dbValue === "delete" ||
                           dbValue === "remove")
+                      )
+                        return true;
+                      if (
+                        uiValue === "gift" &&
+                        (dbValue === "tang" ||
+                          dbValue === "gift" ||
+                          dbValue === "tặng")
                       )
                         return true;
 
