@@ -91,3 +91,47 @@ export const isAdmin = (req, res, next) => {
         message: "Từ chối truy cập. Chỉ có Quản trị viên mới có quyền thực hiện hành động này!"
     });
 };
+
+export const verifyTokenOptional = async (req, res, next) => {
+    try {
+        const authHeader = req.headers.authorization;
+        const token = authHeader && authHeader.split(" ")[1];
+
+        if (!token) {
+            req.user = null;
+            return next();
+        }
+
+        const secret = process.env.JWT_ACCESS_SECRET;
+        const decoded = jwt.verify(token, secret);
+        const user = await prisma.Users.findUnique({
+            where: { id: decoded.id },
+            include: {
+                role: true,
+                permissions: true,
+            },
+        });
+
+        if (!user) {
+            req.user = null;
+            return next();
+        }
+
+        const userPermissionSlugs = user.permissions.map((p) => p.slug);
+        req.user = {
+            ...user,
+            permissionSlugs: userPermissionSlugs,
+        };
+
+        next();
+    } catch (error) {
+        if (error.name === "TokenExpiredError") {
+            return res.status(401).json({
+                message: "Phiên đăng nhập đã hết hạn",
+                code: "TOKEN_EXPIRED",
+            });
+        }
+        req.user = null;
+        next();
+    }
+};
