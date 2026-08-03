@@ -135,6 +135,31 @@ const couponController = {
         }
     },
 
+    giftCoupon: async (req, res) => {
+        const { coupon_id, user_id } = req.body;
+        try {
+            const gift = await couponService.giftCoupon({ couponId: coupon_id, userId: user_id });
+            return res.status(201).json({
+                success: true,
+                message: "Đã tặng mã giảm giá thành công",
+                data: gift
+            });
+        } catch (error) {
+            const status = error.status || 500;
+            if (status === 500) {
+                return res.status(500).json({
+                    success: false,
+                    message: "Lỗi server nội bộ",
+                    error: error.message
+                });
+            }
+            return res.status(status).json({
+                success: false,
+                message: error.message
+            });
+        }
+    },
+
     checkCoupon: async (req, res) => {
         const { amount, code } = req.body;
         console.log(amount, code)

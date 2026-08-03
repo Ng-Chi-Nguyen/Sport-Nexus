@@ -29,4 +29,8 @@ couponRoute
 
     .post("/check/", validate(couponSchema.checkCoupon), couponController.checkCoupon)
 
+    .post("/gift", verifyToken, checkPermission("tang-ma-giam-gia"), validate(couponSchema.giftCoupon),
+      logAction({ actionType: "CREATE", entityType: "UserCoupons", getChanges: createDetails }),
+      couponController.giftCoupon)
+
 export default couponRoute;

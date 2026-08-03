@@ -108,6 +108,54 @@ const couponService = {
         })
     },
 
+    giftCoupon: async ({ couponId, userId }) => {
+        const coupon = await prisma.coupons.findFirst({
+            where: { id: couponId, deleted_at: ACTIVE }
+        });
+        if (!coupon) {
+            const err = new Error("Không tìm thấy mã giảm giá");
+            err.status = 404;
+            throw err;
+        }
+        if (!coupon.is_active) {
+            const err = new Error("Không thể tặng mã giảm giá đã hết hiệu lực");
+            err.status = 400;
+            throw err;
+        }
+        const now = new Date();
+        if (now > coupon.end_date) {
+            const err = new Error("Không thể tặng mã giảm giá đã hết hạn");
+            err.status = 400;
+            throw err;
+        }
+
+        const user = await prisma.users.findFirst({
+            where: { id: userId, deleted_at: ACTIVE }
+        });
+        if (!user) {
+            const err = new Error("Không tìm thấy người dùng");
+            err.status = 404;
+            throw err;
+        }
+
+        try {
+            return await prisma.userCoupons.create({
+                data: { user_id: userId, coupon_id: couponId, is_gift: true, used_count: 0 },
+                include: {
+                    user: { select: { full_name: true, email: true } },
+                    coupon: true
+                }
+            });
+        } catch (error) {
+            if (error.code === 'P2002') {
+                const err = new Error("Coupon này đã được tặng cho user này rồi");
+                err.status = 409;
+                throw err;
+            }
+            throw error;
+        }
+    },
+
     checkCoupon: async (amount, code) => {
         const coupon = await prisma.coupons.findFirst({
             where: { code: code, deleted_at: ACTIVE }
