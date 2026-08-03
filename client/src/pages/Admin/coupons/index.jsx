@@ -2,7 +2,7 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { BtnAdd, BtnDelete, BtnEdit } from "@/components/ui/button";
 import { SearchTable } from "@/components/ui/search";
 import Badge from "@/components/ui/badge";
-import { LayoutDashboard, ChevronDown, Filter, RefreshCw } from "lucide-react";
+import { LayoutDashboard, ChevronDown, Filter, RefreshCw, Gift } from "lucide-react";
 import {
   useLoaderData,
   useRevalidator,
@@ -16,6 +16,7 @@ import { queryClient } from "@/lib/react-query";
 import ShowToast from "@/components/ui/toast";
 import couponApi from "@/api/management/couponApi";
 import ExcelCrudActions from "@/components/admin/ExcelCrudActions";
+import GiftCouponModal from "@/components/admin/GiftCouponModal";
 import { SimpleSelect } from "@/components/ui/select";
 import {
   ACTIVE_TABS,
@@ -33,6 +34,7 @@ const CouponPage = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
+  const [giftCoupon, setGiftCoupon] = useState(null);
 
   const breadcrumbData = [
     { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -99,6 +101,10 @@ const CouponPage = () => {
   const openConfirm = (id) => {
     setDeleteTarget(id);
     setIsConfirmOpen(true);
+  };
+
+  const openGift = (coupon) => {
+    setGiftCoupon(coupon);
   };
 
   const handleDelete = async () => {
@@ -372,6 +378,14 @@ const CouponPage = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2 justify-center">
+                        <button
+                          type="button"
+                          onClick={() => openGift(coupon)}
+                          className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-amber-200 bg-amber-50 text-amber-600 hover:bg-amber-100 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-400 dark:hover:bg-amber-500/20 transition-colors cursor-pointer"
+                        >
+                          <Gift size={14} />
+                          {t("gift_btn")}
+                        </button>
                         <BtnEdit
                           route={`/management/coupons/edit/${coupon.id}`}
                           name={t("edit_btn")}
@@ -411,6 +425,14 @@ const CouponPage = () => {
             onPageChange={handlePageChange}
           />
         </div>
+        <GiftCouponModal
+          isOpen={!!giftCoupon}
+          coupon={giftCoupon}
+          onClose={() => setGiftCoupon(null)}
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: ["coupons"] });
+          }}
+        />
       </div>
     </div>
   );
