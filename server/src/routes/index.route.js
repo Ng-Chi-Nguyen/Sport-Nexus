@@ -29,6 +29,7 @@ import customerUserRoute from "./customer/user.route.js";
 import sendEmailRoute from "./email/sendEmail.route.js";
 import paymentRoute from "./customer/payment.route.js";
 import managementPaymentRoute from "./management/payment.route.js";
+import customerCouponRoute from "./customer/coupon.route.js";
 
 const Routes = (app) => {
 
@@ -55,6 +56,7 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}customer/cart-item/`, cartItemRoute)
     app.use(`${api_prefix_v1}customer/cart/`, cartRoute)
     app.use(`${api_prefix_v1}customer/order/`, orderRoute)
+    app.use(`${api_prefix_v1}customer/coupon/`, customerCouponRoute)
     app.use(`${api_prefix_v1}customer/invoice/`, customerInvoiceRoute)
     app.use(`${api_prefix_v1}customer/review/`, reviewRoute)
     app.use(`${api_prefix_v1}customer/payment/`, paymentRoute)
