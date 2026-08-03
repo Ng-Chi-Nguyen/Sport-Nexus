@@ -72,11 +72,11 @@ const purchaseOrderController = {
         }
     },
 
-    getPurchaseOrderBySupplierId: async (req, res) => {
-        let supplierId = parseInt(req.params.id);
+    getPurchaseOrderItemById: async (req, res) => {
+        let purchaseOrderId = parseInt(req.params.id);
         try {
-            let purchaseOrders = await purchaseOrderService.getPurchaseOrderBySupplierId(supplierId)
-            if (!purchaseOrders || purchaseOrders.length === 0) {
+            let purchaseOrderItems = await purchaseOrderService.getPurchaseOrderItemById(purchaseOrderId)
+            if (!purchaseOrderItems || purchaseOrderItems.length === 0) {
                 return res.status(404).json({
                     success: false,
                     message: "Không tìm thấy đơn nhập hàng."
@@ -84,7 +84,7 @@ const purchaseOrderController = {
             }
             return res.status(200).json({
                 success: true,
-                data: purchaseOrders
+                data: purchaseOrderItems
             });
         } catch (error) {
             if (error.code === 'P2025') {
@@ -98,10 +98,10 @@ const purchaseOrderController = {
         }
     },
 
-    getPurchaseOrderItemById: async (req, res) => {
+    getPurchaseOrderBySupplierId: async (req, res) => {
         let supplierId = parseInt(req.params.id);
         try {
-            let purchaseOrders = await purchaseOrderService.getPurchaseOrderItemById(supplierId)
+            let purchaseOrders = await purchaseOrderService.getPurchaseOrderBySupplierId(supplierId)
             if (!purchaseOrders || purchaseOrders.length === 0) {
                 return res.status(404).json({
                     success: false,
