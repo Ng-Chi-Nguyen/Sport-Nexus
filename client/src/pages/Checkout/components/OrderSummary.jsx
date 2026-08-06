@@ -1,6 +1,7 @@
 import { ShoppingBag, ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import CouponInput from "@/pages/ProductDetail/components/CouponInput";
+import useCouponSuggestions from "@/hooks/useCouponSuggestions";
 import { formatCurrency } from "@/utils/formatters";
 import OrderItem from "./OrderItem";
 
@@ -9,6 +10,10 @@ const OrderSummary = ({
   totalAmount,
   discount,
   finalAmount,
+  shippingFee = 0,
+  shippingEstimate = null,
+  recipientName,
+  recipientPhone,
   couponCode,
   onCouponCodeChange,
   onApplyCoupon,
@@ -22,6 +27,7 @@ const OrderSummary = ({
   onPlaceOrder,
 }) => {
   const navigate = useNavigate();
+  const { suggestions } = useCouponSuggestions();
 
   return (
     <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4 transition-colors duration-200">
@@ -48,6 +54,7 @@ const OrderSummary = ({
         discount={couponData?.discount ?? null}
         oldAmount={couponData?.oldAmount ?? null}
         newAmount={couponData?.newAmount ?? null}
+        suggestions={suggestions}
       />
 
       <hr className="border-slate-200 dark:border-slate-800" />
@@ -63,11 +70,30 @@ const OrderSummary = ({
             <span>-{formatCurrency(discount)}</span>
           </div>
         )}
+        <div className="flex justify-between items-center text-slate-600 dark:text-slate-400">
+          <span>Phí vận chuyển</span>
+          <span className="text-right">
+            {shippingFee ? (
+              <>
+                {formatCurrency(shippingFee)}
+                {shippingEstimate?.estimateDays && (
+                  <span className="block text-[10px] text-slate-400 dark:text-slate-500">
+                    Giao dự kiến {shippingEstimate.estimateDays} ngày
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="text-[11px]">
+                Chọn tỉnh để tính phí
+              </span>
+            )}
+          </span>
+        </div>
         <hr className="border-slate-200 dark:border-slate-800 my-1" />
         <div className="flex justify-between text-base font-bold text-slate-900 dark:text-slate-100">
           <span>Tổng cộng</span>
           <span className="text-rose-600 dark:text-rose-400">
-            {formatCurrency(finalAmount)}
+            {formatCurrency(finalAmount + shippingFee)}
           </span>
         </div>
       </div>
@@ -75,7 +101,13 @@ const OrderSummary = ({
       <button
         type="button"
         onClick={onPlaceOrder}
-        disabled={submitting || !fullAddress || !email.trim()}
+        disabled={
+          submitting ||
+          !fullAddress ||
+          !email.trim() ||
+          !recipientName?.trim() ||
+          !recipientPhone?.trim()
+        }
         className="w-full py-3 bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
       >
         {submitting ? "Đang xử lý..." : "Đặt hàng"}

@@ -4,7 +4,9 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import addressData from "@/assets/data/addressVN_afterUpdate.json";
 import orderApi from "@/api/customer/orderApi";
 import addressApi from "@/api/customer/addressApi";
+import { resolveLocation } from "@/utils/location";
 import paymentApi from "@/api/customer/paymentApi";
+import shippingApi from "@/api/customer/shippingApi";
 import useCoupon from "@/hooks/useCoupon";
 import EmptyCart from "./components/EmptyCart";
 import OrderSuccess from "./components/OrderSuccess";
@@ -25,6 +27,8 @@ const Checkout = () => {
   const user = userStr ? JSON.parse(userStr) : null;
 
   const [email, setEmail] = useState(user?.email || "");
+  const [recipientName, setRecipientName] = useState("");
+  const [recipientPhone, setRecipientPhone] = useState("");
   const [detailAddress, setDetailAddress] = useState("");
   const [provinceCode, setProvinceCode] = useState("");
   const [wardCode, setWardCode] = useState("");
@@ -33,6 +37,7 @@ const Checkout = () => {
   const [orderResult, setOrderResult] = useState(null);
   const [paymentInfo, setPaymentInfo] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [shippingEstimate, setShippingEstimate] = useState(null);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -44,56 +49,17 @@ const Checkout = () => {
         const addr = list.find((a) => a.is_default) || list[0];
         const loc = addr.location_data || {};
 
-        const norm = (s = "") =>
-          s
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/^(thanh pho|tinh|tp\.?\s*)/, "")
-            .replace(/\s+/g, " ")
-            .trim();
+        const { provinceCode, wardCode } = resolveLocation(loc);
 
-        const findProvince = () => {
-          const code = loc.province?.code?.toString().padStart(2, "0");
-          if (code) {
-            const byCode = addressData.find((p) => p.Code === code);
-            if (byCode) return byCode;
-          }
-          const name =
-            typeof loc.province === "string"
-              ? loc.province
-              : loc.province?.name;
-          if (name) {
-            const key = norm(name);
-            return addressData.find((p) => norm(p.FullName) === key);
-          }
-          return null;
-        };
-
-        const province = findProvince();
-        if (province) setProvinceCode(province.Code);
-
-        const wards = province?.Wards || [];
-        const findWard = () => {
-          const code = loc.ward?.code?.toString().padStart(5, "0");
-          if (code) {
-            const byCode = wards.find((w) => w.Code === code);
-            if (byCode) return byCode;
-          }
-          const name = typeof loc.ward === "string" ? loc.ward : loc.ward?.name;
-          if (name) {
-            const key = norm(name);
-            return wards.find((w) => norm(w.FullName) === key);
-          }
-          return null;
-        };
-
-        const ward = findWard();
-        if (ward) setWardCode(ward.Code);
+        if (provinceCode) setProvinceCode(provinceCode);
+        if (wardCode) setWardCode(wardCode);
         if (addr.detail_address) setDetailAddress(addr.detail_address);
+        if (addr.recipient_name) setRecipientName(addr.recipient_name);
+        if (addr.recipient_phone) setRecipientPhone(addr.recipient_phone);
+        if (user?.email) setEmail(user.email);
       })
       .catch(() => {});
-  }, [user?.id]);
+  }, [user?.id, user?.email]);
 
   const {
     couponCode,
@@ -138,15 +104,59 @@ const Checkout = () => {
   const discount = couponData?.discount ?? 0;
   const finalAmount = couponData?.newAmount ?? totalAmount;
 
+  const defaultWeight = useMemo(
+    () => items.reduce((sum, item) => sum + (item.quantity || 1) * 500, 0),
+    [items],
+  );
+
+  useEffect(() => {
+    if (!selectedProvinceName || items.length === 0) return;
+    let cancelled = false;
+    shippingApi
+      .calculate({
+        province_name: selectedProvinceName,
+        weight_grams: defaultWeight,
+        service_type: "FAST",
+        cod_amount: paymentMethod === "COD" ? finalAmount : 0,
+        item_value: totalAmount,
+      })
+      .then((res) => {
+        if (!cancelled) setShippingEstimate(res.data || null);
+      })
+      .catch(() => {
+        if (!cancelled) setShippingEstimate(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    selectedProvinceName,
+    items,
+    defaultWeight,
+    paymentMethod,
+    finalAmount,
+    totalAmount,
+  ]);
+
+  const hasShippingAddress = Boolean(selectedProvinceName && items.length > 0);
+  const shippingFee = hasShippingAddress ? shippingEstimate?.totalFee || 0 : 0;
+  const grandTotal = finalAmount + shippingFee;
+
   const orderPayload = useMemo(
     () => ({
       total_amount: totalAmount,
-      final_amount: finalAmount,
+      final_amount: grandTotal,
       discount_amount: discount,
       shipping_address: fullAddress,
       payment_method: paymentMethod,
       coupon_code: couponCode || null,
       user_email: email || null,
+      shipping_name: recipientName.trim() || null,
+      shipping_phone: recipientPhone.trim() || null,
+      province_name: selectedProvinceName || null,
+      ward_name: selectedWardName || null,
+      weight_grams: defaultWeight,
+      service_type: "FAST",
       items: items.map((item) => ({
         product_variant_id: item.product_variant_id,
         quantity: item.quantity,
@@ -155,13 +165,18 @@ const Checkout = () => {
     }),
     [
       totalAmount,
-      finalAmount,
+      grandTotal,
       discount,
       fullAddress,
       paymentMethod,
       couponCode,
       email,
       items,
+      recipientName,
+      recipientPhone,
+      selectedProvinceName,
+      selectedWardName,
+      defaultWeight,
     ],
   );
 
@@ -172,8 +187,12 @@ const Checkout = () => {
     }
     if (!fullAddress) return;
     if (!email.trim()) return;
+    if (!recipientName.trim() || !recipientPhone.trim()) {
+      ShowToast("error", "Vui lòng nhập tên và số điện thoại người nhận");
+      return;
+    }
     setShowConfirm(true);
-  }, [fullAddress, email, couponCode]);
+  }, [fullAddress, email, couponCode, recipientName, recipientPhone]);
 
   const handleConfirmOrder = useCallback(async () => {
     setSubmitting(true);
@@ -223,6 +242,7 @@ const Checkout = () => {
         orderId={orderResult.id}
         paymentMethod={paymentMethod}
         paymentInfo={paymentInfo}
+        trackingCode={orderResult?.shipment?.tracking_code}
       />
     );
   }
@@ -230,12 +250,14 @@ const Checkout = () => {
   return (
     <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <Breadcrumbs
-          data={[
-            { title: "Trang chủ", route: "/" },
-            { title: "Thanh toán", route: "" },
-          ]}
-        />
+        <div className="mt-10">
+          <Breadcrumbs
+            data={[
+              { title: "Trang chủ", route: "/" },
+              { title: "Thanh toán", route: "" },
+            ]}
+          />
+        </div>
 
         <TitleWithIcon icon={CreditCard} title="Thanh toán đơn hàng" />
 
@@ -243,7 +265,13 @@ const Checkout = () => {
           <div className="md:col-span-3 space-y-6">
             <ContactSection
               email={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name={recipientName}
+              phone={recipientPhone}
+              onChange={(key, value) => {
+                if (key === "email") setEmail(value);
+                else if (key === "name") setRecipientName(value);
+                else if (key === "phone") setRecipientPhone(value);
+              }}
             />
 
             <AddressSection
@@ -269,9 +297,13 @@ const Checkout = () => {
               totalAmount={totalAmount}
               discount={discount}
               finalAmount={finalAmount}
+              shippingFee={shippingFee}
+              shippingEstimate={shippingEstimate}
+              recipientName={recipientName}
+              recipientPhone={recipientPhone}
               couponCode={couponCode}
               onCouponCodeChange={setCouponCode}
-              onApplyCoupon={() => applyCoupon(totalAmount, couponCode)}
+              onApplyCoupon={(code) => applyCoupon(totalAmount, code || couponCode)}
               onClearCoupon={clearCoupon}
               couponMsg={couponMsg}
               couponLoading={couponLoading}
@@ -294,6 +326,7 @@ const Checkout = () => {
           totalAmount,
           discount,
           finalAmount,
+          shippingFee,
           email,
           fullAddress,
           paymentMethod,
