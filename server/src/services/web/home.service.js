@@ -162,10 +162,9 @@ const homeService = {
             .slice(0, limit);
     },
 
-    getProductsByCategory: async (limit = 12, maxCategories = 5) => {
+    getProductsByCategory: async (limit = 12) => {
         const categories = await prisma.Categories.findMany({
             where: { is_active: true, deleted_at: ACTIVE },
-            take: maxCategories,
             orderBy: { id: "asc" },
             select: { id: true, name: true, slug: true, image: true },
         });
