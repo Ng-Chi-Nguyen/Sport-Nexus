@@ -1,5 +1,6 @@
 import userAddressService from "../../services/customer/userAddresses.service.js";
 
+import { t } from "../../locales/messages.js";
 const userAddressController = {
     createUserAddress: async (req, res) => {
         let userAddressData = req.body;
@@ -7,13 +8,13 @@ const userAddressController = {
             let newUserAddress = await userAddressService.createUserAddress(userAddressData)
             return res.status(201).json({
                 success: true,
-                message: "Địa chỉ đã được thêm",
+                message: t(req, "Địa chỉ đã được thêm"),
                 data: newUserAddress
             })
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -26,7 +27,7 @@ const userAddressController = {
             if (!address || address.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy địa chỉ của bạn."
+                    message: t(req, "Không tìm thấy địa chỉ của bạn.")
                 });
             }
             return res.status(200).json({
@@ -36,7 +37,7 @@ const userAddressController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -49,7 +50,7 @@ const userAddressController = {
             if (!address || address.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy địa chỉ của bạn."
+                    message: t(req, "Không tìm thấy địa chỉ của bạn.")
                 });
             }
 
@@ -62,13 +63,13 @@ const userAddressController = {
             if (error.code === '409') {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                    message: t(req, "Không tìm thấy sản phẩm này trong giỏ hàng.")
                 });
             }
 
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -81,7 +82,7 @@ const userAddressController = {
             let updateData = await userAddressService.updateUserAddress(addressId, dataUpdate);
             return res.status(200).json({
                 success: true,
-                message: "Địa chỉ đã được cập nhật",
+                message: t(req, "Địa chỉ đã được cập nhật"),
                 data: updateData
             })
         } catch (error) {
@@ -89,13 +90,13 @@ const userAddressController = {
             if (error.code === "P2025") {
                 return res.status(409).json({
                     success: false,
-                    message: "Không tìm thấy địa chỉ của bạn.",
+                    message: t(req, "Không tìm thấy địa chỉ của bạn."),
                 })
             }
 
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -107,20 +108,20 @@ const userAddressController = {
             await userAddressService.deleteUserAddress(addressId);
             return res.status(200).json({
                 success: true,
-                message: "Địa chỉ đã được xóa",
+                message: t(req, "Địa chỉ đã được xóa"),
             })
         } catch (error) {
 
             if (error.code === "P2025") {
                 return res.status(409).json({
                     success: false,
-                    message: "Không tìm thấy địa chỉ của bạn.",
+                    message: t(req, "Không tìm thấy địa chỉ của bạn."),
                 })
             }
 
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     }

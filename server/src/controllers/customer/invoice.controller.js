@@ -1,5 +1,6 @@
 import invoiceService from "../../services/customer/invoice.service.js";
 
+import { t } from "../../locales/messages.js";
 const invoiceController = {
     getMyInvoices: async (req, res) => {
         const page = parseInt(req.query.page) || 1;
@@ -15,7 +16,7 @@ const invoiceController = {
         } catch (error) {
             return res.status(error.status || 500).json({
                 success: false,
-                message: error.message || 'Lỗi lấy danh sách hóa đơn'
+                message: t(req, error.message) || 'Lỗi lấy danh sách hóa đơn'
             });
         }
     },
@@ -29,7 +30,7 @@ const invoiceController = {
             if (!invoice) {
                 return res.status(404).json({
                     success: false,
-                    message: 'Không tìm thấy hóa đơn'
+                    message: t(req, 'Không tìm thấy hóa đơn')
                 });
             }
             return res.status(200).json({
@@ -39,7 +40,7 @@ const invoiceController = {
         } catch (error) {
             return res.status(error.status || 500).json({
                 success: false,
-                message: error.message || 'Lỗi lấy chi tiết hóa đơn'
+                message: t(req, error.message) || 'Lỗi lấy chi tiết hóa đơn'
             });
         }
     }

@@ -1,13 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-
-const TABS = [
-  { key: "description", label: "Mô tả sản phẩm" },
-  { key: "shipping", label: "Chính sách giao hàng" },
-  { key: "return", label: "Chính sách đổi trả" },
-];
+import { useTranslation } from "react-i18next";
 
 const DescriptionTab = ({ description }) => {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const textRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -38,11 +34,11 @@ const DescriptionTab = ({ description }) => {
         >
           {expanded ? (
             <>
-              Thu gọn <ChevronUp size={16} />
+              {t("show_less")} <ChevronUp size={16} />
             </>
           ) : (
             <>
-              Xem thêm <ChevronDown size={16} />
+              {t("show_more")} <ChevronDown size={16} />
             </>
           )}
         </button>
@@ -51,29 +47,39 @@ const DescriptionTab = ({ description }) => {
   );
 };
 
-const ShippingTab = () => (
-  <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed space-y-2">
-    <p>- Miễn phí giao hàng cho đơn hàng từ 500.000₫</p>
-    <p>
-      - Thời gian giao hàng: 3-7 ngày làm việc (nội thành), 5-10 ngày (ngoại
-      thành)
-    </p>
-    <p>- Giao hàng COD và chuyển khoản đều được hỗ trợ</p>
-    <p>- Kiểm tra hàng trước khi thanh toán</p>
-  </div>
-);
+const ShippingTab = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed space-y-2">
+      <p>{t("shipping_policy_1")}</p>
+      <p>{t("shipping_policy_2")}</p>
+      <p>{t("shipping_policy_3")}</p>
+      <p>{t("shipping_policy_4")}</p>
+    </div>
+  );
+};
 
-const ReturnTab = () => (
-  <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed space-y-2">
-    <p>- Đổi trả trong vòng 7 ngày kể từ ngày nhận hàng</p>
-    <p>- Sản phẩm còn nguyên tem mác, chưa qua sử dụng</p>
-    <p>- Hoàn tiền 100% nếu sản phẩm bị lỗi từ nhà sản xuất</p>
-    <p>- Phí đổi trả: 15.000₫ (miễn phí nếu lỗi nhà sản xuất)</p>
-  </div>
-);
+const ReturnTab = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed space-y-2">
+      <p>{t("return_policy_1")}</p>
+      <p>{t("return_policy_2")}</p>
+      <p>{t("return_policy_3")}</p>
+      <p>{t("return_policy_4")}</p>
+    </div>
+  );
+};
 
 const ProductTabs = ({ description }) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("description");
+
+  const TABS = [
+    { key: "description", label: t("tab_description") },
+    { key: "shipping", label: t("tab_shipping") },
+    { key: "return", label: t("tab_return") },
+  ];
 
   return (
     <div className="border-t border-slate-200 dark:border-slate-800 pt-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">

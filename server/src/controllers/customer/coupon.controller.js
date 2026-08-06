@@ -1,5 +1,6 @@
 import couponCustomerService from "../../services/customer/coupon.service.js";
 
+import { t } from "../../locales/messages.js";
 const couponCustomerController = {
   checkCoupon: async (req, res) => {
     try {
@@ -11,20 +12,23 @@ const couponCustomerController = {
       });
 
       if (result.message) {
-        return res
-          .status(400)
-          .json({ success: false, message: result.message });
+        const { message, ...extra } = result;
+        return res.status(400).json({
+          success: false,
+          message: t(req, message),
+          ...extra,
+        });
       }
 
       return res.json({
         success: true,
         data: result,
-        message: "Thêm mã giảm giá thành công",
+        message: t(req, "Thêm mã giảm giá thành công"),
       });
     } catch (error) {
       return res.status(500).json({
         success: false,
-        message: "Lỗi server nội bộ",
+        message: t(req, "Lỗi server nội bộ"),
         error: error.message,
       });
     }
@@ -40,7 +44,7 @@ const couponCustomerController = {
     } catch (error) {
       return res.status(500).json({
         success: false,
-        message: "Lỗi server nội bộ",
+        message: t(req, "Lỗi server nội bộ"),
         error: error.message,
       });
     }

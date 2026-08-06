@@ -4,8 +4,10 @@ import { ArrowLeft } from "lucide-react";
 import AddressForm from "@/pages/profile/address/AddressForm";
 import ShowToast from "@/components/ui/toast";
 import addressApi from "@/api/customer/addressApi";
+import { useTranslation } from "react-i18next";
 
 const EditAddress = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "address" });
   const { initialData, user } = useLoaderData();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -15,10 +17,14 @@ const EditAddress = () => {
     setSaving(true);
     try {
       await addressApi.update(id, { ...payload, user_id: user.id });
-      ShowToast("success", "Cập nhật địa chỉ thành công");
+      ShowToast("success", t("success_update", "Cập nhật địa chỉ thành công"));
       navigate("/tai-khoan/dia-chi");
     } catch (error) {
-      ShowToast("error", error?.response?.data?.message || "Cập nhật thất bại");
+      ShowToast(
+        "error",
+        error?.response?.data?.message ||
+          t("error_update", "Cập nhật thất bại"),
+      );
     } finally {
       setSaving(false);
     }
@@ -36,16 +42,16 @@ const EditAddress = () => {
           type="button"
           onClick={() => navigate("/tai-khoan/dia-chi")}
           className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-          title="Quay lại"
+          title={t("back")}
         >
           <ArrowLeft size={20} />
         </button>
         <div>
           <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
-            Chỉnh sửa địa chỉ
+            {t("edit_address_title")}
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Cập nhật thông tin địa chỉ giao hàng
+            {t("edit_address_desc")}
           </p>
         </div>
       </div>

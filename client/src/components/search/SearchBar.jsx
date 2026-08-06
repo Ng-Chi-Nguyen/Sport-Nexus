@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Clock, Search, X } from "lucide-react";
 import searchApi from "@/api/web/searchApi";
 import {
@@ -22,6 +22,7 @@ const SearchBar = () => {
   const [activeIdx, setActiveIdx] = useState(-1);
   const [history, setHistory] = useState(() => getSearchHistory());
   const navigate = useNavigate();
+  const location = useLocation();
   const wrapperRef = useRef(null);
   const inputRef = useRef(null);
   const debounceRef = useRef(null);
@@ -108,6 +109,23 @@ const SearchBar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const urlQ = new URLSearchParams(location.search).get("q") || "";
+  const prevPathRef = useRef(location.pathname);
+  useEffect(() => {
+    const isSearchPage = location.pathname === "/tim-kiem";
+    const wasSearchPage = prevPathRef.current === "/tim-kiem";
+    prevPathRef.current = location.pathname;
+    if (isSearchPage) {
+      setQuery(urlQ);
+      setIsOpen(false);
+    } else if (wasSearchPage) {
+      setQuery("");
+      setSuggestions([]);
+      setTotal(0);
+      setIsOpen(false);
+    }
+  }, [location.pathname, urlQ]);
 
   return (
     <div ref={wrapperRef} className="relative flex-1 max-w-2xl hidden sm:block">

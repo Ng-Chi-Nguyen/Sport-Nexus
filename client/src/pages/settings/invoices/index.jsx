@@ -4,12 +4,8 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import Pagination from "@/components/ui/pagination";
 import { Receipt } from "lucide-react";
 import { TitleWithIcon } from "@/components/ui/title";
-
-const INVOICE_LABELS = {
-  Pending: "Chờ xử lý",
-  Completed: "Đã hoàn thành",
-  Cancelled: "Đã hủy",
-};
+import { INVOICE_STATUS_KEYS } from "@/constants/invoice";
+import { useTranslation } from "react-i18next";
 
 const INVOICE_BADGE = {
   Pending:
@@ -28,6 +24,7 @@ const INVOICE_DOT = {
 };
 
 const Invoice = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "invoice" });
   const { invoices, pagination, user } = useLoaderData();
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
@@ -46,22 +43,19 @@ const Invoice = () => {
       <div className="mx-auto max-w-[1400px] mt-6 md:mt-8 px-4 sm:px-6">
         <Breadcrumbs
           data={[
-            { title: "Trang chủ", route: "/" },
-            { title: "Hóa đơn", route: "" },
+            { title: t("home"), route: "/" },
+            { title: t("invoice"), route: "" },
           ]}
         />
 
-        <TitleWithIcon icon={Receipt} title="Hóa đơn của tôi" />
+        <TitleWithIcon icon={Receipt} title={t("my_invoices")} />
 
         {invoices.length === 0 ? (
           <div className="border border-slate-200 dark:border-slate-900 p-8 text-center text-slate-400 dark:text-slate-500 bg-white dark:bg-[#0D121F]/40">
             <p className="text-lg font-medium mb-2 text-slate-700 dark:text-slate-300">
-              Chưa có hóa đơn
+              {t("no_invoices")}
             </p>
-            <p className="text-sm">
-              Khi bạn đặt hàng và hóa đơn được phát hành, chúng sẽ xuất hiện tại
-              đây
-            </p>
+            <p className="text-sm">{t("no_invoices_desc")}</p>
           </div>
         ) : (
           <div className="space-y-6">
@@ -69,10 +63,10 @@ const Invoice = () => {
               <table className="w-full text-sm text-left">
                 <thead>
                   <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]/40 text-slate-700 dark:text-slate-300 font-semibold">
-                    <th className="py-3.5 px-4">Số hóa đơn</th>
-                    <th className="py-3.5 px-4">Ngày phát hành</th>
-                    <th className="py-3.5 px-4">Tổng tiền</th>
-                    <th className="py-3.5 px-4">Trạng thái</th>
+                    <th className="py-3.5 px-4">{t("table_invoice_number")}</th>
+                    <th className="py-3.5 px-4">{t("table_issued_date")}</th>
+                    <th className="py-3.5 px-4">{t("table_total_amount")}</th>
+                    <th className="py-3.5 px-4">{t("table_status")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
@@ -105,7 +99,9 @@ const Invoice = () => {
                             className={`w-1.5 h-1.5 rounded-full ${INVOICE_DOT[invoice.status] || "bg-slate-400"}`}
                           />
 
-                          {INVOICE_LABELS[invoice.status] || invoice.status}
+                          {INVOICE_STATUS_KEYS[invoice.status]
+                            ? t(INVOICE_STATUS_KEYS[invoice.status])
+                            : invoice.status}
                         </span>
                       </td>
                     </tr>

@@ -7,7 +7,7 @@ const OrderItem = ({ item }) => (
         {item.name || `SP #${item.product_variant_id}`}
       </p>
       <p className="text-xs text-slate-500 dark:text-slate-400">
-        SL: {item.quantity} | ID: #{item.product_variant_id}
+        SL: {item.quantity}
         {item.attributes?.length > 0 && (
           <>
             {" "}

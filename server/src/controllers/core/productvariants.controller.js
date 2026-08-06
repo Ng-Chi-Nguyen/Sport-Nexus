@@ -1,5 +1,6 @@
 import productVariantService from "../../services/core/productvariants.service.js";
 
+import { t } from "../../locales/messages.js";
 const productVariantController = {
     createProductVariant: async (req, res) => {
         let dataProductVariant = req.body;
@@ -8,19 +9,19 @@ const productVariantController = {
             let newProductVariant = await productVariantService.createProductVariant(dataProductVariant);
             return res.status(201).json({
                 success: true,
-                message: "Thêm biến thể sản phẩm thành công",
+                message: t(req, "Thêm biến thể sản phẩm thành công"),
                 data: newProductVariant
             })
         } catch (error) {
             if (error.code === "P2025") {
                 return res.status(409).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm trong hệ thống",
+                    message: t(req, "Không tìm thấy sản phẩm trong hệ thống"),
                 })
             }
             return res.status(500).json({
                 success: false,
-                message: error.message,
+                message: t(req, error.message),
                 code: error.code
             })
         }
@@ -33,7 +34,7 @@ const productVariantController = {
             if (!variant || variant.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm."
+                    message: t(req, "Không tìm thấy sản phẩm.")
                 });
             }
             return res.status(200).json({
@@ -43,7 +44,7 @@ const productVariantController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -55,7 +56,7 @@ const productVariantController = {
             if (!variants || variants.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                    message: t(req, "Không tìm thấy sản phẩm này trong giỏ hàng.")
                 });
             }
             return res.status(200).json({
@@ -65,7 +66,7 @@ const productVariantController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -84,7 +85,7 @@ const productVariantController = {
             if (!variants || variants.variants.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm."
+                    message: t(req, "Không tìm thấy sản phẩm.")
                 });
             }
             return res.status(200).json({
@@ -94,7 +95,7 @@ const productVariantController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -106,7 +107,7 @@ const productVariantController = {
             if (!variants || variants.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: t(req, "Không tìm thấy thường hiệu.")
                 });
             }
 
@@ -116,7 +117,7 @@ const productVariantController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             })
         }
@@ -129,15 +130,15 @@ const productVariantController = {
             let updateVariant = await productVariantService.updateProductVariant(variantId, dataUpdate);
             return res.status(200).json({
                 success: true,
-                message: "Cập nhật biến thể thành công",
+                message: t(req, "Cập nhật biến thể thành công"),
                 data: updateVariant
             })
         } catch (error) {
             if (error.code === 'P2025')
-                return res.status(404).json({ message: "Không tìm thấy mã sản phẩm." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy mã sản phẩm.") });
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -148,14 +149,14 @@ const productVariantController = {
             await productVariantService.deleteProductVariant(variantId);
             return res.status(200).json({
                 success: true,
-                message: "Xóa biến thể thành công",
+                message: t(req, "Xóa biến thể thành công"),
             })
         } catch (error) {
             if (error.code === 'P2025')
-                return res.status(404).json({ message: "Không tìm thấy mã sản phẩm." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy mã sản phẩm.") });
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     }

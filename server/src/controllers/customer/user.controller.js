@@ -2,6 +2,7 @@ import { uploadImage } from "../../services/image/image.service.js";
 import prisma from "../../db/prisma.js";
 import { deleteImage } from "../../utils/deleteImage.utils.js";
 
+import { t } from "../../locales/messages.js";
 const customerUserController = {
     getProfile: async (req, res) => {
         try {
@@ -33,7 +34,7 @@ const customerUserController = {
             if (!user) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy người dùng."
+                    message: t(req, "Không tìm thấy người dùng.")
                 });
             }
 
@@ -44,7 +45,7 @@ const customerUserController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi khi lấy thông tin người dùng.",
+                message: t(req, "Lỗi khi lấy thông tin người dùng."),
                 error: error.message
             });
         }
@@ -73,13 +74,13 @@ const customerUserController = {
 
             return res.status(200).json({
                 success: true,
-                message: "Cập nhật thông tin thành công!",
+                message: t(req, "Cập nhật thông tin thành công!"),
                 data: updatedUser
             });
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi khi cập nhật thông tin.",
+                message: t(req, "Lỗi khi cập nhật thông tin."),
                 error: error.message
             });
         }
@@ -93,7 +94,7 @@ const customerUserController = {
             if (!file) {
                 return res.status(400).json({
                     success: false,
-                    message: "Vui lòng chọn ảnh đại diện."
+                    message: t(req, "Vui lòng chọn ảnh đại diện.")
                 });
             }
 
@@ -115,13 +116,13 @@ const customerUserController = {
 
             return res.status(200).json({
                 success: true,
-                message: "Cập nhật ảnh đại diện thành công!",
+                message: t(req, "Cập nhật ảnh đại diện thành công!"),
                 data: updatedUser
             });
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi khi tải ảnh đại diện.",
+                message: t(req, "Lỗi khi tải ảnh đại diện."),
                 error: error.message
             });
         }

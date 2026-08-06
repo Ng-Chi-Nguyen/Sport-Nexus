@@ -1,5 +1,6 @@
 import authService from "../../services/auth/auth.service.js";
 
+import { t } from "../../locales/messages.js";
 const authController = {
     login: async (req, res) => {
         let dataLogin = req.body;
@@ -7,13 +8,13 @@ const authController = {
             let user = await authService.login(dataLogin);
             return res.status(200).json({
                 success: true,
-                message: "Sport Nexus xin chào",
+                message: t(req, "Sport Nexus xin chào"),
                 data: user
             })
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             });
         }
     },
@@ -26,12 +27,12 @@ const authController = {
 
             return res.status(200).json({
                 success: true,
-                message: "Hẹn gặp lại bạn!"
+                message: t(req, "Hẹn gặp lại bạn!")
             });
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             });
         }
     },
@@ -42,7 +43,7 @@ const authController = {
         if (!token) {
             return res.status(500).json({
                 success: false,
-                message: "Không tìm thấy token"
+                message: t(req, "Không tìm thấy token")
             })
         }
         try {
@@ -70,13 +71,13 @@ const authController = {
             await authService.forgotPassword(req.body.email);
             return res.status(200).json({
                 success: true,
-                message: "Link đặt lại mật khẩu đã được gửi vào email của bạn!",
+                message: t(req, "Link đặt lại mật khẩu đã được gửi vào email của bạn!"),
             });
         } catch (error) {
             const status = error.status || 500;
             return res.status(status).json({
                 success: false,
-                message: error.message,
+                message: t(req, error.message),
             });
         }
     },
@@ -87,13 +88,13 @@ const authController = {
             await authService.resetPassword(token, req.body);
             return res.status(200).json({
                 success: true,
-                message: "Đặt lại mật khẩu thành công!",
+                message: t(req, "Đặt lại mật khẩu thành công!"),
             });
         } catch (error) {
             const status = error.status || 500;
             return res.status(status).json({
                 success: false,
-                message: error.message,
+                message: t(req, error.message),
             });
         }
     },
@@ -104,14 +105,14 @@ const authController = {
             const result = await authService.changePassword(userId, req.body);
             return res.status(200).json({
                 success: true,
-                message: "Đổi mật khẩu thành công!",
+                message: t(req, "Đổi mật khẩu thành công!"),
                 data: result,
             });
         } catch (error) {
             const status = error.status || 500;
             return res.status(status).json({
                 success: false,
-                message: error.message,
+                message: t(req, error.message),
             });
         }
     },
@@ -122,19 +123,19 @@ const authController = {
             if (!access_token) {
                 return res.status(400).json({
                     success: false,
-                    message: "Thiếu token đăng nhập Google"
+                    message: t(req, "Thiếu token đăng nhập Google")
                 });
             }
             const result = await authService.googleLogin(access_token);
             return res.status(200).json({
                 success: true,
-                message: "Đăng nhập bằng Google thành công",
+                message: t(req, "Đăng nhập bằng Google thành công"),
                 data: result
             });
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             });
         }
     },
@@ -145,19 +146,19 @@ const authController = {
             if (!access_token) {
                 return res.status(400).json({
                     success: false,
-                    message: "Thiếu token đăng nhập Facebook"
+                    message: t(req, "Thiếu token đăng nhập Facebook")
                 });
             }
             const result = await authService.facebookLogin(access_token);
             return res.status(200).json({
                 success: true,
-                message: "Đăng nhập bằng Facebook thành công",
+                message: t(req, "Đăng nhập bằng Facebook thành công"),
                 data: result
             });
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             });
         }
     },
@@ -175,7 +176,7 @@ const authController = {
         } catch (error) {
             // Xử lý các lỗi được ném ra từ Service
             const status = error.status || 500;
-            const message = error.message || "Lỗi server nội bộ";
+            const message = t(req, error.message) || t(req, "Lỗi server nội bộ");
 
             return res.status(status).json({ message });
         }

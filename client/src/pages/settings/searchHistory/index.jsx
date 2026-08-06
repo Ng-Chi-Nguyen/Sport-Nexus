@@ -13,6 +13,7 @@ import searchApi from "@/api/web/searchApi";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { ProductCard } from "@/components/ui/card";
 import { TitleWithIcon } from "@/components/ui/title";
+import { useTranslation } from "react-i18next";
 
 const groupByTime = (items) => {
   const today = dayjs().startOf("day");
@@ -28,6 +29,7 @@ const groupByTime = (items) => {
 };
 
 const SearchHistoryPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "history" }); // Hoặc dùng namespace riêng nếu bạn cấu hình history
   const navigate = useNavigate();
   const [history, setHistory] = useState(() => getSearchHistory());
 
@@ -67,9 +69,13 @@ const SearchHistoryPage = () => {
 
   const groups = groupByTime(history);
   const groupRows = [
-    { key: "today", label: "Hôm nay", items: groups.today },
-    { key: "yesterday", label: "Hôm qua", items: groups.yesterday },
-    { key: "older", label: "Trước đó", items: groups.older },
+    { key: "today", label: t("today"), items: groups.today },
+    {
+      key: "yesterday",
+      label: t("yesterday"),
+      items: groups.yesterday,
+    },
+    { key: "older", label: t("older"), items: groups.older },
   ].filter((g) => g.items.length > 0);
 
   return (
@@ -77,12 +83,12 @@ const SearchHistoryPage = () => {
       <div className="mx-auto max-w-5xl mt-6 md:mt-8 px-4 sm:px-6">
         <Breadcrumbs
           data={[
-            { title: "Trang chủ", route: "/" },
-            { title: "Lịch sử tìm kiếm", route: "" },
+            { title: t("home"), route: "/" },
+            { title: t("search_history"), route: "" },
           ]}
         />
 
-        <TitleWithIcon icon={History} title="Lịch sử tìm kiếm" />
+        <TitleWithIcon icon={History} title={t("search_history")} />
 
         {history.length === 0 ? (
           <div className="text-center py-20 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md px-6">
@@ -91,25 +97,24 @@ const SearchHistoryPage = () => {
               className="mx-auto text-slate-300 dark:text-slate-600 mb-4"
             />
             <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2">
-              Chưa có lịch sử tìm kiếm
+              {t("no_search_history", "Chưa có lịch sử tìm kiếm")}
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Dùng ô tìm kiếm phía trên để tìm sản phẩm, lịch sử sẽ được lưu lại
-              đây.
+              {t("search_history_hint")}
             </p>
           </div>
         ) : (
           <div className="mt-4 space-y-6">
             <div className="flex items-center justify-between">
               <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
-                {history.length} từ khóa đã tìm
+                {t("keywords_count", { count: history.length })}
               </p>
               <button
                 type="button"
                 onClick={clearAll}
                 className="text-xs font-bold text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 transition-colors cursor-pointer"
               >
-                Xóa tất cả
+                {t("clear_all")}
               </button>
             </div>
 
@@ -157,7 +162,7 @@ const SearchHistoryPage = () => {
         {suggestions.length > 0 && (
           <div className="mt-12 space-y-4">
             <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-              Có thể bạn quan tâm
+              {t("you_may_also_like")}
             </h2>
             {isLoading ? (
               <div className="py-10 flex justify-center">

@@ -4,8 +4,10 @@ import { ArrowLeft } from "lucide-react";
 import AddressForm from "@/pages/profile/address/AddressForm";
 import ShowToast from "@/components/ui/toast";
 import addressApi from "@/api/customer/addressApi";
+import { useTranslation } from "react-i18next";
 
 const AddAddress = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "address" });
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
 
@@ -40,16 +42,16 @@ const AddAddress = () => {
           type="button"
           onClick={() => navigate("/tai-khoan/dia-chi")}
           className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-          title="Quay lại"
+          title={t("back")}
         >
           <ArrowLeft size={20} />
         </button>
         <div>
           <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
-            Thêm địa chỉ mới
+            {t("add_new_address_title", "Thêm địa chỉ mới")}
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Thêm địa chỉ giao hàng cho tài khoản của bạn
+            {t("add_new_address_desc")}
           </p>
         </div>
       </div>

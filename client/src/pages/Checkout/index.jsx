@@ -18,10 +18,26 @@ import ConfirmModal from "./components/ConfirmModal";
 import ShowToast from "@/components/ui/toast";
 import { CreditCard } from "lucide-react";
 import { TitleWithIcon } from "@/components/ui/title";
+import { useTranslation } from "react-i18next";
 
 const Checkout = () => {
+  const { t } = useTranslation();
   const location = useLocation();
-  const items = location.state?.items || [];
+
+  const items = useMemo(() => {
+    const rawItems = location.state?.items || [];
+    return rawItems.map((item) => ({
+      ...item,
+      name: item.name || item.product?.name || "",
+      attributes:
+        item.attributes?.length > 0
+          ? item.attributes
+          : (item.variant?.VariableAttributes || []).map((va) => ({
+              name: va.attributeKey?.name,
+              value: va.value,
+            })),
+    }));
+  }, [location.state?.items]);
 
   const userStr = localStorage.getItem("user");
   const user = userStr ? JSON.parse(userStr) : null;
@@ -182,23 +198,23 @@ const Checkout = () => {
 
   const handlePlaceOrder = useCallback(() => {
     if (couponCode && !localStorage.getItem("accessToken")) {
-      ShowToast("error", "Vui lòng đăng nhập để dùng mã giảm giá");
+      ShowToast("error", t("toast_login_required_coupon"));
       return;
     }
     if (!fullAddress) return;
     if (!email.trim()) return;
     if (!recipientName.trim() || !recipientPhone.trim()) {
-      ShowToast("error", "Vui lòng nhập tên và số điện thoại người nhận");
+      ShowToast("error", t("toast_recipient_info_required"));
       return;
     }
     setShowConfirm(true);
-  }, [fullAddress, email, couponCode, recipientName, recipientPhone]);
+  }, [fullAddress, email, couponCode, recipientName, recipientPhone, t]);
 
   const handleConfirmOrder = useCallback(async () => {
     setSubmitting(true);
     try {
       const res = await orderApi.create(orderPayload);
-      if (!res.success) throw new Error(res.message || "Tạo đơn thất bại");
+      if (!res.success) throw new Error(res.message || t("error_create_order"));
       const order = res.data;
       setOrderResult(order);
 
@@ -225,12 +241,12 @@ const Checkout = () => {
       }
     } catch (error) {
       const msg =
-        error.response?.data?.message || error.message || "Đã có lỗi xảy ra";
+        error.response?.data?.message || error.message || t("error_generic");
       alert(msg);
     } finally {
       setSubmitting(false);
     }
-  }, [orderPayload, paymentMethod]);
+  }, [orderPayload, paymentMethod, t]);
 
   if (!items.length) {
     return <EmptyCart />;
@@ -253,13 +269,13 @@ const Checkout = () => {
         <div className="mt-10">
           <Breadcrumbs
             data={[
-              { title: "Trang chủ", route: "/" },
-              { title: "Thanh toán", route: "" },
+              { title: t("breadcrumb_home"), route: "/" },
+              { title: t("breadcrumb_checkout"), route: "" },
             ]}
           />
         </div>
 
-        <TitleWithIcon icon={CreditCard} title="Thanh toán đơn hàng" />
+        <TitleWithIcon icon={CreditCard} title={t("page_heading")} />
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
           <div className="md:col-span-3 space-y-6">
@@ -303,7 +319,9 @@ const Checkout = () => {
               recipientPhone={recipientPhone}
               couponCode={couponCode}
               onCouponCodeChange={setCouponCode}
-              onApplyCoupon={(code) => applyCoupon(totalAmount, code || couponCode)}
+              onApplyCoupon={(code) =>
+                applyCoupon(totalAmount, code || couponCode)
+              }
               onClearCoupon={clearCoupon}
               couponMsg={couponMsg}
               couponLoading={couponLoading}

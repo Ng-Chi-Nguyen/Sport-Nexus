@@ -1,5 +1,6 @@
 import couponService from "../../services/management/coupon.service.js";
 
+import { t } from "../../locales/messages.js";
 const couponController = {
     createCoupon: async (req, res) => {
         let couponData = req.body;
@@ -9,19 +10,19 @@ const couponController = {
             let newCoupon = await couponService.createCoupon(couponData)
             return res.status(201).json({
                 success: true,
-                message: "Tạo mã giảm giá thành công",
+                message: t(req, "Tạo mã giảm giá thành công"),
                 data: newCoupon
             })
         } catch (error) {
             if (error.code === 'P2002') {
                 return res.status(409).json({
                     success: false,
-                    message: `Mã code '${couponData.code}' đã được sữ dụng`,
+                    message: t(req, "Mã code '${code}' đã được sữ dụng", { code: couponData.code }),
                 })
             }
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
+                message: t(req, "Lỗi server nội bộ"),
                 error: error.message
             });
         }
@@ -36,7 +37,7 @@ const couponController = {
             if (!coupon || coupon.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: t(req, "Không tìm thấy thường hiệu.")
                 });
             }
 
@@ -47,7 +48,7 @@ const couponController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -71,7 +72,7 @@ const couponController = {
             if (!result || result.list_coupons.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy mã giảm giá.",
+                    message: t(req, "Không tìm thấy mã giảm giá."),
                     data: { list_coupons: [], pagination: { totalPages: 1, currentPage: 1 } }
                 });
             }
@@ -83,7 +84,7 @@ const couponController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
+                message: t(req, "Lỗi server nội bộ"),
                 error: error.message
             });
         }
@@ -98,17 +99,17 @@ const couponController = {
             return res.status(200).json({
                 success: true,
                 data: updateData,
-                message: "Đã cập nhật mã giảm giá"
+                message: t(req, "Đã cập nhật mã giảm giá")
             })
         } catch (error) {
 
             if (error.code === 'P2025') {
-                return res.status(404).json({ message: "Không tìm thấy mã giảm giá để cập nhật." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy mã giảm giá để cập nhật.") });
             }
 
             return res.status(500).json({
                 success: false,
-                message: error.message,
+                message: t(req, error.message),
             })
         }
     },
@@ -119,17 +120,17 @@ const couponController = {
             await couponService.deleteCoupon(couponId)
             return res.status(200).json({
                 success: true,
-                message: "Đã xóa mã giảm giá"
+                message: t(req, "Đã xóa mã giảm giá")
             })
         } catch (error) {
 
             if (error.code === 'P2025') {
-                return res.status(404).json({ message: "Không tìm thấy mã giảm giá để xóa." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy mã giảm giá để xóa.") });
             }
 
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
+                message: t(req, "Lỗi server nội bộ"),
                 error: error.message
             });
         }
@@ -141,7 +142,7 @@ const couponController = {
             const gift = await couponService.giftCoupon({ couponId: coupon_id, userId: user_id });
             return res.status(201).json({
                 success: true,
-                message: "Đã tặng mã giảm giá thành công",
+                message: t(req, "Đã tặng mã giảm giá thành công"),
                 data: gift
             });
         } catch (error) {
@@ -149,13 +150,13 @@ const couponController = {
             if (status === 500) {
                 return res.status(500).json({
                     success: false,
-                    message: "Lỗi server nội bộ",
+                    message: t(req, "Lỗi server nội bộ"),
                     error: error.message
                 });
             }
             return res.status(status).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             });
         }
     },
@@ -168,16 +169,16 @@ const couponController = {
             return res.json({
                 success: true,
                 data: newAmount,
-                message: "Thêm mã giảm giá thành công"
+                message: t(req, "Thêm mã giảm giá thành công")
             })
         } catch (error) {
             if (error.code === 'P2025') {
-                return res.status(404).json({ message: "Không tìm thấy mã giảm giá để xóa." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy mã giảm giá để xóa.") });
             }
 
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
+                message: t(req, "Lỗi server nội bộ"),
                 error: error.message
             });
         }

@@ -4,8 +4,10 @@ import { ArrowLeft, Loader2, Camera, User, UserCog } from "lucide-react";
 import ShowToast from "@/components/ui/toast";
 import userApi from "@/api/customer/userApi";
 import { TitleWithIcon } from "@/components/ui/title";
+import { useTranslation } from "react-i18next";
 
 const EditProfile = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "profile" });
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -39,15 +41,15 @@ const EditProfile = () => {
       if (res?.data?.success || res?.success) {
         const updatedUser = { ...user, ...formData, avatar: updatedAvatarUrl };
         localStorage.setItem("user", JSON.stringify(updatedUser));
-        ShowToast("success", "Cập nhật thông tin thành công!");
+        ShowToast("success", t("edit_profile.success_update"));
         navigate("/tai-khoan");
       } else {
-        ShowToast("error", "Cập nhật thất bại, vui lòng thử lại!");
+        ShowToast("error", t("edit_profile.error_update"));
       }
     } catch (error) {
       ShowToast(
         "error",
-        error?.response?.data?.message || "Lỗi khi cập nhật thông tin!",
+        error?.response?.data?.message || t("edit_profile.error_api"),
       );
     } finally {
       setLoading(false);
@@ -61,14 +63,14 @@ const EditProfile = () => {
           type="button"
           onClick={() => navigate(-1)}
           className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-          title="Quay lại"
+          title={t("back")}
         >
           <ArrowLeft size={20} />
         </button>
         <div>
-          <TitleWithIcon icon={UserCog} title="Chỉnh sửa thông tin cá nhân" />
+          <TitleWithIcon icon={UserCog} title={t("edit_profile.heading")} />
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Cập nhật chi tiết hồ sơ tài khoản của bạn
+            {t("edit_profile.description")}
           </p>
         </div>
       </div>
@@ -102,7 +104,9 @@ const EditProfile = () => {
               className="absolute inset-0 bg-slate-900/50 flex flex-col items-center justify-center text-white cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <Camera size={18} />
-              <span className="text-[9px] font-bold mt-0.5">Đổi ảnh</span>
+              <span className="text-[9px] font-bold mt-0.5">
+                {t("edit_profile.change_avatar")}
+              </span>
             </label>
             <input
               id="avatar-upload"
@@ -115,10 +119,10 @@ const EditProfile = () => {
 
           <div>
             <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
-              Ảnh đại diện
+              {t("edit_profile.avatar_label")}
             </p>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Hỗ trợ tệp định dạng JPG, PNG hoặc WEBP
+              {t("edit_profile.avatar_hint")}
             </p>
           </div>
         </div>
@@ -126,7 +130,7 @@ const EditProfile = () => {
         <div className="space-y-4 max-w-lg text-sm">
           <div>
             <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1.5">
-              Họ tên
+              {t("edit_profile.full_name_label")}
             </label>
             <input
               type="text"
@@ -141,7 +145,7 @@ const EditProfile = () => {
 
           <div>
             <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1.5">
-              Email
+              {t("email")}
             </label>
             <input
               type="email"
@@ -155,7 +159,7 @@ const EditProfile = () => {
 
           <div>
             <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1.5">
-              Số điện thoại
+              {t("phone")}
             </label>
             <input
               type="tel"
@@ -175,7 +179,11 @@ const EditProfile = () => {
             className="flex-1 py-3 bg-sky-600 dark:bg-sky-500 hover:bg-sky-700 dark:hover:bg-sky-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer shadow-sm"
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
-            <span>{loading ? "Đang lưu..." : "Lưu thay đổi"}</span>
+            <span>
+              {loading
+                ? t("edit_profile.saving_btn")
+                : t("edit_profile.save_changes_btn")}
+            </span>
           </button>
 
           <button
@@ -183,7 +191,7 @@ const EditProfile = () => {
             onClick={() => navigate(-1)}
             className="px-6 py-3 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-sm"
           >
-            Hủy
+            {t("edit_profile.cancel_btn")}
           </button>
         </div>
       </form>

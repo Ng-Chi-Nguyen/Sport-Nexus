@@ -1,0 +1,41 @@
+{
+  "breadcrumb_home": "Home",
+  "breadcrumb_filter": "PRODUCT FILTER",
+  "filter_heading": "PRODUCT FILTERS",
+  "search_placeholder": "Search products...",
+  "clear_filter_btn": "Clear filters",
+
+  "price_range_title": "PRICE RANGE",
+  "price_under_500k": "Under 500,000đ",
+  "price_500k_1m": "500,000đ - 1 million",
+  "price_1m_1m5": "1 million - 1,500,000đ",
+  "price_1m5_2m": "1,500,000đ - 2 million",
+  "price_2m_2m5": "2 million - 2,500,000đ",
+  "price_2m5_3m": "2,500,000đ - 3 million",
+  "price_above_3m": "Over 3 million",
+
+  "category_title": "PRODUCT CATEGORY",
+  "cat_soccer": "Soccer",
+  "cat_tennis": "Tennis",
+  "cat_cycling": "Cycling",
+  "cat_team_sports": "Team Sports",
+  "cat_running": "Running",
+  "cat_gym": "Gym & Fitness",
+  "cat_hiking": "Hiking",
+  "cat_martial_arts": "Martial Arts",
+
+  "brand_title": "BRAND",
+  "size_shoes_title": "SHOE SIZE",
+  "size_clothing_title": "CLOTHING SIZE",
+
+  "results_count": "Showing {{count}} / {{total}} products",
+  "active_filters_label": "ACTIVE FILTERS:",
+  "active_category_tag": "Category ({{count}})",
+
+  "sort_label": "SORT BY:",
+  "sort_newest": "Newest",
+  "sort_best_selling": "Best selling",
+  "sort_price_low_high": "Price: Low → High",
+  "sort_price_high_low": "Price: High → Low",
+  "sort_top_rated": "Top rated"
+}

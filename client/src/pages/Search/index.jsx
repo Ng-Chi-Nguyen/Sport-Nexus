@@ -6,10 +6,12 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { ProductCard } from "@/components/ui/card";
 import { TitleWithIcon } from "@/components/ui/title";
+import { useTranslation } from "react-i18next";
 
 const ITEMS_PER_PAGE = 12;
 
 const SearchPage = () => {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const q = searchParams.get("q") || "";
   const page = parseInt(searchParams.get("page")) || 1;
@@ -37,10 +39,10 @@ const SearchPage = () => {
             className="mx-auto text-slate-300 dark:text-slate-600 mb-4"
           />
           <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-            Tìm kiếm sản phẩm
+            {t("search_page_title")}
           </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Nhập từ khóa vào ô tìm kiếm phía trên.
+            {t("search_page_prompt")}
           </p>
         </div>
       </div>
@@ -52,15 +54,18 @@ const SearchPage = () => {
       <div className="mx-auto max-w-5xl mt-6 md:mt-8 px-4 sm:px-6">
         <Breadcrumbs
           data={[
-            { title: "Trang chủ", route: "/" },
-            { title: `Tìm kiếm: "${q}"`, route: "" },
+            { title: t("breadcrumb_home"), route: "/" },
+            { title: t("search_breadcrumb_title", { query: q }), route: "" },
           ]}
         />
 
-        <TitleWithIcon icon={Search} title={`Kết quả tìm kiếm cho "${q}"`} />
+        <TitleWithIcon
+          icon={Search}
+          title={t("search_results_heading", { query: q })}
+        />
         {pagination && (
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 font-medium">
-            {pagination.totalItems} kết quả
+            {t("search_results_count", { count: pagination.totalItems })}
           </p>
         )}
 
@@ -75,10 +80,10 @@ const SearchPage = () => {
               className="mx-auto text-slate-300 dark:text-slate-600 mb-4"
             />
             <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2">
-              Không tìm thấy sản phẩm
+              {t("search_no_results_title")}
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Thử tìm kiếm với từ khóa khác bạn nhé.
+              {t("search_no_results_desc")}
             </p>
           </div>
         ) : (
@@ -97,7 +102,7 @@ const SearchPage = () => {
                   disabled={page <= 1}
                   className="px-3.5 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors shadow-sm cursor-pointer"
                 >
-                  Trước
+                  {t("pagination_prev")}
                 </button>
                 {Array.from(
                   { length: pagination.totalPages },
@@ -122,7 +127,7 @@ const SearchPage = () => {
                   disabled={page >= pagination.totalPages}
                   className="px-3.5 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors shadow-sm cursor-pointer"
                 >
-                  Sau
+                  {t("pagination_next")}
                 </button>
               </div>
             )}

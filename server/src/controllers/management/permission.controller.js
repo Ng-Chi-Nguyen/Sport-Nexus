@@ -1,5 +1,6 @@
 import permissionService from "../../services/management/permission.service.js";
 
+import { t } from "../../locales/messages.js";
 const permissionController = {
     createRole: async (req, res) => {
         let dataRole = req.body;
@@ -8,13 +9,13 @@ const permissionController = {
             let newRole = await permissionService.createRole(dataRole);
             return res.status(201).json({
                 success: true,
-                message: "Quyền đã được thêm",
+                message: t(req, "Quyền đã được thêm"),
                 data: newRole
             });
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
+                message: t(req, "Lỗi server nội bộ"),
                 error: error.message
             });
         }
@@ -27,16 +28,16 @@ const permissionController = {
             let updateRole = await permissionService.updateRole(roleId, dataUpdate);
             return res.status(201).json({
                 success: true,
-                message: "Quyền đã được thêm",
+                message: t(req, "Quyền đã được thêm"),
                 data: updateRole
             });
         } catch (error) {
             if (error.code === 'P2025') {
-                return res.status(404).json({ success: false, message: "Không tìm thấy quyền." });
+                return res.status(404).json({ success: false, message: t(req, "Không tìm thấy quyền.") });
             }
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
+                message: t(req, "Lỗi server nội bộ"),
                 error: error.message,
             });
         }
@@ -49,16 +50,16 @@ const permissionController = {
             let updateRole = await permissionService.updatePermissionBySlug(permissionSlug, dataUpdate);
             return res.status(201).json({
                 success: true,
-                message: "Quyền đã được thêm",
+                message: t(req, "Quyền đã được thêm"),
                 data: updateRole
             });
         } catch (error) {
             if (error.code === 'P2025') {
-                return res.status(404).json({ success: false, message: "Không tìm thấy quyền." });
+                return res.status(404).json({ success: false, message: t(req, "Không tìm thấy quyền.") });
             }
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
+                message: t(req, "Lỗi server nội bộ"),
                 error: error.message,
             });
         }
@@ -72,7 +73,7 @@ const permissionController = {
             if (!role || role.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy quyền."
+                    message: t(req, "Không tìm thấy quyền.")
                 });
             }
             return res.status(200).json({
@@ -81,11 +82,11 @@ const permissionController = {
             });
         } catch (error) {
             if (error.code === 'P2025') {
-                return res.status(404).json({ success: false, message: "Không tìm thấy quyền." });
+                return res.status(404).json({ success: false, message: t(req, "Không tìm thấy quyền.") });
             }
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
+                message: t(req, "Lỗi server nội bộ"),
                 error: error.message,
             });
         }
@@ -98,7 +99,7 @@ const permissionController = {
             if (!role || role.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy quyền."
+                    message: t(req, "Không tìm thấy quyền.")
                 });
             }
             return res.status(200).json({
@@ -107,11 +108,11 @@ const permissionController = {
             });
         } catch (error) {
             if (error.code === 'P2025') {
-                return res.status(404).json({ success: false, message: "Không tìm thấy quyền." });
+                return res.status(404).json({ success: false, message: t(req, "Không tìm thấy quyền.") });
             }
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
+                message: t(req, "Lỗi server nội bộ"),
                 error: error.message,
             });
         }
@@ -133,7 +134,7 @@ const permissionController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
+                message: t(req, "Lỗi server nội bộ"),
                 error: error.message,
             });
         }
@@ -154,7 +155,7 @@ const permissionController = {
             console.error("Backend Error:", error); // Log ra terminal để debug
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             });
         }
     },
@@ -165,15 +166,15 @@ const permissionController = {
             await permissionService.deleteRole(roleId);
             return res.status(200).json({
                 success: true,
-                message: "Quyền đã được xóa"
+                message: t(req, "Quyền đã được xóa")
             });
         } catch (error) {
             if (error.code === 'P2025') {
-                return res.status(404).json({ success: false, message: "Không tìm thấy quyền." });
+                return res.status(404).json({ success: false, message: t(req, "Không tìm thấy quyền.") });
             }
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
+                message: t(req, "Lỗi server nội bộ"),
                 error: error.message,
             });
         }
@@ -185,15 +186,15 @@ const permissionController = {
             await permissionService.deleteBySlug(slug);
             return res.status(200).json({
                 success: true,
-                message: "Quyền đã được xóa"
+                message: t(req, "Quyền đã được xóa")
             });
         } catch (error) {
             if (error.code === 'P2025') {
-                return res.status(404).json({ success: false, message: "Không tìm thấy quyền." });
+                return res.status(404).json({ success: false, message: t(req, "Không tìm thấy quyền.") });
             }
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ",
+                message: t(req, "Lỗi server nội bộ"),
                 error: error.message,
             });
         }

@@ -1,6 +1,7 @@
 import productService from "../../services/core/product.service.js";
 import productWebService from "../../services/web/product.service.js";
 
+import { t } from "../../locales/messages.js";
 const productController = {
     getProductBySlug: async (req, res) => {
         let slug = req.params.slug;
@@ -10,7 +11,7 @@ const productController = {
             if (!product) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm."
+                    message: t(req, "Không tìm thấy sản phẩm.")
                 });
             }
             return res.status(200).json({
@@ -20,7 +21,7 @@ const productController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -33,7 +34,7 @@ const productController = {
             if (!q.trim()) {
                 return res.status(400).json({
                     success: false,
-                    message: 'Vui lòng nhập từ khóa tìm kiếm.',
+                    message: t(req, 'Vui lòng nhập từ khóa tìm kiếm.'),
                 });
             }
 
@@ -46,7 +47,7 @@ const productController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message,
+                message: t(req, error.message),
             });
         }
     },
@@ -66,7 +67,7 @@ const productController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message,
+                message: t(req, error.message),
             });
         }
     },
@@ -93,7 +94,7 @@ const productController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message,
+                message: t(req, error.message),
             });
         }
     },

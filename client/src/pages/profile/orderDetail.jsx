@@ -9,21 +9,23 @@ import {
 import { ArrowLeft, PackageCheck } from "lucide-react";
 import { TitleWithIcon } from "@/components/ui/title";
 import Badge from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 
 const OrderDetail = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "order" });
   const { order } = useLoaderData();
 
   if (!order) {
     return (
       <div className="text-center py-16 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md">
         <p className="text-slate-500 dark:text-slate-400 font-medium">
-          Không tìm thấy đơn hàng
+          {t("order_not_found", "Không tìm thấy đơn hàng")}
         </p>
         <Link
           to="/tai-khoan/don-hang"
           className="text-sky-600 dark:text-sky-400 hover:underline mt-3 inline-block font-semibold text-sm"
         >
-          Quay lại danh sách
+          {t("back_to_list", "Quay lại danh sách")}
         </Link>
       </div>
     );
@@ -53,11 +55,14 @@ const OrderDetail = () => {
         className="inline-flex items-center gap-1.5 text-sm text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 font-semibold transition-colors"
       >
         <ArrowLeft size={16} />
-        Quay lại đơn hàng
+        {t("back_to_orders", "Quay lại đơn hàng")}
       </Link>
 
       <div className="flex items-center justify-between flex-wrap gap-4 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md">
-        <TitleWithIcon icon={PackageCheck} title={`Đơn hàng #${order.id}`} />
+        <TitleWithIcon
+          icon={PackageCheck}
+          title={`${t("order_title_prefix", "Đơn hàng")} #${order.id}`}
+        />
         <Badge color={ORDER_COLOR_MAP[order.status] || "gray"}>
           {STATUS_LABELS[order.status] || order.status}
         </Badge>
@@ -66,7 +71,7 @@ const OrderDetail = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md">
         <div className="space-y-1">
           <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
-            Ngày đặt
+            {t("order_date", "Ngày đặt")}
           </p>
           <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
             {order.created_at ? formatFullDateTime(order.created_at) : "—"}
@@ -74,7 +79,7 @@ const OrderDetail = () => {
         </div>
         <div className="space-y-1">
           <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
-            Phương thức thanh toán
+            {t("payment_method", "Phương thức thanh toán")}
           </p>
           <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
             {paymentMethodLabel}
@@ -82,7 +87,7 @@ const OrderDetail = () => {
         </div>
         <div className="space-y-1">
           <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
-            Trạng thái thanh toán
+            {t("payment_status", "Trạng thái thanh toán")}
           </p>
           <Badge color={PAYMENT_COLOR_MAP[order.payment_status] || "gray"}>
             {STATUS_PAYMENT[order.payment_status] || order.payment_status}
@@ -90,7 +95,7 @@ const OrderDetail = () => {
         </div>
         <div className="space-y-1">
           <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
-            Tạm tính
+            {t("subtotal", "Tạm tính")}
           </p>
           <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
             {formatCurrency(order.total_amount)}
@@ -98,7 +103,7 @@ const OrderDetail = () => {
         </div>
         <div className="sm:col-span-2 space-y-1">
           <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
-            Địa chỉ giao hàng
+            {t("shipping_address", "Địa chỉ giao hàng")}
           </p>
           <p className="text-sm font-medium text-slate-800 dark:text-slate-200 leading-relaxed">
             {order.shipping_address}
@@ -107,7 +112,7 @@ const OrderDetail = () => {
         {Number(order.discount_amount) > 0 && (
           <div className="space-y-1">
             <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
-              Giảm giá
+              {t("discount", "Giảm giá")}
             </p>
             <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
               -{formatCurrency(order.discount_amount)}
@@ -117,7 +122,7 @@ const OrderDetail = () => {
         {order.coupon_code && (
           <div className="space-y-1">
             <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
-              Mã giảm giá
+              {t("coupon_code", "Mã giảm giá")}
             </p>
             <p className="text-sm font-medium text-sky-600 dark:text-sky-400">
               {order.coupon_code}
@@ -126,7 +131,7 @@ const OrderDetail = () => {
         )}
         <div className="space-y-1 sm:col-span-2 pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
-            Tổng cộng
+            {t("total_amount", "Tổng cộng")}
           </p>
           <p className="text-base font-bold text-rose-600 dark:text-rose-400">
             {formatCurrency(order.final_amount)}
@@ -136,7 +141,7 @@ const OrderDetail = () => {
 
       <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4">
         <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-          Sản phẩm đã đặt
+          {t("ordered_products", "Sản phẩm đã đặt")}
         </h3>
         <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 custom-scrollbar">
           <table className="w-full text-sm table-fixed">
@@ -148,10 +153,18 @@ const OrderDetail = () => {
             </colgroup>
             <thead>
               <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]/40 text-slate-700 dark:text-slate-300 font-semibold">
-                <th className="py-3.5 px-4 text-left">Sản phẩm</th>
-                <th className="py-3.5 px-4 text-right">Đơn giá</th>
-                <th className="py-3.5 px-4 text-right">Số lượng</th>
-                <th className="py-3.5 px-4 text-right">Tạm tính</th>
+                <th className="py-3.5 px-4 text-left">
+                  {t("product_column", "Sản phẩm")}
+                </th>
+                <th className="py-3.5 px-4 text-right">
+                  {t("unit_price_column", "Đơn giá")}
+                </th>
+                <th className="py-3.5 px-4 text-right">
+                  {t("quantity_column", "Số lượng")}
+                </th>
+                <th className="py-3.5 px-4 text-right">
+                  {t("subtotal_column", "Tạm tính")}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
@@ -168,7 +181,8 @@ const OrderDetail = () => {
                     <td className="py-3.5 px-4">
                       <div className="space-y-1">
                         <p className="font-medium text-slate-900 dark:text-slate-100">
-                          {variant?.product?.name || "Sản phẩm"}
+                          {variant?.product?.name ||
+                            t("default_product_name", "Sản phẩm")}
                         </p>
                         {attributes && (
                           <p className="text-xs text-slate-500 dark:text-slate-400">

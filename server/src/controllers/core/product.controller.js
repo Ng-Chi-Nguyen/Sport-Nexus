@@ -1,6 +1,7 @@
 import productService from "../../services/core/product.service.js";
 import { uploadImage } from "../../services/image/image.service.js";
 
+import { t } from "../../locales/messages.js";
 const productController = {
     createProduct: async (req, res) => {
         let productData = req.body;
@@ -30,13 +31,13 @@ const productController = {
 
             return res.status(201).json({
                 success: true,
-                message: "Thêm sản phẩm thành công",
+                message: t(req, "Thêm sản phẩm thành công"),
                 data: newProduct
             })
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -48,7 +49,7 @@ const productController = {
             if (!product || product.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                    message: t(req, "Không tìm thấy sản phẩm này trong giỏ hàng.")
                 });
             }
             return res.status(200).json({
@@ -58,7 +59,7 @@ const productController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -70,7 +71,7 @@ const productController = {
             if (!product || product.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                    message: t(req, "Không tìm thấy sản phẩm này trong giỏ hàng.")
                 });
             }
             return res.status(200).json({
@@ -80,7 +81,7 @@ const productController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -93,7 +94,7 @@ const productController = {
             if (!product || product.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                    message: t(req, "Không tìm thấy sản phẩm này trong giỏ hàng.")
                 });
             }
             // console.log(product)
@@ -104,7 +105,7 @@ const productController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -116,7 +117,7 @@ const productController = {
             if (!product || product.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                    message: t(req, "Không tìm thấy sản phẩm này trong giỏ hàng.")
                 });
             }
             return res.status(200).json({
@@ -126,7 +127,7 @@ const productController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -146,7 +147,7 @@ const productController = {
             if (!list_products || list_products.list_products.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm."
+                    message: t(req, "Không tìm thấy sản phẩm.")
                 });
             }
             return res.status(200).json({
@@ -156,7 +157,7 @@ const productController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -169,7 +170,7 @@ const productController = {
             if (!list_products || list_products.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: t(req, "Không tìm thấy thường hiệu.")
                 });
             }
 
@@ -179,7 +180,7 @@ const productController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             })
         }
@@ -199,16 +200,16 @@ const productController = {
 
             return res.status(200).json({
                 success: true,
-                message: "Cập nhật sản phẩm thành công",
+                message: t(req, "Cập nhật sản phẩm thành công"),
                 data: updateProduct
             })
 
         } catch (error) {
             if (error.code === 'P2025')
-                return res.status(404).json({ message: "Không tìm thấy mã sản phẩm." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy mã sản phẩm.") });
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -221,14 +222,14 @@ const productController = {
 
             return res.status(200).json({
                 success: true,
-                message: "Xóa sản phẩm thành công",
+                message: t(req, "Xóa sản phẩm thành công"),
             })
         } catch (error) {
             if (error.code === 'P2025')
-                return res.status(404).json({ message: "Không tìm thấy mã sản phẩm." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy mã sản phẩm.") });
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     }

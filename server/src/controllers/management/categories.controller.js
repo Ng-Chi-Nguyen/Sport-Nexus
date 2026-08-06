@@ -3,6 +3,7 @@ import categoryService from "../../services/management/categories.service.js";
 import categoryImportService from "../../services/management/categoryImport/index.js";
 import logService from "../../services/management/log.service.js";
 
+import { t } from "../../locales/messages.js";
 const categoryController = {
     createCategory: async (req, res) => {
         let dataCategory = req.body;
@@ -19,7 +20,7 @@ const categoryController = {
 
             return res.status(201).json({
                 success: true,
-                message: "Thêm loại hàng thành công",
+                message: t(req, "Thêm loại hàng thành công"),
                 data: newCategory
             })
         } catch (error) {
@@ -40,7 +41,7 @@ const categoryController = {
             if (!category || category.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: t(req, "Không tìm thấy thường hiệu.")
                 });
             }
 
@@ -67,7 +68,7 @@ const categoryController = {
             if (!result || result.list_categories.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy danh mục."
+                    message: t(req, "Không tìm thấy danh mục.")
                 });
             }
 
@@ -90,7 +91,7 @@ const categoryController = {
             if (!list_categories || list_categories.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy nhà cung cấp."
+                    message: t(req, "Không tìm thấy nhà cung cấp.")
                 });
             }
 
@@ -100,7 +101,7 @@ const categoryController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             })
         }
@@ -117,7 +118,7 @@ const categoryController = {
             if (!currentCategory) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy loại hàng trong hệ thống"
+                    message: t(req, "Không tìm thấy loại hàng trong hệ thống")
                 })
             }
 
@@ -128,19 +129,19 @@ const categoryController = {
             let updateData = await categoryService.updateCategory(categoryId, dataUpdate);
             return res.status(201).json({
                 success: true,
-                message: "Cập nhật loại hàng thành công",
+                message: t(req, "Cập nhật loại hàng thành công"),
                 data: updateData
             })
 
         } catch (error) {
 
             if (error.code === 'P2025') {
-                return res.status(404).json({ message: "Không tìm thấy danh mục để cập nhật." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy danh mục để cập nhật.") });
             }
 
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -152,19 +153,19 @@ const categoryController = {
             await categoryService.deleteCategory(categoryId);
             return res.status(201).json({
                 success: true,
-                message: "Xóa loại hàng thành công",
+                message: t(req, "Xóa loại hàng thành công"),
             })
 
         } catch (error) {
 
             if (error.code === 'P2025') {
-                return res.status(404).json({ message: "Không tìm thấy danh mục để xóa." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy danh mục để xóa.") });
             }
 
 
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -174,7 +175,7 @@ const categoryController = {
             if (!req.file) {
                 return res.status(400).json({
                     success: false,
-                    message: 'Vui lòng chọn file .xlsx để xem trước.'
+                    message: t(req, 'Vui lòng chọn file .xlsx để xem trước.')
                 });
             }
 
@@ -186,7 +187,7 @@ const categoryController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message || 'Đã xảy ra lỗi khi đọc file.'
+                message: t(req, error.message) || 'Đã xảy ra lỗi khi đọc file.'
             });
         }
     },
@@ -199,7 +200,7 @@ const categoryController = {
             if (!req.file) {
                 return res.status(400).json({
                     success: false,
-                    message: 'Vui lòng chọn file .xlsx để import.'
+                    message: t(req, 'Vui lòng chọn file .xlsx để import.')
                 });
             }
 
@@ -225,13 +226,13 @@ const categoryController = {
 
             return res.status(200).json({
                 success: true,
-                message: `Import hoàn tất: ${result.success} thành công, ${result.failed} lỗi.`,
+                message: t(req, 'Import hoàn tất: ${success} thành công, ${failed} lỗi.', { success: result.success, failed: result.failed }),
                 data: result
             });
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message || 'Đã xảy ra lỗi trong quá trình xử lý Import.'
+                message: t(req, error.message) || 'Đã xảy ra lỗi trong quá trình xử lý Import.'
             });
         }
     },
@@ -246,7 +247,7 @@ const categoryController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             });
         }
     },
@@ -262,7 +263,7 @@ const categoryController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             });
         }
     },
@@ -277,7 +278,7 @@ const categoryController = {
         } catch (error) {
             return res.status(404).json({
                 success: false,
-                message: error.message || 'File báo lỗi không tồn tại hoặc đã hết hạn.'
+                message: t(req, error.message) || 'File báo lỗi không tồn tại hoặc đã hết hạn.'
             });
         }
     }

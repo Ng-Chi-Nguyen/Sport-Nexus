@@ -2,6 +2,7 @@ import productImageService from "../../services/core/productImage.service.js";
 import { uploadImage } from "../../services/image/image.service.js";
 import { checkExistKey } from "../../utils/checkExistKey.utils.js";
 
+import { t } from "../../locales/messages.js";
 const productImageController = {
     createProductImage: async (req, res) => {
         let files = req.files;
@@ -25,18 +26,18 @@ const productImageController = {
 
                 return res.status(201).json({
                     success: true,
-                    message: `Đã upload và lưu thành công ${newProductImgs.length} hình ảnh.`,
+                    message: t(req, 'Đã upload và lưu thành công ${count} hình ảnh.', { count: newProductImgs.length }),
                     data: newProductImgs
                 });
             }
             return res.status(400).json({
                 success: false,
-                message: "Không tìm thấy file hình ảnh nào để upload."
+                message: t(req, "Không tìm thấy file hình ảnh nào để upload.")
             });
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -48,7 +49,7 @@ const productImageController = {
             if (!productImg) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy hình ảnh."
+                    message: t(req, "Không tìm thấy hình ảnh.")
                 });
             }
             return res.status(200).json({
@@ -58,7 +59,7 @@ const productImageController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -74,7 +75,7 @@ const productImageController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -111,16 +112,16 @@ const productImageController = {
 
             return res.status(200).json({
                 success: true,
-                message: `Cập nhật thư viện ảnh cho Sản phẩm ID ${productId} thành công.`,
+                message: t(req, 'Cập nhật thư viện ảnh cho Sản phẩm ID ${id} thành công.', { id: productId }),
                 data: updatedProduct
             });
 
         } catch (error) {
             if (error.code === 'P2025')
-                return res.status(404).json({ message: "Không tìm thấy hình ảnh phụ sản phẩm." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy hình ảnh phụ sản phẩm.") });
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             });
         }
     },
@@ -132,14 +133,14 @@ const productImageController = {
             await productImageService.deleteProductImageById(productId)
             return res.status(200).json({
                 success: true,
-                message: "Xóa hình ảnh mô tả thành công"
+                message: t(req, "Xóa hình ảnh mô tả thành công")
             })
         } catch (error) {
             if (error.code === 'P2025')
-                return res.status(404).json({ message: "Không tìm thấy hình ảnh phụ sản phẩm." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy hình ảnh phụ sản phẩm.") });
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -150,12 +151,12 @@ const productImageController = {
             await productImageService.deleteProductImageByProductId(productId)
             return res.status(200).json({
                 success: true,
-                message: "Xóa hình ảnh mô tả thành công"
+                message: t(req, "Xóa hình ảnh mô tả thành công")
             })
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },

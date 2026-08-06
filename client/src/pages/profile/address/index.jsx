@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { Plus, Pencil, Trash2, MapPin, Check, BookUser } from "lucide-react";
 import ShowToast from "@/components/ui/toast";
@@ -5,16 +6,20 @@ import addressApi from "@/api/customer/addressApi";
 import Badge from "@/components/ui/badge";
 import { TYPE_LABEL, TYPE_ICON } from "@/constants/web/profile";
 import { TitleWithIcon } from "@/components/ui/title";
+import { BtnAdd } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const AddressList = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "address" });
   const navigate = useNavigate();
-  const { addresses, user } = useLoaderData();
+  const { addresses: initialAddresses, user } = useLoaderData();
+  const [addresses, setAddresses] = useState(initialAddresses || []);
 
   const handleDelete = async (id) => {
     try {
       await addressApi.delete(id);
       ShowToast("success", "Xoá địa chỉ thành công");
-      window.location.reload();
+      setAddresses((prev) => prev.filter((a) => a.id !== id));
     } catch (error) {
       ShowToast(
         "error",
@@ -28,7 +33,9 @@ const AddressList = () => {
     try {
       await addressApi.update(addr.id, { is_default: true, user_id: user.id });
       ShowToast("success", "Đã đặt làm mặc định");
-      window.location.reload();
+      setAddresses((prev) =>
+        prev.map((a) => ({ ...a, is_default: a.id === addr.id })),
+      );
     } catch (error) {
       ShowToast("error", error?.response?.data?.message || "Cập nhật thất bại");
     }
@@ -48,7 +55,7 @@ const AddressList = () => {
   if (!user) {
     return (
       <div className="text-center py-12 text-slate-500 dark:text-slate-400 text-sm">
-        Vui lòng đăng nhập để quản lý địa chỉ
+        {t("login_required")}
       </div>
     );
   }
@@ -57,19 +64,16 @@ const AddressList = () => {
     <div className="text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div className="flex-1">
-          <TitleWithIcon icon={BookUser} title="Sổ địa chỉ" />
+          <TitleWithIcon icon={BookUser} title={t("address_book")} />
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Quản lý địa chỉ giao hàng của bạn
+            {t("manage_address_desc")}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => navigate("/tai-khoan/dia-chi/them")}
-          className="flex items-center gap-1.5 px-4 py-2.5 bg-sky-600 dark:bg-sky-500 hover:bg-sky-700 dark:hover:bg-sky-600 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-colors cursor-pointer shadow-sm"
-        >
-          <Plus size={15} />
-          <span>Thêm địa chỉ</span>
-        </button>
+        <BtnAdd
+          route={"/tai-khoan/dia-chi/them"}
+          className="w-full md:w-[30%]"
+          name={t("add_address")}
+        />
       </div>
 
       {addresses.length === 0 ? (
@@ -79,14 +83,14 @@ const AddressList = () => {
             className="mx-auto mb-3 opacity-40 text-slate-400 dark:text-slate-500"
           />
           <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            Bạn chưa có địa chỉ nào
+            {t("no_addresses", "Bạn chưa có địa chỉ nào")}
           </p>
           <button
             type="button"
             onClick={() => navigate("/tai-khoan/dia-chi/them")}
             className="mt-3 text-sky-600 dark:text-sky-400 text-sm font-bold hover:underline cursor-pointer"
           >
-            Thêm địa chỉ mới
+            {t("add_new_address")}
           </button>
         </div>
       ) : (
@@ -113,7 +117,7 @@ const AddressList = () => {
                       {addr.is_default && (
                         <Badge color="green_bold">
                           <Check size={12} className="mr-1.5" />
-                          Mặc định
+                          {t("default_label")}
                         </Badge>
                       )}
                     </div>

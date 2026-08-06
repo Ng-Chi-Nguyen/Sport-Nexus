@@ -1,6 +1,7 @@
 
 import emailService from "../../services/email/email.service.js";
 
+import { t } from "../../locales/messages.js";
 const emailController = {
     sendWelcome: async (req, res) => {
         const { email, full_name, token } = req.body;
@@ -9,13 +10,13 @@ const emailController = {
 
             return res.status(200).json({
                 status: true,
-                message: "Email chào mừng đã được gửi thành công!"
+                message: t(req, "Email chào mừng đã được gửi thành công!")
             });
         } catch (error) {
             // Xử lý lỗi tập trung tại Controller
             return res.status(500).json({
                 status: false,
-                message: "Lỗi server nội bộ khi gửi mail",
+                message: t(req, "Lỗi server nội bộ khi gửi mail"),
                 error: error.message
             });
         }
@@ -28,12 +29,12 @@ const emailController = {
 
             return res.status(200).json({
                 status: true,
-                message: "Yêu cầu hỗ trợ đã được gửi thành công!"
+                message: t(req, "Yêu cầu hỗ trợ đã được gửi thành công!")
             });
         } catch (error) {
             return res.status(500).json({
                 status: false,
-                message: "Lỗi server nội bộ khi gửi mail hỗ trợ",
+                message: t(req, "Lỗi server nội bộ khi gửi mail hỗ trợ"),
                 error: error.message
             });
         }

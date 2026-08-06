@@ -1,5 +1,6 @@
 import logService from "../../services/management/log.service.js";
 
+import { t } from "../../locales/messages.js";
 const logController = {
   getAll: async (req, res) => {
     try {
@@ -20,7 +21,7 @@ const logController = {
     } catch (error) {
       return res.status(500).json({
         success: false,
-        message: "Lỗi khi lấy danh sách logs.",
+        message: t(req, "Lỗi khi lấy danh sách logs."),
         error: error.message,
       });
     }
@@ -30,13 +31,13 @@ const logController = {
     try {
       const log = await logService.getById(req.params.id);
       if (!log) {
-        return res.status(404).json({ success: false, message: "Không tìm thấy log." });
+        return res.status(404).json({ success: false, message: t(req, "Không tìm thấy log.") });
       }
       return res.status(200).json({ success: true, data: log });
     } catch (error) {
       return res.status(500).json({
         success: false,
-        message: "Lỗi khi lấy chi tiết log.",
+        message: t(req, "Lỗi khi lấy chi tiết log."),
         error: error.message,
       });
     }

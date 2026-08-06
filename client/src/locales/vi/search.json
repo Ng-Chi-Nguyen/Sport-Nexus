@@ -1,0 +1,11 @@
+{
+  "search_page_title": "Tìm kiếm sản phẩm",
+  "search_page_prompt": "Nhập từ khóa vào ô tìm kiếm phía trên.",
+  "search_breadcrumb_title": "Tìm kiếm: \"{{query}}\"",
+  "search_results_heading": "Kết quả tìm kiếm cho \"{{query}}\"",
+  "search_results_count": "{{count}} kết quả",
+  "search_no_results_title": "Không tìm thấy sản phẩm",
+  "search_no_results_desc": "Thử tìm kiếm với từ khóa khác bạn nhé.",
+  "pagination_prev": "Trước",
+  "pagination_next": "Sau"
+}

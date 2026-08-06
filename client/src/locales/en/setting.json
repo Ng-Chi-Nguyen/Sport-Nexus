@@ -1,0 +1,85 @@
+{
+  "favorite": {
+    "home": "Home",
+    "liked_products": "Liked Products"
+  },
+  "invoice": {
+    "home": "Home",
+    "invoice": "Invoice",
+    "my_invoices": "My Invoices",
+    "table_invoice_number": "Invoice Number",
+    "table_issued_date": "Issued Date",
+    "table_total_amount": "Total Amount",
+    "table_status": "Status",
+    "detail": {
+      "receipt_title": "Invoice",
+      "detail": "Detail",
+      "no_invoice_found": "Invoice not found",
+      "back_to_list": "Back to list",
+      "back_to_invoices": "Back to invoices",
+      "print_invoice": "Print Invoice",
+      "store_subtitle": "Official Sports Store",
+      "receipt_number": "Invoice:",
+      "receipt_date": "Date:",
+      "receipt_status": "Status:",
+      "receipt_customer": "Customer:",
+      "receipt_phone": "Phone:",
+      "default_product_name": "Product",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "total_caps": "TOTAL",
+      "thank_you_message": "Thank you for shopping at SportNexus!",
+      "return_policy_note": "Items can only be returned with an invoice",
+      "status_pending": "Pending",
+      "status_completed": "Completed",
+      "status_cancelled": "Cancelled"
+    }
+  },
+  "coupon": {
+    "home": "Home",
+    "my_coupons": "My Coupons",
+    "gifted_coupons": "Gifted Coupons",
+    "no_saved_coupons": "No saved coupons found",
+    "save_coupon_hint": "Visit the homepage and click \"Save code\" on coupons to use later."
+  },
+  "support": {
+    "help_center": "Help Center",
+    "contact_support": "Contact & Support",
+    "support_description": "Do you have any questions or need help? Send us a request, and the SportNexus team will respond via email as soon as possible!",
+    "contact_info": "Contact Information",
+    "support_email": "Support Email",
+    "hotline": "Hotline",
+    "headquarters": "Headquarters Address",
+    "working_hours": "Working Hours",
+    "working_time_range": "Mon - Sun: 08:00 - 21:00",
+    "urgent_help": "Need urgent help?",
+    "faq_note": "Check our FAQ section or message us directly via our Hotline for a response within 5 minutes.",
+    "send_request": "Send Support Request",
+    "request_description": "Fill in the information below, and we will respond via your email within 24 hours.",
+    "full_name_label": "Full Name *",
+    "email_label": "Email address *",
+    "phone_label": "Phone Number",
+    "topic_label": "Topic",
+    "content_label": "Detailed Content *",
+    "submit_btn": "Send request via email",
+    "name_placeholder": "John Doe",
+    "email_placeholder": "johndoe@gmail.com",
+    "phone_placeholder": "0901234567",
+    "subject_placeholder": "Order inquiry / Warranty / Web issue...",
+    "message_placeholder": "Describe your question or issue in detail..."
+  },
+  "history": {
+    "home": "Home",
+    "keywords_count": "{{count}} keywords found",
+    "older": "Older",
+    "clear_all": "Clear all",
+    "search_history": "Search History",
+    "keywords_found": "{{count}} keywords found",
+    "previous": "Previous",
+    "you_may_also_like": "You may also like"
+  },
+  "placeholder": {
+    "feature_under_development": "Feature under development",
+    "feature_coming_soon": "This page will be updated soon."
+  }
+}

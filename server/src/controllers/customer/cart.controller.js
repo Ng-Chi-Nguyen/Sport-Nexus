@@ -1,5 +1,6 @@
 import cartService from "../../services/customer/cart.service.js";
 
+import { t } from "../../locales/messages.js";
 const cartController = {
     getCart: async (req, res) => {
         try {
@@ -13,7 +14,7 @@ const cartController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi lấy giỏ hàng.",
+                message: t(req, "Lỗi lấy giỏ hàng."),
                 error: error.message,
             });
         }
@@ -26,13 +27,13 @@ const cartController = {
             const cart = await cartService.syncCart(userId, items);
             return res.status(200).json({
                 success: true,
-                message: "Đồng bộ giỏ hàng thành công.",
+                message: t(req, "Đồng bộ giỏ hàng thành công."),
                 data: cart,
             });
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi đồng bộ giỏ hàng.",
+                message: t(req, "Lỗi đồng bộ giỏ hàng."),
                 error: error.message,
             });
         }

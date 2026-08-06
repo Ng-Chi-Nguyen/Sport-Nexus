@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import prisma from "../db/prisma.js";
+import { t } from "../locales/messages.js";
 
 export const verifyToken = async (req, res, next) => {
     try {
@@ -7,7 +8,7 @@ export const verifyToken = async (req, res, next) => {
         const token = authHeader && authHeader.split(" ")[1];
 
         if (!token) {
-            return res.status(401).json({ message: "Bạn chưa đăng nhập!" });
+            return res.status(401).json({ message: t(req, "Bạn chưa đăng nhập!") });
         }
 
         const secret = process.env.JWT_ACCESS_SECRET;
@@ -27,7 +28,7 @@ export const verifyToken = async (req, res, next) => {
         // console.log(user)
 
         if (!user) {
-            return res.status(404).json({ message: "Tài khoản không tồn tại" });
+            return res.status(404).json({ message: t(req, "Tài khoản không tồn tại") });
         }
 
         // 4. Trích xuất mảng SLUG (Sử dụng trực tiếp trường slug từ model Permissions)
@@ -44,11 +45,11 @@ export const verifyToken = async (req, res, next) => {
         if (error.name === "TokenExpiredError") {
             // Chỉ trả về đúng mã này để Frontend tự gọi hàm refreshToken của bạn
             return res.status(401).json({
-                message: "Phiên đăng nhập đã hết hạn",
+                message: t(req, "Phiên đăng nhập đã hết hạn"),
                 code: "TOKEN_EXPIRED"
             });
         }
-        return res.status(403).json({ message: "Token không hợp lệ" });
+        return res.status(403).json({ message: t(req, "Token không hợp lệ") });
     }
 };
 
@@ -61,7 +62,7 @@ export const checkPermission = (requiredSlug) => {
 
         if (!userPermissionSlugs.includes(requiredSlug)) {
             return res.status(403).json({
-                message: `Bạn không có quyền (${requiredSlug})`
+                message: t(req, `Bạn không có quyền (${requiredSlug})`, { requiredSlug })
             });
         }
         next();
@@ -72,7 +73,7 @@ export const checkPermission = (requiredSlug) => {
 export const isAdmin = (req, res, next) => {
     // 1. Kiểm tra xem dữ liệu user đã được nạp từ verifyToken chưa
     if (!req.user) {
-        return res.status(401).json({ message: "Bạn chưa đăng nhập!" });
+        return res.status(401).json({ message: t(req, "Bạn chưa đăng nhập!") });
     }
     // 2. Lấy thông tin role (do trong verifyToken bạn đã include: { role: true })
     const roleSlug = req.user.role?.slug;
@@ -88,7 +89,7 @@ export const isAdmin = (req, res, next) => {
 
     // 4. Nếu là Nhân viên -> Chặn lại trả về 403
     return res.status(403).json({
-        message: "Từ chối truy cập. Chỉ có Quản trị viên mới có quyền thực hiện hành động này!"
+        message: t(req, "Từ chối truy cập. Chỉ có Quản trị viên mới có quyền thực hiện hành động này!")
     });
 };
 
@@ -127,7 +128,7 @@ export const verifyTokenOptional = async (req, res, next) => {
     } catch (error) {
         if (error.name === "TokenExpiredError") {
             return res.status(401).json({
-                message: "Phiên đăng nhập đã hết hạn",
+                message: t(req, "Phiên đăng nhập đã hết hạn"),
                 code: "TOKEN_EXPIRED",
             });
         }

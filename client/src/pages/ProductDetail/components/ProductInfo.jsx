@@ -1,5 +1,6 @@
 import { Star, ShieldCheck, Tag } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
+import { useTranslation } from "react-i18next";
 
 const ProductInfo = ({
   product,
@@ -8,6 +9,7 @@ const ProductInfo = ({
   currentPrice: propCurrentPrice,
   quantity,
 }) => {
+  const { t } = useTranslation();
   if (!product) return null;
 
   // 1. Tự động tính trung bình cộng rating & tổng lượt review từ mảng Reviews
@@ -82,7 +84,7 @@ const ProductInfo = ({
             </span>
           </div>
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 group-hover:text-sky-600 dark:group-hover:text-sky-400 underline underline-offset-2">
-            ({totalReviews} đánh giá từ khách hàng)
+            {t("customer_reviews_count", { count: totalReviews })}
           </span>
         </a>
       )}
@@ -100,13 +102,13 @@ const ProductInfo = ({
                 {formatCurrency(basePrice)}
               </p>
               <span className="ml-auto bg-rose-600 dark:bg-rose-500 text-white text-xs font-black px-2.5 py-1 shadow-sm">
-                TẶNG -{discountPercent}%
+                {t("discount_badge", { percent: discountPercent })}
               </span>
             </>
           )}
         </div>
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-          Tạm tính:{" "}
+          {t("subtotal")}:{" "}
           <span className="font-semibold text-slate-800 dark:text-slate-200">
             {formatCurrency(currentPrice * quantity)}
           </span>
@@ -116,7 +118,7 @@ const ProductInfo = ({
       {/* Cam kết ngắn */}
       <div className="flex items-center gap-2 pt-1 text-[12px] font-medium text-emerald-600 dark:text-emerald-400">
         <ShieldCheck size={16} />
-        <span>Sản phẩm chính hãng 100% — Cam kết bảo hành chính hãng</span>
+        <span>{t("warranty_commitment")}</span>
       </div>
     </div>
   );

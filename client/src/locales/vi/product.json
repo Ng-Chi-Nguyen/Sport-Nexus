@@ -1,0 +1,41 @@
+{
+  "breadcrumb_home": "Trang chủ",
+  "breadcrumb_filter": "LỌC SẢN PHẨM",
+  "filter_heading": "BỘ LỌC SẢN PHẨM",
+  "search_placeholder": "Tìm sản phẩm...",
+  "clear_filter_btn": "Xóa bộ lọc",
+
+  "price_range_title": "CHỌN MỨC GIÁ",
+  "price_under_500k": "Dưới 500.000đ",
+  "price_500k_1m": "500.000đ - 1 triệu",
+  "price_1m_1m5": "1 triệu - 1.500.000đ",
+  "price_1m5_2m": "1.500.000đ - 2 triệu",
+  "price_2m_2m5": "2 triệu - 2.500.000đ",
+  "price_2m5_3m": "2.500.000đ - 3 triệu",
+  "price_above_3m": "Trên 3 triệu",
+
+  "category_title": "LOẠI SẢN PHẨM",
+  "cat_soccer": "Bóng đá",
+  "cat_tennis": "Tennis",
+  "cat_cycling": "Xe đạp",
+  "cat_team_sports": "Thể thao đồng đội",
+  "cat_running": "Chạy bộ",
+  "cat_gym": "Gym & Fitness",
+  "cat_hiking": "Leo núi",
+  "cat_martial_arts": "Võ thuật",
+
+  "brand_title": "THƯƠNG HIỆU",
+  "size_shoes_title": "SIZE GIÀY",
+  "size_clothing_title": "SIZE QUẦN ÁO",
+
+  "results_count": "Hiển thị {{count}} / {{total}} sản phẩm",
+  "active_filters_label": "BỘ LỌC ĐANG CHỌN:",
+  "active_category_tag": "Danh mục ({{count}})",
+
+  "sort_label": "SẮP XẾP:",
+  "sort_newest": "Mới nhất",
+  "sort_best_selling": "Bán chạy",
+  "sort_price_low_high": "Giá: Thấp → Cao",
+  "sort_price_high_low": "Giá: Cao → Thấp",
+  "sort_top_rated": "Đánh giá cao nhất"
+}

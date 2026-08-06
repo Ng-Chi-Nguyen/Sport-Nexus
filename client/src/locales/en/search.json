@@ -1,0 +1,11 @@
+{
+  "search_page_title": "Search products",
+  "search_page_prompt": "Enter keywords in the search box above.",
+  "search_breadcrumb_title": "Search: \"{{query}}\"",
+  "search_results_heading": "Search results for \"{{query}}\"",
+  "search_results_count": "{{count}} results",
+  "search_no_results_title": "No products found",
+  "search_no_results_desc": "Please try a different keyword.",
+  "pagination_prev": "Prev",
+  "pagination_next": "Next"
+}

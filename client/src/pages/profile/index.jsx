@@ -6,22 +6,37 @@ import authApi from "@/api/auth/auth";
 import ShowToast from "@/components/ui/toast";
 import { breadcrumbNameMap } from "@/constants/web/profile";
 import { clearAuth } from "@/lib/authStorage";
+import { useTranslation } from "react-i18next";
 
 const ProfilePage = () => {
+  const { t: tProfile } = useTranslation("translation", {
+    keyPrefix: "profile",
+  });
+  const { t: tAddress } = useTranslation("translation", {
+    keyPrefix: "address",
+  });
+  const { t: tOrder } = useTranslation("translation", { keyPrefix: "order" });
+  const { t: tPassword } = useTranslation("translation", {
+    keyPrefix: "change_password",
+  });
+
   const location = useLocation();
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  const base = [{ title: "Trang chủ", route: "/" }];
+  const base = [{ title: tProfile("home", "Trang chủ"), route: "/" }];
   const currentPath = location.pathname;
 
   let breadcrumbsData = [...base];
   if (currentPath === "/tai-khoan") {
-    breadcrumbsData.push({ title: "Tài khoản", route: "" });
+    breadcrumbsData.push({
+      title: tProfile("account", "Tài khoản"),
+      route: "",
+    });
   } else if (breadcrumbNameMap[currentPath]) {
     breadcrumbsData.push(
-      { title: "Tài khoản", route: "/tai-khoan" },
+      { title: tProfile("account", "Tài khoản"), route: "/tai-khoan" },
       { title: breadcrumbNameMap[currentPath], route: "" },
     );
   }
@@ -57,13 +72,13 @@ const ProfilePage = () => {
             <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 shadow-xl dark:shadow-2xl backdrop-blur-md sticky top-6 space-y-6">
               <div>
                 <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100 mb-1">
-                  Trang tài khoản
+                  {tProfile("account_page", "Trang tài khoản")}
                 </h2>
                 <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                  Xin chào,{" "}
-                  <span className="text-primary dark:text-primary font-bold">
-                    {user?.full_name || "khách hàng"} !
-                  </span>
+                  {tProfile("hello", "Xin chào, {{name}}", {
+                    name: user?.full_name || tProfile("guest", "khách hàng"),
+                  })}{" "}
+                  !
                 </p>
               </div>
 
@@ -78,7 +93,7 @@ const ProfilePage = () => {
                         : "text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors block px-3 py-2 rounded-xl"
                     }
                   >
-                    Thông tin tài khoản
+                    {tProfile("account_info", "Thông tin tài khoản")}
                   </NavLink>
                 </div>
 
@@ -91,7 +106,7 @@ const ProfilePage = () => {
                         : "text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors block px-3 py-2 rounded-xl"
                     }
                   >
-                    Sổ địa chỉ
+                    {tAddress("address_book", "Sổ địa chỉ")}
                   </NavLink>
                 </div>
 
@@ -104,7 +119,7 @@ const ProfilePage = () => {
                         : "text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors block px-3 py-2 rounded-xl"
                     }
                   >
-                    Đơn hàng
+                    {tOrder("orders", "Đơn hàng")}
                   </NavLink>
                 </div>
 
@@ -117,7 +132,7 @@ const ProfilePage = () => {
                         : "text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors block px-3 py-2 rounded-xl"
                     }
                   >
-                    Đổi mật khẩu
+                    {tPassword("change_password", "Đổi mật khẩu")}
                   </NavLink>
                 </div>
 
@@ -127,7 +142,7 @@ const ProfilePage = () => {
                     onClick={handleLogoutClick}
                     className="w-full text-left text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors font-medium text-sm px-3 py-2 rounded-xl cursor-pointer"
                   >
-                    Đăng xuất
+                    {tProfile("logout", "Đăng xuất")}
                   </button>
                 </div>
               </nav>
@@ -145,7 +160,10 @@ const ProfilePage = () => {
       <Confirm
         isOpen={isLogoutModalOpen}
         onConfirm={confirmLogout}
-        message="Bạn có chắc chắn muốn rời khỏi hệ thống không?"
+        message={tProfile(
+          "logout_confirm_message",
+          "Bạn có chắc chắn muốn rời khỏi hệ thống không?",
+        )}
         onCancel={() => setIsLogoutModalOpen(false)}
       />
     </div>

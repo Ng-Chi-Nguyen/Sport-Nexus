@@ -1,5 +1,6 @@
 import paymentService from "../../services/customer/payment.service.js";
 
+import { t } from "../../locales/messages.js";
 const paymentController = {
     getMethods: async (req, res) => {
         return res.json({
@@ -27,7 +28,7 @@ const paymentController = {
                 .status(status)
                 .json({
                     success: false,
-                    message: error.message || "Lỗi server nội bộ.",
+                    message: t(req, error.message) || "Lỗi server nội bộ.",
                 });
         }
     },
@@ -44,7 +45,7 @@ const paymentController = {
                 .status(status)
                 .json({
                     success: false,
-                    message: error.message || "Lỗi server nội bộ.",
+                    message: t(req, error.message) || "Lỗi server nội bộ.",
                 });
         }
     },
@@ -60,7 +61,7 @@ const paymentController = {
                 .status(500)
                 .json({
                     success: false,
-                    message: error.message || "Lỗi server nội bộ.",
+                    message: t(req, error.message) || "Lỗi server nội bộ.",
                 });
         }
     },
@@ -77,7 +78,7 @@ const paymentController = {
                 .status(status)
                 .json({
                     success: false,
-                    message: error.message || "Lỗi server nội bộ.",
+                    message: t(req, error.message) || "Lỗi server nội bộ.",
                 });
         }
     },
@@ -101,7 +102,7 @@ const paymentController = {
                 .status(status)
                 .json({
                     success: false,
-                    message: error.message || "Lỗi server nội bộ.",
+                    message: t(req, error.message) || "Lỗi server nội bộ.",
                 });
         }
     },
@@ -116,7 +117,7 @@ const paymentController = {
                 .status(400)
                 .json({
                     success: false,
-                    message: error.message || "Webhook không hợp lệ.",
+                    message: t(req, error.message) || "Webhook không hợp lệ.",
                 });
         }
     },
@@ -134,7 +135,7 @@ const paymentController = {
                 .status(400)
                 .json({
                     success: false,
-                    message: error.message || "Webhook không hợp lệ.",
+                    message: t(req, error.message) || "Webhook không hợp lệ.",
                 });
         }
     },

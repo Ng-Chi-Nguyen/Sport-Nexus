@@ -1,5 +1,6 @@
 import attributeKeyService from "../../services/core/attributekey.service.js";
 
+import { t } from "../../locales/messages.js";
 const attributeKeyController = {
     createAttributeKey: async (req, res) => {
         let atttrData = req.body;
@@ -8,13 +9,13 @@ const attributeKeyController = {
             let newAttributeKey = await attributeKeyService.createAttributeKey(atttrData);
             return res.status(200).json({
                 success: true,
-                message: "Thêm thuộc tính sản phẩm thành công",
+                message: t(req, "Thêm thuộc tính sản phẩm thành công"),
                 data: newAttributeKey
             })
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -27,7 +28,7 @@ const attributeKeyController = {
             if (!attributeKey || attributeKey.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy sản phẩm này trong giỏ hàng."
+                    message: t(req, "Không tìm thấy sản phẩm này trong giỏ hàng.")
                 });
             }
             return res.status(200).json({
@@ -37,7 +38,7 @@ const attributeKeyController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -52,7 +53,7 @@ const attributeKeyController = {
             if (!result || result.attribute.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thuộc tính."
+                    message: t(req, "Không tìm thấy thuộc tính.")
                 });
             }
 
@@ -63,7 +64,7 @@ const attributeKeyController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -75,7 +76,7 @@ const attributeKeyController = {
             if (!list_attributesKeys || list_attributesKeys.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: t(req, "Không tìm thấy thường hiệu.")
                 });
             }
 
@@ -85,7 +86,7 @@ const attributeKeyController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             })
         }
@@ -100,7 +101,7 @@ const attributeKeyController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ.",
+                message: t(req, "Lỗi server nội bộ."),
                 error: error.message,
             })
         }
@@ -114,14 +115,14 @@ const attributeKeyController = {
             return res.status(200).json({
                 success: true,
                 data: attributeKey,
-                message: "Cập nhật thuộc tính thành công"
+                message: t(req, "Cập nhật thuộc tính thành công")
             })
         } catch (error) {
             if (error.code === 'P2025')
-                return res.status(404).json({ message: "Không tìm thấy thuộc tính." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy thuộc tính.") });
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },
@@ -132,14 +133,14 @@ const attributeKeyController = {
             await attributeKeyService.deleteAttributeKey(atttrId)
             return res.status(200).json({
                 success: true,
-                message: "Xóa thuộc tính sản phẩm thành công"
+                message: t(req, "Xóa thuộc tính sản phẩm thành công")
             })
         } catch (error) {
             if (error.code === 'P2025')
-                return res.status(404).json({ message: "Không tìm thấy thuộc tính." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy thuộc tính.") });
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: t(req, error.message)
             })
         }
     },

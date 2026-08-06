@@ -40,7 +40,7 @@ const InputPassword = (props) => {
                    dark:focus:ring-sky-500/20 ${className}`}
       />
       <div
-        className="absolute cursor-pointer top-1/2 -translate-y-1/2 right-4 text-slate-400 hover:text-sky-600 dark:text-slate-500 dark:hover:text-sky-400 transition-colors"
+        className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-slate-400 hover:text-sky-600 dark:text-slate-500 dark:hover:text-sky-400 transition-colors"
         onClick={() => setShow(!show)}
       >
         {show ? (
@@ -55,7 +55,9 @@ const InputPassword = (props) => {
 
 // 3. COMPONENT Táº¢I áº¢NH (AVATAR/LOGO)
 const InputFile = ({ label, value, onChange }) => {
-  const { t } = useTranslation("translation", { keyPrefix: "component.common" });
+  const { t } = useTranslation("translation", {
+    keyPrefix: "component.common",
+  });
   const [preview, setPreview] = useState(null);
 
   useEffect(() => {

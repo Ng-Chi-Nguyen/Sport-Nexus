@@ -1,5 +1,6 @@
 import couponWebService from "../../services/web/coupon.service.js";
 
+import { t } from "../../locales/messages.js";
 const couponController = {
     getActiveCoupons: async (req, res) => {
         try {
@@ -11,7 +12,7 @@ const couponController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message,
+                message: t(req, error.message),
             });
         }
     },
@@ -30,7 +31,7 @@ const couponController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message,
+                message: t(req, error.message),
             });
         }
     },

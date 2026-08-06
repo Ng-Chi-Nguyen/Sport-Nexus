@@ -6,8 +6,10 @@ import Pagination from "@/components/ui/pagination";
 import { Package } from "lucide-react";
 import { TitleWithIcon } from "@/components/ui/title";
 import Badge from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 
 const Order = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "order" });
   const { orders, pagination, user } = useLoaderData();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,33 +23,25 @@ const Order = () => {
     setSearchParams({ page: String(page) });
   };
 
-  const PAYMENT_COLOR_MAP = {
-    Paid: "success",
-    Pending: "warning",
-    Failed: "error",
-    Refunded: "purple",
-  };
-
-  const ORDER_COLOR_MAP = {
-    completed: "success",
-    pending: "warning",
-    cancelled: "error",
-    shipping: "info",
-  };
-
   return (
     <div className="text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <div className="flex items-center justify-between">
-        <TitleWithIcon icon={Package} title="Đơn hàng của tôi" />
+        <TitleWithIcon
+          icon={Package}
+          title={t("my_orders", "Đơn hàng của tôi")}
+        />
       </div>
 
       {orders.length === 0 ? (
         <div className="border border-slate-200 dark:border-slate-900 rounded-2xl p-8 text-center text-slate-400 dark:text-slate-500 bg-white dark:bg-[#0D121F]/40 shadow-xl dark:shadow-2xl backdrop-blur-md">
           <p className="text-lg font-medium mb-2 text-slate-700 dark:text-slate-300">
-            Chưa có đơn hàng nào
+            {t("no_orders", "Chưa có đơn hàng nào")}
           </p>
           <p className="text-sm">
-            Khi bạn đặt hàng, đơn hàng sẽ xuất hiện tại đây
+            {t(
+              "no_orders_desc",
+              "Khi bạn đặt hàng, đơn hàng sẽ xuất hiện tại đây",
+            )}
           </p>
         </div>
       ) : (
@@ -56,11 +50,19 @@ const Order = () => {
             <table className="w-full text-sm text-left">
               <thead>
                 <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]/40 text-slate-700 dark:text-slate-300 font-semibold">
-                  <th className="py-3.5 px-4">Mã đơn hàng</th>
-                  <th className="py-3.5 px-4">Ngày đặt</th>
-                  <th className="py-3.5 px-4">Thành tiền</th>
-                  <th className="py-3.5 px-4">Thanh toán</th>
-                  <th className="py-3.5 px-4">Trạng thái</th>
+                  <th className="py-3.5 px-4">
+                    {t("order_code", "Mã đơn hàng")}
+                  </th>
+                  <th className="py-3.5 px-4">{t("order_date", "Ngày đặt")}</th>
+                  <th className="py-3.5 px-4">
+                    {t("total_amount", "Thành tiền")}
+                  </th>
+                  <th className="py-3.5 px-4">
+                    {t("payment_method", "Thanh toán")}
+                  </th>
+                  <th className="py-3.5 px-4">
+                    {t("order_status", "Trạng thái")}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800">

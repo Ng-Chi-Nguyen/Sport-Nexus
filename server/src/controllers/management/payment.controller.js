@@ -1,5 +1,6 @@
 import paymentService from "../../services/customer/payment.service.js";
 
+import { t } from "../../locales/messages.js";
 const paymentController = {
     getAllTransactions: async (req, res) => {
         try {
@@ -15,7 +16,7 @@ const paymentController = {
                 .status(500)
                 .json({
                     success: false,
-                    message: error.message || "Lỗi server nội bộ.",
+                    message: t(req, error.message) || "Lỗi server nội bộ.",
                 });
         }
     },
@@ -32,7 +33,7 @@ const paymentController = {
                 .status(status)
                 .json({
                     success: false,
-                    message: error.message || "Lỗi server nội bộ.",
+                    message: t(req, error.message) || "Lỗi server nội bộ.",
                 });
         }
     },
@@ -45,7 +46,7 @@ const paymentController = {
             );
             return res.json({
                 success: true,
-                message: "Xác nhận thanh toán thành công.",
+                message: t(req, "Xác nhận thanh toán thành công."),
                 data: tx,
             });
         } catch (error) {
@@ -59,7 +60,7 @@ const paymentController = {
                 .status(status)
                 .json({
                     success: false,
-                    message: error.message || "Lỗi server nội bộ.",
+                    message: t(req, error.message) || "Lỗi server nội bộ.",
                 });
         }
     },
@@ -71,7 +72,7 @@ const paymentController = {
             );
             return res.json({
                 success: true,
-                message: "Hủy giao dịch thành công.",
+                message: t(req, "Hủy giao dịch thành công."),
                 data: tx,
             });
         } catch (error) {
@@ -85,7 +86,7 @@ const paymentController = {
                 .status(status)
                 .json({
                     success: false,
-                    message: error.message || "Lỗi server nội bộ.",
+                    message: t(req, error.message) || "Lỗi server nội bộ.",
                 });
         }
     },
@@ -97,7 +98,7 @@ const paymentController = {
             );
             return res.json({
                 success: true,
-                message: "Hoàn tiền thành công.",
+                message: t(req, "Hoàn tiền thành công."),
                 data: tx,
             });
         } catch (error) {
@@ -113,7 +114,7 @@ const paymentController = {
                 .status(status)
                 .json({
                     success: false,
-                    message: error.message || "Lỗi server nội bộ.",
+                    message: t(req, error.message) || "Lỗi server nội bộ.",
                 });
         }
     },

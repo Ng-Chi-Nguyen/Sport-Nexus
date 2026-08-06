@@ -18,8 +18,17 @@ import { STATUS_BADGE, PAYMENT_BADGE } from "@/constants/web/profile";
 import ShowToast from "@/components/ui/toast";
 import userApi from "@/api/customer/userApi";
 import { TitleWithIcon } from "@/components/ui/title";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
+  const { t: tProfile } = useTranslation("translation", {
+    keyPrefix: "profile",
+  });
+  const { t: tAddress } = useTranslation("translation", {
+    keyPrefix: "address",
+  });
+  const { t: tOrder } = useTranslation("translation", { keyPrefix: "order" });
+
   const { user, orders, addresses } = useLoaderData();
   const navigate = useNavigate();
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -73,13 +82,16 @@ const Profile = () => {
       {/* Khối Thông Tin Tài Khoản */}
       <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-6">
         <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
-          <TitleWithIcon icon={UserCheck} title="Tài khoản" />
+          <TitleWithIcon
+            icon={UserCheck}
+            title={tProfile("account", "Tài khoản")}
+          />
           <Link
             to="/tai-khoan/chinh-sua-thong-tin-ca-nhan"
             className="flex items-center gap-1.5 text-primary dark:text-primary hover:primaryHOver dark:hover:primaryHover text-sm font-semibold transition-colors"
           >
             <Pencil size={14} />
-            <span>Chỉnh sửa</span>
+            <span>{tProfile("edit", "Chỉnh sửa")}</span>
           </Link>
         </div>
 
@@ -106,7 +118,7 @@ const Profile = () => {
             >
               <Camera size={18} />
               <span className="text-[9px] font-bold mt-0.5">
-                {uploadingAvatar ? "Đang tải..." : "Đổi ảnh"}
+                {uploadingAvatar ? "Đang tải..." : tProfile("edit", "Đổi ảnh")}
               </span>
             </button>
 
@@ -124,7 +136,7 @@ const Profile = () => {
               {user.full_name}
             </p>
             <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 font-medium">
-              {user.role?.name || "Khách hàng"}
+              {user.role?.name || tProfile("customer", "Khách hàng")}
             </p>
           </div>
         </div>
@@ -137,7 +149,7 @@ const Profile = () => {
             />
             <div className="min-w-0">
               <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
-                Email
+                {tProfile("email", "Email")}
               </p>
               <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate mt-0.5">
                 {user.email || "—"}
@@ -152,7 +164,7 @@ const Profile = () => {
             />
             <div className="min-w-0">
               <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
-                Điện thoại
+                {tProfile("phone", "Điện thoại")}
               </p>
               <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                 {user.phone_number || "—"}
@@ -167,7 +179,7 @@ const Profile = () => {
             />
             <div className="min-w-0 flex-1">
               <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
-                Địa chỉ
+                {tProfile("address", "Địa chỉ")}
               </p>
               {defaultAddr ? (
                 <div className="mt-0.5">
@@ -178,7 +190,7 @@ const Profile = () => {
                     to="/tai-khoan/dia-chi"
                     className="text-[10px] text-sky-600 dark:text-sky-400 hover:underline mt-0.5 inline-block font-semibold"
                   >
-                    Quản lý địa chỉ
+                    {tProfile("manage_address", "Quản lý địa chỉ")}
                   </Link>
                 </div>
               ) : (
@@ -187,7 +199,7 @@ const Profile = () => {
                     to="/tai-khoan/dia-chi/them"
                     className="text-sky-600 dark:text-sky-400 hover:underline"
                   >
-                    + Thêm địa chỉ
+                    {tAddress("add_address", "+ Thêm địa chỉ")}
                   </Link>
                 </p>
               )}
@@ -201,7 +213,7 @@ const Profile = () => {
             />
             <div className="min-w-0">
               <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
-                Vai trò
+                {tProfile("role", "Vai trò")}
               </p>
               <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                 {user.role?.name || "—"}
@@ -220,12 +232,14 @@ const Profile = () => {
             />
             <div className="min-w-0">
               <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
-                Trạng thái
+                {tProfile("status", "Trạng thái")}
               </p>
               <p
                 className={`text-xs font-semibold mt-0.5 ${user.is_verified ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400 dark:text-slate-500"}`}
               >
-                {user.is_verified ? "Đã xác thực" : "Chưa xác thực"}
+                {user.is_verified
+                  ? tProfile("verified", "Đã xác thực")
+                  : tProfile("unverified", "Chưa xác thực")}
               </p>
             </div>
           </div>
@@ -237,7 +251,7 @@ const Profile = () => {
             />
             <div className="min-w-0">
               <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
-                Ngày tham gia
+                {tProfile("joined_date", "Ngày tham gia")}
               </p>
               <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                 {user.created_at ? formatDate(user.created_at) : "—"}
@@ -251,23 +265,26 @@ const Profile = () => {
       <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4">
         <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
           <h2 className="text-xl font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
-            Đơn hàng gần đây
+            {tProfile("recent_orders", "Đơn hàng gần đây")}
           </h2>
           <Link
             to="/tai-khoan/don-hang"
             className="text-sm font-semibold text-primary dark:text-primary hover:underline"
           >
-            Xem tất cả
+            {tProfile("view_all", "Xem tất cả")}
           </Link>
         </div>
 
         {orders.length === 0 ? (
           <div className="border border-slate-200 dark:border-slate-800 p-8 text-center text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-[#111827]/40">
             <p className="font-semibold mb-1 text-slate-700 dark:text-slate-300">
-              Chưa có đơn hàng nào
+              {tOrder("no_orders", "Chưa có đơn hàng nào")}
             </p>
             <p className="text-xs">
-              Khi bạn đặt hàng, đơn hàng sẽ xuất hiện tại đây
+              {tOrder(
+                "no_orders_desc",
+                "Khi bạn đặt hàng, đơn hàng sẽ xuất hiện tại đây",
+              )}
             </p>
           </div>
         ) : (
@@ -275,11 +292,21 @@ const Profile = () => {
             <table className="w-full text-sm text-left">
               <thead>
                 <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]/40 text-slate-700 dark:text-slate-300 font-semibold">
-                  <th className="py-3.5 px-4">Mã đơn hàng</th>
-                  <th className="py-3.5 px-4">Ngày đặt</th>
-                  <th className="py-3.5 px-4">Thành tiền</th>
-                  <th className="py-3.5 px-4">Thanh toán</th>
-                  <th className="py-3.5 px-4">Trạng thái</th>
+                  <th className="py-3.5 px-4">
+                    {tOrder("order_code", "Mã đơn hàng")}
+                  </th>
+                  <th className="py-3.5 px-4">
+                    {tOrder("order_date", "Ngày đặt")}
+                  </th>
+                  <th className="py-3.5 px-4">
+                    {tOrder("total_amount", "Thành tiền")}
+                  </th>
+                  <th className="py-3.5 px-4">
+                    {tOrder("payment_method", "Thanh toán")}
+                  </th>
+                  <th className="py-3.5 px-4">
+                    {tOrder("order_status", "Trạng thái")}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800">

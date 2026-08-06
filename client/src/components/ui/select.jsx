@@ -76,7 +76,7 @@ const Select = ({ options, value, onChange, placeholder, label }) => {
       <div
         className={`flex flex-col rounded-xl p-1.5 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800"
+            ? "opacity-100 top-full visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1 z-[-1]"
         }`}
       >
@@ -156,7 +156,7 @@ const SelectPro = ({ options = [], label, value, onChange }) => {
       <div
         className={`flex flex-col rounded-xl p-1.5 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800"
+            ? "opacity-100 top-full visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1"
         }`}
       >
@@ -249,7 +249,7 @@ const CountrySelect = ({ value, onChange, label }) => {
       <div
         className={`flex flex-col rounded-xl p-1.5 shadow-2xl absolute left-0 w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800"
+            ? "opacity-100 top-full visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1"
         }`}
       >
@@ -486,7 +486,7 @@ const SimpleSelect = ({ options, value, onChange, placeholder, label }) => {
       <div
         className={`flex flex-col rounded-xl p-1.5 shadow-2xl absolute left-0 top-[35px] w-full transition-all duration-200 max-h-[260px] overflow-y-auto custom-scrollbar backdrop-blur-xl ${
           isOpen
-            ? "opacity-100 top-[calc(100%+4px)] visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800"
+            ? "opacity-100 top-full visible translate-y-0 z-[9999] bg-white border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800"
             : "opacity-0 top-[calc(100%-8px)] invisible pointer-events-none -translate-y-1 z-[-1]"
         }`}
       >

@@ -1,5 +1,6 @@
 import invoiceService from "../../services/management/invoice.service.js";
 
+import { t } from "../../locales/messages.js";
 const invoiceController = {
     createInvoice: async (req, res) => {
         try {
@@ -9,12 +10,12 @@ const invoiceController = {
             });
             return res.status(201).json({
                 success: true,
-                message: "Hóa đơn đã được tạo",
+                message: t(req, "Hóa đơn đã được tạo"),
                 data: invoice
             });
         } catch (error) {
             const status = error.status || 500;
-            const message = status === 500 ? "Lỗi server nội bộ." : error.message;
+            const message = status === 500 ? t(req, "Lỗi server nội bộ.") : t(req, error.message);
             return res.status(status).json({
                 success: false,
                 message,
@@ -37,7 +38,7 @@ const invoiceController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ.",
+                message: t(req, "Lỗi server nội bộ."),
                 error: error.message
             });
         }
@@ -48,13 +49,13 @@ const invoiceController = {
         try {
             const invoice = await invoiceService.getInvoiceById(invoiceId);
             if (!invoice) {
-                return res.status(404).json({ success: false, message: "Không tìm thấy hóa đơn." });
+                return res.status(404).json({ success: false, message: t(req, "Không tìm thấy hóa đơn.") });
             }
             return res.status(200).json({ success: true, data: invoice });
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ.",
+                message: t(req, "Lỗi server nội bộ."),
                 error: error.message
             });
         }

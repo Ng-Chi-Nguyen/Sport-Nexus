@@ -7,8 +7,10 @@ import LoadingSpinner from "@/components/ui/loadingSpinner";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import CouponCard from "@/components/ui/couponCard";
 import { TitleWithIcon } from "@/components/ui/title";
+import { useTranslation } from "react-i18next";
 
 const CouponsPage = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "coupon" });
   const { savedCodes } = useCoupons();
   const isLoggedIn = Boolean(localStorage.getItem("accessToken"));
 
@@ -33,8 +35,8 @@ const CouponsPage = () => {
       <div className="mx-auto max-w-[1400px] mt-6 md:mt-8 px-4 sm:px-6">
         <Breadcrumbs
           data={[
-            { title: "Trang chủ", route: "/" },
-            { title: "Mã của tôi", route: "" },
+            { title: t("home"), route: "/" },
+            { title: t("my_coupons"), route: "" },
           ]}
         />
 
@@ -42,7 +44,7 @@ const CouponsPage = () => {
           <div className="mb-8">
             <TitleWithIcon
               icon={Gift}
-              title={`Coupon được tặng (${giftedCoupons.length})`}
+              title={`${t("gifted_coupons")} (${giftedCoupons.length})`}
             />
             {giftedLoading ? (
               <div className="py-10 flex justify-center">
@@ -60,7 +62,7 @@ const CouponsPage = () => {
 
         <TitleWithIcon
           icon={Ticket}
-          title={`Mã của tôi (${savedCodes.length})`}
+          title={`${t("my_coupons")} (${savedCodes.length})`}
         />
 
         {isLoading ? (
@@ -71,20 +73,20 @@ const CouponsPage = () => {
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <Bookmark className="w-12 h-12 text-slate-300 dark:text-slate-600 mb-4" />
             <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">
-              Chưa lưu mã giảm giá nào
+              {t("no_saved_coupons")}
             </h3>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Ghé trang chủ và bấm "Lưu mã" trên các mã giảm giá để dùng sau.
+              {t("save_coupon_hint")}
             </p>
           </div>
         ) : coupons.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <Bookmark className="w-12 h-12 text-slate-300 dark:text-slate-600 mb-4" />
             <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">
-              Chưa lưu mã giảm giá nào
+              {t("no_saved_coupons")}
             </h3>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Ghé trang chủ và bấm "Lưu mã" trên các mã giảm giá để dùng sau.
+              {t("save_coupon_hint")}
             </p>
           </div>
         ) : (

@@ -1,6 +1,7 @@
 import orderService from "../../services/customer/order.service.js";
 import emailService from "../../services/email/email.service.js";
 
+import { t } from "../../locales/messages.js";
 const PAYMENT_LABELS = {
     COD: "Thanh toán khi nhận hàng",
     BANK_TRANSFER: "Chuyển khoản ngân hàng",
@@ -51,7 +52,7 @@ const orderController = {
 
             return res.status(201).json({
                 success: true,
-                message: "Đơn hàng đã được tạo.",
+                message: t(req, "Đơn hàng đã được tạo."),
                 data: newOrder,
                 email_sent: !!emailResult,
             })
@@ -60,7 +61,7 @@ const orderController = {
             const status = error.code === 'INSUFFICIENT_STOCK' || couponErrors.includes(error.code) ? 400 : 500;
             return res.status(status).json({
                 success: false,
-                message: error.message || "Lỗi server nội bộ.",
+                message: t(req, error.message) || "Lỗi server nội bộ.",
             })
         }
     },
@@ -73,7 +74,7 @@ const orderController = {
             if (!items || items.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Đơn hàng này không có sản phẩm."
+                    message: t(req, "Đơn hàng này không có sản phẩm.")
                 });
             }
 
@@ -85,7 +86,7 @@ const orderController = {
             const status = error.code === 'INSUFFICIENT_STOCK' ? 400 : 500;
             return res.status(status).json({
                 success: false,
-                message: error.message || "Lỗi server nội bộ.",
+                message: t(req, error.message) || "Lỗi server nội bộ.",
             })
         }
     },
@@ -99,7 +100,7 @@ const orderController = {
             if (!order || order.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy đơn hàng."
+                    message: t(req, "Không tìm thấy đơn hàng.")
                 });
             }
 
@@ -110,7 +111,7 @@ const orderController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message
             })
         }
@@ -120,7 +121,7 @@ const orderController = {
         let email = req.params.email;
 
         if (!email) {
-            return res.status(400).json({ success: false, message: "Thiếu email" });
+            return res.status(400).json({ success: false, message: t(req, "Thiếu email") });
         }
 
         try {
@@ -128,7 +129,7 @@ const orderController = {
             if (!orders || orders.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy đơn hàng."
+                    message: t(req, "Không tìm thấy đơn hàng.")
                 });
             }
             return res.status(200).json({
@@ -138,7 +139,7 @@ const orderController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message
             })
         }
@@ -151,7 +152,7 @@ const orderController = {
             if (!orders || orders.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy đơn hàng."
+                    message: t(req, "Không tìm thấy đơn hàng.")
                 });
             }
             return res.status(200).json({
@@ -161,7 +162,7 @@ const orderController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message
             })
         }
@@ -175,7 +176,7 @@ const orderController = {
             if (!list_orders || list_orders.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: t(req, "Không tìm thấy thường hiệu.")
                 });
             }
 
@@ -185,7 +186,7 @@ const orderController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             })
         }
@@ -207,7 +208,7 @@ const orderController = {
             if (!result || result.orders.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không có đơn hàng nào."
+                    message: t(req, "Không có đơn hàng nào.")
                 });
             }
             return res.status(200).json({
@@ -217,7 +218,7 @@ const orderController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message
             })
         }
@@ -230,7 +231,7 @@ const orderController = {
             if (!items || !Array.isArray(items) || items.length === 0) {
                 return res.status(400).json({
                     success: false,
-                    message: "Danh sách sản phẩm (items) không được để trống khi cập nhật."
+                    message: t(req, "Danh sách sản phẩm (items) không được để trống khi cập nhật.")
                 });
             }
 
@@ -238,7 +239,7 @@ const orderController = {
             if (!oldOrder) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy đơn hàng.",
+                    message: t(req, "Không tìm thấy đơn hàng."),
                 });
             }
 
@@ -267,19 +268,19 @@ const orderController = {
 
             return res.status(200).json({
                 success: true,
-                message: "Cập nhật đơn hàng thành công",
+                message: t(req, "Cập nhật đơn hàng thành công"),
                 data: updatedOrder
             })
         } catch (error) {
             if (error.code === "P2025") {
                 return res.status(409).json({
                     success: false,
-                    message: "Không tìm thấy đơn hàng.",
+                    message: t(req, "Không tìm thấy đơn hàng."),
                 })
             }
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message
             })
         }
@@ -291,18 +292,18 @@ const orderController = {
             await orderService.deleteOrder(orderId);
             return res.status(200).json({
                 success: true,
-                message: "Xóa đơn hàng thành công"
+                message: t(req, "Xóa đơn hàng thành công")
             })
         } catch (error) {
             if (error.code === "P2025") {
                 return res.status(409).json({
                     success: false,
-                    message: "Không tìm thấy đơn hàng.",
+                    message: t(req, "Không tìm thấy đơn hàng."),
                 })
             }
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message
             })
         }

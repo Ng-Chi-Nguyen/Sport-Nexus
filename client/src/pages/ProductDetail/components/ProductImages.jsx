@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const ProductImages = ({ thumbnail, images }) => {
+  const { t } = useTranslation();
   const allImages = images || [];
   const [selected, setSelected] = useState(0);
 
@@ -24,10 +26,11 @@ const ProductImages = ({ thumbnail, images }) => {
                   ? "border-sky-500 shadow-sky-500/20"
                   : "border-slate-200 dark:border-slate-800 hover:border-sky-300 dark:hover:border-sky-500/50 bg-slate-50 dark:bg-[#111827]/40"
               }`}
+              title={t("thumbnail_image")}
             >
               <img
                 src={img.url}
-                alt=""
+                alt={t("product_image_alt")}
                 className="w-full h-full object-cover"
               />
             </button>
@@ -38,7 +41,7 @@ const ProductImages = ({ thumbnail, images }) => {
         {list[selected]?.url ? (
           <img
             src={list[selected].url}
-            alt=""
+            alt={t("product_preview_alt")}
             className="w-full h-full object-contain p-2"
           />
         ) : (

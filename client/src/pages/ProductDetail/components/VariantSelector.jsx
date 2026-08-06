@@ -30,9 +30,7 @@ const VariantSelector = ({
                 key={opt.value}
                 type="button"
                 disabled={!isAvailable && !isSelected}
-                onClick={() =>
-                  onSelect(attr.name, isSelected ? "" : opt.value)
-                }
+                onClick={() => onSelect(attr.name, isSelected ? "" : opt.value)}
                 className={`px-4 py-2 text-sm border transition-all ${
                   isSelected
                     ? "border-sky-500 dark:border-sky-500 bg-sky-50/50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold shadow-sm"

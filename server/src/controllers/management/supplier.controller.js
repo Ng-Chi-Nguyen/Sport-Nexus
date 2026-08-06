@@ -1,6 +1,7 @@
 import { uploadImage } from "../../services/image/image.service.js";
 import supplierService from "../../services/management/supplier.service.js";
 
+import { t } from "../../locales/messages.js";
 const supplierController = {
     createSupplier: async (req, res) => {
         // console.log("supplierController")
@@ -21,12 +22,12 @@ const supplierController = {
 
             return res.status(201).json({
                 success: true,
-                message: "Thêm nhà cùng cấp thành công",
+                message: t(req, "Thêm nhà cùng cấp thành công"),
                 data: newSupplier
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             });
         }
@@ -41,7 +42,7 @@ const supplierController = {
             if (!supplier || supplier.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: t(req, "Không tìm thấy thường hiệu.")
                 });
             }
 
@@ -51,7 +52,7 @@ const supplierController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             });
         }
@@ -68,7 +69,7 @@ const supplierController = {
             if (!result || result.supplier.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy nhà cung cấp."
+                    message: t(req, "Không tìm thấy nhà cung cấp.")
                 });
             }
 
@@ -78,7 +79,7 @@ const supplierController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ.",
+                message: t(req, "Lỗi server nội bộ."),
                 error: error.message,
             });
         }
@@ -91,7 +92,7 @@ const supplierController = {
             if (!list_suppliers || list_suppliers.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy nhà cung cấp."
+                    message: t(req, "Không tìm thấy nhà cung cấp.")
                 });
             }
 
@@ -101,7 +102,7 @@ const supplierController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             })
         }
@@ -117,7 +118,7 @@ const supplierController = {
             const currentSupplier = await supplierService.getSupplierById(supplierId);
             if (!currentSupplier) {
                 return res.status(404).json({
-                    message: "Không tìm thấy nhà cung cấp để cập nhật."
+                    message: t(req, "Không tìm thấy nhà cung cấp để cập nhật.")
                 });
             }
 
@@ -132,18 +133,18 @@ const supplierController = {
 
             return res.status(200).json({
                 success: true,
-                message: "Cập nhật nhà cung cấp thành công",
+                message: t(req, "Cập nhật nhà cung cấp thành công"),
                 data: updateData
             })
 
         } catch (error) {
 
             if (error.code === 'P2025') {
-                return res.status(404).json({ message: "Không tìm thấy nhà cung cấp giá để cập nhật." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy nhà cung cấp giá để cập nhật.") });
             }
 
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             });
         }
@@ -154,7 +155,7 @@ const supplierController = {
             const provinces = await supplierService.getDistinctProvinces();
             return res.status(200).json({ success: true, data: provinces });
         } catch (error) {
-            return res.status(500).json({ message: "Lỗi server nội bộ.", error: error.message });
+            return res.status(500).json({ message: t(req, "Lỗi server nội bộ."), error: error.message });
         }
     },
 
@@ -166,7 +167,7 @@ const supplierController = {
             const currentSupplier = await supplierService.getSupplierById(supplierId);
             if (!currentSupplier) {
                 return res.status(404).json({
-                    message: "Không tìm thấy nhà cung cấp để xóa."
+                    message: t(req, "Không tìm thấy nhà cung cấp để xóa.")
                 });
             }
 
@@ -174,11 +175,11 @@ const supplierController = {
 
             return res.status(201).json({
                 success: true,
-                message: "Nhà cung cấp đã được xóa khỏi hệ thống",
+                message: t(req, "Nhà cung cấp đã được xóa khỏi hệ thống"),
             });
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình xóa nhà cung.",
+                message: t(req, "Lỗi server nội bộ trong quá trình xóa nhà cung."),
                 error: error.message,
             });
         }

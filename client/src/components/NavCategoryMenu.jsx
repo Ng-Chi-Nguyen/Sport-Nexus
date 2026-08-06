@@ -134,7 +134,7 @@ export const NavCategoryMenu = ({
                   {categories.map((cat) => (
                     <Link
                       key={cat.id || cat.slug}
-                      to={`/products?category=${cat.slug || cat.name}`}
+                      to={`/san-pham?page=1&category_ids=${cat.id}`}
                       onClick={() => setIsOpenMenu(false)}
                       className="flex items-center justify-between p-2.5 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-sky-600 dark:hover:text-sky-400 transition-colors cursor-pointer"
                     >

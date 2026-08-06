@@ -1,49 +1,19 @@
-import { useEffect, useState } from "react";
-import { CreditCard, Truck, Building, Smartphone, Wallet } from "lucide-react";
-import paymentApi from "@/api/customer/paymentApi";
-
-const FALLBACK_METHODS = [
-  { value: "COD", label: "Thanh toán khi nhận hàng", icon: Truck },
-  { value: "BANK_TRANSFER", label: "Chuyển khoản ngân hàng", icon: Building },
-  { value: "MOMO", label: "Ví MoMo", icon: Smartphone },
-  { value: "CREDIT_CARD", label: "Thẻ ATM / quốc tế", icon: CreditCard },
-  { value: "VNPAY", label: "VNPay", icon: Wallet },
-];
+import { CreditCard } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { PAYMENT_METHODS } from "@/constants/payment";
 
 const PaymentSection = ({ value, onChange }) => {
-  const [methods, setMethods] = useState(FALLBACK_METHODS);
-
-  useEffect(() => {
-    let cancelled = false;
-    paymentApi
-      .getMethods()
-      .then((res) => {
-        if (cancelled) return;
-        const list = res?.data;
-        if (!Array.isArray(list) || list.length === 0) return;
-        const icons = Object.fromEntries(
-          FALLBACK_METHODS.map((m) => [m.value, m.icon]),
-        );
-        setMethods(
-          list.map((m) => ({
-            value: m.value,
-            label: m.label,
-            icon: icons[m.value] || Building,
-            manual: m.manual,
-          })),
-        );
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const { t } = useTranslation();
+  const methods = PAYMENT_METHODS.map((m) => ({
+    ...m,
+    label: t(m.labelKey),
+  }));
 
   return (
     <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4 transition-colors duration-200">
       <h2 className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wide">
         <CreditCard size={16} />
-        Phương thức thanh toán
+        {t("payment_method")}
       </h2>
       <div className="space-y-2.5">
         {methods.map((method) => {
@@ -86,7 +56,7 @@ const PaymentSection = ({ value, onChange }) => {
                 </span>
                 {method.manual && (
                   <span className="block text-xs text-slate-400 dark:text-slate-500 mt-0.5">
-                    Quét mã QR bằng app ngân hàng
+                    {t("bank_transfer_desc")}
                   </span>
                 )}
               </div>

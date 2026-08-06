@@ -1,6 +1,7 @@
 import reviewService from "../../services/customer/review.service.js";
 import { uploadImage } from "../../services/image/image.service.js";
 
+import { t } from "../../locales/messages.js";
 const reviewController = {
     createReview: async (req, res) => {
         let dataReview = req.body;
@@ -24,13 +25,13 @@ const reviewController = {
             // console.log(newReview)
             return res.status(201).json({
                 success: true,
-                message: "Đánh giá sản phẩm thành công.",
+                message: t(req, "Đánh giá sản phẩm thành công."),
                 data: newReview
             });
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message
             })
         }
@@ -41,7 +42,7 @@ const reviewController = {
         let { product_id, ...dataReview } = req.body;
         let files = req.files;
         if (!product_id) {
-            return res.status(400).json({ success: false, message: "Thiếu product_id" });
+            return res.status(400).json({ success: false, message: t(req, "Thiếu product_id") });
         }
         // console.log(product_id)
         try {
@@ -69,7 +70,7 @@ const reviewController = {
 
             return res.status(200).json({
                 success: true,
-                message: "Cập nhật đánh giá thành công.",
+                message: t(req, "Cập nhật đánh giá thành công."),
                 data: updatedReview
             });
 
@@ -77,12 +78,12 @@ const reviewController = {
             if (error.code === "P2025") {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy đánh giá cần cập nhật.",
+                    message: t(req, "Không tìm thấy đánh giá cần cập nhật."),
                 });
             }
             return res.status(500).json({
                 success: false,
-                message: "Lỗi hệ thống khi cập nhật đánh giá.",
+                message: t(req, "Lỗi hệ thống khi cập nhật đánh giá."),
                 error: error.message
             });
         }
@@ -95,7 +96,7 @@ const reviewController = {
             if (!reviews || reviews.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không có đánh giá nào."
+                    message: t(req, "Không có đánh giá nào.")
                 });
             }
             return res.status(200).json({
@@ -106,7 +107,7 @@ const reviewController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message
             })
         }
@@ -118,13 +119,13 @@ const reviewController = {
             await reviewService.deleteReview(review_id);
             return res.status(200).json({
                 success: true,
-                message: "Xóa đánh giá thành công"
+                message: t(req, "Xóa đánh giá thành công")
             });
 
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message
             })
         }

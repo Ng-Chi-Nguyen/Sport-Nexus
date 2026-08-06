@@ -6,8 +6,10 @@ import { BtnSave } from "@/components/ui/button";
 import ShowToast from "@/components/ui/toast";
 import axiosClient from "@/lib/axiosClient";
 import { TitleWithIcon } from "@/components/ui/title";
+import { useTranslation } from "react-i18next";
 
 const ResetPassword = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "change_password" });
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -34,7 +36,10 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (form.new_password !== form.confirm_password) {
-      ShowToast("error", "Mật khẩu xác nhận không khớp!");
+      ShowToast(
+        "error",
+        t("error_password_mismatch", "Mật khẩu xác nhận không khớp!"),
+      );
       return;
     }
 
@@ -48,15 +53,22 @@ const ResetPassword = () => {
       });
 
       if (res?.success) {
-        ShowToast("success", "Đổi mật khẩu thành công!");
+        ShowToast(
+          "success",
+          t("success_change_password", "Đổi mật khẩu thành công!"),
+        );
         navigate("/tai-khoan");
       } else {
-        ShowToast("error", res?.message || "Đổi mật khẩu thất bại!");
+        ShowToast(
+          "error",
+          res?.message || t("error_change_password", "Đổi mật khẩu thất bại!"),
+        );
       }
     } catch (error) {
       ShowToast(
         "error",
-        error?.response?.data?.message || "Lỗi khi đổi mật khẩu!",
+        error?.response?.data?.message ||
+          t("error_api_change_password", "Lỗi khi đổi mật khẩu!"),
       );
     } finally {
       setLoading(false);
@@ -81,39 +93,39 @@ const ResetPassword = () => {
   );
 
   return (
-    <div className="max-w-2xl font-sans">
-      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200">
+    <div className="max-w-2xl font-sans text-slate-800 dark:text-slate-100">
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="p-1.5 rounded text-slate-500 hover:text-slate-800 hover:bg-blue-500 transition-colors"
-          title="Quay lại"
+          className="p-1.5 rounded text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          title={t("back", "Quay lại")}
         >
           <ArrowLeft size={20} />
         </button>
         <div>
-          <TitleWithIcon icon={KeyRound} title="Đổi mật khẩu" />
-          <p className="text-xs text-slate-500">
-            Cập nhật mật khẩu đăng nhập tài khoản của bạn
+          <TitleWithIcon icon={KeyRound} title={t("change_password_heading")} />
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            {t("change_password_description")}
           </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4 max-w-lg">
-        {renderPass("current_password", "Mật khẩu hiện tại")}
-        {renderPass("new_password", "Mật khẩu mới", 6)}
-        {renderPass("confirm_password", "Xác nhận mật khẩu mới", 6)}
+        {renderPass("current_password", t("current_password_label"))}
+        {renderPass("new_password", t("new_password_label"), 6)}
+        {renderPass("confirm_password", t("confirm_new_password_label"), 6)}
 
         <div className="flex items-center gap-3 pt-4">
           <BtnSave loading={loading} className="flex-1">
-            Đổi mật khẩu
+            {t("update_password_btn")}
           </BtnSave>
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="px-6 py-2 border border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider rounded hover:bg-slate-50 transition-colors"
+            className="px-6 py-2 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs uppercase tracking-wider rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
-            Hủy
+            {t("cancel_btn")}
           </button>
         </div>
       </form>

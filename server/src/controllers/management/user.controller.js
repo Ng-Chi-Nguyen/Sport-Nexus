@@ -1,6 +1,7 @@
 import { uploadImage } from "../../services/image/image.service.js";
 import userService from "../../services/management/user.service.js";
 
+import { t } from "../../locales/messages.js";
 const userController = {
     createUser: async (req, res) => {
         // console.log("ok")
@@ -18,21 +19,20 @@ const userController = {
 
             return res.status(201).json({
                 success: true,
-                message:
-                    "Tạo tài khoản thành công! Vui lòng kiểm tra email để xác minh.",
+                message: t(req, "Tạo tài khoản thành công! Vui lòng kiểm tra email để xác minh."),
                 data: newUser,
             });
         } catch (error) {
             if (error.code === "P2002") {
                 return res.status(409).json({
                     success: false,
-                    message: "Địa chỉ email hoặc số điện thoại này đã được đăng ký.",
+                    message: t(req, "Địa chỉ email hoặc số điện thoại này đã được đăng ký."),
                 });
             }
 
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             });
         }
@@ -48,7 +48,7 @@ const userController = {
             const currentUser = await userService.getUserById(userId);
             if (!currentUser) {
                 return res.status(404).json({
-                    message: "Không tìm thấy người dùng để cập nhật."
+                    message: t(req, "Không tìm thấy người dùng để cập nhật.")
                 });
             }
 
@@ -61,13 +61,13 @@ const userController = {
 
             return res.status(201).json({
                 success: true,
-                message: "Cập nhật thành công",
+                message: t(req, "Cập nhật thành công"),
                 data: updateData,
             });
 
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             });
         }
@@ -81,7 +81,7 @@ const userController = {
             if (!user || user.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: t(req, "Không tìm thấy thường hiệu.")
                 });
             }
 
@@ -91,7 +91,7 @@ const userController = {
             });
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             });
         }
@@ -125,7 +125,7 @@ const userController = {
             });
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ.",
+                message: t(req, "Lỗi server nội bộ."),
                 error: error.message,
             });
         }
@@ -141,7 +141,7 @@ const userController = {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: "Không thể lấy danh sách vai trò.",
+                message: t(req, "Không thể lấy danh sách vai trò."),
                 error: error.message,
             });
         }
@@ -155,7 +155,7 @@ const userController = {
             const currentUser = await userService.getUserById(userId);
             if (!currentUser) {
                 return res.status(404).json({
-                    message: "Không tìm thấy người dùng để xóa."
+                    message: t(req, "Không tìm thấy người dùng để xóa.")
                 });
             }
 
@@ -163,19 +163,19 @@ const userController = {
 
             return res.status(201).json({
                 success: true,
-                message: "Người dụng đã được xóa khỏi hệ thống",
+                message: t(req, "Người dụng đã được xóa khỏi hệ thống"),
             });
         } catch (error) {
 
             if (error.code === "P2025") {
                 return res.status(409).json({
                     success: false,
-                    message: "Không tìm thấy người dùng trong hệ thống.",
+                    message: t(req, "Không tìm thấy người dùng trong hệ thống."),
                 });
             }
 
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             });
         }
@@ -190,7 +190,7 @@ const userController = {
 
             return res.status(200).json({
                 success: true,
-                message: "Cập nhật quyền thành công",
+                message: t(req, "Cập nhật quyền thành công"),
                 data: result
             });
         } catch (error) {

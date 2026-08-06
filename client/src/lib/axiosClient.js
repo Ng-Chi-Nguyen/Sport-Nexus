@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { clearAuth } from './authStorage';
+import i18n from "@/lib/i18n";
 
 // 1. Khởi tạo instance
 const axiosClient = axios.create({
@@ -9,6 +10,7 @@ const axiosClient = axios.create({
 
 // 2. Interceptor cho Request: Tự động gắn Token vào header mỗi khi gửi API
 axiosClient.interceptors.request.use((config) => {
+    config.headers['Accept-Language'] = i18n.language || 'vi';
     const token = localStorage.getItem('accessToken'); // Kiểm tra kỹ tên key này
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;

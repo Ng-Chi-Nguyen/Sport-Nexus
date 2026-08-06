@@ -8,7 +8,7 @@ const PaymentSuccess = () => {
 
   if (!orderId) {
     return (
-      <div className="max-w-lg mx-auto my-8 p-6 text-center text-slate-600 dark:text-slate-300">
+      <div className="max-w-lg mx-auto mt-[100px] p-6 text-center text-slate-600 dark:text-slate-300">
         Không tìm thấy thông tin đơn hàng.
       </div>
     );

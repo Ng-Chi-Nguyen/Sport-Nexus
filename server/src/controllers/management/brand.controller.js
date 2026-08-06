@@ -1,6 +1,7 @@
 import { uploadImage } from "../../services/image/image.service.js";
 import brandService from "../../services/management/brand.service.js";
 
+import { t } from "../../locales/messages.js";
 const brandController = {
     createBrand: async (req, res) => {
         let brandData = req.body;
@@ -18,11 +19,11 @@ const brandController = {
             return res.status(201).json({
                 success: true,
                 data: newBrand,
-                message: "Thêm thương hiệu thành công"
+                message: t(req, "Thêm thương hiệu thành công")
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ.",
+                message: t(req, "Lỗi server nội bộ."),
                 error: error.message,
             });
         }
@@ -39,7 +40,7 @@ const brandController = {
             if (!brand || brand.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: t(req, "Không tìm thấy thường hiệu.")
                 });
             }
 
@@ -49,7 +50,7 @@ const brandController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             })
         }
@@ -66,7 +67,7 @@ const brandController = {
             if (!result || result.brands.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thương hiệu."
+                    message: t(req, "Không tìm thấy thương hiệu.")
                 });
             }
 
@@ -76,7 +77,7 @@ const brandController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ.",
+                message: t(req, "Lỗi server nội bộ."),
                 error: error.message,
             })
         }
@@ -90,7 +91,7 @@ const brandController = {
             if (!list_brands || list_brands.length === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy thường hiệu."
+                    message: t(req, "Không tìm thấy thường hiệu.")
                 });
             }
 
@@ -100,7 +101,7 @@ const brandController = {
             })
         } catch (error) {
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             })
         }
@@ -123,17 +124,17 @@ const brandController = {
             return res.status(200).json({
                 success: true,
                 data: updateData,
-                message: "Cập nhật thương hiệu thành công"
+                message: t(req, "Cập nhật thương hiệu thành công")
             })
 
         } catch (error) {
 
             if (error.code === 'P2025') {
-                return res.status(404).json({ message: "Không tìm thấy thương hiệu để cập nhật." });
+                return res.status(404).json({ message: t(req, "Không tìm thấy thương hiệu để cập nhật.") });
             }
 
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             })
         }
@@ -146,7 +147,7 @@ const brandController = {
             const currentBrand = await brandService.getBrandById(brandId);
             if (!currentBrand) {
                 return res.status(404).json({
-                    message: "Không tìm thấy thương hiệu để xóa."
+                    message: t(req, "Không tìm thấy thương hiệu để xóa.")
                 });
             }
 
@@ -154,7 +155,7 @@ const brandController = {
 
             return res.status(200).json({
                 success: true,
-                message: "Xóa thương hiệu thành công"
+                message: t(req, "Xóa thương hiệu thành công")
             })
 
         } catch (error) {
@@ -162,12 +163,12 @@ const brandController = {
             if (error.code === "P2025") {
                 return res.status(409).json({
                     success: false,
-                    message: "Không tìm thấy thương hiệu.",
+                    message: t(req, "Không tìm thấy thương hiệu."),
                 })
             }
 
             return res.status(500).json({
-                message: "Lỗi server nội bộ trong quá trình tạo tài khoản.",
+                message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message,
             })
         }

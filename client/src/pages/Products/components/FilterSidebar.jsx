@@ -1,18 +1,11 @@
 import { useState, useEffect } from "react";
 import { Search, X, ChevronDown, ChevronUp } from "lucide-react";
-
-const PRICE_RANGES = [
-  { label: "Dưới 500.000₫", min: 0, max: 500000 },
-  { label: "500.000₫ - 1 triệu", min: 500000, max: 1000000 },
-  { label: "1 triệu - 1.500.000₫", min: 1000000, max: 1500000 },
-  { label: "1.500.000₫ - 2 triệu", min: 1500000, max: 2000000 },
-  { label: "2 triệu - 2.500.000₫", min: 2000000, max: 2500000 },
-  { label: "2.500.000₫ - 3 triệu", min: 2500000, max: 3000000 },
-  { label: "Trên 3 triệu", min: 3000000, max: 99999999 },
-];
-
-const SHOE_SIZES = Array.from({ length: 7 }, (_, i) => String(35 + i));
-const CLOTHING_SIZES = ["XS", "S", "M", "L", "XL", "2XL", "3XL"];
+import {
+  PRICE_RANGES,
+  SHOE_SIZES,
+  CLOTHING_SIZES,
+} from "@/constants/product";
+import { useTranslation } from "react-i18next";
 
 const CheckboxGroup = ({ title, options, selected, onChange }) => (
   <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md p-4 min-w-[180px] transition-colors duration-200">
@@ -68,6 +61,7 @@ const FilterBar = ({
   onAttrFilterChange,
   onClear,
 }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(true);
   const [searchInput, setSearchInput] = useState(search || "");
   const [debounceTimer, setDebounceTimer] = useState(null);
@@ -135,7 +129,7 @@ const FilterBar = ({
             {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </button>
           <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
-            Bộ lọc sản phẩm
+            {t("filter_heading")}
           </h3>
         </div>
         <div className="flex items-center gap-3">
@@ -148,7 +142,7 @@ const FilterBar = ({
               type="text"
               value={searchInput}
               onChange={(e) => handleSearchInput(e.target.value)}
-              placeholder="Tìm sản phẩm..."
+              placeholder={t("search_placeholder")}
               className="w-52 pl-9 pr-8 py-1.5 text-[13px] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-[#111827]/40 outline-none focus:border-sky-500 dark:focus:border-sky-500 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-colors shadow-sm"
             />
             {searchInput && (
@@ -170,7 +164,7 @@ const FilterBar = ({
               onClick={onClear}
               className="text-[12px] font-semibold text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 border border-sky-300 dark:border-sky-500/30 hover:bg-sky-50 dark:hover:bg-sky-500/10 px-3.5 py-1.5 transition-colors cursor-pointer shadow-sm"
             >
-              Xóa bộ lọc
+              {t("clear_filter_btn")}
             </button>
           )}
         </div>
@@ -180,10 +174,10 @@ const FilterBar = ({
         <div className="p-4 overflow-x-auto custom-scrollbar">
           <div className="flex gap-4">
             <CheckboxGroup
-              title="Chọn mức giá"
+              title={t("price_range_title")}
               options={PRICE_RANGES.map((r) => ({
                 value: `${r.min}-${r.max}`,
-                label: r.label,
+                label: t(r.labelKey),
               }))}
               selected={activePriceRange(priceMin, priceMax)}
               onChange={(val) => {
@@ -201,7 +195,7 @@ const FilterBar = ({
               }}
             />
             <CheckboxGroup
-              title="Loại sản phẩm"
+              title={t("category_title")}
               options={(categories || []).map((c) => ({
                 value: String(c.id),
                 label: c.name,
@@ -210,7 +204,7 @@ const FilterBar = ({
               onChange={toggleCategory}
             />
             <CheckboxGroup
-              title="Thương hiệu"
+              title={t("brand_title")}
               options={(brands || []).map((b) => ({
                 value: String(b.id),
                 label: b.name,
@@ -219,13 +213,13 @@ const FilterBar = ({
               onChange={toggleBrand}
             />
             <CheckboxGroup
-              title="Size giày"
+              title={t("size_shoes_title")}
               options={SHOE_SIZES.map((s) => ({ value: s, label: s }))}
               selected={selectedAttrs("Size")}
               onChange={(val) => toggleAttr("Size", val)}
             />
             <CheckboxGroup
-              title="Size quần áo"
+              title={t("size_clothing_title")}
               options={CLOTHING_SIZES.map((s) => ({ value: s, label: s }))}
               selected={selectedAttrs("Size")}
               onChange={(val) => toggleAttr("Size", val)}

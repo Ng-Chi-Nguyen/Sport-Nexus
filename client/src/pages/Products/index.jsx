@@ -1,20 +1,15 @@
 import { useLoaderData, useSearchParams } from "react-router-dom";
-import { X, LayoutDashboard } from "lucide-react";
+import { X } from "lucide-react";
 import FilterBar from "./components/FilterSidebar";
 import { ProductCard } from "@/components/ui/card";
 import Pagination from "@/components/ui/pagination";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import { SimpleSelect } from "@/components/ui/select";
-
-const SORT_OPTIONS = [
-  { slug: "newest", name: "Mới nhất" },
-  { slug: "best-selling", name: "Bán chạy" },
-  { slug: "price-asc", name: "Giá: Thấp → Cao" },
-  { slug: "price-desc", name: "Giá: Cao → Thấp" },
-  { slug: "rating", name: "Đánh giá cao nhất" },
-];
+import { SORT_OPTIONS as PRODUCT_SORT_OPTIONS } from "@/constants/product";
+import { useTranslation } from "react-i18next";
 
 const ProductsPage = () => {
+  const { t } = useTranslation();
   const responses = useLoaderData() || {};
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -22,6 +17,11 @@ const ProductsPage = () => {
   const categories = responses?.categories || [];
   const brands = responses?.brands || [];
   const pagination = responses?.pagination || { totalPages: 1, currentPage: 1 };
+
+  const SORT_OPTIONS = PRODUCT_SORT_OPTIONS.map((opt) => ({
+    slug: opt.slug,
+    name: t(opt.labelKey),
+  }));
 
   const currentSearch = searchParams.get("search") || "";
   const currentSort = searchParams.get("sort") || "newest";
@@ -70,17 +70,15 @@ const ProductsPage = () => {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#090D16] font-sans antialiased text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Breadcrumb */}
         <div className="mb-4 mt-12">
           <Breadcrumbs
             data={[
-              { title: "Trang chủ", route: "/" },
-              { title: "Lọc sản phẩm", route: "" },
+              { title: t("breadcrumb_home"), route: "/" },
+              { title: t("breadcrumb_filter"), route: "" },
             ]}
           />
         </div>
 
-        {/* Filter Bar */}
         <div className="mb-5">
           <FilterBar
             search={currentSearch}
@@ -100,22 +98,16 @@ const ProductsPage = () => {
           />
         </div>
 
-        {/* Results bar */}
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Hiển thị{" "}
-            <span className="font-semibold text-slate-700 dark:text-slate-200">
-              {products.length}
-            </span>{" "}
-            /{" "}
-            <span className="font-semibold text-slate-700 dark:text-slate-200">
-              {pagination.totalItems || 0}
-            </span>{" "}
-            sản phẩm
+            {t("results_count", {
+              count: products.length,
+              total: pagination.totalItems || 0,
+            })}
           </p>
           <div className="flex items-center gap-2">
             <label className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider shrink-0">
-              Sắp xếp:
+              {t("sort_label")}
             </label>
             <div className="w-44">
               <SimpleSelect
@@ -127,7 +119,6 @@ const ProductsPage = () => {
           </div>
         </div>
 
-        {/* Active filters tags */}
         {(currentSearch ||
           currentCategoryIds ||
           currentBrandIds ||
@@ -135,7 +126,7 @@ const ProductsPage = () => {
           currentAttrFilter) && (
           <div className="flex flex-wrap items-center gap-2 mb-4">
             <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase">
-              Bộ lọc đang chọn:
+              {t("active_filters_label")}
             </span>
             {currentSearch && (
               <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 px-3 py-1 font-medium shadow-sm">
@@ -203,7 +194,6 @@ const ProductsPage = () => {
           </div>
         )}
 
-        {/* Product Grid */}
         {products.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3">
             {products.map((p, idx) => (
@@ -221,7 +211,6 @@ const ProductsPage = () => {
           </div>
         )}
 
-        {/* Pagination */}
         {pagination.totalPages > 1 && (
           <div className="mt-8">
             <Pagination

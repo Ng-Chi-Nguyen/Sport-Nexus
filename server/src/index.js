@@ -9,6 +9,7 @@ import Routes from "./routes/index.route.js";
 import cors from 'cors';
 import configViewEngine from "./configs/view.config.js";
 import { attachPortConflictHandler } from './utils/serverStartup.utils.js';
+import { localeMiddleware } from './middlewares/locale.middleware.js';
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(localeMiddleware);
 
 Routes(app);
 

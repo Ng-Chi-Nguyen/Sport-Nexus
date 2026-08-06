@@ -1,0 +1,85 @@
+{
+  "favorite": {
+    "home": "Trang chủ",
+    "liked_products": "Sản phẩm đã thích"
+  },
+  "invoice": {
+    "home": "Trang chủ",
+    "invoice": "Hóa đơn",
+    "my_invoices": "Hóa đơn của tôi",
+    "table_invoice_number": "Số hóa đơn",
+    "table_issued_date": "Ngày phát hành",
+    "table_total_amount": "Tổng tiền",
+    "table_status": "Trạng thái",
+    "detail": {
+      "receipt_title": "Hóa đơn",
+      "detail": "Chi tiết",
+      "no_invoice_found": "Không tìm thấy hóa đơn",
+      "back_to_list": "Quay lại danh sách",
+      "back_to_invoices": "Quay lại hóa đơn",
+      "print_invoice": "In hóa đơn",
+      "store_subtitle": "Cửa hàng thể thao chính hãng",
+      "receipt_number": "Hóa đơn:",
+      "receipt_date": "Ngày:",
+      "receipt_status": "Trạng thái:",
+      "receipt_customer": "Khách:",
+      "receipt_phone": "ĐT:",
+      "default_product_name": "Sản phẩm",
+      "subtotal": "Tạm tính",
+      "discount": "Giảm giá",
+      "total_caps": "TỔNG CỘNG",
+      "thank_you_message": "Cảm ơn quý khách đã mua hàng tại SportNexus!",
+      "return_policy_note": "Hàng đã mua chỉ đổi trả khi còn hóa đơn",
+      "status_pending": "Chờ xử lý",
+      "status_completed": "Đã hoàn thành",
+      "status_cancelled": "Đã hủy"
+    }
+  },
+  "coupon": {
+    "home": "Trang chủ",
+    "my_coupons": "Mã của tôi",
+    "gifted_coupons": "Coupon được tặng",
+    "no_saved_coupons": "Chưa lưu mã giảm giá nào",
+    "save_coupon_hint": "Ghé trang chủ và bấm \"Lưu mã\" trên các mã giảm giá để dùng sau."
+  },
+  "support": {
+    "help_center": "Trung tâm trợ giúp",
+    "contact_support": "Liên Hệ & Hỗ Trợ",
+    "support_description": "Bạn có thắc mắc hoặc cần giúp đỡ? Hãy gửi yêu cầu cho chúng tôi, đội ngũ SportNexus sẽ phản hồi qua email sớm nhất!",
+    "contact_info": "Thông tin liên hệ",
+    "support_email": "Email hỗ trợ",
+    "hotline": "Hotline",
+    "headquarters": "Địa chỉ trụ sở",
+    "working_hours": "Thời gian làm việc",
+    "working_time_range": "Thứ 2 - Chủ Nhật: 08:00 - 21:00",
+    "urgent_help": "Cần giải đáp gấp?",
+    "faq_note": "Kiểm tra phần Các câu hỏi thường gặp (FAQ) hoặc nhắn tin trực tiếp qua Hotline để được phản hồi trong 5 phút.",
+    "send_request": "Gửi yêu cầu hỗ trợ",
+    "request_description": "Điền thông tin bên dưới, chúng tôi sẽ phản hồi lại qua Email của bạn trong vòng 24h.",
+    "full_name_label": "Họ và tên *",
+    "email_label": "Email nhận phản hồi *",
+    "phone_label": "Số điện thoại",
+    "topic_label": "Chủ đề",
+    "content_label": "Nội dung chi tiết *",
+    "submit_btn": "Gửi yêu cầu qua email",
+    "name_placeholder": "Nguyễn Văn A",
+    "email_placeholder": "nguyenvana@gmail.com",
+    "phone_placeholder": "0901234567",
+    "subject_placeholder": "Tư vấn đơn hàng / Bảo hành / Lỗi web...",
+    "message_placeholder": "Mô tả chi tiết thắc mắc hoặc sự cố bạn gặp phải..."
+  },
+  "history": {
+    "home": "Trang chủ",
+    "keywords_count": "{{count}} từ khóa đã tìm",
+    "older": "Trước đó",
+    "clear_all": "Xóa tất cả",
+    "search_history": "Lịch sử tìm kiếm",
+    "keywords_found": "{{count}} từ khóa đã tìm",
+    "previous": "Trước đó",
+    "you_may_also_like": "Có thể bạn quan tâm"
+  },
+  "placeholder": {
+    "feature_under_development": "Tính năng đang phát triển",
+    "feature_coming_soon": "Trang này sẽ sớm được cập nhật."
+  }
+}

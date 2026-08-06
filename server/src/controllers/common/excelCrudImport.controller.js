@@ -1,6 +1,7 @@
 import excelCrudImportService from '../../services/management/excelCrudImport/index.js';
 import { getExcelCrudModuleConfig } from '../../services/management/excelCrudImport/config.js';
 
+import { t } from "../../locales/messages.js";
 export const createExcelCrudImportController = (moduleKey) => {
   const moduleConfig = getExcelCrudModuleConfig(moduleKey);
 
@@ -8,13 +9,13 @@ export const createExcelCrudImportController = (moduleKey) => {
     previewImport: async (req, res) => {
       try {
         if (!req.file) {
-          return res.status(400).json({ success: false, message: 'Vui lòng chọn file .xlsx để xem trước.' });
+          return res.status(400).json({ success: false, message: t(req, 'Vui lòng chọn file .xlsx để xem trước.') });
         }
 
         const result = await excelCrudImportService.previewImport(moduleKey, req.file.buffer);
         return res.status(200).json({ success: true, data: result });
       } catch (error) {
-        return res.status(500).json({ success: false, message: error.message || 'Đã xảy ra lỗi khi đọc file.' });
+        return res.status(500).json({ success: false, message: t(req, error.message) || 'Đã xảy ra lỗi khi đọc file.' });
       }
     },
 
@@ -23,17 +24,17 @@ export const createExcelCrudImportController = (moduleKey) => {
 
       try {
         if (!req.file) {
-          return res.status(400).json({ success: false, message: 'Vui lòng chọn file .xlsx để import.' });
+          return res.status(400).json({ success: false, message: t(req, 'Vui lòng chọn file .xlsx để import.') });
         }
 
         const result = await excelCrudImportService.importFile(moduleKey, req.file.buffer);
         return res.status(200).json({
           success: true,
-          message: `Import hoàn tất: ${result.success} thành công, ${result.failed} lỗi.`,
+          message: t(req, 'Import hoàn tất: ${success} thành công, ${failed} lỗi.', { success: result.success, failed: result.failed }),
           data: result,
         });
       } catch (error) {
-        return res.status(500).json({ success: false, message: error.message || 'Đã xảy ra lỗi trong quá trình xử lý Import.' });
+        return res.status(500).json({ success: false, message: t(req, error.message) || 'Đã xảy ra lỗi trong quá trình xử lý Import.' });
       }
     },
 
@@ -46,7 +47,7 @@ export const createExcelCrudImportController = (moduleKey) => {
         res.setHeader('Content-Disposition', `attachment; filename="export-${moduleConfig.fileName}"`);
         return res.send(buffer);
       } catch (error) {
-        return res.status(500).json({ success: false, message: error.message });
+        return res.status(500).json({ success: false, message: t(req, error.message) });
       }
     },
 
@@ -59,7 +60,7 @@ export const createExcelCrudImportController = (moduleKey) => {
         res.setHeader('Content-Disposition', `attachment; filename="template-${moduleConfig.fileName}"`);
         return res.send(buffer);
       } catch (error) {
-        return res.status(500).json({ success: false, message: error.message });
+        return res.status(500).json({ success: false, message: t(req, error.message) });
       }
     },
   };
