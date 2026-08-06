@@ -172,7 +172,8 @@ const couponService = {
         };
 
         if (amount < coupon.min_order_value) {
-            return { message: `Đơn hàng giá tối thiểu là ${coupon.min_order_value}đ mới có hiệu lực` }
+            const minOrderFormatted = new Intl.NumberFormat("vi-VN").format(coupon.min_order_value);
+            return { message: `Đơn hàng giá tối thiểu là ${minOrderFormatted}đ mới có hiệu lực` }
         }
 
         let discount = 0;

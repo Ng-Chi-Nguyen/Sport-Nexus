@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import couponApi from "@/api/customer/couponApi";
+import { formatCurrency } from "@/utils/formatters";
 
 const useCoupon = () => {
   const [couponCode, setCouponCode] = useState("");
@@ -33,20 +34,29 @@ const useCoupon = () => {
         });
       } else {
         setCouponData(null);
+        const minOrder = res.data?.min_order_value;
         setCouponMsg({
           type: "error",
-          text: res.data?.message || "Mã giảm giá không hợp lệ",
+          text:
+            minOrder !== undefined && minOrder !== null
+              ? `Đơn hàng giá tối thiểu là ${formatCurrency(minOrder)} mới có hiệu lực`
+              : res.data?.message || "Mã giảm giá không hợp lệ",
         });
       }
     } catch (error) {
       setCouponData(null);
+      const minOrder =
+        error.response?.data?.min_order_value ??
+        error.response?.data?.data?.min_order_value;
       setCouponMsg({
         type: "error",
         text:
-          error.response?.data?.message ||
-          error.response?.data?.errors?.[0] ||
-          error.message ||
-          "Đã có lỗi xảy ra",
+          minOrder !== undefined && minOrder !== null
+            ? `Đơn hàng giá tối thiểu là ${formatCurrency(minOrder)} mới có hiệu lực`
+            : error.response?.data?.message ||
+              error.response?.data?.errors?.[0] ||
+              error.message ||
+              "Đã có lỗi xảy ra",
       });
     } finally {
       setLoading(false);

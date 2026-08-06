@@ -208,7 +208,7 @@ const ProductDetail = () => {
             images={product.ProductImages}
           />
 
-          <div className="space-y-6 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md">
+          <div className="relative z-10 space-y-6 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 sm:p-8 shadow-xl dark:shadow-2xl backdrop-blur-md">
             <ProductInfo
               product={product}
               avgRating={avgRating}

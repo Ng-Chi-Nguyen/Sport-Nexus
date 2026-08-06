@@ -32,7 +32,8 @@ const couponCustomerService = {
       return { message: "Mã giảm giá đã hết lượt sử dụng" };
     if (amount < coupon.min_order_value) {
       return {
-        message: `Đơn hàng giá tối thiểu là ${coupon.min_order_value}đ mới có hiệu lực`,
+        message: "Đơn hàng giá tối thiểu mới có hiệu lực",
+        min_order_value: coupon.min_order_value,
       };
     }
 
