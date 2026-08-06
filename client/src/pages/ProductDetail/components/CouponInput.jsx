@@ -13,7 +13,6 @@ const CouponInput = ({
   oldAmount,
   newAmount,
   suggestions = [],
-  suggestionsLoading = false,
 }) => {
   const hasCouponApplied = discount !== null && discount !== undefined;
   const [open, setOpen] = useState(false);
@@ -82,13 +81,7 @@ const CouponInput = ({
           />
           {showDropdown && (
             <ul className="absolute z-20 left-0 right-0 mt-1 max-h-56 overflow-y-auto custom-scrollbar bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-lg">
-              {suggestionsLoading && (
-                <li className="px-3.5 py-2.5 text-xs text-slate-400 dark:text-slate-500">
-                  Đang tải danh sách mã...
-                </li>
-              )}
-              {!suggestionsLoading &&
-                filtered.map((coupon) => (
+              {filtered.map((coupon) => (
                   <li
                     key={coupon.code}
                     onMouseDown={(e) => {
