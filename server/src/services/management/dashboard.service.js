@@ -535,8 +535,8 @@ export const createBusinessDashboardService = ({ db = prisma } = {}) => ({
   async getSystemOverview() {
     const [logs, users] = await Promise.all([
       db.SystemLogs.findMany({
-        orderBy: { created_at: 'desc' }, take: 50,
-        select: { id: true, user_id: true, action_type: true, entity_type: true, entity_id: true, details: true, created_at: true },
+        orderBy: { timestamp: 'desc' }, take: 50,
+        select: { id: true, user_id: true, action_type: true, entity_type: true, entity_id: true, details: true, timestamp: true },
       }),
       db.Users.findMany({ select: { id: true, full_name: true, email: true } }),
     ]);
@@ -564,7 +564,7 @@ export const createBusinessDashboardService = ({ db = prisma } = {}) => ({
         entity_type: l.entity_type,
         entity_id: l.entity_id,
         details: l.details,
-        created_at: l.created_at,
+        created_at: l.timestamp,
       })),
     };
   },
