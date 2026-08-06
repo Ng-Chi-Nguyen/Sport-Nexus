@@ -18,6 +18,7 @@ import ActionBar from "./components/ActionBar";
 import CouponInput from "./components/CouponInput";
 import ProductTabs from "./components/ProductTabs";
 import ReviewList from "./components/ReviewList";
+import useCouponSuggestions from "@/hooks/useCouponSuggestions";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -28,6 +29,8 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [couponCode, setCouponCode] = useState("");
   const [couponMsg, setCouponMsg] = useState(null);
+
+  const { suggestions } = useCouponSuggestions();
 
   useEffect(() => {
     const term = getLastSearchTerm();
@@ -249,14 +252,16 @@ const ProductDetail = () => {
             <CouponInput
               couponCode={couponCode}
               onCodeChange={setCouponCode}
-              onApply={() => {
-                if (!couponCode.trim()) return;
+              onApply={(code) => {
+                const c = code || couponCode;
+                if (!c.trim()) return;
                 setCouponMsg({
                   type: "success",
                   text: "Mã giảm giá không hợp lệ (demo)",
                 });
               }}
               message={couponMsg}
+              suggestions={suggestions}
             />
           </div>
         </div>
