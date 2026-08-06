@@ -169,6 +169,7 @@ async function main() {
       full_name: 'Nguyễn Văn Admin', email: 'admin@gmail.com',
       phone_number: generatePhone(1), password: hashedPassword,
       is_verified: true, status: true, role_id: adminRole.id,
+      avatar: 'https://picsum.photos/seed/avatar-admin/300/300',
       created_at: new Date('2025-01-01'),
     },
   });
@@ -177,6 +178,7 @@ async function main() {
       full_name: 'Trần Thị Nhân Viên', email: 'staff@gmail.com',
       phone_number: generatePhone(2), password: hashedPassword,
       is_verified: true, status: true, role_id: staffRole.id,
+      avatar: 'https://picsum.photos/seed/avatar-staff/300/300',
       created_at: new Date('2025-01-01'),
     },
   });
@@ -185,6 +187,7 @@ async function main() {
       full_name: 'Nguyễn Chí Nguyên', email: 'ngchinguyen2506@gmail.com',
       phone_number: '0900000000', password: await bcrypt.hash('#Nguyen2506', 10),
       is_verified: true, status: true, role_id: adminRole.id,
+      avatar: 'https://picsum.photos/seed/avatar-superadmin/300/300',
       created_at: new Date('2025-01-01'),
     },
   });
@@ -209,6 +212,7 @@ async function main() {
         email: `customer${idx}@gmail.com`,
         phone_number: generatePhone(idx + 100),
         password: hashedPassword,
+        avatar: `https://picsum.photos/seed/avatar-c${idx}/300/300`,
         is_verified: Math.random() > 0.3,
         status: Math.random() > 0.15,
         role_id: customerRole.id,
@@ -253,9 +257,12 @@ async function main() {
   console.log('📂 Tạo categories...');
   const catNames = ['Bóng đá', 'Cầu lông', 'Bơi lội', 'Gym & Fitness', 'Chạy bộ', 'Tennis', 'Thể thao đồng đội', 'Xe đạp', 'Leo núi', 'Võ thuật'];
   const categories = await Promise.all(
-    catNames.map((name) =>
-      prisma.categories.create({ data: { name, slug: slugify(name, { lower: true }) } }),
-    ),
+    catNames.map((name) => {
+      const slug = slugify(name, { lower: true });
+      return prisma.categories.create({
+        data: { name, slug, image: `https://picsum.photos/seed/cat-${slug}/800/400` },
+      });
+    }),
   );
   const [catBongDa, catCauLong, catBoiLoi, catGym, catChayBo, catTennis, catTTDongDoi, catXeDap, catLeoNui, catVoThuat] = categories;
 
@@ -306,7 +313,13 @@ async function main() {
     { name: 'Decathlon', origin: 'Pháp' },
     { name: 'Asics', origin: 'Nhật Bản' },
   ];
-  const brands = await Promise.all(brandInput.map((b) => prisma.brands.create({ data: b })));
+  const brands = await Promise.all(
+    brandInput.map((b) =>
+      prisma.brands.create({
+        data: { ...b, logo: `https://picsum.photos/seed/logo-${slugify(b.name, { lower: true })}/300/300` },
+      }),
+    ),
+  );
   const [bNike, bAdidas, bYonex, bWilson, bKamito, bKingSport, bSpeedo, bSpalding, bPuma, bLiNing, bMizuno, bUA, bDecathlon, bAsics] = brands;
 
   // ======================== 7. ATTRIBUTE KEYS ========================
@@ -316,10 +329,10 @@ async function main() {
   const attrWeight = await prisma.attributeKeys.create({ data: { name: 'Trọng lượng', unit: 'g' } });
   const attrLength = await prisma.attributeKeys.create({ data: { name: 'Chiều dài', unit: 'm' } });
 
-  // ======================== 8. PRODUCTS ========================
-  console.log('⚽ Tạo 27 products & 80+ variants...');
+  // ======================== 8. PRODUCTS (200 = 20/category) ========================
+  console.log('⚽ Tạo 200 products (20/category) & variants...');
 
-  async function createProduct({ cat, sup, brand, name, desc, price, active = true }) {
+  async function createProduct({ cat, sup, brand, name, desc, price, active = true, thumbnail }) {
     return prisma.products.create({
       data: {
         name,
@@ -327,6 +340,7 @@ async function main() {
         base_price: price,
         description: desc,
         is_active: active,
+        thumbnail,
         category_id: cat.id,
         supplier_id: sup.id,
         brand_id: brand.id,
@@ -351,162 +365,213 @@ async function main() {
   }
 
   const allVariants = [];
+  const allProducts = [];
 
-  // --- P1: Bóng đá Nike Flight ---
-  const p1 = await createProduct({ cat: catBongDa, sup: sup1, brand: bNike, name: 'Bóng đá Nike Flight', desc: 'Bóng đá cao cấp Nike Flight với công nghệ Aerowtrack giúp ổn định đường bay. Chất liệu da tổng hợp cao cấp, phù hợp thi đấu chuyên nghiệp.', price: 1550000 });
-  allVariants.push(await createVariant(p1, { stock: 50, price: 1550000, attrs: [{ key: attrSize, value: '5' }] }));
+  const BRAND_MAP = {
+    Nike: bNike, Adidas: bAdidas, Yonex: bYonex, Wilson: bWilson, Kamito: bKamito,
+    KingSport: bKingSport, Speedo: bSpeedo, Spalding: bSpalding, Puma: bPuma,
+    'Li-Ning': bLiNing, Mizuno: bMizuno, 'Under Armour': bUA, Decathlon: bDecathlon, Asics: bAsics,
+  };
+  const SUPS = [sup1, sup2, sup3, sup4, sup5, sup6, sup7, sup8, sup9, sup10];
 
-  // --- P2: Vợt cầu lông Yonex Astrox 99 Pro ---
-  const p2 = await createProduct({ cat: catCauLong, sup: sup2, brand: bYonex, name: 'Vợt cầu lông Yonex Astrox 99 Pro', desc: 'Vợt cầu lông Yonex Astrox 99 Pro - đỉnh cao công nghệ dành cho lối đánh tấn công. Khung vợt Namd cao cấp, độ cứng siêu cao.', price: 4890000 });
-  allVariants.push(await createVariant(p2, { stock: 20, price: 4890000, attrs: [{ key: attrWeight, value: '88 (4U)' }] }));
-  allVariants.push(await createVariant(p2, { stock: 15, price: 4990000, attrs: [{ key: attrWeight, value: '83 (5U)' }] }));
+  // a: [{k: attrKey, o: [options]}], c: colors for the 2nd product & variants
+  const CATALOG = [
+    {
+      cat: catBongDa,
+      templates: [
+        { n: 'Bóng đá Nike Strike', b: 'Nike', p: [700000, 1600000], a: [{ k: attrSize, o: ['4', '5'] }], c: ['Trắng', 'Xanh', 'Đỏ'] },
+        { n: 'Bóng đá Adidas Tiro', b: 'Adidas', p: [600000, 1400000], a: [{ k: attrSize, o: ['4', '5'] }], c: ['Trắng', 'Đen'] },
+        { n: 'Giày đá bóng Nike Mercurial', b: 'Nike', p: [3200000, 5500000], a: [{ k: attrSize, o: ['40', '41', '42', '43', '44'] }, { k: attrColor, o: ['Xanh', 'Đen', 'Đỏ'] }], c: ['Xanh', 'Đỏ', 'Đen'] },
+        { n: 'Giày đá bóng Adidas Predator', b: 'Adidas', p: [2900000, 4800000], a: [{ k: attrSize, o: ['40', '41', '42', '43'] }, { k: attrColor, o: ['Đen', 'Trắng'] }], c: ['Đen', 'Trắng'] },
+        { n: 'Áo đấu bóng đá Puma', b: 'Puma', p: [450000, 850000], a: [{ k: attrSize, o: ['S', 'M', 'L', 'XL'] }, { k: attrColor, o: ['Đỏ', 'Xanh dương', 'Trắng'] }], c: ['Đỏ', 'Xanh dương', 'Trắng'] },
+        { n: 'Áo đấu bóng đá Adidas', b: 'Adidas', p: [400000, 750000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Xanh dương', 'Trắng', 'Đen'] }], c: ['Xanh dương', 'Trắng'] },
+        { n: 'Găng tay thủ môn', b: 'Decathlon', p: [350000, 900000], a: [{ k: attrSize, o: ['7', '8', '9', '10'] }, { k: attrColor, o: ['Đen', 'Xanh'] }], c: ['Đen', 'Xanh', 'Đỏ'] },
+        { n: 'Tất bóng đá', b: 'Decathlon', p: [80000, 150000], a: [{ k: attrSize, o: ['M', 'L'] }, { k: attrColor, o: ['Trắng', 'Đen'] }], c: ['Trắng', 'Đen'] },
+        { n: 'Ống đồng bảo vệ ống quyển', b: 'Decathlon', p: [150000, 280000], a: [{ k: attrSize, o: ['S', 'M', 'L'] }], c: ['Trắng', 'Đen'] },
+        { n: 'Balo thể thao đựng giày', b: 'Nike', p: [400000, 900000], a: [{ k: attrColor, o: ['Đen', 'Xám'] }], c: ['Đen', 'Xám'] },
+      ],
+    },
+    {
+      cat: catCauLong,
+      templates: [
+        { n: 'Vợt cầu lông Yonex Astrox', b: 'Yonex', p: [2800000, 5200000], a: [{ k: attrWeight, o: ['88 (4U)', '83 (5U)'] }], c: ['Đen', 'Xanh'] },
+        { n: 'Vợt cầu lông Yonex Nanoray', b: 'Yonex', p: [2000000, 3600000], a: [{ k: attrWeight, o: ['85 (4U)', '80 (5U)'] }], c: ['Xanh dương', 'Đen'] },
+        { n: 'Vợt cầu lông Li-Ning', b: 'Li-Ning', p: [1400000, 2600000], a: [{ k: attrWeight, o: ['85 (4U)', '80 (5U)'] }], c: ['Đỏ', 'Đen'] },
+        { n: 'Vợt cầu lông Mizuno', b: 'Mizuno', p: [1600000, 3000000], a: [{ k: attrWeight, o: ['87 (4U)', '82 (5U)'] }], c: ['Xanh', 'Đen'] },
+        { n: 'Quần short cầu lông Yonex', b: 'Yonex', p: [300000, 500000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Đen', 'Xanh navy'] }], c: ['Đen', 'Xanh navy'] },
+        { n: 'Áo cầu lông Yonex', b: 'Yonex', p: [350000, 550000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Trắng', 'Xanh dương', 'Đen'] }], c: ['Trắng', 'Xanh dương'] },
+        { n: 'Giày cầu lông Yonex', b: 'Yonex', p: [1500000, 2600000], a: [{ k: attrSize, o: ['40', '41', '42', '43'] }, { k: attrColor, o: ['Đen', 'Trắng'] }], c: ['Đen', 'Trắng'] },
+        { n: 'Lưới cầu lông', b: 'Decathlon', p: [250000, 450000], a: [], c: ['Đen', 'Xanh'] },
+        { n: 'Ống đựng vợt cầu lông', b: 'Decathlon', p: [200000, 350000], a: [{ k: attrColor, o: ['Đen', 'Xám'] }], c: ['Đen', 'Xám'] },
+        { n: 'Cầu lông sân đấu', b: 'Yonex', p: [180000, 280000], a: [{ k: attrSize, o: ['10', '12'] }], c: ['Trắng'] },
+      ],
+    },
+    {
+      cat: catBoiLoi,
+      templates: [
+        { n: 'Kính bơi Speedo', b: 'Speedo', p: [400000, 900000], a: [{ k: attrColor, o: ['Xanh dương', 'Đen', 'Trong suốt'] }], c: ['Xanh dương', 'Đen'] },
+        { n: 'Quần bơi nam Speedo', b: 'Speedo', p: [400000, 700000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Xanh navy', 'Đen'] }], c: ['Xanh navy', 'Đen'] },
+        { n: 'Áo bơi nữ Speedo', b: 'Speedo', p: [650000, 1100000], a: [{ k: attrSize, o: ['S', 'M', 'L'] }, { k: attrColor, o: ['Đen', 'Hồng', 'Xanh'] }], c: ['Đen', 'Hồng'] },
+        { n: 'Mũ bơi Speedo', b: 'Speedo', p: [150000, 280000], a: [{ k: attrSize, o: ['M', 'L'] }, { k: attrColor, o: ['Đen', 'Xanh', 'Hồng'] }], c: ['Đen', 'Xanh'] },
+        { n: 'Phao bơi trẻ em', b: 'Decathlon', p: [120000, 250000], a: [{ k: attrColor, o: ['Cam', 'Xanh', 'Hồng'] }], c: ['Cam', 'Xanh'] },
+        { n: 'Túi khô chống nước', b: 'Decathlon', p: [200000, 400000], a: [{ k: attrSize, o: ['10L', '20L'] }, { k: attrColor, o: ['Xám', 'Xanh'] }], c: ['Xám', 'Xanh'] },
+        { n: 'Dép bơi chống trượt', b: 'Speedo', p: [200000, 350000], a: [{ k: attrSize, o: ['39', '40', '41', '42'] }, { k: attrColor, o: ['Đen', 'Xanh'] }], c: ['Đen', 'Xanh'] },
+        { n: 'Khăn lau khô nhanh', b: 'Decathlon', p: [150000, 280000], a: [{ k: attrSize, o: ['M', 'L'] }, { k: attrColor, o: ['Xanh', 'Xám'] }], c: ['Xanh', 'Xám'] },
+        { n: 'Kính bơi trẻ em', b: 'Decathlon', p: [250000, 400000], a: [{ k: attrColor, o: ['Xanh dương', 'Hồng'] }], c: ['Xanh dương', 'Hồng'] },
+        { n: 'Bộ đồ bơi trẻ em', b: 'Decathlon', p: [300000, 500000], a: [{ k: attrSize, o: ['3T', '5T', '7T'] }, { k: attrColor, o: ['Xanh', 'Cam'] }], c: ['Xanh', 'Cam'] },
+      ],
+    },
+    {
+      cat: catGym,
+      templates: [
+        { n: 'Dây nhảy thể thao', b: 'Kamito', p: [150000, 300000], a: [{ k: attrColor, o: ['Đen', 'Xanh', 'Đỏ'] }], c: ['Đen', 'Xanh'] },
+        { n: 'Tạ tay cao su', b: 'KingSport', p: [200000, 800000], a: [{ k: attrWeight, o: ['2000 (2kg)', '5000 (5kg)', '10000 (10kg)'] }], c: ['Đen', 'Xanh'] },
+        { n: 'Thảm tập yoga', b: 'KingSport', p: [350000, 600000], a: [{ k: attrLength, o: ['173', '183'] }, { k: attrColor, o: ['Tím', 'Xanh', 'Hồng'] }], c: ['Tím', 'Xanh'] },
+        { n: 'Dây kháng lực', b: 'Kamito', p: [200000, 350000], a: [{ k: attrColor, o: ['Xanh dương', 'Đen'] }], c: ['Xanh dương', 'Đen'] },
+        { n: 'Bình nước thể thao', b: 'KingSport', p: [100000, 200000], a: [{ k: attrSize, o: ['500ml', '750ml', '1L'] }, { k: attrColor, o: ['Trong suốt', 'Xám'] }], c: ['Trong suốt', 'Xám'] },
+        { n: 'Găng tay tập gym', b: 'Kamito', p: [150000, 300000], a: [{ k: attrSize, o: ['S', 'M', 'L'] }, { k: attrColor, o: ['Đen', 'Đỏ'] }], c: ['Đen', 'Đỏ'] },
+        { n: 'Đai lưng nâng tạ', b: 'Kamito', p: [250000, 500000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Đen'] }], c: ['Đen', 'Xám'] },
+        { n: 'Bóng tập yoga', b: 'KingSport', p: [250000, 450000], a: [{ k: attrSize, o: ['55cm', '65cm'] }, { k: attrColor, o: ['Tím', 'Xanh'] }], c: ['Tím', 'Xanh'] },
+        { n: 'Dây đàn hồi tập vai', b: 'Kamito', p: [120000, 220000], a: [{ k: attrColor, o: ['Đỏ', 'Xanh', 'Tím'] }], c: ['Đỏ', 'Xanh'] },
+        { n: 'Thảm tập gym', b: 'KingSport', p: [300000, 500000], a: [{ k: attrLength, o: ['180'] }, { k: attrColor, o: ['Đen', 'Xanh'] }], c: ['Đen', 'Xanh'] },
+      ],
+    },
+    {
+      cat: catChayBo,
+      templates: [
+        { n: 'Giày chạy bộ Nike Air Zoom', b: 'Nike', p: [2800000, 4200000], a: [{ k: attrSize, o: ['39', '40', '41', '42', '43'] }, { k: attrColor, o: ['Đen', 'Trắng'] }], c: ['Đen', 'Trắng'] },
+        { n: 'Giày chạy địa hình Adidas Terrex', b: 'Adidas', p: [2400000, 3800000], a: [{ k: attrSize, o: ['40', '41', '42', '43'] }, { k: attrColor, o: ['Xanh rêu', 'Đen'] }], c: ['Xanh rêu', 'Đen'] },
+        { n: 'Giày chạy bộ Asics Gel', b: 'Asics', p: [2200000, 3600000], a: [{ k: attrSize, o: ['40', '41', '42', '43'] }, { k: attrColor, o: ['Xanh dương', 'Đen'] }], c: ['Xanh dương', 'Đen'] },
+        { n: 'Áo thun chạy bộ', b: 'Adidas', p: [400000, 700000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Xanh dương', 'Đen', 'Trắng'] }], c: ['Xanh dương', 'Đen'] },
+        { n: 'Quần short chạy bộ', b: 'Nike', p: [350000, 600000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Đen', 'Xám'] }], c: ['Đen', 'Xám'] },
+        { n: 'Balo chạy bộ', b: 'Nike', p: [700000, 1200000], a: [{ k: attrSize, o: ['20L'] }, { k: attrColor, o: ['Đen', 'Xám'] }], c: ['Đen', 'Xám'] },
+        { n: 'Tất chạy bộ', b: 'Asics', p: [120000, 200000], a: [{ k: attrSize, o: ['M', 'L'] }, { k: attrColor, o: ['Trắng', 'Đen'] }], c: ['Trắng', 'Đen'] },
+        { n: 'Áo gió chạy bộ', b: 'Under Armour', p: [900000, 1500000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Đen', 'Xanh'] }], c: ['Đen', 'Xanh'] },
+        { n: 'Đai chạy bộ đựng điện thoại', b: 'Decathlon', p: [150000, 250000], a: [{ k: attrColor, o: ['Đen', 'Xám'] }], c: ['Đen', 'Xám'] },
+        { n: 'Áo chống nắng chạy bộ', b: 'Mizuno', p: [400000, 650000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Trắng', 'Xanh'] }], c: ['Trắng', 'Xanh'] },
+      ],
+    },
+    {
+      cat: catTennis,
+      templates: [
+        { n: 'Vợt tennis Wilson Ultra', b: 'Wilson', p: [3000000, 4500000], a: [{ k: attrWeight, o: ['300 (G2)', '290 (G3)'] }], c: ['Đen', 'Trắng'] },
+        { n: 'Vợt tennis Babolat Pure Drive', b: 'Wilson', p: [4200000, 5800000], a: [{ k: attrWeight, o: ['300', '285'] }], c: ['Đen', 'Xanh'] },
+        { n: 'Vợt tennis Yonex Ezone', b: 'Yonex', p: [3500000, 5000000], a: [{ k: attrWeight, o: ['300 (G2)', '295 (G3)'] }], c: ['Xanh', 'Đen'] },
+        { n: 'Banh tennis Wilson US Open', b: 'Wilson', p: [150000, 220000], a: [{ k: attrSize, o: ['Standard'] }], c: ['Vàng'] },
+        { n: 'Băng quấn cán vợt', b: 'Wilson', p: [50000, 100000], a: [{ k: attrColor, o: ['Trắng', 'Đen', 'Xanh'] }], c: ['Trắng', 'Đen'] },
+        { n: 'Áo tennis', b: 'Adidas', p: [450000, 750000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Trắng', 'Xanh dương'] }], c: ['Trắng', 'Xanh dương'] },
+        { n: 'Quần tennis', b: 'Adidas', p: [400000, 650000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Trắng', 'Đen'] }], c: ['Trắng', 'Đen'] },
+        { n: 'Giày tennis', b: 'Asics', p: [1800000, 3000000], a: [{ k: attrSize, o: ['40', '41', '42', '43'] }, { k: attrColor, o: ['Trắng', 'Xanh'] }], c: ['Trắng', 'Xanh'] },
+        { n: 'Balo vợt tennis', b: 'Wilson', p: [600000, 1000000], a: [{ k: attrColor, o: ['Đen', 'Xám'] }], c: ['Đen', 'Xám'] },
+        { n: 'Grip cán vợt cao cấp', b: 'Yonex', p: [80000, 150000], a: [{ k: attrColor, o: ['Trắng', 'Đen'] }], c: ['Trắng', 'Đen'] },
+      ],
+    },
+    {
+      cat: catTTDongDoi,
+      templates: [
+        { n: 'Bóng rổ Spalding NBA', b: 'Spalding', p: [700000, 1200000], a: [{ k: attrSize, o: ['6', '7'] }], c: ['Cam', 'Xanh'] },
+        { n: 'Bóng chuyền Mikasa', b: 'Mizuno', p: [450000, 800000], a: [{ k: attrSize, o: ['5'] }], c: ['Trắng-Xanh', 'Vàng-Xanh'] },
+        { n: 'Bóng bầu dục', b: 'Wilson', p: [500000, 900000], a: [{ k: attrSize, o: ['5'] }], c: ['Nâu', 'Đen'] },
+        { n: 'Bóng bóng chày', b: 'Wilson', p: [200000, 400000], a: [{ k: attrColor, o: ['Trắng', 'Đỏ'] }], c: ['Trắng', 'Đỏ'] },
+        { n: 'Áo đấu bóng rổ', b: 'Nike', p: [450000, 800000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Đen', 'Đỏ', 'Trắng'] }], c: ['Đen', 'Đỏ'] },
+        { n: 'Quần bóng rổ', b: 'Adidas', p: [350000, 650000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Đen', 'Xám'] }], c: ['Đen', 'Xám'] },
+        { n: 'Găng tay bắt bóng', b: 'Decathlon', p: [250000, 450000], a: [{ k: attrSize, o: ['M', 'L'] }], c: ['Nâu', 'Đen'] },
+        { n: 'Bóng đá mini', b: 'Adidas', p: [200000, 350000], a: [{ k: attrSize, o: ['3', '4'] }], c: ['Trắng', 'Xanh'] },
+        { n: 'Cầu môn mini tập luyện', b: 'Decathlon', p: [800000, 1500000], a: [], c: ['Trắng-Đỏ'] },
+        { n: 'Đế cọc gôn tập luyện', b: 'Decathlon', p: [300000, 600000], a: [], c: ['Đen'] },
+      ],
+    },
+    {
+      cat: catXeDap,
+      templates: [
+        { n: 'Xe đạp địa hình', b: 'Decathlon', p: [5000000, 12000000], a: [{ k: attrSize, o: ['26"', '27.5"', '29"'] }, { k: attrColor, o: ['Đen', 'Xanh', 'Đỏ'] }], c: ['Đen', 'Xanh'] },
+        { n: 'Xe đạp đua', b: 'Decathlon', p: [12000000, 25000000], a: [{ k: attrSize, o: ['52cm', '54cm', '56cm'] }, { k: attrColor, o: ['Trắng', 'Đen'] }], c: ['Trắng', 'Đen'] },
+        { n: 'Xe đạp thành phố', b: 'Decathlon', p: [3000000, 6000000], a: [{ k: attrSize, o: ['M', 'L'] }, { k: attrColor, o: ['Xám', 'Xanh'] }], c: ['Xám', 'Xanh'] },
+        { n: 'Nón bảo hiểm xe đạp', b: 'Decathlon', p: [350000, 700000], a: [{ k: attrSize, o: ['M', 'L'] }, { k: attrColor, o: ['Đen', 'Trắng', 'Xanh'] }], c: ['Đen', 'Trắng'] },
+        { n: 'Đèn xe đạp', b: 'Decathlon', p: [150000, 350000], a: [{ k: attrColor, o: ['Đen', 'Xám'] }], c: ['Đen', 'Xám'] },
+        { n: 'Khóa xe đạp', b: 'Decathlon', p: [150000, 300000], a: [{ k: attrLength, o: ['60', '100'] }], c: ['Đen'] },
+        { n: 'Găng tay đạp xe', b: 'Decathlon', p: [150000, 280000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Đen', 'Đỏ'] }], c: ['Đen', 'Đỏ'] },
+        { n: 'Áo đạp xe', b: 'Decathlon', p: [400000, 700000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Xanh dương', 'Đen', 'Đỏ'] }], c: ['Xanh dương', 'Đen'] },
+        { n: 'Bình nước gắn xe đạp', b: 'Decathlon', p: [80000, 150000], a: [{ k: attrColor, o: ['Trong suốt', 'Xanh'] }], c: ['Trong suốt', 'Xanh'] },
+        { n: 'Yên xe đạp', b: 'Decathlon', p: [300000, 600000], a: [{ k: attrColor, o: ['Đen', 'Nâu'] }], c: ['Đen', 'Nâu'] },
+      ],
+    },
+    {
+      cat: catLeoNui,
+      templates: [
+        { n: 'Giày leo núi', b: 'Decathlon', p: [1500000, 3000000], a: [{ k: attrSize, o: ['40', '41', '42', '43'] }, { k: attrColor, o: ['Xanh rêu', 'Đen'] }], c: ['Xanh rêu', 'Đen'] },
+        { n: 'Áo khoác chống gió', b: 'Under Armour', p: [1200000, 2200000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Đen', 'Xanh', 'Đỏ'] }], c: ['Đen', 'Xanh'] },
+        { n: 'Balo leo núi 40L', b: 'Decathlon', p: [800000, 1600000], a: [{ k: attrSize, o: ['40L', '55L'] }, { k: attrColor, o: ['Đen', 'Xanh'] }], c: ['Đen', 'Xanh'] },
+        { n: 'Đèn đội đầu', b: 'Decathlon', p: [250000, 500000], a: [{ k: attrColor, o: ['Đen', 'Xám'] }], c: ['Đen', 'Xám'] },
+        { n: 'Gậy leo núi', b: 'Decathlon', p: [400000, 800000], a: [{ k: attrLength, o: ['110', '135'] }], c: ['Đen', 'Đỏ'] },
+        { n: 'Áo mưa chống nước', b: 'Decathlon', p: [300000, 600000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Xanh', 'Cam'] }], c: ['Xanh', 'Cam'] },
+        { n: 'Bình đựng nước leo núi', b: 'Decathlon', p: [200000, 400000], a: [{ k: attrSize, o: ['500ml', '1L'] }, { k: attrColor, o: ['Xanh', 'Xám'] }], c: ['Xanh', 'Xám'] },
+        { n: 'Tất leo núi', b: 'Decathlon', p: [150000, 250000], a: [{ k: attrSize, o: ['M', 'L'] }, { k: attrColor, o: ['Đen', 'Xanh'] }], c: ['Đen', 'Xanh'] },
+        { n: 'Quần trekking', b: 'Decathlon', p: [500000, 900000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Xám', 'Xanh rêu'] }], c: ['Xám', 'Xanh rêu'] },
+        { n: 'Dây thừng leo núi', b: 'Decathlon', p: [900000, 1500000], a: [{ k: attrLength, o: ['30', '50', '60'] }], c: ['Đỏ', 'Xanh'] },
+      ],
+    },
+    {
+      cat: catVoThuat,
+      templates: [
+        { n: 'Găng tay đấm bốc', b: 'Kamito', p: [500000, 1100000], a: [{ k: attrWeight, o: ['8oz', '10oz', '12oz', '14oz'] }, { k: attrColor, o: ['Đỏ', 'Đen', 'Xanh'] }], c: ['Đỏ', 'Đen'] },
+        { n: 'Đồ bảo hộ đấm bốc', b: 'Kamito', p: [900000, 1600000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Đen', 'Đỏ'] }], c: ['Đen', 'Đỏ'] },
+        { n: 'Bao cát đấm bốc', b: 'KingSport', p: [1200000, 2200000], a: [{ k: attrWeight, o: ['30kg', '40kg', '50kg'] }, { k: attrColor, o: ['Đen', 'Đỏ'] }], c: ['Đen', 'Đỏ'] },
+        { n: 'Võ phục Taekwondo', b: 'Kamito', p: [400000, 800000], a: [{ k: attrSize, o: ['160', '170', '180'] }, { k: attrColor, o: ['Trắng', 'Đen'] }], c: ['Trắng', 'Đen'] },
+        { n: 'Đai võ thuật', b: 'Kamito', p: [80000, 150000], a: [{ k: attrSize, o: ['180', '200', '220'] }, { k: attrColor, o: ['Trắng', 'Xanh', 'Đen'] }], c: ['Trắng', 'Xanh'] },
+        { n: 'Đệm chống chân', b: 'KingSport', p: [250000, 450000], a: [{ k: attrSize, o: ['M', 'L'] }, { k: attrColor, o: ['Đen', 'Trắng'] }], c: ['Đen', 'Trắng'] },
+        { n: 'Áo võ thuật Karate', b: 'Kamito', p: [450000, 850000], a: [{ k: attrSize, o: ['150', '160', '170', '180'] }, { k: attrColor, o: ['Trắng'] }], c: ['Trắng'] },
+        { n: 'Găng tay boxing trẻ em', b: 'Kamito', p: [300000, 550000], a: [{ k: attrSize, o: ['4oz', '6oz'] }, { k: attrColor, o: ['Đỏ', 'Xanh', 'Hồng'] }], c: ['Đỏ', 'Xanh'] },
+        { n: 'Bọc tay quấn', b: 'Kamito', p: [80000, 150000], a: [{ k: attrColor, o: ['Đen', 'Trắng', 'Đỏ'] }], c: ['Đen', 'Trắng'] },
+        { n: 'Áo thun tập võ', b: 'Kamito', p: [200000, 350000], a: [{ k: attrSize, o: ['M', 'L', 'XL'] }, { k: attrColor, o: ['Đen', 'Trắng'] }], c: ['Đen', 'Trắng'] },
+      ],
+    },
+  ];
 
-  // --- P3: Vợt cầu lông Yonex Nanoray 100 ---
-  const p3 = await createProduct({ cat: catCauLong, sup: sup2, brand: bYonex, name: 'Vợt cầu lông Yonex Nanoray 100', desc: 'Vợt cầu lông Yonex Nanoray 100 với công nghệ Nanometric giúp vung vợt nhanh hơn, phù hợp lối đánh nhanh và điều cầu.', price: 3290000 });
-  allVariants.push(await createVariant(p3, { stock: 20, price: 3290000, attrs: [{ key: attrWeight, value: '85 (4U)' }] }));
-  allVariants.push(await createVariant(p3, { stock: 15, price: 3390000, attrs: [{ key: attrWeight, value: '80 (5U)' }] }));
+  for (const grp of CATALOG) {
+    for (const tpl of grp.templates) {
+      for (let k = 0; k < 2; k++) {
+        const color = tpl.c[k % tpl.c.length];
+        const name = k === 0 ? tpl.n : `${tpl.n} ${color}`;
+        const slugBase = slugify(name, { lower: true });
+        const basePrice = Math.round((tpl.p[0] + Math.random() * (tpl.p[1] - tpl.p[0])) / 1000) * 1000;
+        const brand = BRAND_MAP[tpl.b] || pick(grp.brands);
+        const sup = pick(SUPS);
+        const product = await createProduct({
+          cat: grp.cat,
+          sup,
+          brand,
+          name,
+          desc: `${name} - sản phẩm thể thao chất lượng cao, phù hợp tập luyện và thi đấu.`,
+          price: basePrice,
+          thumbnail: `https://picsum.photos/seed/${slugBase}/600/600`,
+        });
+        allProducts.push(product);
 
-  // --- P4: Kính bơi Speedo Vanquisher ---
-  const p4 = await createProduct({ cat: catBoiLoi, sup: sup3, brand: bSpeedo, name: 'Kính bơi Speedo Vanquisher', desc: 'Kính bơi Speedo Vanquisher với công nghệ chống sương mù, gọng kính ôm vừa mắt, dây đeo silicone êm ái.', price: 690000 });
-  allVariants.push(await createVariant(p4, { stock: 30, price: 690000, attrs: [{ key: attrColor, value: 'Xanh dương' }] }));
-  allVariants.push(await createVariant(p4, { stock: 25, price: 690000, attrs: [{ key: attrColor, value: 'Đen' }] }));
+        await prisma.productImages.createMany({
+          data: Array.from({ length: 4 }, (_, i) => ({
+            product_id: product.id,
+            url: `https://picsum.photos/seed/${slugBase}-${i + 1}/600/600`,
+            is_primary: i === 0,
+          })),
+        });
 
-  // --- P5: Dây nhảy Kamito Pro ---
-  const p5 = await createProduct({ cat: catGym, sup: sup1, brand: bKamito, name: 'Dây nhảy Kamito Pro', desc: 'Dây nhảy thể thao Kamito Pro với tay cầm chống trượt, dây thép bọc nhựa bền bỉ, có thể điều chỉnh độ dài.', price: 199000 });
-  allVariants.push(await createVariant(p5, { stock: 50, price: 199000, attrs: [{ key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p5, { stock: 40, price: 199000, attrs: [{ key: attrColor, value: 'Xanh' }] }));
-
-  // --- P6: Tạ tay KingSport ---
-  const p6 = await createProduct({ cat: catGym, sup: sup1, brand: bKingSport, name: 'Tạ tay KingSport Cao su', desc: 'Tạ tay KingSport bọc cao su chống trơn trượt, không gây tiếng ồn khi tập.', price: 249000 });
-  allVariants.push(await createVariant(p6, { stock: 40, price: 249000, attrs: [{ key: attrWeight, value: '2000 (2kg)' }] }));
-  allVariants.push(await createVariant(p6, { stock: 30, price: 449000, attrs: [{ key: attrWeight, value: '5000 (5kg)' }] }));
-  allVariants.push(await createVariant(p6, { stock: 20, price: 749000, attrs: [{ key: attrWeight, value: '10000 (10kg)' }] }));
-
-  // --- P7: Giày chạy bộ Nike Air Zoom Pegasus ---
-  const p7 = await createProduct({ cat: catChayBo, sup: sup2, brand: bNike, name: 'Giày chạy bộ Nike Air Zoom Pegasus', desc: 'Giày chạy bộ Nike Air Zoom Pegasus với đệm Zoom Air êm ái, upper lưới thoáng khí.', price: 3290000 });
-  allVariants.push(await createVariant(p7, { stock: 25, price: 3290000, attrs: [{ key: attrSize, value: '39' }, { key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p7, { stock: 30, price: 3290000, attrs: [{ key: attrSize, value: '40' }, { key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p7, { stock: 28, price: 3290000, attrs: [{ key: attrSize, value: '41' }, { key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p7, { stock: 22, price: 3290000, attrs: [{ key: attrSize, value: '42' }, { key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p7, { stock: 15, price: 3290000, attrs: [{ key: attrSize, value: '39' }, { key: attrColor, value: 'Trắng' }] }));
-  allVariants.push(await createVariant(p7, { stock: 20, price: 3290000, attrs: [{ key: attrSize, value: '40' }, { key: attrColor, value: 'Trắng' }] }));
-
-  // --- P8: Áo thun chạy bộ Adidas Own The Run ---
-  const p8 = await createProduct({ cat: catChayBo, sup: sup2, brand: bAdidas, name: 'Áo thun chạy bộ Adidas Own The Run', desc: 'Áo thun chạy bộ Adidas Own The Run với chất liệu vải Climacool thấm hút mồ hôi.', price: 590000 });
-  allVariants.push(await createVariant(p8, { stock: 35, price: 590000, attrs: [{ key: attrSize, value: 'M' }, { key: attrColor, value: 'Xanh dương' }] }));
-  allVariants.push(await createVariant(p8, { stock: 40, price: 590000, attrs: [{ key: attrSize, value: 'L' }, { key: attrColor, value: 'Xanh dương' }] }));
-  allVariants.push(await createVariant(p8, { stock: 25, price: 590000, attrs: [{ key: attrSize, value: 'XL' }, { key: attrColor, value: 'Xanh dương' }] }));
-  allVariants.push(await createVariant(p8, { stock: 30, price: 590000, attrs: [{ key: attrSize, value: 'M' }, { key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p8, { stock: 35, price: 590000, attrs: [{ key: attrSize, value: 'L' }, { key: attrColor, value: 'Đen' }] }));
-
-  // --- P9: Vợt tennis Wilson Ultra 100 ---
-  const p9 = await createProduct({ cat: catTennis, sup: sup3, brand: bWilson, name: 'Vợt tennis Wilson Ultra 100', desc: 'Vợt tennis Wilson Ultra 100 với khung vợt siêu nhẹ, mặt vợt 100 inch².', price: 3800000 });
-  allVariants.push(await createVariant(p9, { stock: 15, price: 3800000, attrs: [{ key: attrWeight, value: '300 (G2)' }] }));
-  allVariants.push(await createVariant(p9, { stock: 12, price: 3950000, attrs: [{ key: attrWeight, value: '290 (G3)' }] }));
-
-  // --- P10: Bóng rổ Spalding NBA ---
-  const p10 = await createProduct({ cat: catTTDongDoi, sup: sup3, brand: bSpalding, name: 'Bóng rổ Spalding NBA', desc: 'Bóng rổ chính thức giải NBA, chất liệu da tổng hợp cao cấp.', price: 890000 });
-  allVariants.push(await createVariant(p10, { stock: 35, price: 890000, attrs: [{ key: attrSize, value: '7' }] }));
-
-  // ===== NHÓM SẢN PHẨM MỚI =====
-
-  // --- P11: Giày đá bóng Nike Phantom GX ---
-  const p11 = await createProduct({ cat: catBongDa, sup: sup4, brand: bNike, name: 'Giày đá bóng Nike Phantom GX Elite', desc: 'Giày đá bóng Nike Phantom GX Elite dành cho sân cỏ tự nhiên. Công nghệ Gripper giúp kiểm soát bóng tối ưu.', price: 4590000 });
-  allVariants.push(await createVariant(p11, { stock: 15, price: 4590000, attrs: [{ key: attrSize, value: '40' }, { key: attrColor, value: 'Xanh' }] }));
-  allVariants.push(await createVariant(p11, { stock: 20, price: 4590000, attrs: [{ key: attrSize, value: '41' }, { key: attrColor, value: 'Xanh' }] }));
-  allVariants.push(await createVariant(p11, { stock: 18, price: 4590000, attrs: [{ key: attrSize, value: '42' }, { key: attrColor, value: 'Xanh' }] }));
-  allVariants.push(await createVariant(p11, { stock: 12, price: 4590000, attrs: [{ key: attrSize, value: '43' }, { key: attrColor, value: 'Xanh' }] }));
-
-  // --- P12: Áo đấu bóng đá Adidas ---
-  const p12 = await createProduct({ cat: catBongDa, sup: sup5, brand: bAdidas, name: 'Áo đấu bóng đá Adidas Condivo 22', desc: 'Áo đấu bóng đá Adidas Condivo 22 với chất liệu vải AEROREADY thấm hút mồ hôi, phù hợp thi đấu và tập luyện.', price: 620000 });
-  allVariants.push(await createVariant(p12, { stock: 40, price: 620000, attrs: [{ key: attrSize, value: 'M' }, { key: attrColor, value: 'Đỏ' }] }));
-  allVariants.push(await createVariant(p12, { stock: 45, price: 620000, attrs: [{ key: attrSize, value: 'L' }, { key: attrColor, value: 'Đỏ' }] }));
-  allVariants.push(await createVariant(p12, { stock: 30, price: 620000, attrs: [{ key: attrSize, value: 'XL' }, { key: attrColor, value: 'Đỏ' }] }));
-  allVariants.push(await createVariant(p12, { stock: 35, price: 620000, attrs: [{ key: attrSize, value: 'M' }, { key: attrColor, value: 'Xanh dương' }] }));
-  allVariants.push(await createVariant(p12, { stock: 40, price: 620000, attrs: [{ key: attrSize, value: 'L' }, { key: attrColor, value: 'Xanh dương' }] }));
-
-  // --- P13: Ống đồng bảo vệ ống quyển ---
-  const p13 = await createProduct({ cat: catBongDa, sup: sup6, brand: bDecathlon, name: 'Ống đồng bảo vệ ống quyển Decathlon', desc: 'Ống đồng bảo vệ ống quyển Decathlon Kipsta F500, chất liệu nhựa cứng, ôm sát chân.', price: 189000 });
-  allVariants.push(await createVariant(p13, { stock: 60, price: 189000, attrs: [{ key: attrSize, value: 'S' }] }));
-  allVariants.push(await createVariant(p13, { stock: 80, price: 189000, attrs: [{ key: attrSize, value: 'M' }] }));
-  allVariants.push(await createVariant(p13, { stock: 70, price: 189000, attrs: [{ key: attrSize, value: 'L' }] }));
-
-  // --- P14: Vợt cầu lông Li-Ning Air Claw ---
-  const p14 = await createProduct({ cat: catCauLong, sup: sup7, brand: bLiNing, name: 'Vợt cầu lông Li-Ning Air Claw 200', desc: 'Vợt cầu lông Li-Ning Air Claw 200 với khung vợt carbon lightweight, phù hợp người mới chơi.', price: 1590000 });
-  allVariants.push(await createVariant(p14, { stock: 25, price: 1590000, attrs: [{ key: attrWeight, value: '85 (4U)' }] }));
-  allVariants.push(await createVariant(p14, { stock: 20, price: 1650000, attrs: [{ key: attrWeight, value: '80 (5U)' }] }));
-
-  // --- P15: Quần short cầu lông Yonex ---
-  const p15 = await createProduct({ cat: catCauLong, sup: sup2, brand: bYonex, name: 'Quần short cầu lông Yonex 15512', desc: 'Quần short cầu lông Yonex 15512 vải polyester nhẹ, thoáng khí, co giãn 4 chiều.', price: 350000 });
-  allVariants.push(await createVariant(p15, { stock: 35, price: 350000, attrs: [{ key: attrSize, value: 'M' }, { key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p15, { stock: 40, price: 350000, attrs: [{ key: attrSize, value: 'L' }, { key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p15, { stock: 30, price: 350000, attrs: [{ key: attrSize, value: 'XL' }, { key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p15, { stock: 35, price: 350000, attrs: [{ key: attrSize, value: 'M' }, { key: attrColor, value: 'Xanh navy' }] }));
-
-  // --- P16: Đồ bơi Speedo ---
-  const p16 = await createProduct({ cat: catBoiLoi, sup: sup8, brand: bSpeedo, name: 'Quần bơi nam Speedo Endurance+', desc: 'Quần bơi nam Speedo Endurance+ chất liệu vải Endurance10 bền gấp đôi, chống clo.', price: 550000 });
-  allVariants.push(await createVariant(p16, { stock: 30, price: 550000, attrs: [{ key: attrSize, value: 'M' }, { key: attrColor, value: 'Xanh navy' }] }));
-  allVariants.push(await createVariant(p16, { stock: 35, price: 550000, attrs: [{ key: attrSize, value: 'L' }, { key: attrColor, value: 'Xanh navy' }] }));
-  allVariants.push(await createVariant(p16, { stock: 25, price: 550000, attrs: [{ key: attrSize, value: 'XL' }, { key: attrColor, value: 'Xanh navy' }] }));
-
-  // --- P17: Áo bơi nữ Speedo ---
-  const p17 = await createProduct({ cat: catBoiLoi, sup: sup8, brand: bSpeedo, name: 'Áo bơi nữ Speedo PowerSculpt', desc: 'Áo bơi nữ Speedo PowerSculpt với công nghệ vải PowerSculpt ôm gọn, tôn dáng.', price: 890000 });
-  allVariants.push(await createVariant(p17, { stock: 20, price: 890000, attrs: [{ key: attrSize, value: 'S' }, { key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p17, { stock: 25, price: 890000, attrs: [{ key: attrSize, value: 'M' }, { key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p17, { stock: 20, price: 890000, attrs: [{ key: attrSize, value: 'S' }, { key: attrColor, value: 'Hồng' }] }));
-  allVariants.push(await createVariant(p17, { stock: 25, price: 890000, attrs: [{ key: attrSize, value: 'M' }, { key: attrColor, value: 'Hồng' }] }));
-
-  // --- P18: Thảm tập yoga KingSport ---
-  const p18 = await createProduct({ cat: catGym, sup: sup4, brand: bKingSport, name: 'Thảm tập yoga KingSport 6mm', desc: 'Thảm tập yoga KingSport dày 6mm, chất liệu TPE chống trơn, không mùi.', price: 420000 });
-  allVariants.push(await createVariant(p18, { stock: 40, price: 420000, attrs: [{ key: attrLength, value: '173' }, { key: attrColor, value: 'Tím' }] }));
-  allVariants.push(await createVariant(p18, { stock: 35, price: 420000, attrs: [{ key: attrLength, value: '173' }, { key: attrColor, value: 'Xanh' }] }));
-  allVariants.push(await createVariant(p18, { stock: 30, price: 520000, attrs: [{ key: attrLength, value: '183' }, { key: attrColor, value: 'Tím' }] }));
-
-  // --- P19: Dây kháng lực Kamito ---
-  const p19 = await createProduct({ cat: catGym, sup: sup5, brand: bKamito, name: 'Dây kháng lực Kamito 5 mức', desc: 'Bộ dây kháng lực Kamito 5 mức lực từ nhẹ đến nặng, kèm túi đựng, phù hợp tập luyện tại nhà.', price: 280000 });
-  allVariants.push(await createVariant(p19, { stock: 45, price: 280000, attrs: [{ key: attrColor, value: 'Xanh dương' }] }));
-
-  // --- P20: Bình nước thể thao KingSport ---
-  const p20 = await createProduct({ cat: catGym, sup: sup9, brand: bKingSport, name: 'Bình nước thể thao KingSport 750ml', desc: 'Bình nước thể thao KingSport 750ml, chất liệu nhựa Tritan không BPA, nắp chống tràn.', price: 120000 });
-  allVariants.push(await createVariant(p20, { stock: 100, price: 120000, attrs: [{ key: attrColor, value: 'Trong suốt' }] }));
-  allVariants.push(await createVariant(p20, { stock: 80, price: 120000, attrs: [{ key: attrColor, value: 'Xám' }] }));
-
-  // --- P21: Balo chạy bộ Nike ---
-  const p21 = await createProduct({ cat: catChayBo, sup: sup2, brand: bNike, name: 'Balo chạy bộ Nike Elemental', desc: 'Balo chạy bộ Nike Elemental 20L, thiết kế nhỏ gọn, ngăn đựng giày riêng.', price: 850000 });
-  allVariants.push(await createVariant(p21, { stock: 30, price: 850000, attrs: [{ key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p21, { stock: 25, price: 850000, attrs: [{ key: attrColor, value: 'Xám' }] }));
-
-  // --- P22: Giày chạy địa hình Adidas Terrex ---
-  const p22 = await createProduct({ cat: catChayBo, sup: sup5, brand: bAdidas, name: 'Giày chạy địa hình Adidas Terrex Agravic', desc: 'Giày chạy địa hình Adidas Terrex Agravic với đế Continental™ chống trượt, phù hợp trail running.', price: 2890000 });
-  allVariants.push(await createVariant(p22, { stock: 20, price: 2890000, attrs: [{ key: attrSize, value: '40' }, { key: attrColor, value: 'Xanh rêu' }] }));
-  allVariants.push(await createVariant(p22, { stock: 25, price: 2890000, attrs: [{ key: attrSize, value: '41' }, { key: attrColor, value: 'Xanh rêu' }] }));
-  allVariants.push(await createVariant(p22, { stock: 20, price: 2890000, attrs: [{ key: attrSize, value: '42' }, { key: attrColor, value: 'Xanh rêu' }] }));
-  allVariants.push(await createVariant(p22, { stock: 15, price: 2890000, attrs: [{ key: attrSize, value: '43' }, { key: attrColor, value: 'Xanh rêu' }] }));
-
-  // --- P23: Banh tennis Wilson US Open ---
-  const p23 = await createProduct({ cat: catTennis, sup: sup10, brand: bWilson, name: 'Banh tennis Wilson US Open 3 bóng', desc: 'Banh tennis Wilson US Open, bóng chính thức giải US Open, độ nảy chuẩn ITF.', price: 185000 });
-  allVariants.push(await createVariant(p23, { stock: 60, price: 185000, attrs: [{ key: attrSize, value: 'Standard' }] }));
-
-  // --- P24: Vợt tennis Babolat Pure Drive ---
-  const p24 = await createProduct({ cat: catTennis, sup: sup7, brand: bWilson, name: 'Vợt tennis Babolat Pure Drive 2024', desc: 'Vợt tennis Babolat Pure Drive với công nghệ Cortex Pure Feel, uy lực và kiểm soát.', price: 5200000 });
-  allVariants.push(await createVariant(p24, { stock: 10, price: 5200000, attrs: [{ key: attrWeight, value: '300' }] }));
-  allVariants.push(await createVariant(p24, { stock: 10, price: 5400000, attrs: [{ key: attrWeight, value: '285' }] }));
-
-  // --- P25: Bóng chuyền Mikasa ---
-  const p25 = await createProduct({ cat: catTTDongDoi, sup: sup6, brand: bMizuno, name: 'Bóng chuyền Mikasa MVA300', desc: 'Bóng chuyền Mikasa MVA300 đạt chuẩn FIVB, chất liệu da tổng hợp cao cấp.', price: 650000 });
-  allVariants.push(await createVariant(p25, { stock: 30, price: 650000, attrs: [{ key: attrSize, value: '5' }] }));
-
-  // --- P26: Lưới cầu lông ---
-  const p26 = await createProduct({ cat: catCauLong, sup: sup9, brand: bDecathlon, name: 'Lưới cầu lông Decathlon sợi nylon', desc: 'Lưới cầu lông Decathlon sợi nylon dày dặn, kích thước 6.1m x 0.76m, có viền bảo vệ.', price: 320000 });
-  allVariants.push(await createVariant(p26, { stock: 25, price: 320000 }));
-
-  // --- P27: Nón bảo hiểm xe đạp ---
-  const p27 = await createProduct({ cat: catXeDap, sup: sup10, brand: bDecathlon, name: 'Nón bảo hiểm xe đạp Decathlon BTWIN 500', desc: 'Nón bảo hiểm xe đạp Decathlon BTWIN 500, trọng lượng nhẹ 280g, 14 lỗ thông gió.', price: 390000 });
-  allVariants.push(await createVariant(p27, { stock: 30, price: 390000, attrs: [{ key: attrSize, value: 'M' }, { key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p27, { stock: 25, price: 390000, attrs: [{ key: attrSize, value: 'L' }, { key: attrColor, value: 'Đen' }] }));
-  allVariants.push(await createVariant(p27, { stock: 20, price: 390000, attrs: [{ key: attrSize, value: 'M' }, { key: attrColor, value: 'Trắng' }] }));
-
-  const allProducts = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27];
+        const varCount = 1 + Math.floor(Math.random() * 3);
+        for (let vi = 0; vi < varCount; vi++) {
+          const attrs = [];
+          for (const spec of tpl.a) {
+            attrs.push({ key: spec.k, value: spec.o[Math.floor(Math.random() * spec.o.length)] });
+          }
+          const price = vi === 0 ? basePrice : Math.round((basePrice * (1 + Math.random() * 0.15)) / 1000) * 1000;
+          allVariants.push(await createVariant(product, {
+            stock: 15 + Math.floor(Math.random() * 105),
+            price,
+            attrs,
+          }));
+        }
+      }
+    }
+  }
 
   // Rải created_at cho sản phẩm trong 12 tháng
   const productStartTs = new Date('2025-08-01').getTime();
@@ -777,10 +842,10 @@ async function main() {
 
   // ======================== 14. PURCHASE ORDERS ========================
   console.log('📋 Tạo purchase orders...');
-  const p1Vars = allVariants.filter((v) => v.product_id === p1.id);
-  const p5Vars = allVariants.filter((v) => v.product_id === p5.id);
-  const p2Vars = allVariants.filter((v) => v.product_id === p2.id);
-  const p7Vars = allVariants.filter((v) => v.product_id === p7.id);
+  const p1Vars = allVariants.filter((v) => v.product_id === allProducts[0].id);
+  const p5Vars = allVariants.filter((v) => v.product_id === allProducts[1].id);
+  const p2Vars = allVariants.filter((v) => v.product_id === allProducts[2].id);
+  const p7Vars = allVariants.filter((v) => v.product_id === allProducts[3].id);
 
   const po1 = await prisma.purchaseOrders.create({
     data: {
@@ -813,7 +878,7 @@ async function main() {
   const sampleOrder = await prisma.orders.findFirst();
   await prisma.systemLogs.createMany({
     data: [
-      { user_id: userAdmin.id, action_type: 'CREATE', entity_type: 'Products', entity_id: p1.id, details: { name: 'Tạo sản phẩm Bóng đá Nike Flight' } },
+      { user_id: userAdmin.id, action_type: 'CREATE', entity_type: 'Products', entity_id: allProducts[0].id, details: { name: 'Tạo sản phẩm thể thao' } },
       { user_id: userStaff.id, action_type: 'UPDATE', entity_type: 'Orders', entity_id: sampleOrder?.id || 1, details: { from: 'Processing', to: 'Delivered' } },
       { user_id: userAdmin.id, action_type: 'CREATE', entity_type: 'PurchaseOrders', entity_id: po1.id, details: { supplier: sup1.name, total: 7750000 } },
     ],
@@ -832,6 +897,7 @@ async function main() {
   console.log(`   - ${brands.length} brands`);
   console.log(`   - 4 attribute keys`);
   console.log(`   - ${allProducts.length} sản phẩm với ${allVariants.length} variants`);
+  console.log(`   - ${await prisma.productImages.count()} product images`);
   console.log(`   - ${await prisma.orders.count()} orders`);
   console.log(`   - ${reviewsToCreate.length} reviews`);
   console.log(`   - ${await prisma.carts.count()} carts`);
