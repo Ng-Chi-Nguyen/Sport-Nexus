@@ -1,12 +1,14 @@
 import prisma from "../../db/prisma.js";
 import paymentService from "./payment.service.js";
 import { computeCouponDiscount } from "./coupon.service.js";
+import { createShipmentForOrder } from "../shipping/ghnSimulator.service.js";
 import { ACTIVE } from "../../utils/prisma.js";
 
 const orderService = {
     createOrder: async (orderData, authUser) => {
         let { total_amount, status, shipping_address, payment_method,
-            payment_status, discount_amount, final_amount, coupon_code, user_email, items } = orderData;
+            payment_status, discount_amount, final_amount, coupon_code, user_email, items,
+            shipping_name, shipping_phone, province_name, ward_name, weight_grams, service_type } = orderData;
 
         if (coupon_code && !authUser) {
             const err = new Error("Vui lòng đăng nhập để dùng mã giảm giá");
@@ -62,7 +64,8 @@ const orderService = {
                     throw err;
                 }
                 if (Number(total_amount) < coupon.min_order_value) {
-                    const err = new Error(`Đơn hàng giá tối thiểu là ${coupon.min_order_value}đ mới có hiệu lực`);
+                    const minOrderFormatted = new Intl.NumberFormat("vi-VN").format(coupon.min_order_value);
+                    const err = new Error(`Đơn hàng giá tối thiểu là ${minOrderFormatted}đ mới có hiệu lực`);
                     err.code = 'COUPON_INVALID';
                     throw err;
                 }
@@ -169,7 +172,25 @@ const orderService = {
                 })
             }
 
-            return newOrder;
+            // Tự động tạo vận đơn giả lập nếu có thông tin giao hàng
+            let shipment = null;
+            if (shipping_name && shipping_phone && province_name) {
+                shipment = await createShipmentForOrder({
+                    order: newOrder,
+                    data: {
+                        recipient_name: shipping_name,
+                        recipient_phone: shipping_phone,
+                        province_name,
+                        ward_name: ward_name || "",
+                        detail_address: shipping_address,
+                        weight_grams,
+                        service_type,
+                    },
+                    client: tx,
+                });
+            }
+
+            return { ...newOrder, shipment };
         });
     },
 

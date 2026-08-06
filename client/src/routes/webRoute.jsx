@@ -38,6 +38,8 @@ const ProfilePlaceholder = lazy(() => import("@/pages/settings/placeholder"));
 const Invoice = lazy(() => import("@/pages/settings/invoices"));
 const InvoiceDetail = lazy(() => import("@/pages/settings/invoices/detail"));
 
+const TrackingPage = lazy(() => import("@/pages/Tracking"));
+
 export const webRoutes = {
   children: [
     {
@@ -70,6 +72,10 @@ export const webRoutes = {
     {
       path: "thanh-toan/success",
       element: <PaymentSuccessPage />,
+    },
+    {
+      path: "tra-cuu-don",
+      element: <TrackingPage />,
     },
     {
       path: "he-thong-cua-hang",

@@ -24,6 +24,12 @@ const orderSchema = {
 
         coupon_code: Joi.string().allow(null).default(null),
         user_email: Joi.string().allow(null).default(null),
+        shipping_name: Joi.string().trim().allow(null).default(null),
+        shipping_phone: Joi.string().trim().allow(null).default(null),
+        province_name: Joi.string().trim().allow(null).default(null),
+        ward_name: Joi.string().trim().allow(null).default(null),
+        weight_grams: Joi.number().integer().min(1).max(50000).default(500),
+        service_type: Joi.string().valid('FAST', 'ECONOMY').default('FAST'),
         items: Joi.array().items(
             Joi.object({
                 product_variant_id: Joi.number().integer().required().messages({

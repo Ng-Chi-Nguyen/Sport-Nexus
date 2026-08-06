@@ -27,6 +27,11 @@ export const SIDEBAR_MENU_STRUCTURE = (prefix) => [
         iconName: "ClipboardList",
       },
       {
+        path: `${prefix}/shipping`,
+        label: "shipping",
+        iconName: "Truck",
+      },
+      {
         path: `${prefix}/carts`,
         label: "carts",
         iconName: "ShoppingCart",

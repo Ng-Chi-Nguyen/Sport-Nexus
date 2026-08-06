@@ -30,6 +30,8 @@ import sendEmailRoute from "./email/sendEmail.route.js";
 import paymentRoute from "./customer/payment.route.js";
 import managementPaymentRoute from "./management/payment.route.js";
 import customerCouponRoute from "./customer/coupon.route.js";
+import customerShippingRoute from "./customer/shipping.route.js";
+import managementShippingRoute from "./management/shipping.route.js";
 
 const Routes = (app) => {
 
@@ -49,6 +51,7 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}management/product-attribute-key/`, productAttributeKeyRoute)
     app.use(`${api_prefix_v1}management/invoice/`, invoiceRoute)
     app.use(`${api_prefix_v1}management/payment/`, managementPaymentRoute)
+    app.use(`${api_prefix_v1}management/shipping/`, managementShippingRoute)
 
     // Customer - Kh�ch h�ng
     app.use(`${api_prefix_v1}user/`, customerUserRoute)
@@ -60,6 +63,7 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}customer/invoice/`, customerInvoiceRoute)
     app.use(`${api_prefix_v1}customer/review/`, reviewRoute)
     app.use(`${api_prefix_v1}customer/payment/`, paymentRoute)
+    app.use(`${api_prefix_v1}customer/shipping/`, customerShippingRoute)
 
     // Core - c?t l?i c?a h? th?ng (Management v� Customer)
     app.use(`${api_prefix_v1}core/product/`, productRoute)

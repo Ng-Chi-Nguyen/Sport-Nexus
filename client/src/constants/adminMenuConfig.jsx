@@ -22,6 +22,7 @@ export const iconMap = {
   KeySquare: <Icons.KeySquare strokeWidth={1.5} size={18} />,
   LocateFixed: <Icons.LocateFixed strokeWidth={1.5} size={18} />,
   Tags: <Icons.Tags strokeWidth={1.5} size={18} />,
+  Truck: <Icons.Truck strokeWidth={1.5} size={18} />,
 };
 
 export const getSidebarSections = (userRole = null) => {

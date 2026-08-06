@@ -1,4 +1,5 @@
 import addressApi from "@/api/customer/addressApi";
+import { resolveLocation } from "@/utils/location";
 
 export async function addressLoader() {
   const userStr = localStorage.getItem("user");
@@ -56,11 +57,12 @@ export async function editAddressLoader({ params }) {
   if (!addr) return { initialData: null, user };
 
   const loc = addr.location_data || {};
+  const { provinceCode, wardCode } = resolveLocation(loc);
   const initialData = {
     recipient_name: addr.recipient_name,
     recipient_phone: addr.recipient_phone,
-    province: loc.province?.code?.toString().padStart(2, "0") || "",
-    ward: loc.ward?.code?.toString().padStart(5, "0") || "",
+    province: provinceCode,
+    ward: wardCode,
     detail_address: addr.detail_address,
     type: addr.type || "home",
     is_default: addr.is_default,

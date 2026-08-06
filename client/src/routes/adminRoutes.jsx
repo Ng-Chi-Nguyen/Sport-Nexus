@@ -40,6 +40,9 @@ const OrderPage = lazy(() => import("@/pages/Admin/orders/index.jsx"));
 const EditOrderPage = lazy(() => import("@/pages/Admin/orders/edit.jsx"));
 const CreateOrderPage = lazy(() => import("@/pages/Admin/orders/create.jsx"));
 
+// Vận đơn (mô phỏng GHN)
+const ShippingPage = lazy(() => import("@/pages/Admin/shipping/index.jsx"));
+
 // Nhập hàng & Chuỗi cung ứng (Thư mục)
 const PurchaseOrderItemPage = lazy(
   () => import("@/pages/Admin/purchaseorderitems/index.jsx"),
@@ -209,6 +212,7 @@ export const adminRoutes = {
       element: <OrderPage />,
       loader: RouteLoaders.ordersLoader,
     },
+    { path: "shipping", element: <ShippingPage /> },
     {
       path: "orders/create",
       element: <CreateOrderPage />,
