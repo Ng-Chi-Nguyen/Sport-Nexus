@@ -121,9 +121,11 @@ const ProductDetail = () => {
         ),
       );
     }
-    if (pool.length === 0) return null;
+    if (pool.length === 0) {
+      return entries.length >= attrKeys.length ? 0 : null;
+    }
     return pool.reduce((sum, v) => sum + Number(v.stock || 0), 0);
-  }, [selectedVariant, selectedAttrs, variants]);
+  }, [selectedVariant, selectedAttrs, variants, attrKeys.length]);
 
   const maxStock = currentStock ?? 999;
 

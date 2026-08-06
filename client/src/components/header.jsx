@@ -213,8 +213,20 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
                     <ShieldCheck size={18} strokeWidth={1.5} />
                     <span>{t("security")}</span>
                   </Link>
+                </>
+              )}
+              {!user && (
+                <Link
+                  to="/auth/login"
+                  onClick={() => setIsOpenSettings(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100 dark:border-slate-700"
+                >
+                  <User size={18} strokeWidth={1.5} />
+                  <span>{t("login")}</span>
+                </Link>
+              )}
 
-                  {/* Mục Ngôn ngữ kèm Submenu khi Hover */}
+              {/* Mục Ngôn ngữ kèm Submenu khi Hover */}
                   <div
                     className="relative border-b border-gray-100 dark:border-slate-700"
                     onMouseEnter={() => setIsLangHovered(true)}
@@ -285,6 +297,8 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
                     )}
                     <span>{isDark ? t("light_mode") : t("dark_mode")}</span>
                   </button>
+              {user && (
+                <>
                   <Link
                     to="/tai-khoan"
                     onClick={() => setIsOpenSettings(false)}

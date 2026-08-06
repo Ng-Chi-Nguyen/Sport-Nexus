@@ -59,6 +59,7 @@ i18n
                     ...viCheckOut,
                     ...viCart,
                     ...viSearch,
+                    order: { ...viProfile.order, ...vndashboard.order },
                 },
             },
             en: {
@@ -82,6 +83,7 @@ i18n
                     ...enCheckOut,
                     ...enCart,
                     ...enSearch,
+                    order: { ...enProfile.order, ...endashboard.order },
                 },
             },
         },

@@ -33,7 +33,7 @@ const SearchPage = () => {
   if (!q) {
     return (
       <div className="min-h-screen py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-        <div className="mx-auto max-w-5xl text-center py-20 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md px-6">
+        <div className="mx-auto max-w-5xl text-center py-20 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md px-6">
           <Search
             size={48}
             className="mx-auto text-slate-300 dark:text-slate-600 mb-4"
@@ -74,7 +74,7 @@ const SearchPage = () => {
             <LoadingSpinner />
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-20 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-md px-6">
+          <div className="text-center py-20 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md px-6">
             <Search
               size={48}
               className="mx-auto text-slate-300 dark:text-slate-600 mb-4"
@@ -100,7 +100,7 @@ const SearchPage = () => {
                   type="button"
                   onClick={() => handlePageChange(page - 1)}
                   disabled={page <= 1}
-                  className="px-3.5 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors shadow-sm cursor-pointer"
+                  className="px-3.5 py-2 text-sm border border-slate-200 dark:border-slate-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors shadow-sm cursor-pointer"
                 >
                   {t("pagination_prev")}
                 </button>
@@ -112,7 +112,7 @@ const SearchPage = () => {
                     type="button"
                     key={p}
                     onClick={() => handlePageChange(p)}
-                    className={`px-3.5 py-2 text-sm rounded-xl border transition-colors shadow-sm cursor-pointer ${
+                    className={`px-3.5 py-2 text-sm border transition-colors shadow-sm cursor-pointer ${
                       p === page
                         ? "bg-sky-600 dark:bg-sky-500 text-white border-sky-600 dark:border-sky-500 font-bold"
                         : "border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
@@ -125,7 +125,7 @@ const SearchPage = () => {
                   type="button"
                   onClick={() => handlePageChange(page + 1)}
                   disabled={page >= pagination.totalPages}
-                  className="px-3.5 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors shadow-sm cursor-pointer"
+                  className="px-3.5 py-2 text-sm border border-slate-200 dark:border-slate-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors shadow-sm cursor-pointer"
                 >
                   {t("pagination_next")}
                 </button>

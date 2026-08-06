@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Xóa toàn bộ bo góc trên giao diện client */
+[class*="rounded"] {
+  border-radius: 0 !important;
+}
+
 @layer base {
   body {
     /* Sử dụng font Inter mặc định, nền sáng cho Light Mode */

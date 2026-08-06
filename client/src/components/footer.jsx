@@ -165,7 +165,7 @@ const Footer = () => {
           <ul className="space-y-3 text-[13px] font-semibold text-slate-600 dark:text-slate-400">
             <li className="flex items-start gap-2.5">
               <MapPin size={16} className="text-blue-600 shrink-0 mt-0.5" />
-              <span className="leading-tight">{t("address")}</span>
+              <span className="leading-tight">{t("contact_address")}</span>
             </li>
             <li className="flex items-center gap-2.5">
               <Phone size={16} className="text-blue-600 shrink-0" />

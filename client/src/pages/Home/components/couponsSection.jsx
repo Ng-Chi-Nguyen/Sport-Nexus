@@ -19,7 +19,7 @@ export const CouponsSection = ({ coupons }) => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 mt-20 border-b border-blue-600">
+    <div className="max-w-7xl mx-auto px-4 mt-20 mb-3 border-b border-blue-600">
       {/* Tiêu đề giữ nguyên ở trên */}
       <div className="flex items-center justify-between">
         <TitleWithIcon icon={Tag} title={t("discount_coupons")} />

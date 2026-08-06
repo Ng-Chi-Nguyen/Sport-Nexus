@@ -227,14 +227,14 @@ const SearchBar = () => {
             ))}
           </div>
         ) : (
-          <div className="absolute top-full mt-2 w-full bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-50 py-6 text-center text-sm text-gray-500 dark:text-slate-400">
+          <div className="absolute top-full w-full bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 shadow-lg z-50 py-6 text-center text-sm text-gray-500 dark:text-slate-400">
             {t("no_history")}
           </div>
         ))}
 
       {/* Dropdown danh sách gợi ý */}
       {isOpen && suggestions.length > 0 && (
-        <div className="absolute top-full mt-2 w-full bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-50 overflow-hidden">
+        <div className="absolute top-full w-full bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 shadow-lg z-50 overflow-hidden">
           {suggestions.map((item, idx) => (
             <button
               key={item.id}
@@ -247,7 +247,7 @@ const SearchBar = () => {
                   : "hover:bg-gray-50 dark:hover:bg-slate-800"
               }`}
             >
-              <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 overflow-hidden shrink-0">
+              <div className="w-10 h-10 bg-gray-100 dark:bg-slate-800 overflow-hidden shrink-0">
                 {item.thumbnail ? (
                   <img
                     src={item.thumbnail}
@@ -285,7 +285,7 @@ const SearchBar = () => {
       )}
 
       {isOpen && query && suggestions.length === 0 && (
-        <div className="absolute top-full mt-2 w-full bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-50 py-6 text-center text-sm text-gray-500 dark:text-slate-400">
+        <div className="absolute top-full mt-2 w-full bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 shadow-lg z-50 py-6 text-center text-sm text-gray-500 dark:text-slate-400">
           {t("no_results")}
         </div>
       )}
