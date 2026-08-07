@@ -83,7 +83,7 @@ const productService = {
                 },
                 Reviews: {
                     select: {
-                        id: true, rating: true, comment: true, user_id: true, created_at: true,
+                        id: true, rating: true, comment: true, user_id: true, created_at: true, media_urls: true,
                         user: { select: { id: true, full_name: true, avatar: true } },
                     },
                     take: 10,

@@ -241,6 +241,15 @@ const orderService = {
                             }
                         }
                     }
+                },
+                Reviews: {
+                    select: {
+                        id: true,
+                        product_id: true,
+                        rating: true,
+                        comment: true,
+                        media_urls: true
+                    }
                 }
             }
         })
@@ -324,6 +333,9 @@ const orderService = {
                             }
                         }
                     }
+                },
+                Reviews: {
+                    select: { product_id: true, rating: true }
                 }
             }
             }),

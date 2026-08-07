@@ -13,9 +13,10 @@ const ProductImages = ({ thumbnail, images }) => {
       : [{ url: null, is_primary: false }];
 
   return (
-    <div className="flex gap-3.5 mx-auto text-slate-800 dark:text-slate-100 transition-colors duration-200">
+    <div className="flex flex-col-reverse sm:flex-row gap-3.5 mx-auto text-slate-800 dark:text-slate-100 transition-colors duration-200 w-full">
+      {/* Thumbnail List - Section bên dưới trên Mobile (flex-col-reverse) */}
       {list.length > 1 && (
-        <div className="flex flex-col gap-2.5 overflow-y-auto max-h-96 pr-1 custom-scrollbar">
+        <div className="flex sm:flex-col gap-2.5 overflow-x-auto sm:overflow-y-auto max-w-full sm:max-h-96 pb-3 sm:pb-0 sm:pr-1 custom-scrollbar justify-center sm:justify-start">
           {list.map((img, i) => (
             <button
               key={i}
@@ -37,7 +38,9 @@ const ProductImages = ({ thumbnail, images }) => {
           ))}
         </div>
       )}
-      <div className="w-80 h-80 md:w-96 md:h-96 overflow-hidden border border-slate-200 dark:border-slate-900 bg-white dark:bg-[#0D121F]/40 shadow-xl dark:shadow-2xl backdrop-blur-md flex items-center justify-center">
+
+      {/* Main Preview Image - Section bên trên trên Mobile (flex-col-reverse) */}
+      <div className="flex-1 min-w-0 w-full aspect-square overflow-hidden border border-slate-200 dark:border-slate-900 bg-white dark:bg-[#0D121F]/40 shadow-xl dark:shadow-2xl backdrop-blur-md flex items-center justify-center order-last sm:order-none">
         {list[selected]?.url ? (
           <img
             src={list[selected].url}

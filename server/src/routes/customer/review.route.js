@@ -1,5 +1,6 @@
 import express from "express";
 import { validate } from "../../middlewares/validation.middleware.js";
+import { verifyToken } from "../../middlewares/verifyToken.middlware.js";
 import reviewSchema from "../../validators/customer/review.validator.js";
 import { uploadMediaImage } from "../../middlewares/fileUpload.middleware.js";
 import reviewController from "../../controllers/customer/review.controller.js";
@@ -10,14 +11,14 @@ const reviewRoute = express.Router();
 
 reviewRoute
 
-    .post("/", validate(reviewSchema.createReview), uploadMediaImage,
+    .post("/", verifyToken, uploadMediaImage, validate(reviewSchema.createReview),
       logAction({ actionType: "CREATE", entityType: "Reviews", getEntityId: (_, body) => body.data?.id, getChanges: createDetails }),
       reviewController.createReview)
-    .put("/:id", validate(reviewSchema.updateReview), uploadMediaImage,
+    .put("/:id", verifyToken, uploadMediaImage, validate(reviewSchema.updateReview),
       logAction({ actionType: "UPDATE", entityType: "Reviews", getChanges: updateDetails }),
       reviewController.updateReview)
     .get("/product/:id", reviewController.getReviewByProductId)
-    .delete("/:id",
+    .delete("/:id", verifyToken,
       logAction({ actionType: "DELETE", entityType: "Reviews", getChanges: deleteDetails }),
       reviewController.deleteReview)
 

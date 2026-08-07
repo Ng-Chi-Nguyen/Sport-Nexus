@@ -4,6 +4,17 @@ import { useTranslation } from "react-i18next";
 
 const ReviewItem = ({ review }) => {
   const { t } = useTranslation();
+
+  let media = review.media_urls;
+  if (typeof media === "string") {
+    try {
+      media = JSON.parse(media);
+    } catch {
+      media = [];
+    }
+  }
+  if (!Array.isArray(media)) media = [];
+
   return (
     <div className="pb-4 border-b border-slate-200 dark:border-slate-800 last:border-b-0">
       <div className="flex items-center gap-3 mb-2">
@@ -39,6 +50,18 @@ const ReviewItem = ({ review }) => {
       <p className="text-sm text-slate-600 dark:text-slate-300 pl-11 leading-relaxed">
         {review.comment}
       </p>
+      {media.length > 0 && (
+        <div className="flex flex-wrap gap-2 pl-11 mt-2">
+          {media.map((url, i) => (
+            <img
+              key={i}
+              src={url}
+              alt={`${t("reviews_heading", { count: 1 })} ${i + 1}`}
+              className="w-20 h-20 object-cover rounded-lg border border-slate-200 dark:border-slate-800"
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
