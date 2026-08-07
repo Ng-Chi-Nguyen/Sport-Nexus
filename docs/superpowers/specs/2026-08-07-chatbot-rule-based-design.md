@@ -19,6 +19,7 @@ dùng chung, tự nhận diện vai trò người dùng.
 ### Backend (`server/`)
 
 **Endpoint mới**: `POST /api/v1/chat`
+
 - Body: `{ message }` (text). Vai trò (khách/admin) tự suy ra từ `req.user` nếu có token,
   không cần client gửi `role`.
 - Route: `server/src/routes/core/chat.route.js` → đăng ký trong `index.route.js`.
@@ -26,12 +27,14 @@ dùng chung, tự nhận diện vai trò người dùng.
   không token = khách vãng lai.
 
 **Service mới**: `server/src/services/chat/chat.service.js`
+
 - Nhận `{ message, user }`, chuẩn hóa (bỏ dấu tiếng Việt, lowercase) rồi định tuyến ý định bằng
   keyword matching.
 - Intent router tách riêng từng handler, mỗi handler trả về cấu trúc trả lời nhất quán
   (text + optional items).
 
 **Các intent khách hàng**:
+
 1. `PRODUCT_SEARCH` — từ khóa sản phẩm / danh mục / khoảng giá → query `products` (is_active,
    deleted_at) + `ProductVariants` giá, trả tối đa 5 sản phẩm (tên, giá thấp nhất, thumbnail, slug).
 2. `ORDER_LOOKUP` — nhận mã đơn (số) hoặc email → query `orders` theo `id` hoặc `user_email`,
@@ -43,6 +46,7 @@ dùng chung, tự nhận diện vai trò người dùng.
    `start_date <= now <= end_date`, trả tối đa 5 mã (code, giảm, điều kiện).
 
 **Các intent admin** (yêu cầu `req.user` có role admin):
+
 1. `STATS` — "doanh thu hôm nay / tuần này / tháng này", "số đơn", "sản phẩm bán chạy"
    → query `orders` + `orderItems` theo khoảng thời gian.
 2. `QUICK_LOOKUP` — tra nhanh đơn hàng / user / sản phẩm theo mã hoặc từ khóa.
@@ -53,6 +57,7 @@ dùng chung, tự nhận diện vai trò người dùng.
    và ghi chú kinh doanh.
 
 **Cấu trúc response** thống nhất:
+
 ```json
 {
   "success": true,
@@ -62,12 +67,14 @@ dùng chung, tự nhận diện vai trò người dùng.
   }
 }
 ```
+
 - Không khớp intent nào → trả reply mặc định + gợi ý các chủ đề có thể hỏi.
 - Nếu là intent admin mà không có quyền → trả lời từ chối.
 
 ### Frontend (`client/`)
 
 **Component mới**: `client/src/components/chat/ChatWidget.jsx`
+
 - Nút tròn nổi (lucide `MessageCircle`) cố định góc phải dưới, z-index cao.
 - Click mở popup chat: khung tin nhắn + input + nút gửi.
 - Đọc vai trò từ `localStorage.user` (`role.slug`) — chỉ để hiển thị khác biệt nhỏ

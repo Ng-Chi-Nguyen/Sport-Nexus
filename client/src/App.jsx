@@ -9,6 +9,7 @@ import LoadingSpinner from "@/components/ui/loadingSpinner";
 
 import { NavCategoryMenu } from "./components/NavCategoryMenu";
 import { HeroBanner } from "@/pages/Home/components/heroBanner";
+import ChatWidget from "@/components/chat/ChatWidget";
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -51,8 +52,18 @@ function App() {
       <Toaster position="top-right" richColors />
       {!isManagementView && (
         <>
-          <Header isScrolled={isScrolled} categories={categories} isOpenMenu={isOpenMenu} setIsOpenMenu={setIsOpenMenu} />
-          <NavCategoryMenu isScrolled={isScrolled} categories={categories} isOpenMenu={isOpenMenu} setIsOpenMenu={setIsOpenMenu} />
+          <Header
+            isScrolled={isScrolled}
+            categories={categories}
+            isOpenMenu={isOpenMenu}
+            setIsOpenMenu={setIsOpenMenu}
+          />
+          <NavCategoryMenu
+            isScrolled={isScrolled}
+            categories={categories}
+            isOpenMenu={isOpenMenu}
+            setIsOpenMenu={setIsOpenMenu}
+          />
         </>
       )}
       {!isManagementView && location.pathname === "/" && (
@@ -73,6 +84,7 @@ function App() {
             <Outlet />
           </Suspense>
         )}
+        <ChatWidget />
       </main>
 
       {!isManagementView && (

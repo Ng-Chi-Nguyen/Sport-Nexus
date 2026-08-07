@@ -32,12 +32,13 @@ import managementPaymentRoute from "./management/payment.route.js";
 import customerCouponRoute from "./customer/coupon.route.js";
 import customerShippingRoute from "./customer/shipping.route.js";
 import managementShippingRoute from "./management/shipping.route.js";
+import chatRoute from "./core/chat.route.js";
 
 const Routes = (app) => {
 
     const api_prefix_v1 = "/api/v1/";
 
-    // Management / Ng�?i qu?n l? - Admin
+    // Management / Ngườii quản lý - Admin
     app.use(`${api_prefix_v1}management/user/`, userRoute)
     app.use(`${api_prefix_v1}management/supplier/`, supplierRoute)
     app.use(`${api_prefix_v1}management/brand/`, brandRoute)
@@ -53,7 +54,7 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}management/payment/`, managementPaymentRoute)
     app.use(`${api_prefix_v1}management/shipping/`, managementShippingRoute)
 
-    // Customer - Kh�ch h�ng
+    // Customer - Khách hàng
     app.use(`${api_prefix_v1}user/`, customerUserRoute)
     app.use(`${api_prefix_v1}customer/user-address/`, userAddressRoute)
     app.use(`${api_prefix_v1}customer/cart-item/`, cartItemRoute)
@@ -65,16 +66,17 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}customer/payment/`, paymentRoute)
     app.use(`${api_prefix_v1}customer/shipping/`, customerShippingRoute)
 
-    // Core - c?t l?i c?a h? th?ng (Management v� Customer)
+    // Core - cat lai của hệ thống (Management vs Customer)
     app.use(`${api_prefix_v1}core/product/`, productRoute)
     app.use(`${api_prefix_v1}core/product-image/`, productImageRoute)
     app.use(`${api_prefix_v1}core/product-variant/`, productVariantRoute)
     app.use(`${api_prefix_v1}core/variant-attribute-key/`, attriButeKeyRoute)
+    app.use(`${api_prefix_v1}chat/`, chatRoute);
 
-    // Auth - X�c th?c
+    // Auth - Xác th?c
     app.use(`${api_prefix_v1}auth/`, authRoute)
 
-    // Web - Hi?n th? data c�c trang / Route c�c trang
+    // Web - Hien thi data cac trang / Route cac trang
     app.use(`${api_prefix_v1}home/`, homeRoute)
     app.use(`${api_prefix_v1}home/product/`, webProductRoute)
     app.use(`${api_prefix_v1}home/coupon/`, webCouponRoute)
