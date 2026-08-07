@@ -38,6 +38,9 @@ Thumbs.db
 # Generated repo maps
 codemap.md
 
+# Git worktrees
+.worktrees/
+
 
 .hive
 .slim
