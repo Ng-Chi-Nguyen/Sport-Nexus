@@ -878,9 +878,9 @@ async function main() {
   const sampleOrder = await prisma.orders.findFirst();
   await prisma.systemLogs.createMany({
     data: [
-      { user_id: userAdmin.id, action_type: 'CREATE', entity_type: 'Products', entity_id: allProducts[0].id, details: { name: 'Tạo sản phẩm thể thao' } },
-      { user_id: userStaff.id, action_type: 'UPDATE', entity_type: 'Orders', entity_id: sampleOrder?.id || 1, details: { from: 'Processing', to: 'Delivered' } },
-      { user_id: userAdmin.id, action_type: 'CREATE', entity_type: 'PurchaseOrders', entity_id: po1.id, details: { supplier: sup1.name, total: 7750000 } },
+      { user_id: userAdmin.id, action_type: 'CREATE', entity_type: 'Products', entity_id: allProducts[0].id, details: { name: 'Tạo sản phẩm thể thao' }, ip_address: '192.168.1.10' },
+      { user_id: userStaff.id, action_type: 'UPDATE', entity_type: 'Orders', entity_id: sampleOrder?.id || 1, details: { from: 'Processing', to: 'Delivered' }, ip_address: '192.168.1.20' },
+      { user_id: userAdmin.id, action_type: 'CREATE', entity_type: 'PurchaseOrders', entity_id: po1.id, details: { supplier: sup1.name, total: 7750000 }, ip_address: '192.168.1.10' },
     ],
   });
 
