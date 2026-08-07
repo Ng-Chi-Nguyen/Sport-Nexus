@@ -1,4 +1,5 @@
-import { useLoaderData, Link } from "react-router-dom";
+import { useState } from "react";
+import { useLoaderData, Link, useRevalidator } from "react-router-dom";
 import { formatCurrency, formatFullDateTime } from "@/utils/formatters";
 import { STATUS_LABELS, STATUS_PAYMENT } from "@/constants/order";
 import {
@@ -6,7 +7,8 @@ import {
   PAYMENT_BADGE,
   PAYMENT_METHOD_LABELS,
 } from "@/constants/web/profile";
-import { ArrowLeft, PackageCheck } from "lucide-react";
+import ReviewModal from "@/components/customer/ReviewModal";
+import { ArrowLeft, PackageCheck, Star } from "lucide-react";
 import { TitleWithIcon } from "@/components/ui/title";
 import Badge from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
@@ -14,6 +16,8 @@ import { useTranslation } from "react-i18next";
 const OrderDetail = () => {
   const { t } = useTranslation("translation", { keyPrefix: "order" });
   const { order } = useLoaderData();
+  const revalidator = useRevalidator();
+  const [showReview, setShowReview] = useState(false);
 
   if (!order) {
     return (
@@ -48,6 +52,15 @@ const OrderDetail = () => {
   const paymentMethodLabel =
     PAYMENT_METHOD_LABELS[order.payment_method] || order.payment_method;
 
+  const reviewedIds = new Set(
+    (order.Reviews || []).map((r) => r.product_id),
+  );
+  const hasPendingReview =
+    order.status === "Delivered" &&
+    (order.OrderItems || []).some(
+      (item) => !reviewedIds.has(item.product_variant?.product_id),
+    );
+
   return (
     <div className="text-slate-800 dark:text-slate-100 transition-colors duration-200 space-y-6">
       <Link
@@ -63,9 +76,23 @@ const OrderDetail = () => {
           icon={PackageCheck}
           title={`${t("order_title_prefix", "Đơn hàng")} #${order.id}`}
         />
-        <Badge color={ORDER_COLOR_MAP[order.status] || "gray"}>
-          {STATUS_LABELS[order.status] || order.status}
-        </Badge>
+        <div className="flex items-center gap-3">
+          {order.status === "Delivered" && (
+            <button
+              type="button"
+              onClick={() => setShowReview(true)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-sky-600 hover:bg-sky-700 rounded-lg transition-colors cursor-pointer"
+            >
+              <Star size={15} />
+              {hasPendingReview
+                ? t("review_button", "Đánh giá")
+                : t("review_edit_button", "Sửa đánh giá")}
+            </button>
+          )}
+          <Badge color={ORDER_COLOR_MAP[order.status] || "gray"}>
+            {STATUS_LABELS[order.status] || order.status}
+          </Badge>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md">
@@ -209,6 +236,14 @@ const OrderDetail = () => {
           </table>
         </div>
       </div>
+
+      {showReview && (
+        <ReviewModal
+          order={order}
+          onClose={() => setShowReview(false)}
+          onSuccess={() => revalidator.revalidate()}
+        />
+      )}
     </div>
   );
 };

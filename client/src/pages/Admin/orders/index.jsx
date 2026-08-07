@@ -134,106 +134,94 @@ const OrderPage = () => {
           }
         >
           {/* 1. Dropdown Vận chuyển */}
-            <div className="flex-1 min-w-[150px]">
-              <SimpleSelect
-                label={t("shipping_label")}
-                options={statusOptionsMapped}
-                value={currentStatus}
-                onChange={(val) => setFilter("status", val)}
-                placeholder={t("all_status")}
-              />
-            </div>
+          <div className="flex-1 min-w-[150px]">
+            <SimpleSelect
+              label={t("shipping_label")}
+              options={statusOptionsMapped}
+              value={currentStatus}
+              onChange={(val) => setFilter("status", val)}
+              placeholder={t("all_status")}
+            />
+          </div>
 
-            {/* 2. Dropdown Thanh toán */}
-            <div className="flex-1 min-w-[150px]">
-              <SimpleSelect
-                label={t("payment_label")}
-                options={paymentOptionsMapped}
-                value={currentPaymentStatus}
-                onChange={(val) =>
-                  setFilter("payment_status", val)
-                }
-                placeholder={t("all_payment_status")}
-              />
-            </div>
+          {/* 2. Dropdown Thanh toán */}
+          <div className="flex-1 min-w-[150px]">
+            <SimpleSelect
+              label={t("payment_label")}
+              options={paymentOptionsMapped}
+              value={currentPaymentStatus}
+              onChange={(val) => setFilter("payment_status", val)}
+              placeholder={t("all_payment_status")}
+            />
+          </div>
 
-            {/* 3. Dropdown Phương thức */}
-            <div className="flex-1 min-w-[160px]">
-              <SimpleSelect
-                label={t("method_label")}
-                options={methodOptionsMapped}
-                value={currentPaymentMethod}
-                onChange={(val) =>
-                  setFilter("payment_method", val)
-                }
-                placeholder={t("all_methods")}
-              />
-            </div>
+          {/* 3. Dropdown Phương thức */}
+          <div className="flex-1 min-w-[160px]">
+            <SimpleSelect
+              label={t("method_label")}
+              options={methodOptionsMapped}
+              value={currentPaymentMethod}
+              onChange={(val) => setFilter("payment_method", val)}
+              placeholder={t("all_methods")}
+            />
+          </div>
 
-            {/* 4. Lọc thời gian từ ngày */}
-            <div className="flex-1 min-w-[130px]">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("from_date")}
-              </label>
+          {/* 4. Lọc thời gian từ ngày */}
+          <div className="flex-1 min-w-[130px]">
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              {t("from_date")}
+            </label>
+            <input
+              type="date"
+              value={currentDateFrom}
+              onChange={(e) => setFilter("date_from", e.target.value)}
+              className="w-full h-10 px-2.5 text-sm outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 dark:focus:ring-1 dark:focus:ring-sky-500/20"
+            />
+          </div>
+
+          {/* 5. Lọc thời gian đến ngày */}
+          <div className="flex-1 min-w-[130px]">
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              {t("to_date")}
+            </label>
+            <input
+              type="date"
+              value={currentDateTo}
+              onChange={(e) => setFilter("date_to", e.target.value)}
+              className="w-full h-10 px-2.5 text-sm outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 dark:focus:ring-1 dark:focus:ring-sky-500/20"
+            />
+          </div>
+
+          {/* 6. Lọc khoảng giá trị đơn hàng */}
+          <div className="w-[180px] shrink-0">
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              {t("order_value")}
+            </label>
+            <div className="flex items-center gap-1">
               <input
-                type="date"
-                value={currentDateFrom}
-                onChange={(e) =>
-                  setFilter("date_from", e.target.value)
-                }
-                className="w-full h-10 px-2.5 text-sm rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 dark:focus:ring-1 dark:focus:ring-sky-500/20"
+                type="number"
+                placeholder={t("amount_from")}
+                value={currentAmountMin}
+                onChange={(e) => setFilter("amount_min", e.target.value)}
+                className="w-full h-10 px-2 text-xs outline-none font-mono transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
               />
-            </div>
-
-            {/* 5. Lọc thời gian đến ngày */}
-            <div className="flex-1 min-w-[130px]">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("to_date")}
-              </label>
+              <span className="text-slate-400 dark:text-slate-600 shrink-0">
+                –
+              </span>
               <input
-                type="date"
-                value={currentDateTo}
-                onChange={(e) =>
-                  setFilter("date_to", e.target.value)
-                }
-                className="w-full h-10 px-2.5 text-sm rounded-lg outline-none transition-colors duration-150 bg-white border border-slate-300 text-slate-800 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:focus:border-sky-500/50 dark:focus:ring-1 dark:focus:ring-sky-500/20"
+                type="number"
+                placeholder={t("amount_to")}
+                value={currentAmountMax}
+                onChange={(e) => setFilter("amount_max", e.target.value)}
+                className="w-full h-10 px-2 text-xs outline-none font-mono transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
               />
             </div>
-
-            {/* 6. Lọc khoảng giá trị đơn hàng */}
-            <div className="w-[180px] shrink-0">
-              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {t("order_value")}
-              </label>
-              <div className="flex items-center gap-1">
-                <input
-                  type="number"
-                  placeholder={t("amount_from")}
-                  value={currentAmountMin}
-                  onChange={(e) =>
-                    setFilter("amount_min", e.target.value)
-                  }
-                  className="w-full h-10 px-2 text-xs rounded-lg outline-none font-mono transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
-                />
-                <span className="text-slate-400 dark:text-slate-600 shrink-0">
-                  –
-                </span>
-                <input
-                  type="number"
-                  placeholder={t("amount_to")}
-                  value={currentAmountMax}
-                  onChange={(e) =>
-                    setFilter("amount_max", e.target.value)
-                  }
-                  className="w-full h-10 px-2 text-xs rounded-lg outline-none font-mono transition-colors duration-150 bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-sky-500 dark:bg-[#111827]/40 dark:border-slate-800 dark:text-slate-200 dark:placeholder:text-slate-600 dark:focus:border-sky-500/50"
-                />
-              </div>
-            </div>
+          </div>
         </FilterPanel>
       </div>
 
       {/* KHỐI BẢNG CONTAINER */}
-      <div className="rounded-2xl p-6 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
+      <div className="">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
             {t("order_list_title")}
@@ -241,7 +229,7 @@ const OrderPage = () => {
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
-            className="p-1.5 rounded-lg transition-colors text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1.5 transition-colors text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
             title={t("reload")}
           >
             <RefreshCw

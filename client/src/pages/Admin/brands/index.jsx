@@ -93,11 +93,9 @@ const BrandPage = () => {
         </div>
       </FilterPanel>
 
-      <div className="bg-white dark:bg-[#0D121F]/30 border border-slate-200 dark:border-slate-900/80 rounded-2xl p-4 sm:p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
+      <div className="">
         <div className="flex items-center gap-3 mb-6 justify-between">
-          <h2 className="text-sm font-bold text-slate-900 dark:text-slate-200 tracking-wide uppercase">
-            {t("brand_list")}
-          </h2>
+          <h2 className="section-title mb-3">{t("brand_list")}</h2>
           <div className="flex items-center gap-3">
             {allBrands.length > 0 && (
               <Badge>

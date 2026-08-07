@@ -91,7 +91,21 @@
     "unit_price_column": "Đơn giá",
     "quantity_column": "Số lượng",
     "subtotal_column": "Tạm tính",
-    "default_product_name": "Sản phẩm"
+    "default_product_name": "Sản phẩm",
+    "review_button": "Đánh giá",
+    "review_title": "Đánh giá sản phẩm",
+    "review_rating_required": "Vui lòng chọn số sao cho ít nhất một sản phẩm",
+    "review_success": "Gửi đánh giá thành công",
+    "review_comment_placeholder": "Chia sẻ cảm nhận của bạn về sản phẩm...",
+    "review_media_label": "Hình ảnh (tối đa 3)",
+    "review_cancel": "Hủy",
+    "review_submitting": "Đang gửi...",
+    "review_submit": "Gửi đánh giá",
+    "review_all_done": "Bạn đã đánh giá tất cả sản phẩm trong đơn",
+    "review_edit_button": "Sửa đánh giá",
+    "review_edit_title": "Chỉnh sửa đánh giá",
+    "review_updated": "Cập nhật đánh giá thành công",
+    "review_update_submit": "Cập nhật đánh giá"
   },
   "change_password": {
     "change_password": "Đổi mật khẩu",

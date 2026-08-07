@@ -120,7 +120,11 @@ const EditProductAttributeKey = lazy(
 export const adminRoutes = {
   path: "management",
   children: [
-    { path: "dashboard", element: <Dashboard />, loader: RouteLoaders.dashboardLoader },
+    {
+      path: "dashboard",
+      element: <Dashboard />,
+      loader: RouteLoaders.dashboardLoader,
+    },
     { path: "carts", element: <CartPage /> },
     { path: "logs", element: <LogPage />, loader: RouteLoaders.logsLoader },
     { path: "addresses", element: <AddressPage /> },
@@ -298,4 +302,3 @@ export const adminRoutes = {
     },
   ],
 };
-

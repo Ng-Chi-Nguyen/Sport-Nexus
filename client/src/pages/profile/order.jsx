@@ -1,8 +1,15 @@
-import { useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import {
+  useLoaderData,
+  useNavigate,
+  useRevalidator,
+  useSearchParams,
+} from "react-router-dom";
 import { formatDate, formatCurrency } from "@/utils/formatters";
 import { STATUS_LABELS, STATUS_PAYMENT } from "@/constants/order";
 import { STATUS_BADGE, PAYMENT_BADGE } from "@/constants/web/profile";
 import Pagination from "@/components/ui/pagination";
+import ReviewModal from "@/components/customer/ReviewModal";
 import { Package } from "lucide-react";
 import { TitleWithIcon } from "@/components/ui/title";
 import Badge from "@/components/ui/badge";
@@ -12,13 +19,14 @@ const Order = () => {
   const { t } = useTranslation("translation", { keyPrefix: "order" });
   const { orders, pagination, user } = useLoaderData();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const revalidator = useRevalidator();
+  const [, setSearchParams] = useSearchParams();
+  const [reviewOrder, setReviewOrder] = useState(null);
 
   if (!user) return null;
 
   const currentPage = pagination?.currentPage || 1;
   const totalPages = pagination?.totalPages || 1;
-
   const goToPage = (page) => {
     setSearchParams({ page: String(page) });
   };
@@ -66,49 +74,78 @@ const Order = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-                {orders.map((order) => (
-                  <tr
-                    key={order.id}
-                    onClick={() => navigate(`/tai-khoan/don-hang/${order.id}`)}
-                    className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer"
-                  >
-                    <td className="py-3.5 px-4 font-semibold text-primary dark:text-primary">
-                      #{order.id}
-                    </td>
-                    <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300">
-                      {order.created_at ? formatDate(order.created_at) : "—"}
-                    </td>
-                    <td className="py-3.5 px-4 font-medium text-slate-900 dark:text-slate-100">
-                      {formatCurrency(order.final_amount)}
-                    </td>
-                    <td className="py-3.5 px-4">
-                      <Badge
-                        color={
-                          order.payment_status === "Paid"
-                            ? "success"
-                            : "warning"
-                        }
-                      >
-                        {STATUS_PAYMENT[order.payment_status] ||
-                          order.payment_status}
-                      </Badge>
-                    </td>
+                {orders.map((order) => {
+                  const reviewedIds = new Set(
+                    (order.Reviews || []).map((r) => r.product_id),
+                  );
+                  const hasPendingReview =
+                    order.status === "Delivered" &&
+                    (order.OrderItems || []).some(
+                      (item) =>
+                        !reviewedIds.has(item.product_variant?.product_id),
+                    );
+                  return (
+                    <tr
+                      key={order.id}
+                      onClick={() =>
+                        navigate(`/tai-khoan/don-hang/${order.id}`)
+                      }
+                      className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer"
+                    >
+                      <td className="py-3.5 px-4 font-semibold text-primary dark:text-primary">
+                        #{order.id}
+                      </td>
+                      <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300">
+                        {order.created_at ? formatDate(order.created_at) : "—"}
+                      </td>
+                      <td className="py-3.5 px-4 font-medium text-slate-900 dark:text-slate-100">
+                        {formatCurrency(order.final_amount)}
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <Badge
+                          color={
+                            order.payment_status === "Paid"
+                              ? "success"
+                              : "warning"
+                          }
+                        >
+                          {STATUS_PAYMENT[order.payment_status] ||
+                            order.payment_status}
+                        </Badge>
+                      </td>
 
-                    <td className="py-3.5 px-4">
-                      <Badge
-                        color={
-                          order.status === "completed"
-                            ? "success"
-                            : order.status === "cancelled"
-                              ? "error"
-                              : "nexus"
-                        }
-                      >
-                        {STATUS_LABELS[order.status] || order.status}
-                      </Badge>
-                    </td>
-                  </tr>
-                ))}
+                      <td className="py-3.5 px-4 flex gap-2">
+                        <div className="flex flex-col items-start gap-2">
+                          <Badge
+                            color={
+                              order.status === "Delivered"
+                                ? "success"
+                                : order.status === "Cancelled"
+                                  ? "error"
+                                  : "nexus"
+                            }
+                          >
+                            {STATUS_LABELS[order.status] || order.status}
+                          </Badge>
+                        </div>
+                        <div className="">
+                          {hasPendingReview && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setReviewOrder(order);
+                              }}
+                              className="text-xs font-medium text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
+                            >
+                              {t("review_button")}
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -124,6 +161,14 @@ const Order = () => {
             </div>
           )}
         </div>
+      )}
+
+      {reviewOrder && (
+        <ReviewModal
+          order={reviewOrder}
+          onClose={() => setReviewOrder(null)}
+          onSuccess={() => revalidator.revalidate()}
+        />
       )}
     </div>
   );

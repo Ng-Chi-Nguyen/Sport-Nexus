@@ -91,7 +91,21 @@
     "unit_price_column": "Unit Price",
     "quantity_column": "Quantity",
     "subtotal_column": "Subtotal",
-    "default_product_name": "Product"
+    "default_product_name": "Product",
+    "review_button": "Review",
+    "review_title": "Product Review",
+    "review_rating_required": "Please select a star rating for at least one product",
+    "review_success": "Review submitted successfully",
+    "review_comment_placeholder": "Share your thoughts about the product...",
+    "review_media_label": "Images (max 3)",
+    "review_cancel": "Cancel",
+    "review_submitting": "Submitting...",
+    "review_submit": "Submit Review",
+    "review_all_done": "You have reviewed all products in this order",
+    "review_edit_button": "Edit Review",
+    "review_edit_title": "Edit Review",
+    "review_updated": "Review updated successfully",
+    "review_update_submit": "Update Review"
   },
   "change_password": {
     "change_password": "Change Password",

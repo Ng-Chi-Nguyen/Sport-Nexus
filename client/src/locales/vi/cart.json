@@ -17,7 +17,7 @@
   "checkout_btn": "Tiến hành thanh toán ({{count}} sản phẩm)",
   "product_default": "Sản phẩm",
   "subtotal_label": "Thành tiền",
-  "delete_product_title": "Xóa sản phẩm",
+  "delete_product_title": "Xóa sản phẩm khỏi giỏ hàng",
   "delete_product_confirm_msg": "Bạn có chắc muốn xóa \"{{name}}\" khỏi giỏ hàng?",
   "empty_cart_message": "Giỏ hàng trống",
   "shop_now_btn": "Mua sắm ngay"

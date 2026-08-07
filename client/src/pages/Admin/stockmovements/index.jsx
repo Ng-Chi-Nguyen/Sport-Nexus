@@ -183,7 +183,7 @@ const StockPage = () => {
       </FilterPanel>
 
       {/* KHỐI NỀN TỔNG - Hỗ trợ sáng/tối */}
-      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
+      <div className="">
         {/* HEADER TIÊU ĐỀ */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>

@@ -127,7 +127,7 @@ const CategoryPage = () => {
         </div>
 
         {/* Nhóm tab lọc trạng thái */}
-        <div className="flex items-center gap-2 p-1 bg-white dark:bg-[#0D121F]/20 border border-slate-200 dark:border-slate-900/60 rounded-xl shadow-sm dark:shadow-none">
+        <div className="flex items-center gap-2 p-1 bg-white dark:bg-[#0D121F]/20 border border-slate-200 dark:border-slate-900/60 shadow-sm dark:shadow-none">
           {[
             { value: "", label: t("all") },
             { value: "true", label: t("active_status") },
@@ -139,7 +139,7 @@ const CategoryPage = () => {
                 key={tab.value}
                 type="button"
                 onClick={() => handleActiveClick(tab.value)}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 cursor-pointer ${
+                className={`px-3 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer ${
                   isActive
                     ? "bg-sky-500/10 text-sky-600 dark:bg-sky-500/20 dark:text-sky-300 border border-sky-300 dark:border-sky-500/30"
                     : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
@@ -169,13 +169,13 @@ const CategoryPage = () => {
       </div>
 
       {/* Khu vực Bảng hiển thị */}
-      <div className="mt-4 glass-card">
+      <div className="mt-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="section-title mb-0">{t("category_list_title")}</h2>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
-            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title={t("reload")}
           >
             <RefreshCw

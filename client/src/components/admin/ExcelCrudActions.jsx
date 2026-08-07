@@ -48,7 +48,7 @@ const ExcelCrudActions = ({
     try {
       const res = await excelCrudImportApi.export(basePath);
       downloadBlob(res, exportFileName || "export.xlsx");
-      ShowToast(t("success", "export_success"));
+      ShowToast("success", t("export_success"));
     } catch (err) {
       ShowToast("error", err?.message || t("export_error"));
     } finally {
@@ -58,11 +58,12 @@ const ExcelCrudActions = ({
 
   return (
     <>
-      <div className={`flex items-center gap-2 flex-wrap ${className}`}>
+      <div className={`flex items-center gap-2.5 flex-wrap ${className}`}>
+        {/* Nút Template */}
         <button
           onClick={handleTemplate}
           disabled={templateLoading}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-sky-300 bg-sky-500/10 border border-sky-500/30 rounded-xl hover:bg-sky-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-500/10 border border-sky-300 dark:border-sky-500/30 rounded-xl hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {templateLoading ? (
             <Loader2 size={16} className="animate-spin" />
@@ -71,10 +72,12 @@ const ExcelCrudActions = ({
           )}
           {templateLoading ? t("loading") : t("template")}
         </button>
+
+        {/* Nút Export */}
         <button
           onClick={handleExport}
           disabled={exportLoading}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded-xl hover:bg-emerald-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-300 dark:border-emerald-500/30 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {exportLoading ? (
             <Loader2 size={16} className="animate-spin" />
@@ -83,9 +86,11 @@ const ExcelCrudActions = ({
           )}
           {exportLoading ? t("exporting") : t("export")}
         </button>
+
+        {/* Nút Import */}
         <button
           onClick={() => setIsOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-sky-500 to-indigo-500 rounded-xl hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-sky-500 to-indigo-600 rounded-xl hover:opacity-90 transition-opacity shadow-sm"
         >
           <Upload size={16} /> {t("import")}
         </button>

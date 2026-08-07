@@ -129,12 +129,12 @@ const ProductAttributeKey = () => {
           name={t("assign_btn")}
         />
       </div>
-      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
+      <div className="bg-white dark:bg-[#0D121F]/40">
         <div className="flex items-center justify-between mb-4">
           <h2 className="section-title mb-0">{t("list_title")}</h2>
           <button
             onClick={handleRefresh}
-            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             title={t("reload")}
           >
             <RefreshCw size={18} />

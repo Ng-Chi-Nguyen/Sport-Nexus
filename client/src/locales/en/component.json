@@ -135,5 +135,12 @@
     "personal_ai": "Personal AI",
     "billing": "Subscription Plans",
     "logout": "Logout"
+  },
+  "chat": {
+    "title": "Virtual Assistant",
+    "welcome_user": "Hello! What can I help you find today?",
+    "welcome_admin": "Hi admin! How can I help you with the business today?",
+    "placeholder": "Type a message...",
+    "error": "Connection error. Please try again."
   }
 }

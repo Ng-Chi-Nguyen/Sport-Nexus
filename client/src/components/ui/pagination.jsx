@@ -12,55 +12,45 @@ const Pagination = ({
     keyPrefix: "component.common",
   });
 
-  // Giới hạn số trang có thể truy cập để tránh query deep-offset quá nặng.
-  // Khi dùng offset pagination, nhảy tới trang rất xa sẽ làm server phải skip
-  // nhiều bản ghi. `maxPages` giới hạn trang truy cập sâu nhất (mặc định 20),
-  // có thể truyền giá trị khác (hoặc null để bỏ giới hạn) ở từng trang dùng.
-  const effectiveTotalPages =
-    maxPages == null ? totalPages : Math.min(totalPages, maxPages);
-  const current = Math.min(currentPage, effectiveTotalPages);
-
+  // `maxPages` là số trang nhảy về phía trước từ trang hiện tại (mặc định 20).
+  // Hiển thị gọn: vài số quanh trang hiện tại, dấu "...", rồi trang đích.
+  // Ví dụ: trang 1 -> "1 2 3 4 ... 20", trang 20 -> "20 21 22 23 ... 40".
   const getPageNumbers = () => {
     const pages = [];
 
-    // Luôn hiển thị trang đầu tiên
-    pages.push(1);
-
-    // Nếu khoảng cách giữa trang hiện tại và đầu trang lớn hơn 2, thêm dấu ...
-    if (current > 3) {
+    if (currentPage > 1) {
+      pages.push(1);
+    }
+    if (currentPage > 2) {
       pages.push("...");
     }
 
-    // Các trang xung quanh trang hiện tại (lùi 1 và tiến 1)
-    for (
-      let i = Math.max(2, current - 1);
-      i <= Math.min(effectiveTotalPages - 1, current + 1);
-      i++
-    ) {
+    // Vài số liên tiếp quanh trang hiện tại (hiện tại, +1, +2, +3)
+    const nearEnd = Math.min(totalPages, currentPage + 3);
+    for (let i = currentPage; i <= nearEnd; i++) {
       pages.push(i);
     }
 
-    // Nếu khoảng cách giữa trang hiện tại và trang cuối lớn hơn 2, thêm dấu ...
-    if (current < effectiveTotalPages - 2) {
+    // Trang đích: nhảy thêm `maxPages` trang về phía trước
+    const windowEnd = Math.min(totalPages, currentPage + maxPages);
+    if (nearEnd < windowEnd - 1) {
       pages.push("...");
     }
-
-    // Luôn hiển thị trang cuối cùng (nếu tổng số trang lớn hơn 1)
-    if (effectiveTotalPages > 1) {
-      pages.push(effectiveTotalPages);
+    if (!pages.includes(windowEnd)) {
+      pages.push(windowEnd);
     }
 
     return [...new Set(pages)];
   };
 
-  if (effectiveTotalPages <= 1) return null;
+  if (totalPages <= 1) return null;
 
   return (
     <div className="flex items-center justify-end gap-2 font-medium select-none">
       {/* Nút Trang Trước */}
       <button
-        onClick={() => onPageChange(current - 1)}
-        disabled={current === 1}
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
         className="flex items-center justify-center w-9 h-9 rounded-lg border transition-all duration-200 shadow-sm outline-none focus:outline-none focus:ring-0 focus-visible:ring-0
                    bg-white border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900
                    dark:bg-[#0D121F] dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100
@@ -82,7 +72,7 @@ const Pagination = ({
               <button
                 onClick={() => onPageChange(page)}
                 className={`w-9 h-9 rounded-lg text-xs font-bold border transition-all duration-200 shadow-sm flex items-center justify-center outline-none focus:outline-none focus:ring-0 focus-visible:ring-0 ${
-                  current === page
+                  currentPage === page
                     ? "bg-sky-50 text-sky-600 border-sky-300 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/40 dark:shadow-none"
                     : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100 hover:text-slate-900 dark:bg-[#0D121F] dark:text-slate-400 dark:border-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100"
                 }`}
@@ -96,8 +86,8 @@ const Pagination = ({
 
       {/* Nút Trang Sau */}
       <button
-        onClick={() => onPageChange(current + 1)}
-        disabled={current === effectiveTotalPages}
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
         className="flex items-center justify-center w-9 h-9 rounded-lg border transition-all duration-200 shadow-sm outline-none focus:outline-none focus:ring-0 focus-visible:ring-0
                    bg-white border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900
                    dark:bg-[#0D121F] dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100

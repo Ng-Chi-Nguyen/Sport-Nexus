@@ -131,7 +131,7 @@ const SupplierPage = () => {
 
       const addressParts = [loc.detail, loc.ward, loc.province].filter(Boolean);
       return addressParts.join(", ");
-    } catch (error) {
+    } catch {
       return (
         <span className="text-rose-600 dark:text-rose-400">
           {t("address_format_error")}
@@ -188,7 +188,7 @@ const SupplierPage = () => {
         />
       </div>
 
-      <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md transition-colors duration-200">
+      <div className="">
         <div className="flex items-center justify-between mb-4">
           <h2 className="section-title mb-0">{t("list_title")}</h2>
           <button

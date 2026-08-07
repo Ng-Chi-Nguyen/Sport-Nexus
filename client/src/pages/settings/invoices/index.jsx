@@ -28,7 +28,7 @@ const Invoice = () => {
   const { invoices, pagination, user } = useLoaderData();
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
-
+  console.log({ invoices, pagination, user });
   if (!user) return null;
 
   const currentPage = pagination?.currentPage || 1;

@@ -35,7 +35,7 @@
 
   /* Khung bọc bảng linh hoạt Light / Dark */
   .table-retro {
-    @apply w-full border border-slate-200 dark:border-slate-800 rounded-xl overflow-x-auto
+    @apply w-full border border-slate-200 dark:border-slate-800 overflow-x-auto
            bg-white dark:bg-[#0D121F] shadow-sm dark:shadow-2xl transition-colors duration-300;
   }
 
@@ -87,7 +87,7 @@
 
   /* Khung bao bọc panel filter collapsible */
   .filter-panel {
-    @apply p-4 bg-white dark:bg-[#0D121F]/80 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm dark:shadow-lg transition-colors duration-300;
+    @apply p-4 bg-white dark:bg-[#0D121F]/80 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-lg transition-colors duration-300;
   }
 
   /* =============================================
@@ -96,7 +96,7 @@
 
   /* Thẻ Glass Card hỗ trợ 2 giao diện */
   .glass-card {
-    @apply bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-2xl p-6 shadow-sm dark:shadow-2xl backdrop-blur-md transition-colors duration-300;
+    @apply bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 shadow-sm dark:shadow-2xl backdrop-blur-md transition-colors duration-300;
   }
 
   /* Tiêu đề section bên trong glass-card */

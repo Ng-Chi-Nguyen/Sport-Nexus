@@ -1,5 +1,6 @@
 import {
   Bell,
+  Check,
   ChevronRight,
   Heart,
   Languages,
@@ -26,7 +27,7 @@ import SearchBar from "@/components/search/SearchBar";
 import { useCart } from "@/contexts/CartContext";
 import { clearAuth } from "@/lib/authStorage";
 
-const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
+const Header = ({ isOpenMenu, setIsOpenMenu }) => {
   const { i18n, t } = useTranslation();
   const { count } = useCart();
   const userString = localStorage.getItem("user");
@@ -227,76 +228,80 @@ const Header = ({ isScrolled, categories, isOpenMenu, setIsOpenMenu }) => {
               )}
 
               {/* Mục Ngôn ngữ kèm Submenu khi Hover */}
-                  <div
-                    className="relative border-b border-gray-100 dark:border-slate-700"
-                    onMouseEnter={() => setIsLangHovered(true)}
-                    onMouseLeave={() => setIsLangHovered(false)}
-                  >
-                    <button className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-primary/5 hover:text-primary transition-all text-left">
-                      <div className="flex items-center gap-3">
-                        <Languages size={18} strokeWidth={1.5} />
-                        <span>{t("language")}</span>
-                      </div>
-                      <ChevronRight
-                        size={16}
-                        className="text-gray-400 dark:text-slate-500"
-                      />
-                    </button>
-
-                    {/* Submenu chọn Tiếng Việt / English */}
-                    {isLangHovered && (
-                      <div className="absolute right-full top-0 w-48 max-h-64 overflow-y-auto bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 shadow-xl z-50 flex flex-col py-1 scrollbar-thin">
-                        {LANGUAGES.map((lang, index) => {
-                          const isActive = i18n.language.startsWith(lang.code);
-                          return (
-                            <button
-                              key={lang.code}
-                              onClick={() => handleChangeLanguage(lang.code)}
-                              className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium hover:bg-primary/5 transition-all text-left ${
-                                index !== LANGUAGES.length - 1
-                                  ? "border-b border-gray-100 dark:border-slate-700"
-                                  : ""
-                              } ${
-                                isActive
-                                  ? "text-primary bg-primary/5 font-semibold"
-                                  : "text-gray-700 dark:text-slate-200"
-                              }`}
-                            >
-                              <span className="flex items-center gap-2.5">
-                                <span className="text-lg leading-none">
-                                  {lang.flag}
-                                </span>
-                                <span className="truncate">{lang.label}</span>
-                              </span>
-                              {isActive && (
-                                <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
+              <div
+                className="relative border-b border-gray-100 dark:border-slate-700"
+                onMouseEnter={() => setIsLangHovered(true)}
+                onMouseLeave={() => setIsLangHovered(false)}
+              >
+                <button className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-primary/5 hover:text-primary transition-all text-left">
+                  <div className="flex items-center gap-3">
+                    <Languages size={18} strokeWidth={1.5} />
+                    <span>{t("language")}</span>
                   </div>
+                  <ChevronRight
+                    size={16}
+                    className="text-gray-400 dark:text-slate-500"
+                  />
+                </button>
 
-                  <Link
-                    to="/ho-tro"
-                    onClick={() => setIsOpenSettings(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100 dark:border-slate-700"
-                  >
-                    <LifeBuoy size={18} strokeWidth={1.5} />
-                    <span>{t("help")}</span>
-                  </Link>
-                  <button
-                    onClick={() => setIsDark((prev) => !prev)}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100 dark:border-slate-700 text-left w-full"
-                  >
-                    {isDark ? (
-                      <Sun size={18} strokeWidth={1.5} />
-                    ) : (
-                      <Moon size={18} strokeWidth={1.5} />
-                    )}
-                    <span>{isDark ? t("light_mode") : t("dark_mode")}</span>
-                  </button>
+                {/* Submenu chọn Tiếng Việt / English */}
+                {isLangHovered && (
+                  <div className="absolute right-full top-0 w-48 max-h-64 overflow-y-auto bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 shadow-xl z-50 flex flex-col py-1 scrollbar-thin">
+                    {LANGUAGES.map((lang, index) => {
+                      const isActive = i18n.language.startsWith(lang.code);
+                      return (
+                        <button
+                          key={lang.code}
+                          onClick={() => handleChangeLanguage(lang.code)}
+                          className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium hover:bg-primary/5 transition-all text-left ${
+                            index !== LANGUAGES.length - 1
+                              ? "border-b border-gray-100 dark:border-slate-700"
+                              : ""
+                          } ${
+                            isActive
+                              ? "text-primary bg-primary/5 font-semibold"
+                              : "text-gray-700 dark:text-slate-200"
+                          }`}
+                        >
+                          <span className="flex items-center gap-2.5">
+                            <span className="text-lg leading-none">
+                              {lang.flag}
+                            </span>
+                            <span className="truncate">{lang.label}</span>
+                          </span>
+
+                          {isActive && (
+                            <Check
+                              size={16}
+                              className="text-primary shrink-0"
+                            />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <Link
+                to="/ho-tro"
+                onClick={() => setIsOpenSettings(false)}
+                className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100 dark:border-slate-700"
+              >
+                <LifeBuoy size={18} strokeWidth={1.5} />
+                <span>{t("help")}</span>
+              </Link>
+              <button
+                onClick={() => setIsDark((prev) => !prev)}
+                className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-primary/5 hover:text-primary transition-all border-b border-gray-100 dark:border-slate-700 text-left w-full"
+              >
+                {isDark ? (
+                  <Sun size={18} strokeWidth={1.5} />
+                ) : (
+                  <Moon size={18} strokeWidth={1.5} />
+                )}
+                <span>{isDark ? t("light_mode") : t("dark_mode")}</span>
+              </button>
               {user && (
                 <>
                   <Link

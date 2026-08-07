@@ -135,5 +135,12 @@
     "personal_ai": "Trí thông minh cá nhân",
     "billing": "Quản lý gói thuê bao",
     "logout": "Đăng xuất hệ thống"
+  },
+  "chat": {
+    "title": "Trợ lý ảo 24/7",
+    "welcome_user": "Xin chào! Bạn cần tìm gì hôm nay?",
+    "welcome_admin": "Chào admin! Tôi có thể giúp gì cho công việc kinh doanh hôm nay?",
+    "placeholder": "Nhập tin nhắn...",
+    "error": "Lỗi kết nối. Vui lòng thử lại sau."
   }
 }
