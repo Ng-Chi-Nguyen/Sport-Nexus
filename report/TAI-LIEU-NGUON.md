@@ -340,7 +340,14 @@ utils/         →  tiện ích
 
 # CHƯƠNG 5. THIẾT KẾ CƠ SỞ DỮ LIỆU
 
-> **Nguồn chuẩn:** `server/prisma/schema.prisma`. Sơ đồ trực quan: `docs/DiagramDB.png`.
+> **Nguồn chuẩn:** `server/prisma/schema.prisma`.
+
+**Sơ đồ ERD tổng thể của hệ thống:**
+
+<p align="center">
+  <img src="../docs/DiagramDB.png" alt="Sơ đồ cơ sở dữ liệu SportNexus" width="100%">
+  <br><em>Hình 5.1 — Sơ đồ quan hệ cơ sở dữ liệu SportNexus</em>
+</p>
 
 ## 5.1 Tổng quan các bảng
 
