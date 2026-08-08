@@ -4,6 +4,8 @@ import axiosClient from "@/lib/axiosClient";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { getRecentViewIds } from "@/lib/viewHistory";
 import { ProductCard } from "@/components/ui/card";
+import { TitleWithIcon } from "@/components/ui/title";
+import { Boxes } from "lucide-react";
 
 const Group = ({ title, products, loading, indexOffset = 0 }) => {
   if (loading) {
@@ -45,7 +47,9 @@ const RelatedProducts = ({ productId }) => {
         if (!active) return;
         setSimilar({
           loading: false,
-          products: (res.data?.products || []).filter((p) => p.id !== productId),
+          products: (res.data?.products || []).filter(
+            (p) => p.id !== productId,
+          ),
         });
       })
       .catch(() => {
@@ -67,14 +71,19 @@ const RelatedProducts = ({ productId }) => {
       .then((res) => {
         setter({
           loading: false,
-          products: (res.data?.products || []).filter((p) => p.id !== productId),
+          products: (res.data?.products || []).filter(
+            (p) => p.id !== productId,
+          ),
         });
       })
       .catch(() => setter({ loading: false, products: [] }));
   };
 
   useEffect(() => {
-    fetchByIds(ids.filter((id) => id !== productId), setLiked);
+    fetchByIds(
+      ids.filter((id) => id !== productId),
+      setLiked,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ids, productId]);
 
@@ -96,9 +105,7 @@ const RelatedProducts = ({ productId }) => {
 
   return (
     <div className="mt-8 space-y-8">
-      <h2 className="text-xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-        {t("related_title")}
-      </h2>
+      <TitleWithIcon icon={Boxes} title={t("related_title")} />
       <Group
         title={t("related_similar")}
         products={similar.products}

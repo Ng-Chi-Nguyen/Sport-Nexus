@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ListOrdered } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ProductCard } from "@/components/ui/card";
 import { CarouselPagination } from "@/components/ui/pagination";
+import { TitleWithIcon } from "@/components/ui/title";
 
 export const ProductSection = ({ title, products = [] }) => {
   const navigate = useNavigate();
@@ -30,13 +31,7 @@ export const ProductSection = ({ title, products = [] }) => {
       <div className="bg-transparent rounded-2xl overflow-hidden">
         {/* Tiêu đề và nút Xem tất cả */}
         <div className="flex items-center justify-between gap-4 px-2 pt-4 pb-4">
-          <div className="flex items-center gap-3">
-            <h2 className="text-xl md:text-2xl font-black text-sky-600 dark:text-sky-400 flex items-center gap-2 tracking-tight">
-              <span className="border-b-2 border-sky-600 dark:border-sky-400 pb-0.5">
-                {title}
-              </span>
-            </h2>
-          </div>
+          <TitleWithIcon icon={ListOrdered} title={title} />
           <button
             type="button"
             onClick={() => navigate(`/san-pham?category_ids=${categoryId}`)}
@@ -54,13 +49,15 @@ export const ProductSection = ({ title, products = [] }) => {
             ))}
           </div>
 
-          {/* Thanh tiến trình và cặp nút điều hướng */}
-          <CarouselPagination
-            className="mt-6 pt-2"
-            totalPages={totalPages}
-            current={safeIndex}
-            onChange={setCurrentIndex}
-          />
+          {/* Thanh tiến trình và cặp nút điều hướng - Chỉ hiện khi có nhiều hơn 1 trang */}
+          {totalPages > 1 && (
+            <CarouselPagination
+              className="mt-6 pt-2"
+              totalPages={totalPages}
+              current={safeIndex}
+              onChange={setCurrentIndex}
+            />
+          )}
         </div>
       </div>
     </div>
