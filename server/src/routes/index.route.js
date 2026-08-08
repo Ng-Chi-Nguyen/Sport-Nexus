@@ -33,6 +33,7 @@ import paymentRoute from "./customer/payment.route.js";
 import managementPaymentRoute from "./management/payment.route.js";
 import customerCouponRoute from "./customer/coupon.route.js";
 import customerShippingRoute from "./customer/shipping.route.js";
+import loyaltyCustomerRoute from "./customer/loyalty.route.js";
 import managementShippingRoute from "./management/shipping.route.js";
 import chatRoute from "./core/chat.route.js";
 
@@ -68,6 +69,7 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}customer/review/`, reviewRoute)
     app.use(`${api_prefix_v1}customer/payment/`, paymentRoute)
     app.use(`${api_prefix_v1}customer/shipping/`, customerShippingRoute)
+    app.use(`${api_prefix_v1}customer/loyalty/`, loyaltyCustomerRoute)
 
     // Core - cat lai của hệ thống (Management vs Customer)
     app.use(`${api_prefix_v1}core/product/`, productRoute)
