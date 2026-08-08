@@ -153,6 +153,50 @@ const productWebService = {
         };
     },
 
+    getRelatedProducts: async (productId, { limit = 8 } = {}) => {
+        const current = await prisma.Products.findFirst({
+            where: { id: productId, deleted_at: ACTIVE },
+            select: { id: true, category_id: true, brand_id: true },
+        });
+        if (!current) return { products: [] };
+
+        const relatedSelect = {
+            ...productSelect,
+            ProductVariants: {
+                select: { id: true, price: true },
+                where: { stock: { gt: 0 }, deleted_at: ACTIVE },
+                orderBy: { price: "asc" },
+                take: 1,
+            },
+        };
+
+        const products = await prisma.Products.findMany({
+            where: {
+                is_active: true,
+                deleted_at: ACTIVE,
+                category_id: current.category_id,
+                id: { not: current.id },
+                ProductVariants: { some: { stock: { gt: 0 }, deleted_at: ACTIVE } },
+            },
+            take: limit,
+            select: relatedSelect,
+        });
+
+        let mapped = products.map(mapProduct);
+
+        if (current.brand_id) {
+            mapped.sort((a, b) =>
+                (a.brand?.id === current.brand_id ? 0 : 1) -
+                (b.brand?.id === current.brand_id ? 0 : 1),
+            );
+        }
+
+        const soldCounts = await getSoldCountsByProductIds(mapped.map((p) => p.id));
+        mapped = mapped.map((p) => ({ ...p, sold_count: soldCounts.get(p.id) || 0 }));
+
+        return { products: mapped };
+    },
+
     getAllCategories: async () => {
         return prisma.Categories.findMany({
             where: { is_active: true, deleted_at: ACTIVE },
