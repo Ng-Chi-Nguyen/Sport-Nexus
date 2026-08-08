@@ -25,6 +25,18 @@ const productController = {
             })
         }
     },
+    getRelatedProducts: async (req, res) => {
+        try {
+            const productId = parseInt(req.params.productId);
+            if (!Number.isInteger(productId) || productId <= 0) {
+                return res.status(400).json({ success: false, message: t(req, "ID sản phẩm không hợp lệ") });
+            }
+            const { products } = await productWebService.getRelatedProducts(productId);
+            return res.status(200).json({ success: true, data: { products } });
+        } catch (error) {
+            return res.status(500).json({ success: false, message: t(req, error.message) });
+        }
+    },
     searchProducts: async (req, res) => {
         try {
             const q = req.query.q || '';
