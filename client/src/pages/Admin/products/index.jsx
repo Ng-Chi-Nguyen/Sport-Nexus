@@ -266,6 +266,9 @@ const ProductPage = () => {
                   {t("status_col")}
                 </th>
                 <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
+                  {t("sold_col")}
+                </th>
+                <th className="px-6 py-4 font-black text-center text-slate-600 dark:text-slate-400">
                   {t("actions_col")}
                 </th>
               </tr>
@@ -325,6 +328,11 @@ const ProductPage = () => {
                         </Badge>
                       )}
                     </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className="text-sm font-black text-slate-700 dark:text-slate-200">
+                        {Number(product.sold_count) || 0}
+                      </span>
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2 justify-center">
                         <BtnEdit
@@ -342,7 +350,7 @@ const ProductPage = () => {
               ) : (
                 <tr>
                   <td
-                    colSpan="4"
+                    colSpan="5"
                     className="px-6 py-10 text-center text-slate-400 dark:text-slate-500 italic"
                   >
                     {t("no_products")}
