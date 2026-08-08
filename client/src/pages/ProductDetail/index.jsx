@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import ShowToast from "@/components/ui/toast";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { addToViewHistory } from "@/lib/viewHistory";
 import {
   addToSearchHistory,
   clearLastSearchTerm,
@@ -17,6 +18,7 @@ import VariantSelector from "./components/VariantSelector";
 import ActionBar from "./components/ActionBar";
 import ProductTabs from "./components/ProductTabs";
 import ReviewList from "./components/ReviewList";
+import RelatedProducts from "./components/RelatedProducts";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -35,6 +37,12 @@ const ProductDetail = () => {
     }, 120000);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (loaderData?.success && loaderData.data?.id) {
+      addToViewHistory(loaderData.data.id);
+    }
+  }, [loaderData]);
 
   const product = loaderData?.success ? loaderData.data : null;
   const { isLiked, toggleLike } = useWishlist();
@@ -251,6 +259,8 @@ const ProductDetail = () => {
           <ProductTabs description={product.description} />
           <ReviewList reviews={ratings} />
         </div>
+
+        <RelatedProducts productId={product.id} />
       </div>
     </div>
   );
