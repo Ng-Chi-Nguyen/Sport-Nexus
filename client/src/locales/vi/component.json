@@ -105,7 +105,8 @@
     "ward_label": "Phường / Xã",
     "choose_province": "Chọn Tỉnh / Thành phố",
     "choose_ward": "Chọn Phường / Xã",
-    "select_province_first": "Vui lòng chọn Tỉnh"
+    "select_province_first": "Vui lòng chọn Tỉnh",
+    "sold_count": "Đã bán"
   },
   "menu": {
     "system": "HỆ THỐNG",
@@ -121,6 +122,7 @@
     "coupons": "Khuyến mãi",
     "reviews": "Đánh giá & Phản hồi",
     "categories": "Danh mục",
+    "collections": "Bộ sưu tập",
     "products": "Sản phẩm",
     "product_variants": "Sản phẩm chi tiết",
     "attribute_key": "Thuộc tính SP",

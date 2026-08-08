@@ -1,4 +1,11 @@
-import { Package, CheckCircle, XCircle, ImageOff, Layers } from "lucide-react";
+import {
+  Package,
+  CheckCircle,
+  XCircle,
+  ImageOff,
+  Layers,
+  ShoppingBag,
+} from "lucide-react";
 import { KpiCard } from "@/pages/Admin/Dashboard/components/KpiCard";
 import { useTranslation } from "react-i18next";
 
@@ -21,10 +28,11 @@ export const SummaryCards = ({ summary = {} }) => {
     inactiveProducts = 0,
     noImageProducts = 0,
     noVariantProducts = 0,
+    totalSold = 0,
   } = summary;
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5 items-start">
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6 items-start">
       <KpiCard
         label={t("total_products")}
         value={totalProducts.toLocaleString()}
@@ -42,6 +50,12 @@ export const SummaryCards = ({ summary = {} }) => {
         value={inactiveProducts.toLocaleString()}
         icon={<XCircle size={16} />}
         tone={TONES.amber}
+      />
+      <KpiCard
+        label={t("total_sold")}
+        value={totalSold.toLocaleString()}
+        icon={<ShoppingBag size={16} />}
+        tone={TONES.rose}
       />
       <KpiCard
         label={t("missing_image")}

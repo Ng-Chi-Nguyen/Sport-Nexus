@@ -1,5 +1,6 @@
 import prisma from "../../db/prisma.js";
 import { ACTIVE } from "../../utils/prisma.js";
+import { getSoldCountsByProductIds } from "../../utils/soldCount.utils.js";
 
 const safeInt = (val) => { const n = parseInt(val); return isNaN(n) ? undefined : n; };
 const safeFloat = (val) => { const n = parseFloat(val); return isNaN(n) ? undefined : n; };
@@ -115,6 +116,9 @@ const productWebService = {
         ]);
 
         let mapped = products.map(mapProduct);
+
+        const soldCounts = await getSoldCountsByProductIds(mapped.map((p) => p.id));
+        mapped = mapped.map((p) => ({ ...p, sold_count: soldCounts.get(p.id) || 0 }));
 
         if (sort === "best-selling") {
             const topVariantIds = (await prisma.OrderItems.groupBy({

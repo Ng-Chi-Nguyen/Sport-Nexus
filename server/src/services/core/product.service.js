@@ -3,6 +3,7 @@ import { deleteImage } from "../../utils/deleteImage.utils.js";
 import { createAutoSlug } from "../../utils/slug.utils.js";
 import { uploadImage } from "../image/image.service.js";
 import { ACTIVE } from "../../utils/prisma.js";
+import { getSoldCountByProductId, getSoldCountsByProductIds } from "../../utils/soldCount.utils.js";
 
 const productService = {
     createProduct: async (productData) => {
@@ -91,8 +92,9 @@ const productService = {
                 },
             },
         })
+        const soldCount = await getSoldCountByProductId(product.id);
         // console.log(product)
-        return product;
+        return { ...product, sold_count: soldCount };
     },
 
     getProductBySupplierId: async (supplierId) => {
@@ -158,6 +160,8 @@ const productService = {
             }),
             prisma.Products.count({ where })
         ])
+        const soldCounts = await getSoldCountsByProductIds(list_products.map((p) => p.id));
+        list_products = list_products.map((p) => ({ ...p, sold_count: soldCounts.get(p.id) || 0 }));
         return {
             list_products, pagination: {
                 totalItems,
@@ -219,6 +223,9 @@ const productService = {
             };
         });
 
+        const soldCounts = await getSoldCountsByProductIds(products.map((p) => p.id));
+        products = products.map((p) => ({ ...p, sold_count: soldCounts.get(p.id) || 0 }));
+
         return {
             products,
             pagination: {
@@ -271,6 +278,9 @@ const productService = {
                 total_reviews: ratings.length,
             };
         });
+
+        const soldCounts = await getSoldCountsByProductIds(products.map((p) => p.id));
+        return products.map((p) => ({ ...p, sold_count: soldCounts.get(p.id) || 0 }));
     },
 
     getAllProductsDropdown: async () => {

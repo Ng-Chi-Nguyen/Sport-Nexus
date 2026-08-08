@@ -1,6 +1,7 @@
 import { Star, ShieldCheck, Tag } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
 import { useTranslation } from "react-i18next";
+import { ShoppingCart } from "lucide-react";
 
 const ProductInfo = ({
   product,
@@ -35,6 +36,8 @@ const ProductInfo = ({
   const discountPercent = hasDiscount
     ? Math.round(((basePrice - currentPrice) / basePrice) * 100)
     : 0;
+
+  const soldCount = Number(product.sold_count || 0);
 
   return (
     <div className="space-y-4 font-sans text-slate-800 dark:text-slate-100 transition-colors duration-200">
@@ -83,10 +86,20 @@ const ProductInfo = ({
               {Number(avgRating).toFixed(1)}
             </span>
           </div>
+
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 group-hover:text-sky-600 dark:group-hover:text-sky-400 underline underline-offset-2">
             {t("customer_reviews_count", { count: totalReviews })}
           </span>
         </a>
+      )}
+
+      {soldCount > 0 && (
+        <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 ml-2">
+          <ShoppingCart size={14} className="shrink-0" />
+          <span>
+            {t("sold_count")}: {soldCount}
+          </span>
+        </div>
       )}
 
       {/* Khối Giá bán & Badge phần trăm giảm giá */}

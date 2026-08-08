@@ -1,6 +1,7 @@
 import prisma from "../../db/prisma.js";
 import { ACTIVE } from "../../utils/prisma.js";
 import couponWebService from "./coupon.service.js";
+import { getSoldCountsByProductIds } from "../../utils/soldCount.utils.js";
 
 const productSelect = {
     id: true, name: true, slug: true,
@@ -82,7 +83,7 @@ const homeService = {
             select: productSelect,
         });
 
-        return products.map(mapProduct);
+        return homeService.mapProductsWithSold(products.map(mapProduct));
     },
 
     getCategories: async () => {
@@ -125,14 +126,15 @@ const homeService = {
         });
 
         const seen = new Set();
-        return variants
+        const bestSellers = variants
             .filter((v) => {
                 if (seen.has(v.product_id)) return false;
                 seen.add(v.product_id);
                 return true;
             })
-            .slice(0, limit)
-            .map((v) => mapProduct(v.product));
+            .slice(0, limit);
+
+        return homeService.mapProductsWithSold(bestSellers.map((v) => mapProduct(v.product)));
     },
 
     getBestSellersThisMonth: async (limit = 12) => {
@@ -156,10 +158,8 @@ const homeService = {
             select: productSelect,
         });
 
-        return products
-            .map(mapProduct)
-            .sort((a, b) => b.avg_rating - a.avg_rating)
-            .slice(0, limit);
+        const mapped = products.map(mapProduct).sort((a, b) => b.avg_rating - a.avg_rating).slice(0, limit);
+        return homeService.mapProductsWithSold(mapped);
     },
 
     getProductsByCategory: async (limit = 12) => {
@@ -185,12 +185,18 @@ const homeService = {
 
                 return {
                     category: cat,
-                    products: products.map(mapProduct),
+                    products: await homeService.mapProductsWithSold(products.map(mapProduct)),
                 };
             }),
         );
 
         return result;
+    },
+
+    mapProductsWithSold: async (mappedProducts) => {
+        if (mappedProducts.length === 0) return mappedProducts;
+        const soldCounts = await getSoldCountsByProductIds(mappedProducts.map((p) => p.id));
+        return mappedProducts.map((p) => ({ ...p, sold_count: soldCounts.get(p.id) || 0 }));
     },
 };
 

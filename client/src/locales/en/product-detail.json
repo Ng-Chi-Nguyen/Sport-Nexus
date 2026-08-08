@@ -11,6 +11,7 @@
   "customer_reviews_count": "({{count}} customer reviews)",
   "discount_badge": "SAVE -{{percent}}%",
   "subtotal": "Subtotal",
+  "sold_count": "Sold",
   "warranty_commitment": "100% Authentic Product — Official warranty commitment",
   "tab_description": "Product Description",
   "tab_shipping": "Shipping Policy",

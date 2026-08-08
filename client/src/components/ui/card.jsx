@@ -197,6 +197,13 @@ const ProductCard = ({ product, index = 0 }) => {
           </div>
         )}
 
+        {Number(product.sold_count) > 0 && (
+          <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+            <ShoppingCart size={12} className="shrink-0" />
+            <span>{t("sold_count")}: {Number(product.sold_count)}</span>
+          </div>
+        )}
+
         <div className="pt-1 mt-auto flex items-center gap-2 flex-wrap">
           <p className="text-[15px] md:text-[16px] font-bold text-red-600 dark:text-red-500">
             {formatCurrency(salePrice)}

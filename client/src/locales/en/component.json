@@ -105,7 +105,8 @@
     "ward_label": "Ward / Commune",
     "choose_province": "Select Province / City",
     "choose_ward": "Select Ward / Commune",
-    "select_province_first": "Please select Province"
+    "select_province_first": "Please select Province",
+    "sold_count": "Sold"
   },
   "menu": {
     "system": "SYSTEM",
@@ -121,6 +122,7 @@
     "coupons": "Coupons",
     "reviews": "Reviews & Feedback",
     "categories": "Categories",
+    "collections": "Collections",
     "products": "Products",
     "product_variants": "Product Variants",
     "attribute_key": "Attribute Keys",

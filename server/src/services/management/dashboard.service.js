@@ -106,7 +106,7 @@ export const createBusinessDashboardService = ({ db = prisma } = {}) => ({
     const productWhere = hasDateFilter ? { created_at: { gte: range.from, lte: range.to } } : {};
     const [products, orderItems, reviews, images, variants, newProducts] = await Promise.all([
       db.Products.findMany({ select: { id: true, name: true, is_active: true, base_price: true, created_at: true, category_id: true, supplier_id: true, brand_id: true } }),
-      db.OrderItems.findMany({ select: { quantity: true, price_at_purchase: true, product_variant: { select: { product_id: true } } } }),
+      db.OrderItems.findMany({ where: { order: { status: { notIn: ['Cancelled', 'Refunded'] } } }, select: { quantity: true, price_at_purchase: true, product_variant: { select: { product_id: true } } } }),
       db.Reviews.findMany({ select: { rating: true, product_id: true } }),
       db.ProductImages.findMany({ select: { product_id: true } }),
       db.ProductVariants.findMany({ select: { product_id: true } }),
@@ -135,6 +135,8 @@ export const createBusinessDashboardService = ({ db = prisma } = {}) => ({
       if (!productReviews[r.product_id]) productReviews[r.product_id] = [];
       productReviews[r.product_id].push(r.rating);
     }
+
+    const totalSold = Object.values(productSold).reduce((s, n) => s + n, 0);
 
     const productDetails = (id) => products.find((p) => p.id === id);
 
@@ -217,6 +219,7 @@ export const createBusinessDashboardService = ({ db = prisma } = {}) => ({
         inactiveProducts,
         noImageProducts,
         noVariantProducts,
+        totalSold,
       },
       newProductTrend,
       topSelling,
