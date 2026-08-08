@@ -54,5 +54,3 @@ export const METHOD_OPTIONS = [
   { value: "VNPAY", label: "Cổng VNPay" },
   { value: "CREDIT_CARD", label: "Thẻ tín dụng" },
 ];
-
-

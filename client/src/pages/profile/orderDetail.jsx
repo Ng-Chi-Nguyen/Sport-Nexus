@@ -52,9 +52,7 @@ const OrderDetail = () => {
   const paymentMethodLabel =
     PAYMENT_METHOD_LABELS[order.payment_method] || order.payment_method;
 
-  const reviewedIds = new Set(
-    (order.Reviews || []).map((r) => r.product_id),
-  );
+  const reviewedIds = new Set((order.Reviews || []).map((r) => r.product_id));
   const hasPendingReview =
     order.status === "Delivered" &&
     (order.OrderItems || []).some(
@@ -68,25 +66,23 @@ const OrderDetail = () => {
         className="inline-flex items-center gap-1.5 text-sm text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 font-semibold transition-colors"
       >
         <ArrowLeft size={16} />
-        {t("back_to_orders", "Quay lại đơn hàng")}
+        {t("back_to_orders")}
       </Link>
 
       <div className="flex items-center justify-between flex-wrap gap-4 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md">
         <TitleWithIcon
           icon={PackageCheck}
-          title={`${t("order_title_prefix", "Đơn hàng")} #${order.id}`}
+          title={`${t("order_title_prefix")} #OD-${order.id}`}
         />
         <div className="flex items-center gap-3">
           {order.status === "Delivered" && (
             <button
               type="button"
               onClick={() => setShowReview(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-sky-600 hover:bg-sky-700 rounded-lg transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 py-1 px-2 text-[10px] font-semibold text-white bg-sky-600 hover:bg-sky-700 transition-colors cursor-pointer"
             >
               <Star size={15} />
-              {hasPendingReview
-                ? t("review_button", "Đánh giá")
-                : t("review_edit_button", "Sửa đánh giá")}
+              {hasPendingReview ? t("review_button") : t("review_edit_button")}
             </button>
           )}
           <Badge color={ORDER_COLOR_MAP[order.status] || "gray"}>
@@ -98,7 +94,7 @@ const OrderDetail = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md">
         <div className="space-y-1">
           <p className="text-xs text-slate-400 dark:text-slate-500 uppercase font-semibold">
-            {t("order_date", "Ngày đặt")}
+            {t("order_date")}
           </p>
           <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
             {order.created_at ? formatFullDateTime(order.created_at) : "—"}
@@ -180,17 +176,15 @@ const OrderDetail = () => {
             </colgroup>
             <thead>
               <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]/40 text-slate-700 dark:text-slate-300 font-semibold">
-                <th className="py-3.5 px-4 text-left">
-                  {t("product_column", "Sản phẩm")}
+                <th className="py-3.5 px-4 text-left">{t("product_column")}</th>
+                <th className="py-3.5 px-4 text-right">
+                  {t("unit_price_column")}
                 </th>
                 <th className="py-3.5 px-4 text-right">
-                  {t("unit_price_column", "Đơn giá")}
+                  {t("quantity_column")}
                 </th>
                 <th className="py-3.5 px-4 text-right">
-                  {t("quantity_column", "Số lượng")}
-                </th>
-                <th className="py-3.5 px-4 text-right">
-                  {t("subtotal_column", "Tạm tính")}
+                  {t("subtotal_column")}
                 </th>
               </tr>
             </thead>
@@ -208,8 +202,7 @@ const OrderDetail = () => {
                     <td className="py-3.5 px-4">
                       <div className="space-y-1">
                         <p className="font-medium text-slate-900 dark:text-slate-100">
-                          {variant?.product?.name ||
-                            t("default_product_name", "Sản phẩm")}
+                          {variant?.product?.name || t("default_product_name")}
                         </p>
                         {attributes && (
                           <p className="text-xs text-slate-500 dark:text-slate-400">

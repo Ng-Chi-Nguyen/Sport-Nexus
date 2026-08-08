@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { formatDate, formatCurrency } from "@/utils/formatters";
 import { STATUS_LABELS, STATUS_PAYMENT } from "@/constants/order";
-import { STATUS_BADGE, PAYMENT_BADGE } from "@/constants/web/profile";
 import Pagination from "@/components/ui/pagination";
 import ReviewModal from "@/components/customer/ReviewModal";
 import { Package } from "lucide-react";
@@ -58,19 +57,11 @@ const Order = () => {
             <table className="w-full text-sm text-left">
               <thead>
                 <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]/40 text-slate-700 dark:text-slate-300 font-semibold">
-                  <th className="py-3.5 px-4">
-                    {t("order_code", "Mã đơn hàng")}
-                  </th>
-                  <th className="py-3.5 px-4">{t("order_date", "Ngày đặt")}</th>
-                  <th className="py-3.5 px-4">
-                    {t("total_amount", "Thành tiền")}
-                  </th>
-                  <th className="py-3.5 px-4">
-                    {t("payment_method", "Thanh toán")}
-                  </th>
-                  <th className="py-3.5 px-4">
-                    {t("order_status", "Trạng thái")}
-                  </th>
+                  <th className="py-3.5 px-4">{t("order_code")}</th>
+                  <th className="py-3.5 px-4">{t("order_date")}</th>
+                  <th className="py-3.5 px-4">{t("total_amount")}</th>
+                  <th className="py-3.5 px-4">{t("payment_method")}</th>
+                  <th className="py-3.5 px-4">{t("order_status")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
@@ -84,6 +75,23 @@ const Order = () => {
                       (item) =>
                         !reviewedIds.has(item.product_variant?.product_id),
                     );
+
+                  const status = order.payment_status;
+                  const isPaid = status === "Paid";
+
+                  // Định nghĩa style màu sắc dạng soft/pastel qua className để đè lên style thô cũ
+                  const paymentBadgeStyle = isPaid
+                    ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 px-2.5 py-1 rounded-full text-xs font-medium"
+                    : "bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20 px-2.5 py-1 rounded-full text-xs font-medium";
+
+                  const getOrderStatusStyle = (st) => {
+                    if (st === "Delivered")
+                      return "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 px-2.5 py-1 rounded-full text-xs font-medium";
+                    if (st === "Cancelled")
+                      return "bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20 px-2.5 py-1 rounded-full text-xs font-medium";
+                    return "bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-500/20 px-2.5 py-1 rounded-full text-xs font-medium";
+                  };
+
                   return (
                     <tr
                       key={order.id}
@@ -92,7 +100,7 @@ const Order = () => {
                       }
                       className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer"
                     >
-                      <td className="py-3.5 px-4 font-semibold text-primary dark:text-primary">
+                      <td className="py-3.5 px-4 font-semibold text-sky-600 dark:text-sky-400">
                         #{order.id}
                       </td>
                       <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300">
@@ -102,33 +110,18 @@ const Order = () => {
                         {formatCurrency(order.final_amount)}
                       </td>
                       <td className="py-3.5 px-4">
-                        <Badge
-                          color={
-                            order.payment_status === "Paid"
-                              ? "success"
-                              : "warning"
-                          }
-                        >
-                          {STATUS_PAYMENT[order.payment_status] ||
-                            order.payment_status}
-                        </Badge>
+                        <span className={paymentBadgeStyle}>
+                          {STATUS_PAYMENT[status] || status}
+                        </span>
                       </td>
 
-                      <td className="py-3.5 px-4 flex gap-2">
-                        <div className="flex flex-col items-start gap-2">
-                          <Badge
-                            color={
-                              order.status === "Delivered"
-                                ? "success"
-                                : order.status === "Cancelled"
-                                  ? "error"
-                                  : "nexus"
-                            }
-                          >
+                      <td className="py-3.5 px-4 flex items-center gap-3">
+                        <div className="flex flex-col items-start">
+                          <span className={getOrderStatusStyle(order.status)}>
                             {STATUS_LABELS[order.status] || order.status}
-                          </Badge>
+                          </span>
                         </div>
-                        <div className="">
+                        <div>
                           {hasPendingReview && (
                             <button
                               type="button"

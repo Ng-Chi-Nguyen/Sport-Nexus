@@ -49,6 +49,7 @@ const couponCustomerService = {
     const discount = computeCouponDiscount(coupon, amount);
     return {
       discount,
+      oldAmount: amount,
       newAmount: amount - discount,
       remainingUses: coupon.max_uses_per_user - usedCount,
       max_uses_per_user: coupon.max_uses_per_user,

@@ -94,7 +94,7 @@ const CartPage = () => {
           <div className="md:col-span-2 sticky top-4">
             <CartSummary
               selectedItems={selectedItems}
-              onCheckout={(selItems) => {
+              onCheckout={(selItems, couponCode) => {
                 const checkoutItems = selItems.map((i) => ({
                   product_variant_id: i.product_variant_id,
                   quantity: i.quantity,
@@ -109,7 +109,7 @@ const CartPage = () => {
                   ),
                 }));
                 navigate("/thanh-toan", {
-                  state: { items: checkoutItems, email: "" },
+                  state: { items: checkoutItems, email: "", couponCode },
                 });
               }}
             />

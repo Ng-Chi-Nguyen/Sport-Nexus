@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { formatDate, formatCurrency } from "@/utils/formatters";
 import { STATUS_LABELS, STATUS_PAYMENT } from "@/constants/order";
-import { STATUS_BADGE, PAYMENT_BADGE } from "@/constants/web/profile";
 import ShowToast from "@/components/ui/toast";
 import userApi from "@/api/customer/userApi";
 import { TitleWithIcon } from "@/components/ui/title";
@@ -77,6 +76,23 @@ const Profile = () => {
 
   if (!user) return null;
 
+  // Hàm style cho trạng thái thanh toán
+  const getPaymentBadgeStyle = (status) => {
+    const isPaid = status === "Paid";
+    return isPaid
+      ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 px-2.5 py-1 rounded-full text-xs font-medium inline-block"
+      : "bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20 px-2.5 py-1 rounded-full text-xs font-medium inline-block";
+  };
+
+  // Hàm style cho trạng thái đơn hàng
+  const getOrderStatusStyle = (status) => {
+    if (status === "Delivered")
+      return "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 px-2.5 py-1 rounded-full text-xs font-medium inline-block";
+    if (status === "Cancelled")
+      return "bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20 px-2.5 py-1 rounded-full text-xs font-medium inline-block";
+    return "bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-500/20 px-2.5 py-1 rounded-full text-xs font-medium inline-block";
+  };
+
   return (
     <div className="space-y-8 font-sans text-slate-800 dark:text-slate-100 transition-colors duration-200">
       {/* Khối Thông Tin Tài Khoản */}
@@ -136,7 +152,7 @@ const Profile = () => {
               {user.full_name}
             </p>
             <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 font-medium">
-              {user.role?.name || tProfile("customer", "Khách hàng")}
+              {user.role?.name || tProfile("customer")}
             </p>
           </div>
         </div>
@@ -149,7 +165,7 @@ const Profile = () => {
             />
             <div className="min-w-0">
               <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
-                {tProfile("email", "Email")}
+                {tProfile("email")}
               </p>
               <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate mt-0.5">
                 {user.email || "—"}
@@ -164,7 +180,7 @@ const Profile = () => {
             />
             <div className="min-w-0">
               <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
-                {tProfile("phone", "Điện thoại")}
+                {tProfile("phone")}
               </p>
               <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                 {user.phone_number || "—"}
@@ -179,7 +195,7 @@ const Profile = () => {
             />
             <div className="min-w-0 flex-1">
               <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
-                {tProfile("address", "Địa chỉ")}
+                {tProfile("address")}
               </p>
               {defaultAddr ? (
                 <div className="mt-0.5">
@@ -190,7 +206,7 @@ const Profile = () => {
                     to="/tai-khoan/dia-chi"
                     className="text-[10px] text-sky-600 dark:text-sky-400 hover:underline mt-0.5 inline-block font-semibold"
                   >
-                    {tProfile("manage_address", "Quản lý địa chỉ")}
+                    {tProfile("manage_address")}
                   </Link>
                 </div>
               ) : (
@@ -199,7 +215,7 @@ const Profile = () => {
                     to="/tai-khoan/dia-chi/them"
                     className="text-sky-600 dark:text-sky-400 hover:underline"
                   >
-                    {tAddress("add_address", "+ Thêm địa chỉ")}
+                    {tAddress("add_address")}
                   </Link>
                 </p>
               )}
@@ -213,7 +229,7 @@ const Profile = () => {
             />
             <div className="min-w-0">
               <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
-                {tProfile("role", "Vai trò")}
+                {tProfile("role")}
               </p>
               <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                 {user.role?.name || "—"}
@@ -316,7 +332,7 @@ const Profile = () => {
                     onClick={() => navigate(`/tai-khoan/don-hang/${order.id}`)}
                     className="text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer"
                   >
-                    <td className="py-3.5 px-4 font-semibold text-primary dark:text-primary">
+                    <td className="py-3.5 px-4 font-semibold text-sky-600 dark:text-sky-400">
                       #{order.id}
                     </td>
                     <td className="py-3.5 px-4">
@@ -327,16 +343,14 @@ const Profile = () => {
                     </td>
                     <td className="py-3.5 px-4">
                       <span
-                        className={`inline-block px-2.5 py- text-xs font-medium border ${PAYMENT_BADGE[order.payment_status] || ""}`}
+                        className={getPaymentBadgeStyle(order.payment_status)}
                       >
                         {STATUS_PAYMENT[order.payment_status] ||
                           order.payment_status}
                       </span>
                     </td>
                     <td className="py-3.5 px-4">
-                      <span
-                        className={`inline-block px-2.5 py-1 text-xs font-medium border ${STATUS_BADGE[order.status] || ""}`}
-                      >
+                      <span className={getOrderStatusStyle(order.status)}>
                         {STATUS_LABELS[order.status] || order.status}
                       </span>
                     </td>

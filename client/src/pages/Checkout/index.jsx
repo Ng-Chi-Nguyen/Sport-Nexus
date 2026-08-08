@@ -87,6 +87,15 @@ const Checkout = () => {
     clearCoupon,
   } = useCoupon();
 
+  const carriedCoupon = location.state?.couponCode || "";
+
+  useEffect(() => {
+    if (!carriedCoupon || couponCode || totalAmount <= 0) return;
+    setCouponCode(carriedCoupon);
+    applyCoupon(totalAmount, carriedCoupon);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const selectedProvince = useMemo(
     () => addressData.find((p) => p.Code === provinceCode),
     [provinceCode],

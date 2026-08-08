@@ -71,7 +71,7 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
 
       <button
         type="button"
-        onClick={() => onCheckout(selectedItems)}
+        onClick={() => onCheckout(selectedItems, couponCode)}
         disabled={selectedItems.length === 0}
         className="w-full py-3 bg-amber-500 dark:bg-amber-600 text-white hover:bg-amber-600 dark:hover:bg-amber-500 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
       >
