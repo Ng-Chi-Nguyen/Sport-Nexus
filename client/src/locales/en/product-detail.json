@@ -37,5 +37,9 @@
   "coupon_discounted_price": "Discounted price:",
   "coupon_saved": "Saved: {{value}}",
   "reviews_heading": "Reviews ({{count}})",
-  "default_user_name": "User"
+  "default_user_name": "User",
+  "related_title": "Buy together",
+  "related_similar": "Similar products",
+  "related_liked": "Liked products",
+  "related_viewed": "Recently viewed"
 }

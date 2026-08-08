@@ -37,5 +37,9 @@
   "coupon_discounted_price": "Giá sau giảm:",
   "coupon_saved": "Tiết kiệm: {{value}}",
   "reviews_heading": "Đánh giá ({{count}})",
-  "default_user_name": "Người dùng"
+  "default_user_name": "Người dùng",
+  "related_title": "Gợi ý mua kèm",
+  "related_similar": "Sản phẩm tương tự",
+  "related_liked": "Sản phẩm đã thích",
+  "related_viewed": "Sản phẩm đã xem gần đây"
 }
