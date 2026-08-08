@@ -10,6 +10,7 @@ import {
   Grid,
   ChevronRight,
   ArrowUpRight,
+  LayoutGrid,
 } from "lucide-react";
 
 export const NavCategoryMenu = ({
@@ -28,9 +29,7 @@ export const NavCategoryMenu = ({
     { key: "terms_of_use", to: "/dieu-khoan-su-dung", icon: PhoneCall },
     { key: "privacy_policy", to: "/chinh-sach-bao-mat", icon: ShieldCheck },
     { key: "recruitment", to: "/tuyen-dung", icon: Users },
-  ];
-
-  // Xử lý click outside đóng menu
+  ];  // Xử lý click outside đóng menu
   useEffect(() => {
     const handleClickOutside = (e) => {
       const toggleBtn = document.getElementById("menu-toggle-btn");
@@ -79,6 +78,18 @@ export const NavCategoryMenu = ({
 
           {/* Links Điều Hướng Desktop */}
           <nav className="hidden md:flex items-center gap-1">
+            <Link
+              to="/bo-suu-tap"
+              onClick={() => setIsOpenMenu(false)}
+              className={`h-8 px-3 flex items-center gap-2 text-xs font-medium rounded-lg transition-colors ${
+                pathname === "/bo-suu-tap" || pathname.startsWith("/bo-suu-tap/")
+                  ? "bg-sky-600 dark:bg-sky-500 text-white font-semibold shadow-sm"
+                  : "hover:text-white hover:bg-slate-800"
+              }`}
+            >
+              <LayoutGrid size={14} />
+              <span>{t("collections_title")}</span>
+            </Link>
             {infoLinks.map((link) => {
               const isActive = pathname === link.to;
               const Icon = link.icon;

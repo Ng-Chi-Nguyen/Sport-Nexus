@@ -93,6 +93,15 @@ const EditCategoryPage = lazy(
   () => import("@/pages/Admin/categories/edit.jsx"),
 );
 
+// Bộ sưu tập (Thư mục)
+const CollectionPage = lazy(() => import("@/pages/Admin/collections/index.jsx"));
+const CreateCollectionPage = lazy(
+  () => import("@/pages/Admin/collections/create.jsx"),
+);
+const EditCollectionPage = lazy(
+  () => import("@/pages/Admin/collections/edit.jsx"),
+);
+
 // Thuộc tính & Biến thể (Thư mục con/File lẻ)
 const Variant = lazy(() => import("@/pages/Admin/productVariant/index.jsx"));
 const EditVariant = lazy(() => import("@/pages/Admin/productVariant/edit.jsx"));
@@ -299,6 +308,21 @@ export const adminRoutes = {
       path: "categories/edit/:catrgoryId",
       element: <EditCategoryPage />,
       loader: RouteLoaders.categoryEditLoader,
+    },
+    {
+      path: "collections",
+      element: <CollectionPage />,
+      loader: RouteLoaders.collectionsLoader,
+    },
+    {
+      path: "collections/create",
+      element: <CreateCollectionPage />,
+      loader: RouteLoaders.collectionCreateLoader,
+    },
+    {
+      path: "collections/edit/:collectionId",
+      element: <EditCollectionPage />,
+      loader: RouteLoaders.collectionEditLoader,
     },
   ],
 };

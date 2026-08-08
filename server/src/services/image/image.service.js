@@ -21,6 +21,10 @@ const uploadImage = {
         return uploadFileToSupabase(fileBuffer, 'image_categories', namePrefix);
     },
 
+    uploadImageCollection: async (fileBuffer, namePrefix) => {
+        return uploadFileToSupabase(fileBuffer, 'image_collections', namePrefix);
+    },
+
     uploadThumbnail: async (fileBuffer, namePrefix) => {
         return uploadFileToSupabase(fileBuffer, 'thumbnail_products', namePrefix);
     },

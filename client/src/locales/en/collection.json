@@ -1,0 +1,10 @@
+{
+  "breadcrumb_home": "Home",
+  "collections_title": "Collections",
+  "collections_subtitle": "Discover collections by theme",
+  "collections_empty": "No collections available yet.",
+  "collections_not_found": "Collection not found.",
+  "collections_back": "Back to collections",
+  "collections_products": "Products ({{count}})",
+  "collections_products_empty": "This collection has no products yet."
+}

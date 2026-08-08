@@ -12,3 +12,7 @@ export {
   invoiceDetailLoader,
 } from "@/loaders/customer/invoiceLoader";
 export { productsLoader } from "@/loaders/web/productsLoader";
+export {
+  collectionsLoader,
+  collectionDetailLoader,
+} from "@/loaders/web/collectionLoader";

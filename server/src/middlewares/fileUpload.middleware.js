@@ -28,6 +28,7 @@ const uploadImageAvatar = upload.single('avatar');
 const uploadImageLogoSupplier = upload.single('logo_url');
 const uploadImageLogoBrand = upload.single('logo');
 const uploadImageCategory = upload.single('image');
+const uploadImageCollection = upload.single('banner');
 const uploadThubnailProduct = upload.single('thumbnail');
 const uploadProductImage = upload.array('url', 10);
 const uploadMediaImage = upload.array('media_urls', 5);
@@ -57,6 +58,7 @@ export {
     uploadImageLogoSupplier,
     uploadImageLogoBrand,
     uploadImageCategory,
+    uploadImageCollection,
     uploadThubnailProduct,
     uploadProductImage,
     uploadMediaImage,

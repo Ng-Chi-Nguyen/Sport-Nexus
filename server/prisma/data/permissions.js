@@ -12,6 +12,13 @@ export const categoryPermissions = [
   { slug: 'xem-danh-muc', name: 'Xem danh mục', module: 'categories', action: 'xem' },
 ];
 
+export const collectionPermissions = [
+  { slug: 'them-bo-suu-tap', name: 'Thêm bộ sưu tập', module: 'collections', action: 'them' },
+  { slug: 'sua-bo-suu-tap', name: 'Sửa bộ sưu tập', module: 'collections', action: 'sua' },
+  { slug: 'xoa-bo-suu-tap', name: 'Xóa bộ sưu tập', module: 'collections', action: 'xoa' },
+  { slug: 'xem-bo-suu-tap', name: 'Xem bộ sưu tập', module: 'collections', action: 'xem' },
+];
+
 export const supplierPermissions = [
   { slug: 'them-nha-cung-cap', name: 'Thêm nhà cung cấp', module: 'suppliers', action: 'them' },
   { slug: 'sua-nha-cung-cap', name: 'Sửa nhà cung cấp', module: 'suppliers', action: 'sua' },
@@ -111,6 +118,7 @@ export const paymentPermissions = [
 export const allPermissions = [
   ...brandPermissions,
   ...categoryPermissions,
+  ...collectionPermissions,
   ...supplierPermissions,
   ...userPermissions,
   ...couponPermissions,

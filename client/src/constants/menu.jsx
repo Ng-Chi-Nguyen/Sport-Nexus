@@ -53,6 +53,11 @@ export const SIDEBAR_MENU_STRUCTURE = (prefix) => [
         iconName: "ListTree",
       },
       {
+        path: `${prefix}/collections`,
+        label: "collections",
+        iconName: "Award",
+      },
+      {
         path: `${prefix}/products`,
         label: "products",
         iconName: "Package",

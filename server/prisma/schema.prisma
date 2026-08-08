@@ -85,9 +85,28 @@ model Categories {
   is_active  Boolean    @default(true)
   deleted_at DateTime   @default(dbgenerated("'1000-01-01 00:00:00'"))
   Products   Products[]
+  Collections Collections[]
 
   @@unique([slug, deleted_at])
   @@map("categories")
+}
+
+// Collections - Bộ sưu tập (gắn với 1 danh mục, sản phẩm tự động theo danh mục)
+model Collections {
+  id          Int        @id @default(autoincrement())
+  name        String
+  slug        String
+  banner      String?    @db.Text
+  description String?    @db.Text
+  is_active   Boolean    @default(true)
+  deleted_at  DateTime   @default(dbgenerated("'1000-01-01 00:00:00'"))
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+  category_id Int
+  category    Categories @relation(fields: [category_id], references: [id], onDelete: Cascade)
+
+  @@unique([slug, deleted_at])
+  @@map("collections")
 }
 
 // Suppliers Done

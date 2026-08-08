@@ -1,0 +1,10 @@
+{
+  "breadcrumb_home": "Trang chủ",
+  "collections_title": "Bộ sưu tập",
+  "collections_subtitle": "Khám phá các bộ sưu tập theo chủ đề",
+  "collections_empty": "Chưa có bộ sưu tập nào.",
+  "collections_not_found": "Không tìm thấy bộ sưu tập.",
+  "collections_back": "Quay lại danh sách",
+  "collections_products": "Sản phẩm ({{count}})",
+  "collections_products_empty": "Bộ sưu tập này chưa có sản phẩm nào."
+}

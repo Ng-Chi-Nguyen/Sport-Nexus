@@ -11,6 +11,8 @@ import {
   invoicesLoader,
   invoiceDetailLoader,
   productsLoader,
+  collectionsLoader,
+  collectionDetailLoader,
 } from "./webLoader";
 import Support from "@/pages/settings/supports";
 
@@ -39,6 +41,8 @@ const Invoice = lazy(() => import("@/pages/settings/invoices"));
 const InvoiceDetail = lazy(() => import("@/pages/settings/invoices/detail"));
 
 const TrackingPage = lazy(() => import("@/pages/Tracking"));
+const CollectionsPage = lazy(() => import("@/pages/Collections"));
+const CollectionDetailPage = lazy(() => import("@/pages/Collections/detail"));
 
 export const webRoutes = {
   children: [
@@ -60,6 +64,16 @@ export const webRoutes = {
     {
       path: "tim-kiem",
       element: <SearchPage />,
+    },
+    {
+      path: "bo-suu-tap",
+      element: <CollectionsPage />,
+      loader: collectionsLoader,
+    },
+    {
+      path: "bo-suu-tap/:slug",
+      element: <CollectionDetailPage />,
+      loader: collectionDetailLoader,
     },
     {
       path: "gio-hang",

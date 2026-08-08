@@ -5,6 +5,7 @@ import LoaderUser from "@/loaders/management/userLoader";
 import LoaderBrand from "@/loaders/management/brandLoader";
 import LoaderSupplier from "@/loaders/management/supplierLoader";
 import LoaderCategory from "@/loaders/management/categoryLoader";
+import LoaderCollection from "@/loaders/management/collectionLoader";
 import LoaderProduct from "@/loaders/core/productLoader";
 import LoaderAttr from "@/loaders/core/attributeKey";
 import LoaderPurchase from "@/loaders/management/purchaseOrder";
@@ -352,6 +353,39 @@ export const categoriesLoader = ({ request }) =>
 
 export const categoryEditLoader = (args) =>
   LoaderCategory.getCategoryById(args);
+
+export const collectionsLoader = async ({ request }) => {
+  const collectionsPromise = queryClient.fetchQuery({
+    queryKey: ["collections", getPage(request), getSearchParam(request, "is_active"), getSearchParam(request, "search")],
+    queryFn: () => LoaderCollection.getAllCollections({ page: getPage(request), is_active: getSearchParam(request, "is_active"), search: getSearchParam(request, "search") }),
+  });
+  return collectionsPromise;
+};
+
+export const collectionCreateLoader = async () => {
+  const categoriesPromise = queryClient.fetchQuery({
+    queryKey: ["category-dropdown"],
+    queryFn: () => LoaderCategory.getCategoriesDropdown(),
+    staleTime: 60000,
+  });
+  const [categories] = await Promise.all([categoriesPromise]);
+  return { categories: categories?.data || [] };
+};
+
+export const collectionEditLoader = async ({ params }) => {
+  const [categories, collection] = await Promise.all([
+    queryClient.fetchQuery({
+      queryKey: ["category-dropdown"],
+      queryFn: () => LoaderCategory.getCategoriesDropdown(),
+      staleTime: 60000,
+    }),
+    queryClient.fetchQuery({
+      queryKey: ["collection", params.collectionId],
+      queryFn: () => LoaderCollection.getCollectionById({ params }),
+    }),
+  ]);
+  return { categories: categories?.data || [], collection };
+};
 
 export const productVariantsLoader = async ({ request }) => {
   const variantsPromise = queryClient.fetchQuery({
