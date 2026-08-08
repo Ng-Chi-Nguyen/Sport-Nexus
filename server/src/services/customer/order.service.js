@@ -3,6 +3,7 @@ import paymentService from "./payment.service.js";
 import { computeCouponDiscount } from "./coupon.service.js";
 import { createShipmentForOrder } from "../shipping/ghnSimulator.service.js";
 import { ACTIVE } from "../../utils/prisma.js";
+import loyaltyService from "./loyalty.service.js";
 
 const orderService = {
     createOrder: async (orderData, authUser) => {
@@ -403,6 +404,11 @@ const orderService = {
                 await paymentService.markCodPaid(Number(orderId));
             } catch (err) {
                 console.error("[PAYMENT] Không đánh dấu COD Paid:", err.message);
+            }
+            try {
+                await loyaltyService.awardPoints(Number(orderId));
+            } catch (err) {
+                console.error("[LOYALTY] Không tích điểm đơn:", err.message);
             }
         }
 
