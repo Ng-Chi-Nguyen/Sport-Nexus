@@ -31,6 +31,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.js",
     "seed": "node prisma/seed.js",
-    "seed:permissions": "node prisma/seed-permissions.js"
+    "seed:permissions": "node prisma/seed-permissions.js",
+    "seed:loyalty": "node prisma/seed-loyalty.js"
   }
 }
