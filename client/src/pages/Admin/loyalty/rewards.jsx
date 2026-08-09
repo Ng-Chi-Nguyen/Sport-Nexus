@@ -6,13 +6,12 @@ import ShowToast from "@/components/ui/toast";
 import Badge from "@/components/ui/badge";
 import { BtnDelete } from "@/components/ui/button";
 import { ConfirmDelete } from "@/components/ui/confirm";
-import { formatCurrency } from "@/utils/formatters";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 
-const RewardForm = ({ initial, onSave, onCancel }) => {
+const RewardForm = ({ initial, tiers, onSave, onCancel }) => {
   const { t } = useTranslation("translation", { keyPrefix: "loyalty_admin" });
   const [form, setForm] = useState(
-    initial || { name: "", description: "", points_cost: 0, discount_value: 0, discount_type: "percent", stock: 0, image_url: "", is_active: true },
+    initial || { tier_id: tiers?.[0]?.id ?? "", name: "", point_cost: 0, coupon_code: "", is_active: true },
   );
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
   const setNum = (k) => (e) => setForm({ ...form, [k]: Number(e.target.value) });
@@ -23,16 +22,18 @@ const RewardForm = ({ initial, onSave, onCancel }) => {
         {initial ? t("edit_reward") : t("add_reward")}
       </h4>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <label className="block">
+          <span className="mb-1 block text-slate-600 dark:text-slate-300">{t("tier")}</span>
+          <select value={form.tier_id} onChange={set("tier_id")} className="w-full px-3 py-2 border rounded-lg">
+            <option value="">{t("select_tier")}</option>
+            {tiers.map((tier) => (
+              <option key={tier.id} value={tier.id}>{tier.name}</option>
+            ))}
+          </select>
+        </label>
         <input value={form.name} onChange={set("name")} placeholder={t("reward_name")} className="px-3 py-2 border rounded-lg" />
-        <input value={form.description} onChange={set("description")} placeholder={t("description")} className="px-3 py-2 border rounded-lg" />
-        <input type="number" value={form.points_cost} onChange={setNum("points_cost")} placeholder={t("points_cost")} className="px-3 py-2 border rounded-lg" />
-        <input type="number" value={form.discount_value} onChange={setNum("discount_value")} placeholder={t("discount_value")} className="px-3 py-2 border rounded-lg" />
-        <select value={form.discount_type} onChange={set("discount_type")} className="px-3 py-2 border rounded-lg">
-          <option value="percent">%</option>
-          <option value="fixed">{t("fixed_amount")}</option>
-        </select>
-        <input type="number" value={form.stock} onChange={setNum("stock")} placeholder={t("stock")} className="px-3 py-2 border rounded-lg" />
-        <input value={form.image_url} onChange={set("image_url")} placeholder={t("image_url")} className="px-3 py-2 border rounded-lg" />
+        <input type="number" value={form.point_cost} onChange={setNum("point_cost")} placeholder={t("point_cost")} className="px-3 py-2 border rounded-lg" />
+        <input value={form.coupon_code} onChange={set("coupon_code")} placeholder={t("coupon_code")} className="px-3 py-2 border rounded-lg" />
         <label className="flex items-center gap-2">
           <input type="checkbox" checked={!!form.is_active} onChange={(e) => setForm({ ...form, is_active: e.target.checked })} />
           {t("is_active")}
@@ -49,6 +50,7 @@ const RewardForm = ({ initial, onSave, onCancel }) => {
 const RewardPage = () => {
   const { t } = useTranslation("translation", { keyPrefix: "loyalty_admin" });
   const [rewards, setRewards] = useState([]);
+  const [tiers, setTiers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -57,8 +59,9 @@ const RewardPage = () => {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await loyaltyApi.getRewards();
+      const [res, tierRes] = await Promise.all([loyaltyApi.getRewards(), loyaltyApi.getTiers()]);
       setRewards(res?.data?.rewards ?? []);
+      setTiers(tierRes?.data?.tiers ?? []);
     } finally {
       setLoading(false);
     }
@@ -101,17 +104,16 @@ const RewardPage = () => {
         </button>
       </div>
 
-      {showForm && <RewardForm initial={editing} onSave={handleSave} onCancel={() => { setShowForm(false); setEditing(null); }} />}
+      {showForm && <RewardForm initial={editing} tiers={tiers} onSave={handleSave} onCancel={() => { setShowForm(false); setEditing(null); }} />}
 
       <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-800">
             <tr>
+              <th className="text-left p-3">{t("tier")}</th>
               <th className="text-left p-3">{t("reward_name")}</th>
-              <th className="text-left p-3">{t("description")}</th>
-              <th className="text-left p-3">{t("points_cost")}</th>
-              <th className="text-left p-3">{t("discount_value")}</th>
-              <th className="text-left p-3">{t("stock")}</th>
+              <th className="text-left p-3">{t("point_cost")}</th>
+              <th className="text-left p-3">{t("coupon_code")}</th>
               <th className="text-left p-3">{t("is_active")}</th>
               <th className="text-right p-3">{t("actions")}</th>
             </tr>
@@ -119,11 +121,10 @@ const RewardPage = () => {
           <tbody>
             {rewards.map((reward) => (
               <tr key={reward.id} className="border-t border-slate-100 dark:border-slate-800">
+                <td className="p-3">{reward.tier?.name ?? reward.tier_id}</td>
                 <td className="p-3 font-medium">{reward.name}</td>
-                <td className="p-3 text-slate-500">{reward.description}</td>
-                <td className="p-3">{Number(reward.points_cost)}</td>
-                <td className="p-3">{reward.discount_type === "percent" ? `${reward.discount_value}%` : formatCurrency(reward.discount_value)}</td>
-                <td className="p-3">{reward.stock}</td>
+                <td className="p-3">{Number(reward.point_cost)}</td>
+                <td className="p-3 text-slate-500">{reward.coupon_code || "—"}</td>
                 <td className="p-3"><Badge>{reward.is_active ? t("active") : t("inactive")}</Badge></td>
                 <td className="p-3">
                   <div className="flex justify-end gap-2">
