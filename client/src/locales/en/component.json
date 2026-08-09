@@ -114,6 +114,8 @@
     "products_warehouse": "PRODUCTS & WAREHOUSE",
     "supply_chain": "SUPPLY CHAIN",
     "users_acl": "USERS & ACL",
+    "membership": "MEMBERSHIP & BENEFITS",
+    "loyalty": "Loyalty Points",
     "overview": "Overview",
     "activity": "Activity",
     "orders": "Orders",

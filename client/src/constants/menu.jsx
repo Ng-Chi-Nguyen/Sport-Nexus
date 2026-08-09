@@ -97,6 +97,17 @@ export const SIDEBAR_MENU_STRUCTURE = (prefix) => [
     ],
   },
   {
+    title: "membership",
+    items: [
+      {
+        path: `${prefix}/loyalty`,
+        label: "loyalty",
+        iconName: "Trophy",
+        roles: ["admin"],
+      },
+    ],
+  },
+  {
     title: "users_acl",
     items: [
       {
