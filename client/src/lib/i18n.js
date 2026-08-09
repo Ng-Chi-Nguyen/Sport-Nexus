@@ -18,6 +18,7 @@ import viCart from "@/locales/vi/cart.json";
 import viSearch from "@/locales/vi/search.json";
 import viCollection from "@/locales/vi/collection.json";
 import viLoyalty from "@/locales/vi/loyalty.json";
+import viLoyaltyAdmin from "@/locales/vi/loyalty_admin.json";
 
 // 2. Tiếng Anh (en)
 import enHome from "@/locales/en/home.json";
@@ -35,6 +36,7 @@ import enCart from "@/locales/en/cart.json";
 import enSearch from "@/locales/en/search.json";
 import enCollection from "@/locales/en/collection.json";
 import enLoyalty from "@/locales/en/loyalty.json";
+import enLoyaltyAdmin from "@/locales/en/loyalty_admin.json";
 
 i18n
     .use(LanguageDetector)
@@ -65,6 +67,7 @@ i18n
                     ...viSearch,
                     ...viCollection,
                     loyalty: viLoyalty,
+                    loyalty_admin: viLoyaltyAdmin,
                     order: { ...viProfile.order, ...vndashboard.order },
                 },
             },
@@ -91,6 +94,7 @@ i18n
                     ...enSearch,
                     ...enCollection,
                     loyalty: enLoyalty,
+                    loyalty_admin: enLoyaltyAdmin,
                     order: { ...enProfile.order, ...endashboard.order },
                 },
             },
