@@ -4,6 +4,7 @@ import CouponInput from "@/pages/ProductDetail/components/CouponInput";
 import useCouponSuggestions from "@/hooks/useCouponSuggestions";
 import { formatCurrency } from "@/utils/formatters";
 import OrderItem from "./OrderItem";
+import PointsInput from "./PointsInput";
 import { useTranslation } from "react-i18next";
 
 const OrderSummary = ({
@@ -26,6 +27,9 @@ const OrderSummary = ({
   fullAddress,
   email,
   onPlaceOrder,
+  pointsDiscount,
+  onApplyPoints,
+  pointsLoading,
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -61,6 +65,14 @@ const OrderSummary = ({
 
       <hr className="border-slate-200 dark:border-slate-800" />
 
+      <PointsInput
+        onApplyPoints={onApplyPoints}
+        appliedDiscount={pointsDiscount || 0}
+        busy={pointsLoading}
+      />
+
+      <hr className="border-slate-200 dark:border-slate-800" />
+
       <div className="space-y-2 text-sm">
         <div className="flex justify-between text-slate-600 dark:text-slate-400">
           <span>{t("subtotal")}</span>
@@ -70,6 +82,12 @@ const OrderSummary = ({
           <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
             <span>{t("discount_label", "Giảm giá")}</span>
             <span>-{formatCurrency(discount)}</span>
+          </div>
+        )}
+        {pointsDiscount > 0 && (
+          <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
+            <span>{t("loyalty.points")}</span>
+            <span>-{formatCurrency(pointsDiscount)}</span>
           </div>
         )}
         <div className="flex justify-between items-center text-slate-600 dark:text-slate-400">

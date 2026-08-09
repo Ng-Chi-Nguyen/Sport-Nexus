@@ -115,6 +115,18 @@ export const paymentPermissions = [
   { slug: 'hoan-tien', name: 'Hoàn tiền giao dịch', module: 'payments', action: 'hoan-tien' },
 ];
 
+export const loyaltyPermissions = [
+  { slug: 'them-hang-thanh-vien', name: 'Thêm hạng thành viên', module: 'membership', action: 'them' },
+  { slug: 'sua-hang-thanh-vien', name: 'Sửa hạng thành viên', module: 'membership', action: 'sua' },
+  { slug: 'xoa-hang-thanh-vien', name: 'Xóa hạng thành viên', module: 'membership', action: 'xoa' },
+  { slug: 'xem-hang-thanh-vien', name: 'Xem hạng thành viên', module: 'membership', action: 'xem' },
+  { slug: 'them-qua-doi-diem', name: 'Thêm quà đổi điểm', module: 'membership', action: 'them' },
+  { slug: 'sua-qua-doi-diem', name: 'Sửa quà đổi điểm', module: 'membership', action: 'sua' },
+  { slug: 'xoa-qua-doi-diem', name: 'Xóa quà đổi điểm', module: 'membership', action: 'xoa' },
+  { slug: 'xem-qua-doi-diem', name: 'Xem quà đổi điểm', module: 'membership', action: 'xem' },
+  { slug: 'cau-hinh-tich-diem', name: 'Cấu hình tích điểm', module: 'membership', action: 'cau-hinh' },
+];
+
 export const allPermissions = [
   ...brandPermissions,
   ...categoryPermissions,
@@ -133,4 +145,5 @@ export const allPermissions = [
   ...reviewPermissions,
   ...invoicePermissions,
   ...paymentPermissions,
+  ...loyaltyPermissions,
 ];

@@ -17,6 +17,7 @@ import {
   Sun,
   TicketPercent,
   User,
+  Coins,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
@@ -26,10 +27,12 @@ import { Logo } from "./logo";
 import SearchBar from "@/components/search/SearchBar";
 import { useCart } from "@/contexts/CartContext";
 import { clearAuth } from "@/lib/authStorage";
+import useMembership from "@/hooks/useMembership";
 
 const Header = ({ isOpenMenu, setIsOpenMenu }) => {
   const { i18n, t } = useTranslation();
   const { count } = useCart();
+  const { membership } = useMembership();
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
   const [avatarError, setAvatarError] = useState(false);
@@ -116,6 +119,12 @@ const Header = ({ isOpenMenu, setIsOpenMenu }) => {
                 <span className="text-[10px] text-gray-400 dark:text-slate-500 hidden md:block">
                   {user.email}
                 </span>
+                {membership?.tier && (
+                  <span className="text-[10px] text-amber-500 dark:text-amber-400 flex items-center gap-1">
+                    <Coins size={10} />
+                    {membership.tier.name} · {membership.points_balance?.toLocaleString("vi-VN")}đ
+                  </span>
+                )}
               </div>
             </Link>
           ) : (

@@ -8,6 +8,7 @@ import { resolveLocation } from "@/utils/location";
 import paymentApi from "@/api/customer/paymentApi";
 import shippingApi from "@/api/customer/shippingApi";
 import useCoupon from "@/hooks/useCoupon";
+import loyaltyApi from "@/api/customer/loyaltyApi";
 import EmptyCart from "./components/EmptyCart";
 import OrderSuccess from "./components/OrderSuccess";
 import ContactSection from "./components/ContactSection";
@@ -54,6 +55,21 @@ const Checkout = () => {
   const [paymentInfo, setPaymentInfo] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [shippingEstimate, setShippingEstimate] = useState(null);
+  const [pointsDiscount, setPointsDiscount] = useState(0);
+  const [pointsLoading, setPointsLoading] = useState(false);
+
+  const handleApplyPoints = async (points) => {
+    setPointsLoading(true);
+    try {
+      const res = await loyaltyApi.applyPoints(points);
+      setPointsDiscount(res?.data?.discount || 0);
+      ShowToast("success", res?.message || "Áp dụng điểm thành công");
+    } catch (err) {
+      ShowToast("error", err?.response?.data?.message || "Áp dụng điểm thất bại");
+    } finally {
+      setPointsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!user?.id) return;
@@ -127,7 +143,7 @@ const Checkout = () => {
   );
 
   const discount = couponData?.discount ?? 0;
-  const finalAmount = couponData?.newAmount ?? totalAmount;
+  const finalAmount = (couponData?.newAmount ?? totalAmount) - pointsDiscount;
 
   const defaultWeight = useMemo(
     () => items.reduce((sum, item) => sum + (item.quantity || 1) * 500, 0),
@@ -171,7 +187,7 @@ const Checkout = () => {
     () => ({
       total_amount: totalAmount,
       final_amount: grandTotal,
-      discount_amount: discount,
+      discount_amount: discount + pointsDiscount,
       shipping_address: fullAddress,
       payment_method: paymentMethod,
       coupon_code: couponCode || null,
@@ -192,6 +208,7 @@ const Checkout = () => {
       totalAmount,
       grandTotal,
       discount,
+      pointsDiscount,
       fullAddress,
       paymentMethod,
       couponCode,
@@ -339,6 +356,9 @@ const Checkout = () => {
               fullAddress={fullAddress}
               email={email}
               onPlaceOrder={handlePlaceOrder}
+              pointsDiscount={pointsDiscount}
+              onApplyPoints={handleApplyPoints}
+              pointsLoading={pointsLoading}
             />
           </div>
         </div>

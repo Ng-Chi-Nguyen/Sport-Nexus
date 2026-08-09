@@ -102,6 +102,17 @@ const EditCollectionPage = lazy(
   () => import("@/pages/Admin/collections/edit.jsx"),
 );
 
+// Chương trình thành viên & tích điểm
+const LoyaltyAdminPage = lazy(() => import("@/pages/Admin/loyalty/index.jsx"));
+const LoyaltyTiersPage = lazy(() => import("@/pages/Admin/loyalty/tiers.jsx"));
+const LoyaltyRewardsPage = lazy(
+  () => import("@/pages/Admin/loyalty/rewards.jsx"),
+);
+const LoyaltySettingsPage = lazy(
+  () => import("@/pages/Admin/loyalty/settings.jsx"),
+);
+const LoyaltyUsersPage = lazy(() => import("@/pages/Admin/loyalty/users.jsx"));
+
 // Thuộc tính & Biến thể (Thư mục con/File lẻ)
 const Variant = lazy(() => import("@/pages/Admin/productVariant/index.jsx"));
 const EditVariant = lazy(() => import("@/pages/Admin/productVariant/edit.jsx"));
@@ -324,5 +335,12 @@ export const adminRoutes = {
       element: <EditCollectionPage />,
       loader: RouteLoaders.collectionEditLoader,
     },
+
+    // Chương trình thành viên & tích điểm
+    { path: "loyalty", element: <LoyaltyAdminPage /> },
+    { path: "loyalty/tiers", element: <LoyaltyTiersPage /> },
+    { path: "loyalty/rewards", element: <LoyaltyRewardsPage /> },
+    { path: "loyalty/settings", element: <LoyaltySettingsPage /> },
+    { path: "loyalty/users", element: <LoyaltyUsersPage /> },
   ],
 };

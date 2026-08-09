@@ -18,6 +18,7 @@ import ShowToast from "@/components/ui/toast";
 import userApi from "@/api/customer/userApi";
 import { TitleWithIcon } from "@/components/ui/title";
 import { useTranslation } from "react-i18next";
+import MembershipBlock from "@/components/customer/MembershipBlock";
 
 const Profile = () => {
   const { t: tProfile } = useTranslation("translation", {
@@ -156,6 +157,8 @@ const Profile = () => {
             </p>
           </div>
         </div>
+
+        <MembershipBlock />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-800/80 shadow-sm">
