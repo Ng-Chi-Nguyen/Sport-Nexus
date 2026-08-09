@@ -1067,6 +1067,59 @@ Hệ thống SportNexus được phân tích thành hai nhóm chức năng chín
                  └─────────────────────────────────────────────┘
 ```
 
+### 3.6.3 Sơ đồ Use Case tổng quan (Use Case Diagram)
+
+<p align="center">
+  <img src="diagrams/usecase.png" alt="Sơ đồ Use Case tổng quan SportNexus" width="820">
+</p>
+
+Sơ đồ thể hiện hai hệ thống con chính với hai tác nhân, trong đó **khách hàng** được thể hiện đầy đủ **toàn bộ 24 use case** chia theo 3 nhóm nghiệp vụ:
+
+**Nhóm Tài khoản (UC-A) — 6 use case:**
+- UC-A1 Đăng ký (gửi email xác minh)
+- UC-A2 Đăng nhập (email/SĐT + mật khẩu)
+- UC-A3 Đăng nhập xã hội (Google, Facebook)
+- UC-A4 Quên mật khẩu
+- UC-A5 Đăng xuất
+- UC-A6 Đổi mật khẩu
+
+**Nhóm Mua sắm (UC-B) — 9 use case:**
+- UC-B1 Duyệt sản phẩm
+- UC-B2 Lọc & tìm kiếm
+- UC-B3 Chọn biến thể
+- UC-B4 Giỏ hàng
+- UC-B5 Checkout
+- UC-B6 Áp coupon
+- UC-B7 Đặt hàng
+- UC-B8 Thanh toán (COD / chuyển khoản)
+- UC-B9 Theo dõi đơn
+
+**Nhóm Hậu mãi & tài khoản (UC-C) — 9 use case:**
+- UC-C1 Quản lý hồ sơ
+- UC-C2 Sổ địa chỉ
+- UC-C3 Xem đơn hàng
+- UC-C4 Đánh giá sản phẩm
+- UC-C5 Hóa đơn
+- UC-C6 Yêu thích (wishlist)
+- UC-C7 Coupon đã lưu
+- UC-C8 Lịch sử tìm kiếm
+- UC-C9 Hỗ trợ (gửi yêu cầu qua email)
+
+**Quản trị viên** tương tác với Hệ thống Quản trị gồm 15 use case chính (UC-M1..M15): dashboard, người dùng, phân quyền, sản phẩm, danh mục, thương hiệu, nhà cung cấp, coupon, đơn hàng, phiếu nhập, tồn kho, hóa đơn, vận đơn, đánh giá, nhật ký hệ thống.
+
+Các quan hệ giữa use case của quản trị viên được thể hiện bằng mũi tên đứt nét:
+
+**Quan hệ «include» (use case chính luôn gọi use case kèm):**
+- **Người dùng (UC-M2)** → *Gán vai trò & quyền*
+- **Sản phẩm (UC-M4)** → *Quản lý biến thể*, *Quản lý thuộc tính*, *Quản lý hình ảnh*
+- **Đơn hàng (UC-M9)** → *Tạo hóa đơn (UC-M12)*, *Tạo vận đơn (UC-M13)*
+- **Phiếu nhập (UC-M10)** → *Cập nhật tồn kho (UC-M11)*
+
+**Quan hệ «extend» (use case tùy chọn mở rộng):**
+- **Nhập/Xuất Excel** → mở rộng các module *Người dùng (UC-M2)*, *Sản phẩm (UC-M4)*, *Danh mục (UC-M5)*, *Thương hiệu (UC-M6)*, *Nhà cung cấp (UC-M7)*, *Coupon (UC-M8)* khi quản trị viên cần nhập/xuất dữ liệu hàng loạt.
+
+Tất cả **24 use case của khách hàng** (UC-A1..A6, UC-B1..B9, UC-C1..C9) **đều đã được triển khai đầy đủ** trong hệ thống.
+
 ## 3.7 Phân tích sâu các use case phức tạp
 
 ### 3.7.1 Use case "Áp coupon" (UC-B6)
@@ -1229,6 +1282,14 @@ Chương 3 đã phân tích đầy đủ hệ thống SportNexus: yêu cầu ch�
                                  │  Google · Facebook   │
                                  └──────────────────────┘
 ```
+
+### 4.1.1 Sơ đồ kiến trúc hệ thống (System Architecture Diagram)
+
+<p align="center">
+  <img src="diagrams/architecture.png" alt="Sơ đồ kiến trúc hệ thống SportNexus" width="760">
+</p>
+
+Sơ đồ trên mô tả kiến trúc tổng thể: tầng Frontend (React) giao tiếp với tầng Backend (Express) qua HTTP/JSON/JWT; Backend truy cập CSDL MySQL qua Prisma và kết nối các dịch vụ ngoài (Supabase Storage, SMTP, PayOS, Casso, OAuth). Phần dưới thể hiện hai phương án triển khai (production một server / demo tách frontend) và cấu hình biến môi trường.
 
 ## 4.2 Các thành phần
 
@@ -1575,6 +1636,14 @@ suppliers ────> purchaseorders ──< purchaseorderitems >── produc
 productvariants ──< stockmovements
 users ──< systemlogs
 ```
+
+### 5.0.3 Sơ đồ thực thể – mối quan hệ (ERD)
+
+<p align="center">
+  <img src="diagrams/erd.png" alt="Sơ đồ thực thể mối quan hệ SportNexus" width="900">
+</p>
+
+Sơ đồ ERD trực quan thể hiện 22 bảng cùng các quan hệ chính được nhóm theo nghiệp vụ (Identity, Catalog, Sản phẩm, Bán hàng, Thanh toán, Vận chuyển, Kho, Audit). Các bảng khóa chính đánh dấu **PK**; quan hệ 1–N được nối từ khóa chính bảng cha đến khóa ngoại bảng con. Sơ đồ này là nền tảng trực quan cho việc trao đổi thiết kế và phục vụ trình bày trong báo cáo.
 
 ## 5.1 Tổng quan các bảng
 
@@ -2675,6 +2744,14 @@ Client          Route             Controller        Service                 DB
   │◄───────────────│  response JSON   │               │                    │
 ```
 
+#### 6.7.4.1 Sơ đồ tuần tự (Sequence Diagram) tạo đơn hàng
+
+<p align="center">
+  <img src="diagrams/sequence.png" alt="Sơ đồ tuần tự tạo đơn hàng" width="760">
+</p>
+
+Sơ đồ tuần tự mô tả luồng tạo đơn hàng giữa các đối tượng **Client → Route → Controller → Service → Database → Email**. Điểm trọng tâm là việc ghi dữ liệu được bọc trong **transaction** (BEGIN → ghi order/items/invoice → trừ tồn kho → tạo shipment → COMMIT), đảm bảo tính nguyên tử. Sau đó, email xác nhận được gửi theo nguyên tắc **best-effort** không làm ảnh hưởng luồng chính.
+
 #### 6.7.4.2 Các trạng thái đơn hàng
 
 | Trạng thái | Ý nghĩa | Chuyển đến |
@@ -2968,6 +3045,14 @@ Service (trong transaction)
   │
   └── COMMIT
 ```
+
+### 6.12.7 Sơ đồ hoạt động (Activity Diagram) – luồng đặt hàng
+
+<p align="center">
+  <img src="diagrams/activity.png" alt="Sơ đồ hoạt động luồng đặt hàng" width="560">
+</p>
+
+Sơ đồ hoạt động mô tả luồng nghiệp vụ đặt hàng từ phía người dùng: mở Checkout, điền thông tin, tính phí vận chuyển, rẽ nhánh theo việc **có dùng coupon hay không**, tạo đơn trong transaction, rồi rẽ nhánh theo **phương thức thanh toán** (online → chuyển hướng cổng thanh toán / COD → OrderSuccess). Sơ đồ này thể hiện rõ các điểm quyết định (hình thoi) và luồng hội tụ của nghiệp vụ.
 
 ## 6.13 Module Dashboard (Thống kê)
 

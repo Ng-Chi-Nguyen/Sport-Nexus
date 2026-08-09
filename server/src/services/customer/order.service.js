@@ -319,25 +319,25 @@ const orderService = {
                 orderBy: {
                     created_at: 'desc'
                 },
-            include: {
-                OrderItems: {
-                    include: {
-                        product_variant: {
-                            include: {
-                                product: { select: { name: true } },
-                                VariableAttributes: {
-                                    include: {
-                                        attributeKey: { select: { name: true } }
+                include: {
+                    OrderItems: {
+                        include: {
+                            product_variant: {
+                                include: {
+                                    product: { select: { name: true } },
+                                    VariableAttributes: {
+                                        include: {
+                                            attributeKey: { select: { name: true } }
+                                        }
                                     }
                                 }
                             }
                         }
+                    },
+                    Reviews: {
+                        select: { product_id: true, rating: true }
                     }
-                },
-                Reviews: {
-                    select: { product_id: true, rating: true }
                 }
-            }
             }),
             prisma.Orders.count({ where })
         ])
