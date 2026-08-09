@@ -112,6 +112,19 @@ const ProfilePage = () => {
 
                 <div>
                   <NavLink
+                    to="/tai-khoan/thanh-vien"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-sky-600 dark:text-sky-400 font-bold block px-3 py-2 rounded-xl bg-sky-50 dark:bg-sky-500/15 transition-all"
+                        : "text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors block px-3 py-2 rounded-xl"
+                    }
+                  >
+                    {tProfile("membership", "Thành viên")}
+                  </NavLink>
+                </div>
+
+                <div>
+                  <NavLink
                     to="/tai-khoan/don-hang"
                     className={({ isActive }) =>
                       isActive

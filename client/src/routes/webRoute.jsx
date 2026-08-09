@@ -37,6 +37,7 @@ const FavoritesPage = lazy(() => import("@/pages/settings/favorites"));
 const CouponsPage = lazy(() => import("@/pages/settings/coupons"));
 const SearchHistoryPage = lazy(() => import("@/pages/settings/searchHistory"));
 const ProfilePlaceholder = lazy(() => import("@/pages/settings/placeholder"));
+const LoyaltyPage = lazy(() => import("@/pages/profile/loyalty"));
 const Invoice = lazy(() => import("@/pages/settings/invoices"));
 const InvoiceDetail = lazy(() => import("@/pages/settings/invoices/detail"));
 
@@ -130,6 +131,7 @@ export const webRoutes = {
         },
         { path: "dat-lai-mat-khau", element: <ResetPassword /> },
         { path: "don-hang", element: <Order />, loader: ordersLoader },
+        { path: "thanh-vien", element: <LoyaltyPage /> },
         {
           path: "don-hang/:id",
           element: <OrderDetail />,
