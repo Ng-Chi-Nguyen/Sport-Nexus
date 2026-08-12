@@ -1,6 +1,7 @@
 import { Earth, ShoppingCart, Eye, Heart, Star } from "lucide-react";
 import Badge from "./badge";
 import { formatCurrency } from "@/utils/formatters";
+import MemberPrice from "./MemberPrice";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -205,9 +206,12 @@ const ProductCard = ({ product, index = 0 }) => {
         )}
 
         <div className="pt-1 mt-auto flex items-center gap-2 flex-wrap">
-          <p className="text-[15px] md:text-[16px] font-bold text-red-600 dark:text-red-500">
-            {formatCurrency(salePrice)}
-          </p>
+          <MemberPrice
+            price={salePrice}
+            memberClassName="text-[15px] md:text-[16px] text-red-600 dark:text-red-500"
+            originalClassName="text-[12px] md:text-[13px] text-slate-400 dark:text-slate-500"
+            showLabel={false}
+          />
           {hasDiscount && (
             <p className="text-[12px] md:text-[13px] text-slate-400 dark:text-slate-500 line-through">
               {formatCurrency(originalPrice)}

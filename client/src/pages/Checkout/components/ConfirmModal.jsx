@@ -17,6 +17,8 @@ const ConfirmModal = ({ open, onClose, onConfirm, data, submitting }) => {
     fullAddress,
     paymentMethod,
     couponCode,
+    tierDiscount,
+    tierPercent = 0,
   } = data;
 
   return (
@@ -111,6 +113,14 @@ const ConfirmModal = ({ open, onClose, onConfirm, data, submitting }) => {
               <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
                 <span>{t("discount_label")}</span>
                 <span>-{formatCurrency(discount)}</span>
+              </div>
+            )}
+            {tierDiscount > 0 && (
+              <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
+                <span>
+                  {t("loyalty.member_discount_label", { percent: tierPercent })}
+                </span>
+                <span>-{formatCurrency(tierDiscount)}</span>
               </div>
             )}
             <div className="flex justify-between text-slate-600 dark:text-slate-400">

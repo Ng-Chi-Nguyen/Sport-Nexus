@@ -9,6 +9,7 @@ import paymentApi from "@/api/customer/paymentApi";
 import shippingApi from "@/api/customer/shippingApi";
 import useCoupon from "@/hooks/useCoupon";
 import loyaltyApi from "@/api/customer/loyaltyApi";
+import useMemberDiscount from "@/hooks/useMemberDiscount";
 import EmptyCart from "./components/EmptyCart";
 import OrderSuccess from "./components/OrderSuccess";
 import ContactSection from "./components/ContactSection";
@@ -57,6 +58,8 @@ const Checkout = () => {
   const [shippingEstimate, setShippingEstimate] = useState(null);
   const [pointsDiscount, setPointsDiscount] = useState(0);
   const [pointsLoading, setPointsLoading] = useState(false);
+
+  const memberPercent = useMemberDiscount();
 
   const handleApplyPoints = async (points) => {
     setPointsLoading(true);
@@ -143,7 +146,9 @@ const Checkout = () => {
   );
 
   const discount = couponData?.discount ?? 0;
-  const finalAmount = (couponData?.newAmount ?? totalAmount) - pointsDiscount;
+  const tierDiscount = Math.round((totalAmount * memberPercent) / 100);
+  const finalAmount =
+    (couponData?.newAmount ?? totalAmount) - tierDiscount - pointsDiscount;
 
   const defaultWeight = useMemo(
     () => items.reduce((sum, item) => sum + (item.quantity || 1) * 500, 0),
@@ -187,7 +192,8 @@ const Checkout = () => {
     () => ({
       total_amount: totalAmount,
       final_amount: grandTotal,
-      discount_amount: discount + pointsDiscount,
+      discount_amount: discount + tierDiscount + pointsDiscount,
+      points_discount_amount: pointsDiscount,
       shipping_address: fullAddress,
       payment_method: paymentMethod,
       coupon_code: couponCode || null,
@@ -208,6 +214,7 @@ const Checkout = () => {
       totalAmount,
       grandTotal,
       discount,
+      tierDiscount,
       pointsDiscount,
       fullAddress,
       paymentMethod,
@@ -359,6 +366,8 @@ const Checkout = () => {
               pointsDiscount={pointsDiscount}
               onApplyPoints={handleApplyPoints}
               pointsLoading={pointsLoading}
+              tierDiscount={tierDiscount}
+              tierPercent={memberPercent}
             />
           </div>
         </div>
@@ -378,6 +387,8 @@ const Checkout = () => {
           fullAddress,
           paymentMethod,
           couponCode,
+          tierDiscount,
+          tierPercent: memberPercent,
         }}
       />
     </div>

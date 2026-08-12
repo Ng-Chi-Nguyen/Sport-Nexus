@@ -30,6 +30,7 @@
   "select_province_prompt": "Select province to calculate fee",
   "total": "Total",
   "place_order_btn": "Place order",
+  "confirm_order_btn": "Confirm order",
   "submitting_btn": "Processing...",
   "back_btn": "Back",
   "toast_login_required_coupon": "Please log in to use the discount code",

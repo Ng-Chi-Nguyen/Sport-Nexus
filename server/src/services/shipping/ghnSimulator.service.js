@@ -169,7 +169,7 @@ export const createShipmentForOrder = async ({ order, data, client = prisma }) =
 
     const fee = calculateFee({
         provinceName: province_name,
-        weightGrams,
+        weightGrams: weight_grams,
         serviceType: service_type,
         codAmount,
         itemValue: Number(order.final_amount) || 0,

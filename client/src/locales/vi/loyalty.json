@@ -13,13 +13,19 @@
   "type": "Loại",
   "note": "Ghi chú",
   "redeem": "Đổi",
+  "redeem_to_view_code": "Đổi quà để nhận mã giảm giá",
   "redeeming": "Đang đổi...",
   "redeem_success": "Đổi quà thành công",
   "redeem_fail": "Đổi quà thất bại",
+  "confirm_redeem_title": "Xác nhận đổi quà",
+  "confirm_redeem_message": "Bạn có chắc muốn dùng {{points}} điểm để đổi quà \"{{name}}\"?",
   "use_points": "Dùng điểm (có {{available}} điểm)",
   "enter_points": "Nhập số điểm",
   "apply": "Áp dụng",
   "invalid_points": "Số điểm không hợp lệ",
   "points_exceed": "Số điểm vượt quá điểm hiện có",
-  "applied": "Đã giảm {{amount}}đ"
+  "applied": "Đã giảm {{amount}}đ",
+  "membership": "Thành viên",
+  "member_price_label": "Giá hội viên",
+  "member_discount_label": "Ưu đãi hội viên (-{{percent}}%)"
 }

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
+import { getMemberPrice } from "@/utils/tierPrice";
+import useMemberDiscount from "@/hooks/useMemberDiscount";
 import { Link } from "react-router-dom";
 import { Confirm } from "@/components/ui/confirm";
 import { useTranslation } from "react-i18next";
@@ -16,7 +18,9 @@ const CartItem = ({
   const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
   const price = item.variant?.price || item.product?.base_price || 0;
-  const subtotal = price * item.quantity;
+  const memberPercent = useMemberDiscount();
+  const memberPrice = getMemberPrice(price, memberPercent);
+  const subtotal = memberPrice * item.quantity;
   const attributes = item.variant?.VariableAttributes || [];
 
   return (
@@ -68,8 +72,21 @@ const CartItem = ({
             </div>
           )}
 
-          <div className="text-xs sm:text-sm font-bold text-rose-600 dark:text-rose-400 mt-1">
-            {formatCurrency(price)}
+          <div className="mt-1 text-xs sm:text-sm">
+            {memberPercent > 0 && memberPrice < Number(price) ? (
+              <>
+                <span className="text-slate-400 dark:text-slate-500 line-through mr-1">
+                  {formatCurrency(price)}
+                </span>
+                <span className="font-bold text-rose-600 dark:text-rose-400">
+                  {formatCurrency(memberPrice)}
+                </span>
+              </>
+            ) : (
+              <span className="font-bold text-rose-600 dark:text-rose-400">
+                {formatCurrency(price)}
+              </span>
+            )}
           </div>
         </div>
 

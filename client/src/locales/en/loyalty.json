@@ -13,13 +13,19 @@
   "type": "Type",
   "note": "Note",
   "redeem": "Redeem",
+  "redeem_to_view_code": "Redeem this reward to receive a discount code",
   "redeeming": "Redeeming...",
   "redeem_success": "Reward redeemed successfully",
   "redeem_fail": "Failed to redeem reward",
+  "confirm_redeem_title": "Confirm redemption",
+  "confirm_redeem_message": "Use {{points}} points to redeem \"{{name}}\"?",
   "use_points": "Use points ({{available}} available)",
   "enter_points": "Enter points",
   "apply": "Apply",
   "invalid_points": "Invalid points",
   "points_exceed": "Points exceed available balance",
-  "applied": "Reduced {{amount}}đ"
+  "applied": "Reduced {{amount}}đ",
+  "membership": "Membership",
+  "member_price_label": "Member price",
+  "member_discount_label": "Member discount (-{{percent}}%)"
 }

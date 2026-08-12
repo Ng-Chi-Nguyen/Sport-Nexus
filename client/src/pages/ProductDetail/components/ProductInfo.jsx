@@ -1,5 +1,6 @@
 import { Star, ShieldCheck, Tag } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
+import MemberPrice from "@/components/ui/MemberPrice";
 import { useTranslation } from "react-i18next";
 import { ShoppingCart } from "lucide-react";
 
@@ -105,9 +106,12 @@ const ProductInfo = ({
       {/* Khối Giá bán & Badge phần trăm giảm giá */}
       <div className="p-4 bg-slate-50 dark:bg-[#111827]/40 border border-slate-200 dark:border-slate-900 shadow-xl dark:shadow-2xl backdrop-blur-md">
         <div className="flex items-baseline gap-3 flex-wrap">
-          <p className="text-2xl md:text-3xl font-black text-rose-600 dark:text-rose-400 tracking-tight">
-            {formatCurrency(currentPrice)}
-          </p>
+          <MemberPrice
+            price={currentPrice}
+            memberClassName="text-2xl md:text-3xl text-rose-600 dark:text-rose-400"
+            originalClassName="text-sm md:text-base text-slate-400 dark:text-slate-500"
+            showLabel={false}
+          />
 
           {hasDiscount && (
             <>

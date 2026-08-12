@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import loyaltyApi from "@/api/customer/loyaltyApi";
 
-const useMembership = () => {
+const useMembership = (refreshKey) => {
   const [membership, setMembership] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -22,7 +22,7 @@ const useMembership = () => {
 
   useEffect(() => {
     fetchMembership();
-  }, [fetchMembership]);
+  }, [fetchMembership, refreshKey]);
 
   return { membership, loading, error, refresh: fetchMembership };
 };

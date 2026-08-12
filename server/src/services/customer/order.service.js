@@ -9,7 +9,12 @@ const orderService = {
     createOrder: async (orderData, authUser) => {
         let { total_amount, status, shipping_address, payment_method,
             payment_status, discount_amount, final_amount, coupon_code, user_email, items,
-            shipping_name, shipping_phone, province_name, ward_name, weight_grams, service_type } = orderData;
+            shipping_name, shipping_phone, province_name, ward_name, weight_grams, service_type,
+            points_discount_amount } = orderData;
+
+        const clientDiscountAmount = Number(discount_amount) || 0;
+        const clientFinalAmount = Number(final_amount) || 0;
+        let couponDiscount = 0;
 
         if (coupon_code && !authUser) {
             const err = new Error("Vui lòng đăng nhập để dùng mã giảm giá");
@@ -26,6 +31,18 @@ const orderService = {
                 const err = new Error(`Sản phẩm ID ${item.product_variant_id} không đủ hàng (còn ${variant?.stock ?? 0}, cần ${item.quantity})`)
                 err.code = 'INSUFFICIENT_STOCK'
                 throw err
+            }
+        }
+
+        // Giảm giá theo hạng thành viên — chỉ áp dụng khi đơn do chính khách đặt
+        let tierDiscount = 0;
+        if (authUser?.id) {
+            try {
+                const membership = await loyaltyService.getUserMembership(authUser.id);
+                const pct = membership?.tier?.discount_percent || 0;
+                tierDiscount = Math.round((Number(total_amount) * pct) / 100);
+            } catch {
+                tierDiscount = 0;
             }
         }
 
@@ -71,24 +88,63 @@ const orderService = {
                     throw err;
                 }
 
-                discount_amount = computeCouponDiscount(coupon, Number(total_amount));
-                final_amount = Number(total_amount) - discount_amount;
+                // Mã đổi từ quà (TierRewards) chỉ người đã đổi quà mới dùng được
+                const rewardCoupon = await tx.tierRewards.findFirst({
+                    where: { coupon_code: coupon_code, deleted_at: ACTIVE },
+                    select: { id: true }
+                });
+                if (rewardCoupon) {
+                    const gifted = await tx.userCoupons.findUnique({
+                        where: { user_id_coupon_id: { user_id: authUser.id, coupon_id: coupon.id } },
+                        select: { is_gift: true, quantity: true }
+                    });
+                    if (!gifted?.is_gift || (gifted.quantity ?? 0) <= 0) {
+                        const err = new Error("Mã giảm giá này chỉ dành cho người đã đổi quà");
+                        err.code = 'COUPON_INVALID';
+                        throw err;
+                    }
+                }
+
+                couponDiscount = computeCouponDiscount(coupon, Number(total_amount));
 
                 await tx.userCoupons.upsert({
                     where: { user_id_coupon_id: { user_id: authUser.id, coupon_id: coupon.id } },
                     create: { user_id: authUser.id, coupon_id: coupon.id, used_count: 0 },
                     update: {}
                 });
-                const incr = await tx.userCoupons.updateMany({
-                    where: { user_id: authUser.id, coupon_id: coupon.id, used_count: { lt: coupon.max_uses_per_user } },
-                    data: { used_count: { increment: 1 } }
+                const uc = await tx.userCoupons.findUnique({
+                    where: { user_id_coupon_id: { user_id: authUser.id, coupon_id: coupon.id } },
+                    select: { is_gift: true, quantity: true, used_count: true }
                 });
-                if (incr.count === 0) {
-                    const err = new Error("Bạn đã dùng hết số lần của mã giảm giá này");
-                    err.code = 'COUPON_LIMIT_REACHED';
-                    throw err;
+                if (uc?.is_gift) {
+                    if ((uc.quantity ?? 0) <= 0) {
+                        const err = new Error("Bạn đã dùng hết số lần của mã giảm giá này");
+                        err.code = 'COUPON_LIMIT_REACHED';
+                        throw err;
+                    }
+                    await tx.userCoupons.update({
+                        where: { user_id_coupon_id: { user_id: authUser.id, coupon_id: coupon.id } },
+                        data: { quantity: { decrement: 1 }, used_count: { increment: 1 } }
+                    });
+                } else {
+                    const incr = await tx.userCoupons.updateMany({
+                        where: { user_id: authUser.id, coupon_id: coupon.id, used_count: { lt: coupon.max_uses_per_user } },
+                        data: { used_count: { increment: 1 } }
+                    });
+                    if (incr.count === 0) {
+                        const err = new Error("Bạn đã dùng hết số lần của mã giảm giá này");
+                        err.code = 'COUPON_LIMIT_REACHED';
+                        throw err;
+                    }
                 }
             }
+
+            const pointsDiscount = Number(points_discount_amount) || 0;
+            discount_amount = couponDiscount + tierDiscount + pointsDiscount;
+            final_amount = Math.max(
+                0,
+                Math.round((clientFinalAmount - (discount_amount - clientDiscountAmount)) * 100) / 100,
+            );
 
             const orderEmail = authUser?.email || user_email || null;
             const customer = orderEmail

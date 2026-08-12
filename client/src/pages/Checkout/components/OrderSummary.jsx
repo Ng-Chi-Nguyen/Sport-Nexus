@@ -30,6 +30,8 @@ const OrderSummary = ({
   pointsDiscount,
   onApplyPoints,
   pointsLoading,
+  tierDiscount = 0,
+  tierPercent = 0,
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -88,6 +90,14 @@ const OrderSummary = ({
           <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
             <span>{t("loyalty.points")}</span>
             <span>-{formatCurrency(pointsDiscount)}</span>
+          </div>
+        )}
+        {tierDiscount > 0 && (
+          <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
+            <span>
+              {t("loyalty.member_discount_label", { percent: tierPercent })}
+            </span>
+            <span>-{formatCurrency(tierDiscount)}</span>
           </div>
         )}
         <div className="flex justify-between items-center text-slate-600 dark:text-slate-400">

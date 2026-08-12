@@ -30,6 +30,7 @@
   "select_province_prompt": "Chọn tỉnh để tính phí",
   "total": "Tổng cộng",
   "place_order_btn": "Đặt hàng",
+  "confirm_order_btn": "Xác nhận đặt hàng",
   "submitting_btn": "Đang xử lý...",
   "back_btn": "Quay lại",
   "toast_login_required_coupon": "Vui lòng đăng nhập để dùng mã giảm giá",
