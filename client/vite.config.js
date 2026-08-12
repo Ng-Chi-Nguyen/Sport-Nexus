@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig(({ mode }) => {
   return {
-    base: mode === 'production' ? '/Sport-Nexus/' : '/',
+    base: process.env.VITE_BASE_PATH || (mode === 'production' ? '/Sport-Nexus/' : '/'),
     plugins: [react()],
     resolve: {
       alias: {
