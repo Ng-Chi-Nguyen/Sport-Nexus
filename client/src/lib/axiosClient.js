@@ -8,6 +8,13 @@ const axiosClient = axios.create({
     headers: { 'Content-Type': 'application/json' }
 });
 
+axiosClient.interceptors.request.use((config) => {
+    if (config.url?.includes('/api/v1') && import.meta.env.VITE_API_URL?.includes('ngrok')) {
+        config.headers['ngrok-skip-browser-warning'] = 'true';
+    }
+    return config;
+});
+
 // 2. Interceptor cho Request: Tự động gắn Token vào header mỗi khi gửi API
 axiosClient.interceptors.request.use((config) => {
     config.headers['Accept-Language'] = i18n.language || 'vi';
