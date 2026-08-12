@@ -33,6 +33,7 @@
     "seed": "node prisma/seed.js",
     "seed:permissions": "node prisma/seed-permissions.js",
     "seed:loyalty": "node prisma/seed-loyalty.js",
-    "seed:credit-points": "node prisma/seed-credit-points.js"
+    "seed:credit-points": "node prisma/seed-credit-points.js",
+    "seed:invoices-ngchinguyen": "node prisma/seed-invoices-ngchinguyen.js"
   }
 }
