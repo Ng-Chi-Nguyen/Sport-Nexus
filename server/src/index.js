@@ -20,7 +20,12 @@ const port = process.env.APP_PORT || 8081;
 configViewEngine(app);
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://ng-chi-nguyen.github.io'],
+  origin: [
+    'http://localhost:5173',
+    'https://ng-chi-nguyen.github.io',
+    'https://sport-nexus-five.vercel.app',
+    'https://sport-nexus-nguyen-chi-nguyens-projects.vercel.app',
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));

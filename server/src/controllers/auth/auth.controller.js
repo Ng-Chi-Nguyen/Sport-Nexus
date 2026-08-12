@@ -51,18 +51,20 @@ const authController = {
 
             res.clearCookie('token'); // Nếu bạn có dùng cookie
 
+            const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
             if (!result) {
                 // console.log("Xác thực thất bại");
                 // console.log(result)
-                return res.status(302).redirect("http://localhost:5173");
+                return res.status(302).redirect(frontendUrl);
             }
 
             // console.log("Xác thực thành công, đang chuyển hướng...");
             // Sử dụng status 302 (Found) để ép trình duyệt chuyển hướng
-            return res.status(302).redirect("http://localhost:5173");
+            return res.status(302).redirect(frontendUrl);
         } catch (error) {
             console.error("Lỗi hệ thống trong verifyAccount:", error.message);
-            return res.redirect("http://localhost:5173");
+            const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+            return res.redirect(frontendUrl);
         }
     },
 
