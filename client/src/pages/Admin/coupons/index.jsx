@@ -22,7 +22,7 @@ import FilterPanel from "@/components/ui/FilterPanel";
 import useTableFilters from "@/hooks/useTableFilters";
 
 const CouponPage = () => {
-  const { t } = useTranslation("translation", { keyPrefix: "coupon" });
+  const { t } = useTranslation("translation", { keyPrefix: "coupon_admin" });
   const { t: tc } = useTranslation("translation", { keyPrefix: "constants" });
   const responses = useLoaderData();
   const revalidator = useRevalidator();

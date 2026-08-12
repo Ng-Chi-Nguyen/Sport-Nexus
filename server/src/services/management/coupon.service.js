@@ -5,7 +5,7 @@ import { ACTIVE } from "../../utils/prisma.js";
 const couponService = {
     createCoupon: async (dataCoupon) => {
         let { code, discount_value, discount_type, max_discount,
-            min_order_value, start_date, end_date, usage_limit, is_active } = dataCoupon;
+            min_order_value, start_date, end_date, usage_limit, is_active, is_public } = dataCoupon;
         let usage_count = 0;
         let newCoupon = await prisma.coupons.create({
             data: {
@@ -19,6 +19,7 @@ const couponService = {
                 usage_limit: usage_limit,
                 usage_count: usage_count,
                 is_active: is_active,
+                is_public: is_public ?? true,
             },
             select: {
                 id: true,
@@ -32,7 +33,8 @@ const couponService = {
                 usage_limit: true,
                 created_at: true,
                 usage_count: true,
-                is_active: true
+                is_active: true,
+                is_public: true
             }
         })
 

@@ -499,6 +499,8 @@
     "code_input": "Coupon Code",
     "active_status_label": "Active",
     "expired_status_label": "Expired",
+    "public_visible_label": "Show on web",
+    "public_hidden_label": "Hide on web",
     "time_frame_title": "Time Frame",
     "start_date_label": "Start Date",
     "end_date_label": "End Date",

@@ -3,6 +3,7 @@ import {
   Bookmark,
   Check,
   Copy,
+  Lock,
   Printer,
   Shirt,
   Tag,
@@ -14,7 +15,7 @@ import { SportNexusLogoIcon } from "@/components/logo";
 import { useTranslation } from "react-i18next";
 import { printElement } from "@/utils/printUtils";
 
-const CouponCard = ({ coupon, showPrint = true }) => {
+const CouponCard = ({ coupon, showPrint = true, locked = false }) => {
   const { t } = useTranslation("translation", {
     keyPrefix: "component.common",
   });
@@ -25,7 +26,9 @@ const CouponCard = ({ coupon, showPrint = true }) => {
   const isInactive = coupon.is_active === false;
   const isExpired = new Date(coupon.end_date).getTime() < now;
   const isOutOfStock = coupon.usage_count >= coupon.usage_limit;
-  const disabled = isInactive || isExpired || isOutOfStock;
+  const isGiftUsedUp = coupon.is_gift === true && (coupon.quantity ?? 1) <= 0;
+  const disabled =
+    isInactive || isExpired || isOutOfStock || isGiftUsedUp;
 
   const statusLabel = isInactive
     ? t("coupon_inactive")
@@ -33,7 +36,9 @@ const CouponCard = ({ coupon, showPrint = true }) => {
       ? t("coupon_expired")
       : isOutOfStock
         ? t("coupon_out_of_stock")
-        : null;
+        : isGiftUsedUp
+          ? t("coupon_out_of_stock")
+          : null;
 
   const saved = isSaved(coupon.code);
 
@@ -108,6 +113,13 @@ const CouponCard = ({ coupon, showPrint = true }) => {
         </span>
       )}
 
+      {/* Badge Số lần đổi (chỉ quà tặng) */}
+      {coupon.quantity > 1 && (
+        <span className="absolute top-1.5 left-2 z-10 rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold backdrop-blur-sm">
+          x{coupon.quantity}
+        </span>
+      )}
+
       <div className="relative flex h-full items-stretch">
         {/* Cột Trái: Nút In + Giá trị giảm */}
         <div className="flex w-[115px] shrink-0 flex-col justify-center items-center gap-0.5 px-1 py-2 text-center border-r border-dashed border-white/30">
@@ -142,12 +154,14 @@ const CouponCard = ({ coupon, showPrint = true }) => {
           {/* Hàng 1: Mã Code + Nút Sao chép */}
           <div className="flex items-center gap-1.5 h-7">
             <span className="flex-1 truncate rounded bg-white/15 px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white text-center">
-              {coupon.code}
+              {locked ? "••••••••••••" : coupon.code}
             </span>
             <button
               onClick={handleCopy}
-              disabled={disabled}
-              className="no-print shrink-0 inline-flex items-center justify-center gap-1 h-full rounded border border-white/60 px-2 text-[10px] font-semibold text-white hover:bg-white hover:text-blue-600 transition-colors cursor-pointer"
+              disabled={disabled || locked}
+              className={`no-print shrink-0 inline-flex items-center justify-center gap-1 h-full rounded border border-white/60 px-2 text-[10px] font-semibold text-white hover:bg-white hover:text-blue-600 transition-colors cursor-pointer ${
+                locked ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               {copiedCode === coupon.code ? (
                 <>
@@ -181,7 +195,12 @@ const CouponCard = ({ coupon, showPrint = true }) => {
 
           {/* Hàng 3: Nút Lưu / Đã lưu + Xóa */}
           <div className="no-print h-7 w-full">
-            {saved ? (
+            {locked ? (
+              <div className="flex h-full w-full items-center justify-center gap-1 rounded-lg border border-white/40 bg-white/5 px-2.5 text-[11px] font-semibold text-white/90">
+                <Lock className="w-3.5 h-3.5" />
+                <span>{t("locked_code")}</span>
+              </div>
+            ) : saved ? (
               <div className="flex h-full w-full items-stretch rounded-lg overflow-hidden border border-white shadow-sm">
                 <div className="flex flex-1 items-center justify-center gap-1 bg-white text-blue-600 px-2 text-[11px] font-bold">
                   <Check className="w-3.5 h-3.5 stroke-[3]" />

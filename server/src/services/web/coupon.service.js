@@ -8,6 +8,7 @@ const couponWebService = {
             where: {
                 deleted_at: ACTIVE,
                 is_active: true,
+                is_public: true,
                 start_date: { lte: now },
                 end_date: { gte: now },
                 UserCoupons: { none: { is_gift: true } },

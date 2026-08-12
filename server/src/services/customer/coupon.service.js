@@ -39,10 +39,25 @@ const couponCustomerService = {
 
     const used = await prisma.userCoupons.findUnique({
       where: { user_id_coupon_id: { user_id: userId, coupon_id: coupon.id } },
-      select: { used_count: true },
+      select: { used_count: true, quantity: true, is_gift: true },
     });
     const usedCount = used?.used_count ?? 0;
-    if (usedCount >= coupon.max_uses_per_user) {
+    const remainingGiftQuantity = used?.is_gift ? used.quantity : 0;
+
+    if (used?.is_gift && remainingGiftQuantity <= 0) {
+      return { message: "Bạn đã dùng hết số lần của mã giảm giá này" };
+    }
+
+    // Mã đổi từ quà (TierRewards) chỉ người đã đổi mới dùng được
+    const rewardCoupon = await prisma.tierRewards.findFirst({
+      where: { coupon_code: code, deleted_at: ACTIVE },
+      select: { id: true },
+    });
+    if (rewardCoupon && !used?.is_gift) {
+      return { message: "Mã giảm giá này chỉ dành cho người đã đổi quà" };
+    }
+
+    if (!used?.is_gift && usedCount >= coupon.max_uses_per_user) {
       return { message: "Bạn đã dùng hết số lần của mã giảm giá này" };
     }
 
@@ -51,7 +66,9 @@ const couponCustomerService = {
       discount,
       oldAmount: amount,
       newAmount: amount - discount,
-      remainingUses: coupon.max_uses_per_user - usedCount,
+      remainingUses: used?.is_gift
+        ? remainingGiftQuantity
+        : coupon.max_uses_per_user - usedCount,
       max_uses_per_user: coupon.max_uses_per_user,
     };
   },
@@ -62,7 +79,7 @@ const couponCustomerService = {
       include: { coupon: true },
       orderBy: { created_at: "desc" },
     });
-    return list.map((uc) => uc.coupon);
+    return list.map((uc) => ({ ...uc.coupon, quantity: uc.quantity, is_gift: true }));
   },
 };
 

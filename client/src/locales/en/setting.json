@@ -39,6 +39,7 @@
     "home": "Home",
     "my_coupons": "My Coupons",
     "gifted_coupons": "Gifted Coupons",
+    "remove_gifted": "Remove from view",
     "no_saved_coupons": "No saved coupons found",
     "save_coupon_hint": "Visit the homepage and click \"Save code\" on coupons to use later."
   },

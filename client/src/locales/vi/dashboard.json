@@ -502,6 +502,8 @@
     "code_input": "Mã giảm giá (Code)",
     "active_status_label": "Đang hoạt động",
     "expired_status_label": "Ngừng hoạt động",
+    "public_visible_label": "Hiển thị trên web",
+    "public_hidden_label": "Ẩn trên web",
 
     "time_frame_title": "Khung thời gian",
     "start_date_label": "Ngày bắt đầu",

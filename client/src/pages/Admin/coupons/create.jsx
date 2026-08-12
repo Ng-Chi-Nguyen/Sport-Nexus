@@ -13,7 +13,7 @@ import { queryClient } from "@/lib/react-query";
 import { useTranslation } from "react-i18next";
 
 const CreateCouponPage = () => {
-  const { t } = useTranslation("translation", { keyPrefix: "coupon" });
+  const { t } = useTranslation("translation", { keyPrefix: "coupon_admin" });
   const navigate = useNavigate();
 
   const [discountType, setDiscountType] = useState("");
@@ -26,6 +26,7 @@ const CreateCouponPage = () => {
   const [usageLimit, setUsageLimit] = useState(1);
   const [maxUsesPerUser, setMaxUsesPerUser] = useState(1);
   const [isActive, setIsActive] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const breadcrumbData = [
@@ -59,6 +60,7 @@ const CreateCouponPage = () => {
       end_date: endDate,
       start_date: startDate,
       is_active: isActive,
+      is_public: isPublic,
     };
 
     try {
@@ -144,6 +146,18 @@ const CreateCouponPage = () => {
                   checked={isActive}
                   onChange={(e) => handleIsActiveChange(e.target.checked)}
                 />
+                <div className="mt-3 border-t border-slate-200 dark:border-slate-800 pt-3">
+                  <AnimatedCheckbox
+                    id="public"
+                    label={
+                      isPublic
+                        ? t("public_visible_label")
+                        : t("public_hidden_label")
+                    }
+                    checked={isPublic}
+                    onChange={(e) => setIsPublic(e.target.checked)}
+                  />
+                </div>
               </div>
             </div>
           </div>

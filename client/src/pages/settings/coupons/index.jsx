@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Bookmark, Gift, Ticket } from "lucide-react";
+import { Bookmark, Gift, Ticket, X } from "lucide-react";
 import webCouponApi from "@/api/web/couponApi";
 import customerCouponApi from "@/api/customer/couponApi";
 import { useCoupons } from "@/contexts/CouponContext";
@@ -8,11 +8,19 @@ import Breadcrumbs from "@/components/ui/breadcrumbs";
 import CouponCard from "@/components/ui/couponCard";
 import { TitleWithIcon } from "@/components/ui/title";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 const CouponsPage = () => {
   const { t } = useTranslation("translation", { keyPrefix: "coupon" });
   const { savedCodes } = useCoupons();
   const isLoggedIn = Boolean(localStorage.getItem("accessToken"));
+  const [dismissedGifted, setDismissedGifted] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("dismissed-gifted-coupons") || "[]");
+    } catch {
+      return [];
+    }
+  });
 
   const { data, isLoading } = useQuery({
     queryKey: ["saved-coupons", savedCodes.join(",")],
@@ -24,11 +32,27 @@ const CouponsPage = () => {
     queryKey: ["gifted-coupons"],
     queryFn: () => customerCouponApi.getGifted(),
     enabled: isLoggedIn,
+    staleTime: 0,
+    refetchOnMount: "always",
   });
 
   const coupons = data?.success ? data.data.coupons : [];
-  const giftedCoupons =
-    isLoggedIn && giftedData?.success ? giftedData.data.coupons : [];
+  const giftedCoupons = (
+    isLoggedIn && giftedData?.success ? giftedData.data.coupons : []
+  ).filter((c) => {
+    if (!dismissedGifted.includes(c.code)) return true;
+    return (c.quantity ?? 0) > 0;
+  });
+
+  const dismissGifted = (code) => {
+    const next = [...dismissedGifted, code];
+    setDismissedGifted(next);
+    try {
+      localStorage.setItem("dismissed-gifted-coupons", JSON.stringify(next));
+    } catch {
+      /* ignore */
+    }
+  };
 
   return (
     <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
@@ -53,7 +77,17 @@ const CouponsPage = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {giftedCoupons.map((coupon) => (
-                  <CouponCard key={coupon.id} coupon={coupon} />
+                  <div key={coupon.id} className="relative">
+                    <button
+                      type="button"
+                      onClick={() => dismissGifted(coupon.code)}
+                      title={t("remove_gifted")}
+                      className="absolute -top-2 -right-2 z-10 flex items-center justify-center w-6 h-6 rounded-full bg-rose-600 text-white shadow-md hover:bg-rose-500 transition-colors cursor-pointer"
+                    >
+                      <X size={14} />
+                    </button>
+                    <CouponCard coupon={coupon} />
+                  </div>
                 ))}
               </div>
             )}

@@ -53,6 +53,7 @@ const couponSchema = {
                 'any.required': 'Ngày bắt đầu không được để trống.',
             }).required(),
         is_active: Joi.boolean().optional(),
+        is_public: Joi.boolean().optional(),
     }).unknown(false),
 
     updateCoupon: Joi.object({
@@ -93,6 +94,7 @@ const couponSchema = {
             'date.less': 'Ngày bắt đầu phải trước Ngày kết thúc.',
         }),
         is_active: Joi.boolean().optional(),
+        is_public: Joi.boolean().optional(),
     }).unknown(false).min(1),
 
     checkCoupon: Joi.object({
