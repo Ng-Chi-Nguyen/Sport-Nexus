@@ -2,6 +2,8 @@ import useCoupon from "@/hooks/useCoupon";
 import useCouponSuggestions from "@/hooks/useCouponSuggestions";
 import CouponInput from "@/pages/ProductDetail/components/CouponInput";
 import { formatCurrency } from "@/utils/formatters";
+import { getMemberPrice } from "@/utils/tierPrice";
+import useMemberDiscount from "@/hooks/useMemberDiscount";
 import { useTranslation } from "react-i18next";
 
 const CartSummary = ({ selectedItems, onCheckout }) => {
@@ -21,6 +23,12 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
     const price = i.variant?.price || i.product?.base_price || 0;
     return s + Number(price) * i.quantity;
   }, 0);
+  const memberPercent = useMemberDiscount();
+  const memberSubtotal = selectedItems.reduce((s, i) => {
+    const price = i.variant?.price || i.product?.base_price || 0;
+    return s + getMemberPrice(price, memberPercent) * i.quantity;
+  }, 0);
+  const memberDiscount = subtotal - memberSubtotal;
   const discount = couponData?.discount ?? 0;
   const finalAmount = couponData?.newAmount ?? subtotal;
   const shipping = subtotal >= 500000 ? 0 : 30000;
@@ -55,6 +63,16 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
             <span>-{formatCurrency(discount)}</span>
           </div>
         )}
+        {memberDiscount > 0 && (
+          <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
+            <span>
+              {t("loyalty.member_discount_label", {
+                percent: memberPercent,
+              })}
+            </span>
+            <span>-{formatCurrency(memberDiscount)}</span>
+          </div>
+        )}
         <div className="flex justify-between text-slate-600 dark:text-slate-400">
           <span>{t("shipping_fee", "Phí vận chuyển")}</span>
           <span>
@@ -64,7 +82,7 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
         <div className="flex justify-between font-bold text-slate-900 dark:text-slate-100 text-base border-t border-slate-200 dark:border-slate-800 pt-2.5">
           <span>{t("total")}</span>
           <span className="text-rose-600 dark:text-rose-400">
-            {formatCurrency(finalAmount + shipping)}
+            {formatCurrency(finalAmount - memberDiscount + shipping)}
           </span>
         </div>
       </div>
