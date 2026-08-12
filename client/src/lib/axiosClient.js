@@ -9,7 +9,7 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use((config) => {
-    if (config.url?.includes('/api/v1') && import.meta.env.VITE_API_URL?.includes('ngrok')) {
+    if (config.baseURL?.includes('ngrok')) {
         config.headers['ngrok-skip-browser-warning'] = 'true';
     }
     return config;
