@@ -39,6 +39,13 @@ const loyaltyManagementController = {
     } catch (e) { return handleError(res, req, e); }
   },
 
+  getHiddenCoupons: async (req, res) => {
+    try {
+      const coupons = await loyaltyManagementService.getHiddenCoupons();
+      return ok(res, req, { coupons });
+    } catch (e) { return handleError(res, req, e); }
+  },
+
   // Rewards
   createReward: async (req, res) => {
     try {
@@ -82,8 +89,8 @@ const loyaltyManagementController = {
   // Users
   getUsers: async (req, res) => {
     try {
-      const { page, search } = req.query;
-      const data = await loyaltyManagementService.getUsers({ page, search });
+      const { page, search, sortBy, order, tierId } = req.query;
+      const data = await loyaltyManagementService.getUsers({ page, search, sortBy, order, tierId });
       return ok(res, req, data);
     } catch (e) { return handleError(res, req, e); }
   },

@@ -15,6 +15,7 @@ import LoaderOrder from "@/loaders/customer/orderLoader";
 import LoaderStock from "@/loaders/management/stockMovement";
 import LoaderLog from "@/loaders/management/logLoader";
 import LoaderDashboard from "@/loaders/management/dashboardLoader";
+import LoaderLoyalty from "@/loaders/management/loyaltyLoader";
 
 // Hàm tiện ích bóc tách số trang từ URL
 const getPage = (request) => new URL(request.url).searchParams.get("page") || 1;
@@ -455,3 +456,20 @@ export const dashboardLoader = async ({ request }) => {
   return LoaderDashboard.fromRequest({ request });
 };
 
+export const loyaltyRewardsLoader = () =>
+  queryClient.fetchQuery({
+    queryKey: ["loyalty-rewards"],
+    queryFn: () => LoaderLoyalty.getRewardsPage(),
+  });
+
+export const loyaltyUsersLoader = ({ request }) =>
+  queryClient.fetchQuery({
+    queryKey: ["loyalty-users", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "sortBy"), getSearchParam(request, "order"), getSearchParam(request, "tierId")],
+    queryFn: () => LoaderLoyalty.getUsersPage({
+      page: getPage(request),
+      search: getSearchParam(request, "search"),
+      sortBy: getSearchParam(request, "sortBy") || "points_balance",
+      order: getSearchParam(request, "order") || "desc",
+      tierId: getSearchParam(request, "tierId"),
+    }),
+  });

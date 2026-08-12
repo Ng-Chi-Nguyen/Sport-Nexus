@@ -6,6 +6,7 @@
     "hello": "Xin chào, {{name}}",
     "account_info": "Thông tin tài khoản",
     "address_book": "Sổ địa chỉ",
+    "membership": "Thành viên",
     "orders": "Đơn hàng",
     "change_password": "Đổi mật khẩu",
     "logout": "Đăng xuất",

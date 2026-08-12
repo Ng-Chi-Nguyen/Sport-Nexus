@@ -9,6 +9,7 @@ const breadcrumbNameMap = {
   "/tai-khoan/yeu-thich": "Sản phẩm đã thích",
   "/tai-khoan/hoa-don": "Hóa đơn đã thanh toán",
   "/tai-khoan/khuyen-mai": "Mã giảm giá của tôi",
+  "/tai-khoan/thanh-vien": "Thành viên",
   "/tai-khoan/thong-bao": "Thông báo",
   "/tai-khoan/lich-su-tim-kiem": "Lịch sử tìm kiếm",
   "/tai-khoan/bao-mat": "Bảo mật tài khoản",

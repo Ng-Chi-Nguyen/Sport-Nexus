@@ -18,6 +18,7 @@ loyaltyRoute
 // Bảng đổi quà
 loyaltyRoute
   .get("/rewards", checkPermission("xem-qua-doi-diem"), loyaltyController.getAllRewards)
+  .get("/rewards/hidden-coupons", checkPermission("xem-qua-doi-diem"), loyaltyController.getHiddenCoupons)
   .post("/rewards", checkPermission("them-qua-doi-diem"), validate(loyaltySchema.createReward), loyaltyController.createReward)
   .put("/rewards/:id", checkPermission("sua-qua-doi-diem"), validate(loyaltySchema.updateReward), loyaltyController.updateReward)
   .delete("/rewards/:id", checkPermission("xoa-qua-doi-diem"), loyaltyController.deleteReward);

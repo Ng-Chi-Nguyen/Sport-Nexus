@@ -119,7 +119,7 @@ const ProfilePage = () => {
                         : "text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors block px-3 py-2 rounded-xl"
                     }
                   >
-                    {tProfile("membership", "Thành viên")}
+                    {tProfile("membership")}
                   </NavLink>
                 </div>
 

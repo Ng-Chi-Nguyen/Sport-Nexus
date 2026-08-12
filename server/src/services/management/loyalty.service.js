@@ -48,6 +48,25 @@ const loyaltyManagementService = {
     });
   },
 
+  // ---------- Hidden coupons (cho form đổi quà) ----------
+  getHiddenCoupons: async () => {
+    return prisma.coupons.findMany({
+      where: {
+        deleted_at: ACTIVE,
+        is_public: false,
+        is_active: true,
+      },
+      select: {
+        id: true,
+        code: true,
+        discount_value: true,
+        discount_type: true,
+        max_discount: true,
+      },
+      orderBy: { code: "asc" },
+    });
+  },
+
   // ---------- TierRewards ----------
   createReward: async (data) => {
     return prisma.tierRewards.create({
@@ -62,11 +81,27 @@ const loyaltyManagementService = {
   },
 
   getAllRewards: async () => {
-    return prisma.tierRewards.findMany({
+    const rewards = await prisma.tierRewards.findMany({
       where: { deleted_at: ACTIVE },
       include: { tier: { select: { id: true, name: true } } },
       orderBy: { id: "asc" },
     });
+    const codes = rewards.map((r) => r.coupon_code).filter(Boolean);
+    const coupons = codes.length
+      ? await prisma.coupons.findMany({
+          where: { code: { in: codes }, deleted_at: ACTIVE },
+          select: {
+            code: true, discount_value: true, discount_type: true,
+            max_discount: true, min_order_value: true, end_date: true,
+            is_active: true,
+          },
+        })
+      : [];
+    const couponMap = new Map(coupons.map((c) => [c.code, c]));
+    return rewards.map((r) => ({
+      ...r,
+      coupon: r.coupon_code ? (couponMap.get(r.coupon_code) ?? null) : null,
+    }));
   },
 
   updateReward: async (rewardId, data) => {
@@ -115,7 +150,7 @@ const loyaltyManagementService = {
   },
 
   // ---------- Users & transactions ----------
-  getUsers: async ({ page = 1, search = "" } = {}) => {
+  getUsers: async ({ page = 1, search = "", sortBy = "", order = "", tierId = "" } = {}) => {
     const limit = 10;
     const currentPage = Math.max(1, page || 1);
     const skip = (currentPage - 1) * limit;
@@ -126,6 +161,21 @@ const loyaltyManagementService = {
         { full_name: { contains: search } },
       ];
     }
+    if (tierId) {
+      const id = safeInt(tierId);
+      if (id) where.tier_id = id;
+    }
+    const SORTABLE = {
+      points_balance: "points_balance",
+      total_spent: "total_spent",
+      id: "id",
+    };
+    const dir = order === "asc" ? "asc" : "desc";
+    const sortField = SORTABLE[sortBy] || "id";
+    const orderBy =
+      sortField === "id"
+        ? { id: dir }
+        : [{ [sortField]: dir }, { id: dir }];
     const [users, total] = await Promise.all([
       prisma.users.findMany({
         where,
@@ -135,7 +185,7 @@ const loyaltyManagementService = {
           tier: { select: { id: true, name: true, sort_order: true } },
           status: true,
         },
-        orderBy: { id: "desc" },
+        orderBy,
         skip,
         take: limit,
       }),

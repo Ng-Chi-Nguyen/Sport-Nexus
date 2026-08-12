@@ -76,7 +76,42 @@ const loyaltyService = {
       select: { id: true, name: true, point_cost: true, coupon_code: true },
       orderBy: { id: "asc" },
     });
-    return { rewards };
+
+    // Xác định quà user đã đổi (đã trừ điểm) để tiết lộ mã coupon thật
+    const userCoupons = await prisma.userCoupons.findMany({
+      where: { user_id: userId, is_gift: true },
+      select: { coupon: { select: { code: true } } },
+    });
+    const redeemedCodes = new Set(userCoupons.map((uc) => uc.coupon.code));
+
+    // Lấy coupon để hiển thị card cho tất cả quà, nhưng chưa đổi thì giấu mã
+    const codes = rewards.map((r) => r.coupon_code).filter(Boolean);
+    const coupons = codes.length
+      ? await prisma.coupons.findMany({
+          where: { code: { in: codes }, deleted_at: ACTIVE },
+          select: {
+            code: true, discount_value: true, discount_type: true,
+            max_discount: true, min_order_value: true, end_date: true,
+            is_active: true, usage_count: true, usage_limit: true,
+          },
+        })
+      : [];
+    const couponMap = new Map(coupons.map((c) => [c.code, c]));
+    return {
+      rewards: rewards.map((r) => {
+        const coupon = r.coupon_code ? (couponMap.get(r.coupon_code) ?? null) : null;
+        const redeemed = r.coupon_code ? redeemedCodes.has(r.coupon_code) : false;
+        return {
+          id: r.id,
+          name: r.name,
+          point_cost: r.point_cost,
+          redeemed,
+          coupon: coupon
+            ? { ...coupon, code: redeemed ? coupon.code : null }
+            : null,
+        };
+      }),
+    };
   },
 
   // Đổi quà: trừ điểm + cấp coupon cho user
@@ -131,8 +166,8 @@ const loyaltyService = {
         if (coupon) {
           await tx.userCoupons.upsert({
             where: { user_id_coupon_id: { user_id: userId, coupon_id: coupon.id } },
-            create: { user_id: userId, coupon_id: coupon.id, used_count: 0, is_gift: true },
-            update: {},
+            create: { user_id: userId, coupon_id: coupon.id, used_count: 0, is_gift: true, quantity: 1 },
+            update: { quantity: { increment: 1 }, is_gift: true },
           });
         }
       }

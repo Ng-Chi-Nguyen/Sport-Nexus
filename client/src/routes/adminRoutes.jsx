@@ -339,8 +339,8 @@ export const adminRoutes = {
     // Chương trình thành viên & tích điểm
     { path: "loyalty", element: <LoyaltyAdminPage /> },
     { path: "loyalty/tiers", element: <LoyaltyTiersPage /> },
-    { path: "loyalty/rewards", element: <LoyaltyRewardsPage /> },
+    { path: "loyalty/rewards", element: <LoyaltyRewardsPage />, loader: RouteLoaders.loyaltyRewardsLoader },
     { path: "loyalty/settings", element: <LoyaltySettingsPage /> },
-    { path: "loyalty/users", element: <LoyaltyUsersPage /> },
+    { path: "loyalty/users", element: <LoyaltyUsersPage />, loader: RouteLoaders.loyaltyUsersLoader },
   ],
 };

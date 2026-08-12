@@ -6,6 +6,7 @@
     "hello": "Hello, {{name}}",
     "account_info": "Account Information",
     "address_book": "Address Book",
+    "membership": "Membership",
     "orders": "Orders",
     "change_password": "Change Password",
     "logout": "Logout",

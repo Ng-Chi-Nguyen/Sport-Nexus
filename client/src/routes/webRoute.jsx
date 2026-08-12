@@ -8,6 +8,7 @@ import {
   profileLoader,
   ordersLoader,
   orderDetailLoader,
+  loyaltyLoader,
   invoicesLoader,
   invoiceDetailLoader,
   productsLoader,
@@ -131,7 +132,7 @@ export const webRoutes = {
         },
         { path: "dat-lai-mat-khau", element: <ResetPassword /> },
         { path: "don-hang", element: <Order />, loader: ordersLoader },
-        { path: "thanh-vien", element: <LoyaltyPage /> },
+        { path: "thanh-vien", element: <LoyaltyPage />, loader: loyaltyLoader },
         {
           path: "don-hang/:id",
           element: <OrderDetail />,
