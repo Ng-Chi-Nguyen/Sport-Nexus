@@ -36,6 +36,12 @@ axiosClient.interceptors.response.use(
             }
         }
 
+        // Lỗi mạng (mất kết nối, server không phản hồi) — không có response
+        if (!error.response) {
+            error.message = i18n.language === "en" ? "Network error" : "Lỗi kết nối mạng, vui lòng thử lại";
+            return Promise.reject(error);
+        }
+
         if (error.response && error.response.status === 403) {
             // Lấy tin nhắn từ server ("Bạn không có quyền này!")
             const message = error.response.data?.message || "Bạn không có quyền thực hiện hành động này";

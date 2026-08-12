@@ -20,9 +20,8 @@ const InvoiceDetail = () => {
 
     printElement(receipt, {
       title: `${t("detail.receipt_title", "Hóa đơn")} ${invoice?.invoice_number || ""}`,
-      pageSize: "80mm 200mm",
+      pageSize: "80mm auto",
       containerWidth: "80mm",
-      containerHeight: "200mm",
     });
   };
 

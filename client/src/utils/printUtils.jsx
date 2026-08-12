@@ -1,9 +1,8 @@
 const printElement = (element, options = {}) => {
   const {
-    title = "Print",
-    pageSize = "105mm 45mm",
-    containerWidth = "100mm",
-    containerHeight = "40mm",
+    title = "Hóa đơn",
+    pageSize = "80mm auto",
+    containerWidth = "76mm",
   } = options;
 
   const elementHTML = element?.outerHTML ?? element;
@@ -12,15 +11,16 @@ const printElement = (element, options = {}) => {
   const printWindow = window.open("", "_blank", "width=800,height=600");
   if (!printWindow) return;
 
+  // Lấy toàn bộ style hiện tại của ứng dụng để truyền vào bản in
   const styleSheets = Array.from(document.styleSheets)
     .map((sheet) => {
       try {
         return Array.from(sheet.cssRules)
           .map((rule) => rule.cssText)
           .join("");
-        } catch {
-          return "";
-        }
+      } catch {
+        return "";
+      }
     })
     .join("");
 
@@ -32,36 +32,51 @@ const printElement = (element, options = {}) => {
         <style>
           ${styleSheets}
 
+          /* Cấu hình bắt buộc để ép khổ máy in nhiệt */
           @page {
             size: ${pageSize};
-            margin: 0;
+            margin: 0 !important;
+          }
+
+          * {
+            box-sizing: border-box;
           }
 
           html, body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 80mm;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
             background-color: #ffffff;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
           }
 
+          body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+
           .print-container {
             width: ${containerWidth};
-            height: ${containerHeight};
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            height: auto !important;
+            margin: 0 auto !important;
+            padding: 0 !important;
+            /* Chống ngắt trang thừa */
+            page-break-after: avoid;
+            page-break-before: avoid;
           }
 
           .print-container > div {
             width: 100% !important;
-            height: 100% !important;
+            height: auto !important;
             box-shadow: none !important;
+            border: none !important;
+            background: transparent !important;
+            margin: 0 !important;
+            /* Thêm 1 chút padding dưới cùng để khi máy in cắt giấy không bị lẹm chữ */
+            padding-bottom: 8mm !important;
           }
 
           .no-print {
@@ -74,10 +89,11 @@ const printElement = (element, options = {}) => {
           ${elementHTML}
         </div>
         <script>
+          // Đợi DOM render xong style rồi mới gọi lệnh in
           setTimeout(() => {
             window.print();
             window.close();
-          }, 300);
+          }, 400);
         </script>
       </body>
     </html>

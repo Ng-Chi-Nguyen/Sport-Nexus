@@ -31,11 +31,6 @@ export const SIDEBAR_MENU_STRUCTURE = (prefix) => [
         label: "shipping",
         iconName: "Truck",
       },
-      {
-        path: `${prefix}/carts`,
-        label: "carts",
-        iconName: "ShoppingCart",
-      },
       { path: `${prefix}/coupons`, label: "coupons", iconName: "Barcode" },
       {
         path: `${prefix}/reviews`,
@@ -120,12 +115,6 @@ export const SIDEBAR_MENU_STRUCTURE = (prefix) => [
         path: `${prefix}/permissions`,
         label: "permissions",
         iconName: "KeySquare",
-        roles: ["admin"],
-      },
-      {
-        path: `${prefix}/addresses`,
-        label: "addresses",
-        iconName: "LocateFixed",
         roles: ["admin"],
       },
     ],
