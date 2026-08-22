@@ -29,7 +29,7 @@ export const NavCategoryMenu = ({
     { key: "terms_of_use", to: "/dieu-khoan-su-dung", icon: PhoneCall },
     { key: "privacy_policy", to: "/chinh-sach-bao-mat", icon: ShieldCheck },
     { key: "recruitment", to: "/tuyen-dung", icon: Users },
-  ];  // Xử lý click outside đóng menu
+  ]; // Xử lý click outside đóng menu
   useEffect(() => {
     const handleClickOutside = (e) => {
       const toggleBtn = document.getElementById("menu-toggle-btn");
@@ -58,7 +58,7 @@ export const NavCategoryMenu = ({
       <div className="bg-slate-900 text-slate-300 border-b border-slate-800 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 h-12 flex items-center justify-between gap-4">
           {/* Search Box cho Mobile */}
-          <div className="flex-1 sm:hidden relative flex items-center rounded-full overflow-hidden bg-slate-800 border border-slate-700 focus-within:border-sky-500">
+          <div className="flex-1 sm:hidden relative flex items-center rounded-full overflow-hidden bg-slate-800 border border-slate-700 focus-within:border-primary">
             <Search
               size={14}
               className="absolute left-3 text-slate-400 pointer-events-none"
@@ -70,7 +70,7 @@ export const NavCategoryMenu = ({
             />
             <button
               type="button"
-              className="absolute right-0 h-full px-3 bg-sky-600 dark:bg-sky-500 text-white text-xs font-semibold hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
+              className="absolute right-0 h-full px-3 bg-primary dark:bg-primary text-white text-xs font-semibold hover:bg-sky-700 dark:hover:bg-primary transition-colors cursor-pointer"
             >
               {t("search_btn")}
             </button>
@@ -82,8 +82,9 @@ export const NavCategoryMenu = ({
               to="/bo-suu-tap"
               onClick={() => setIsOpenMenu(false)}
               className={`h-8 px-3 flex items-center gap-2 text-xs font-medium rounded-lg transition-colors ${
-                pathname === "/bo-suu-tap" || pathname.startsWith("/bo-suu-tap/")
-                  ? "bg-sky-600 dark:bg-sky-500 text-white font-semibold shadow-sm"
+                pathname === "/bo-suu-tap" ||
+                pathname.startsWith("/bo-suu-tap/")
+                  ? "bg-primary dark:bg-primary text-white font-semibold shadow-sm"
                   : "hover:text-white hover:bg-slate-800"
               }`}
             >
@@ -99,7 +100,7 @@ export const NavCategoryMenu = ({
                   to={link.to}
                   className={`h-8 px-3 flex items-center gap-2 text-xs font-medium rounded-lg transition-colors ${
                     isActive
-                      ? "bg-sky-600 dark:bg-sky-500 text-white font-semibold shadow-sm"
+                      ? "bg-primary dark:bg-primary text-white font-semibold shadow-sm"
                       : "hover:text-white hover:bg-slate-800"
                   }`}
                 >
@@ -114,10 +115,10 @@ export const NavCategoryMenu = ({
           <div className="hidden lg:block text-xs font-medium text-slate-400">
             {t("hotline")}:{" "}
             <a
-              href="tel:0812312831"
+              href={`tel:${import.meta.env.VITE_PHONE_ME}`}
               className="text-primary font-bold hover:underline"
             >
-              0812312831
+              {import.meta.env.VITE_PHONE_ME}
             </a>
           </div>
         </div>
@@ -147,7 +148,7 @@ export const NavCategoryMenu = ({
                       key={cat.id || cat.slug}
                       to={`/san-pham?page=1&category_ids=${cat.id}`}
                       onClick={() => setIsOpenMenu(false)}
-                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-sky-600 dark:hover:text-sky-400 transition-colors cursor-pointer"
+                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-primary dark:hover:text-sky-400 transition-colors cursor-pointer"
                     >
                       <span className="truncate">{cat.name}</span>
                       <ChevronRight
