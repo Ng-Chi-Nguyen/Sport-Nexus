@@ -38,6 +38,7 @@
   "coupon_saved": "Saved: {{value}}",
   "reviews_heading": "Reviews ({{count}})",
   "default_user_name": "User",
+  "store_reply_heading": "Store's response",
   "related_title": "Buy together",
   "related_similar": "Similar products",
   "related_liked": "Liked products",

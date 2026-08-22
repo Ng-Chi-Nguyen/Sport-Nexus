@@ -11,44 +11,46 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-paymentRoute.get("/methods", paymentController.getMethods);
-paymentRoute.get(
-    "/orders/:orderId/transactions",
-    verifyToken,
-    paymentController.getOrderTransactions,
-);
-paymentRoute.get(
-    "/orders/:orderId/status",
-    verifyToken,
-    paymentController.getOrderPaymentStatus,
-);
-paymentRoute.get(
-    "/transactions/:transactionId",
-    verifyToken,
-    paymentController.getTransaction,
-);
-paymentRoute.post(
-    "/orders/:orderId",
-    verifyToken,
-    validate(paymentSchema.createPayment),
-    paymentController.createPayment,
-);
-paymentRoute.post(
-    "/transactions/:transactionId/receipt",
-    verifyToken,
-    upload.single("receipt_image"),
-    validate(paymentSchema.uploadReceipt),
-    paymentController.uploadReceipt,
-);
-paymentRoute.post(
-    "/webhook/payos",
-    express.json({ type: "application/json" }),
-    paymentController.handlePayosWebhook,
-);
-paymentRoute.post(
-    "/webhook/casso",
-    express.json({ type: "application/json" }),
-    paymentController.handleCassoWebhook,
-);
+paymentRoute
+
+    .get("/methods", paymentController.getMethods)
+    .get(
+        "/orders/:orderId/transactions",
+        verifyToken,
+        paymentController.getOrderTransactions,
+    )
+    .get(
+        "/orders/:orderId/status",
+        verifyToken,
+        paymentController.getOrderPaymentStatus,
+    )
+    .get(
+        "/transactions/:transactionId",
+        verifyToken,
+        paymentController.getTransaction,
+    )
+    .post(
+        "/orders/:orderId",
+        verifyToken,
+        validate(paymentSchema.createPayment),
+        paymentController.createPayment,
+    )
+    .post(
+        "/transactions/:transactionId/receipt",
+        verifyToken,
+        upload.single("receipt_image"),
+        validate(paymentSchema.uploadReceipt),
+        paymentController.uploadReceipt,
+    )
+    .post(
+        "/webhook/payos",
+        express.json({ type: "application/json" }),
+        paymentController.handlePayosWebhook,
+    )
+    .post(
+        "/webhook/casso",
+        express.json({ type: "application/json" }),
+        paymentController.handleCassoWebhook,
+    )
 
 export default paymentRoute;

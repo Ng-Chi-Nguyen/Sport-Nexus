@@ -11,15 +11,15 @@ const reviewRoute = express.Router();
 
 reviewRoute
 
-    .post("/", verifyToken, uploadMediaImage, validate(reviewSchema.createReview),
-      logAction({ actionType: "CREATE", entityType: "Reviews", getEntityId: (_, body) => body.data?.id, getChanges: createDetails }),
-      reviewController.createReview)
-    .put("/:id", verifyToken, uploadMediaImage, validate(reviewSchema.updateReview),
-      logAction({ actionType: "UPDATE", entityType: "Reviews", getChanges: updateDetails }),
-      reviewController.updateReview)
-    .get("/product/:id", reviewController.getReviewByProductId)
-    .delete("/:id", verifyToken,
-      logAction({ actionType: "DELETE", entityType: "Reviews", getChanges: deleteDetails }),
-      reviewController.deleteReview)
+  .post("/", verifyToken, uploadMediaImage, validate(reviewSchema.createReview),
+    logAction({ actionType: "CREATE", entityType: "Reviews", getEntityId: (_, body) => body.data?.id, getChanges: createDetails }),
+    reviewController.createReview)
+  .put("/:id", verifyToken, uploadMediaImage, validate(reviewSchema.updateReview),
+    logAction({ actionType: "UPDATE", entityType: "Reviews", getChanges: updateDetails }),
+    reviewController.updateReview)
+  .get("/product/:id", reviewController.getReviewByProductId)
+  .delete("/:id", verifyToken,
+    logAction({ actionType: "DELETE", entityType: "Reviews", getChanges: deleteDetails }),
+    reviewController.deleteReview)
 
 export default reviewRoute;
