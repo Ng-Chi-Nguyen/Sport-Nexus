@@ -10,13 +10,13 @@ Hệ thống import Excel dùng chung (`excelCrudImport`) hiện chỉ tạo m�
 
 Hiện trạng cụ thể:
 
-| Module | Trạng thái |
-|---|---|
-| `brands`, `users`, `attributeKey`, `coupons`, `productVariants` | Chỉ `create` trong `importRow` |
-| `suppliers`, `category`, `productAttributeKey` | Có code update theo `row.id` nhưng **lệch cột**: `parseRow` đọc ID tại `values[0]` trong khi `columns.js` không định nghĩa cột ID → file export/template thiếu cột ID, import từ file export sẽ dịch toàn bộ cột |
-| `products` | `if (row.id)` là dead code vì `parseRow` không bao giờ gán `row.id` |
-| `stockMovements` | Create-only (giữ nguyên — bản ghi nhật ký kho không nên sửa) |
-| `orders`, `purchaseOrder` (dual-sheet) | Đã có cơ chế upsert riêng qua `ref_code`/ID, không đổi |
+| Module                                                          | Trạng thái                                                                                                                                                                                                       |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `brands`, `users`, `attributeKey`, `coupons`, `productVariants` | Chỉ `create` trong `importRow`                                                                                                                                                                                   |
+| `suppliers`, `category`, `productAttributeKey`                  | Có code update theo `row.id` nhưng **lệch cột**: `parseRow` đọc ID tại `values[0]` trong khi `columns.js` không định nghĩa cột ID → file export/template thiếu cột ID, import từ file export sẽ dịch toàn bộ cột |
+| `products`                                                      | `if (row.id)` là dead code vì `parseRow` không bao giờ gán `row.id`                                                                                                                                              |
+| `stockMovements`                                                | Create-only (giữ nguyên — bản ghi nhật ký kho không nên sửa)                                                                                                                                                     |
+| `orders`, `purchaseOrder` (dual-sheet)                          | Đã có cơ chế upsert riêng qua `ref_code`/ID, không đổi                                                                                                                                                           |
 
 Vấn đề người dùng muốn giải quyết: khi tải file export về, chỉnh sửa dữ liệu rồi import lại, hệ thống tạo bản ghi trùng thay vì cập nhật dòng tương ứng.
 
@@ -59,24 +59,36 @@ Upload .xlsx
 Thêm:
 
 ```js
-export const upsertRecord = async (db, model, { id }, data, { notFoundMessage } = {}) => {
+export const upsertRecord = async (
+  db,
+  model,
+  { id },
+  data,
+  { notFoundMessage } = {},
+) => {
   if (id) {
     const existing = await db[model].findUnique({ where: { id } });
     if (!existing) {
       return {
-        action: 'error',
-        errors: [{ field: 'id', message: notFoundMessage ?? `Không tìm thấy bản ghi có ID #${id}` }],
+        action: "error",
+        errors: [
+          {
+            field: "id",
+            message: notFoundMessage ?? `Không tìm thấy bản ghi có ID #${id}`,
+          },
+        ],
       };
     }
     const record = await db[model].update({ where: { id }, data });
-    return { action: 'update', record };
+    return { action: "update", record };
   }
   const record = await db[model].create({ data });
-  return { action: 'create', record };
+  return { action: "create", record };
 };
 ```
 
 Ghi chú:
+
 - `model` là tên Prisma delegate dạng chuỗi (ví dụ `'Brands'`) — khớp với cách gọi sẵn có `db.Brands`.
 - Bọc try/catch lỗi Prisma `P2002` (vi phạm unique) quanh create/update, trả `action: 'error'` kèm thông báo trường tương ứng thay vì làm sập cả lượt import.
 
@@ -101,17 +113,17 @@ Do `buildWorkbookBuffer` map row object theo column key, các `exportAll` đã t
 
 ### 4.5 Thay đổi từng module — `modules/`
 
-| Module | parseRow | importRow / exportAll |
-|---|---|---|
-| `brands` | Không đổi | `create` → `upsertRecord`; `exportAll` bổ sung `id` |
-| `users` | Không đổi | `create` → `upsertRecord` (password trống khi update → giữ mật khẩu cũ — logic có sẵn); `exportAll` đã có `id` |
-| `attributeKey` | Không đổi | `upsertRecord`; `exportAll` bổ sung `id` |
-| `coupons` | Không đổi | `upsertRecord`; `exportAll` bổ sung `id` |
-| `productVariants` | Không đổi | Upsert; khi **update**: xoá `VariableAttributes` cũ (`deleteMany({ where: { variable_id } })`) rồi tạo lại từ cột Thuộc tính (sync); `exportAll` bổ sung `id` |
-| `suppliers` | Bỏ đọc ID thủ công tại `values[0]` (builder lo), các index còn lại giữ nguyên vị trí mới (dịch -1 so với code cũ) | `upsertRecord` (thêm check ID-not-found) |
-| `category` | Như suppliers | `upsertRecord` |
-| `productAttributeKey` | Bỏ đọc ID thủ công tại `values[0]` (đang có — cùng pattern lệch cột với suppliers/category), index dịch -1, giữ logic validate product_id/attribute_key_id | `upsertRecord` (thêm check ID-not-found) |
-| `products` | Không đổi (đã đọc business-first) | Kích hoạt `row.id` (bỏ dead code), chuyển nhánh update/create sang `upsertRecord`; `exportAll` bổ sung `id` |
+| Module                | parseRow                                                                                                                                                   | importRow / exportAll                                                                                                                                         |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `brands`              | Không đổi                                                                                                                                                  | `create` → `upsertRecord`; `exportAll` bổ sung `id`                                                                                                           |
+| `users`               | Không đổi                                                                                                                                                  | `create` → `upsertRecord` (password trống khi update → giữ mật khẩu cũ — logic có sẵn); `exportAll` đã có `id`                                                |
+| `attributeKey`        | Không đổi                                                                                                                                                  | `upsertRecord`; `exportAll` bổ sung `id`                                                                                                                      |
+| `coupons`             | Không đổi                                                                                                                                                  | `upsertRecord`; `exportAll` bổ sung `id`                                                                                                                      |
+| `productVariants`     | Không đổi                                                                                                                                                  | Upsert; khi **update**: xoá `VariableAttributes` cũ (`deleteMany({ where: { variable_id } })`) rồi tạo lại từ cột Thuộc tính (sync); `exportAll` bổ sung `id` |
+| `suppliers`           | Bỏ đọc ID thủ công tại `values[0]` (builder lo), các index còn lại giữ nguyên vị trí mới (dịch -1 so với code cũ)                                          | `upsertRecord` (thêm check ID-not-found)                                                                                                                      |
+| `category`            | Như suppliers                                                                                                                                              | `upsertRecord`                                                                                                                                                |
+| `productAttributeKey` | Bỏ đọc ID thủ công tại `values[0]` (đang có — cùng pattern lệch cột với suppliers/category), index dịch -1, giữ logic validate product_id/attribute_key_id | `upsertRecord` (thêm check ID-not-found)                                                                                                                      |
+| `products`            | Không đổi (đã đọc business-first)                                                                                                                          | Kích hoạt `row.id` (bỏ dead code), chuyển nhánh update/create sang `upsertRecord`; `exportAll` bổ sung `id`                                                   |
 
 Lưu ý quan trọng về index: các module trước đây đọc `values[0]` làm ID (suppliers, category, productAttributeKey) sẽ được builder strip ID trước, nên `parseRow` của chúng đọc business fields bắt đầu từ `values[0]` — tức là so với code cũ phải dịch toàn bộ index xuống 1 đơn vị.
 

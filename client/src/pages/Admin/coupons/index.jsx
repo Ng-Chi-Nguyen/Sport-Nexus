@@ -247,6 +247,9 @@ const CouponPage = () => {
             <thead className="text-xs uppercase border-b transition-colors duration-200 bg-slate-100 border-slate-200 dark:bg-[#161F32] dark:border-slate-800">
               <tr>
                 <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
+                  ID
+                </th>
+                <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
                   {t("table_code")}
                 </th>
                 <th className="px-6 py-4 font-bold text-center text-slate-500 dark:text-slate-400">
@@ -270,6 +273,9 @@ const CouponPage = () => {
                     key={coupon.id}
                     className="hover:bg-slate-50 dark:hover:bg-[#161F32]/40 transition-colors duration-150"
                   >
+                    <td className="px-6 py-4 text-center font-mono text-xs text-slate-600">
+                      {coupon.id}
+                    </td>
                     <td className="px-6 py-4 text-center font-bold text-sky-600 dark:text-sky-400">
                       <Badge color={coupon.is_active ? "blue" : "red"}>
                         Code: {coupon.code}
@@ -340,7 +346,7 @@ const CouponPage = () => {
               ) : (
                 <tr>
                   <td
-                    colSpan="5"
+                    colSpan="6"
                     className="px-6 py-10 text-center text-slate-400 dark:text-slate-500 italic"
                   >
                     {t("no_coupons_found")}

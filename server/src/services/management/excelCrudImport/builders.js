@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { getSheetRows } from './workbook.js';
-import { rowHasOwnData } from './helpers.js';
+import { rowHasOwnData, toInt } from './helpers.js';
 
 
 
@@ -29,10 +29,24 @@ export const buildSingleSheetModule = ({
       throw new Error(`File Excel không đúng cấu trúc (thiếu sheet "${sheetName}").`);
     }
 
-    return getSheetRows(worksheet, columns.length).map(({ rowNumber, row, values }) => {
-      const parsed = parseRow({ rowNumber, row, values, sheetName });
-      return { rowNumber, ...parsed };
-    }).filter((entry) => rowHasOwnData(entry.rawValues ?? entry.values ?? []));
+    // Detect whether the first header cell is an ID column (header A1 === 'ID')
+    const headerCell = worksheet.getRow(1).getCell(1).value;
+    const headerText = headerCell ? String(headerCell).trim().toLowerCase() : '';
+    const hasIdColumn = headerText === 'id';
+
+    return getSheetRows(worksheet, columns.length)
+      .map(({ rowNumber, row, values }) => {
+        let rowId = null;
+        let businessValues = values;
+        if (hasIdColumn) {
+          rowId = toInt(values[0]);
+          businessValues = values.slice(1);
+        }
+
+        const parsed = parseRow({ rowNumber, row, values: businessValues, sheetName });
+        return { rowNumber, id: rowId, ...parsed };
+      })
+      .filter((entry) => rowHasOwnData(entry.rawValues ?? entry.values ?? []));
   },
   async importRows(db, parsedRows) {
     const result = { created: [], updated: [], errors: [] };

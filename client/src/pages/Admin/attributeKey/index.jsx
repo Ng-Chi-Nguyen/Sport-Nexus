@@ -177,6 +177,12 @@ const AttributeKey = () => {
                 <tr>
                   <th
                     scope="col"
+                    className="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider w-[6%]"
+                  >
+                    ID
+                  </th>
+                  <th
+                    scope="col"
                     className="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
                     {t("attributeKey.attribute_name")}
@@ -208,6 +214,9 @@ const AttributeKey = () => {
                       key={attr.id}
                       className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors duration-200"
                     >
+                      <td className="px-6 py-4 font-mono text-xs text-slate-600">
+                        {attr.id}
+                      </td>
                       <td className="px-6 py-4 font-medium text-slate-900 dark:text-slate-200 whitespace-nowrap">
                         {attr.name}
                       </td>
@@ -231,7 +240,7 @@ const AttributeKey = () => {
                 ) : (
                   <tr>
                     <td
-                      colSpan="4"
+                      colSpan="5"
                       className="px-6 py-20 text-center text-slate-400 dark:text-slate-500 italic text-sm"
                     >
                       {t("attributeKey.no_attributes")}

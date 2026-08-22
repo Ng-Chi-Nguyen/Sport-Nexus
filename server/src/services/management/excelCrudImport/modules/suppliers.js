@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { trimText, toText, toInt, rowHasOwnData } from "../helpers.js";
+import { trimText, toText, toInt, rowHasOwnData, upsertRecord } from "../helpers.js";
 import { buildSingleSheetModule } from "../builders.js";
 import { supplierColumns } from "../columns.js";
 import { ACTIVE } from "../../../../utils/prisma.js";
@@ -46,12 +46,11 @@ export const suppliers = buildSingleSheetModule({
       return { detail: parts.slice(0, -2).join(', '), ward: parts[parts.length - 2], province: parts[parts.length - 1] };
     };
 
-    const id = toInt(values[0]);
-    const contact_person = toText(values[1]);
-    const email = toText(values[2]);
-    const phone = toText(values[3]);
-    const name = toText(values[4]);
-    const location_data = parseLocationData(values[5]) ?? {};
+    const contact_person = toText(values[0]);
+    const email = toText(values[1]);
+    const phone = toText(values[2]);
+    const name = toText(values[3]);
+    const location_data = parseLocationData(values[4]) ?? {};
 
     const errors = [];
 
@@ -62,7 +61,6 @@ export const suppliers = buildSingleSheetModule({
     return {
       values,
       rawValues: values,
-      id,
       data: {
         contact_person: contact_person || undefined,
         email: email || undefined,
@@ -75,11 +73,6 @@ export const suppliers = buildSingleSheetModule({
   },
   importRow: async (db, row) => {
     const data = Object.fromEntries(Object.entries(row.data).filter(([, value]) => value !== undefined));
-    if (row.id) {
-      const record = await db.Suppliers.update({ where: { id: row.id }, data });
-      return { action: 'update', record };
-    }
-    const record = await db.Suppliers.create({ data });
-    return { action: 'create', record };
+    return await upsertRecord(db, 'Suppliers', { id: row.id }, data, { notFoundMessage: `Không tìm thấy nhà cung cấp có ID #${row.id}` });
   },
 });

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { toText, toInt, toNumber, rowHasOwnData, parseVariantAttributePairs, normalizeLookupText } from "../helpers.js";
+import { toText, toInt, toNumber, rowHasOwnData, parseVariantAttributePairs, normalizeLookupText, upsertRecord } from "../helpers.js";
 import { buildSingleSheetModule } from "../builders.js";
 import { productVariantColumns } from "../columns.js";
 import { ACTIVE } from "../../../../utils/prisma.js";
@@ -69,6 +69,7 @@ export const productVariants = buildSingleSheetModule({
     });
 
     return rows.map((item) => ({
+      id: item.id,
       product_name: item.product?.name || '',
       stock: Number(item.stock),
       price: Number(item.price),
@@ -148,10 +149,15 @@ export const productVariants = buildSingleSheetModule({
 
     const cleanData = Object.fromEntries(Object.entries(data).filter(([, v]) => v !== undefined));
 
-    let record;
-    record = await db.ProductVariants.create({ data: cleanData });
+    // perform upsert (create or update)
+    const upsertResult = await upsertRecord(db, 'ProductVariants', { id: row.id }, cleanData, { notFoundMessage: `Không tìm thấy biến thể có ID #${row.id}` });
+    if (upsertResult.action === 'error') return upsertResult;
+
+    const record = upsertResult.record;
 
     if (parsedAttributes.length > 0) {
+      // ensure attributes synced: delete old and create new
+      await db.variableAttributes.deleteMany({ where: { variable_id: record.id } });
       await db.variableAttributes.createMany({
         data: parsedAttributes.map((item) => ({
           variable_id: record.id,
@@ -161,6 +167,6 @@ export const productVariants = buildSingleSheetModule({
       });
     }
 
-    return { action: 'create', record };
+    return { action: upsertResult.action, record };
   },
 });

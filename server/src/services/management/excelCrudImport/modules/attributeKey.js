@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { toText, rowHasOwnData } from "../helpers.js";
+import { toText, rowHasOwnData, upsertRecord } from "../helpers.js";
 import { buildSingleSheetModule } from "../builders.js";
 import { attributeKeyColumns } from "../columns.js";
 
@@ -13,6 +13,7 @@ export const attributeKey = buildSingleSheetModule({
     });
 
     return rows.map((item) => ({
+      id: item.id,
       name: item.name || '',
       unit: item.unit || '',
     }));
@@ -40,7 +41,6 @@ export const attributeKey = buildSingleSheetModule({
   },
   importRow: async (db, row) => {
     const data = Object.fromEntries(Object.entries(row.data).filter(([, value]) => value !== undefined));
-    const record = await db.AttributeKeys.create({ data });
-    return { action: 'create', record };
+    return await upsertRecord(db, 'AttributeKeys', { id: row.id }, data, { notFoundMessage: `Không tìm thấy thuộc tính có ID #${row.id}` });
   },
 });

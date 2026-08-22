@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { trimText, toText, toInt, rowHasOwnData } from "../helpers.js";
+import { trimText, toText, toInt, rowHasOwnData, upsertRecord } from "../helpers.js";
 import { buildSingleSheetModule } from "../builders.js";
 import { categoryColumns } from "../columns.js";
 import { ACTIVE } from "../../../../utils/prisma.js";
@@ -29,12 +29,11 @@ export const category = buildSingleSheetModule({
       return { values, rawValues: values, errors: [] };
     }
 
-    const id = toInt(values[0]);
-    const name = toText(values[1]);
+    const name = toText(values[0]);
     const slug = slugify(name, { lower: true, strict: true });
-    const parent_id = toInt(values[2]);
-    const description = toText(values[3]);
-    const image = toText(values[4]);
+    const parent_id = toInt(values[1]);
+    const description = toText(values[2]);
+    const image = toText(values[3]);
     const errors = [];
 
     if (!name) errors.push({ field: 'name', message: 'Tên danh mục không được để trống' });
@@ -42,7 +41,6 @@ export const category = buildSingleSheetModule({
     return {
       values,
       rawValues: values,
-      id,
       data: {
         name: name || undefined,
         slug: slug || undefined,
@@ -55,11 +53,6 @@ export const category = buildSingleSheetModule({
   },
   importRow: async (db, row) => {
     const data = Object.fromEntries(Object.entries(row.data).filter(([, value]) => value !== undefined));
-    if (row.id) {
-      const record = await db.Categories.update({ where: { id: row.id }, data });
-      return { action: 'update', record };
-    }
-    const record = await db.Categories.create({ data });
-    return { action: 'create', record };
+    return await upsertRecord(db, 'Categories', { id: row.id }, data, { notFoundMessage: `Không tìm thấy danh mục có ID #${row.id}` });
   },
 });

@@ -28,6 +28,52 @@ export const toInt = (value) => {
   return Number.isNaN(parsed) ? null : parsed;
 };
 
+export const upsertRecord = async (
+  db,
+  model,
+  { id } = {},
+  data,
+  { notFoundMessage } = {},
+) => {
+  try {
+    if (id) {
+      const existing = await db[model].findUnique({ where: { id } });
+      if (!existing) {
+        return {
+          action: 'error',
+          errors: [
+            {
+              field: 'id',
+              message: notFoundMessage ?? `Không tìm thấy bản ghi có ID #${id}`,
+            },
+          ],
+        };
+      }
+      const record = await db[model].update({ where: { id }, data });
+      return { action: 'update', record };
+    }
+
+    const record = await db[model].create({ data });
+    return { action: 'create', record };
+  } catch (error) {
+    // Prisma unique constraint
+    if (error && error.code === 'P2002') {
+      const target = error.meta && error.meta.target ? (Array.isArray(error.meta.target) ? error.meta.target[0] : error.meta.target) : null;
+      const field = target || 'unique';
+      return {
+        action: 'error',
+        errors: [
+          {
+            field,
+            message: error.message || `Vi phạm unique constraint ${field}`,
+          },
+        ],
+      };
+    }
+    throw error;
+  }
+};
+
 export const toNumber = (value) => {
   const text = trimText(value);
   if (!text) return null;

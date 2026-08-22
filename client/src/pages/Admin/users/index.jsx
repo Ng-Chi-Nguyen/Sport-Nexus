@@ -209,6 +209,12 @@ const UserPage = () => {
                 <tr>
                   <th
                     scope="col"
+                    className="px-6 py-4 w-[6%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
+                  >
+                    ID
+                  </th>
+                  <th
+                    scope="col"
                     className="px-6 py-4 w-[35%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
                   >
                     {t("user_col")}
@@ -246,6 +252,10 @@ const UserPage = () => {
                       key={user.id || index}
                       className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors duration-200"
                     >
+                      <td className="px-6 py-4 font-mono text-xs text-slate-600">
+                        {user.id}
+                      </td>
+
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
                           <div
@@ -338,7 +348,7 @@ const UserPage = () => {
                 ) : (
                   <tr>
                     <td
-                      colSpan="5"
+                      colSpan="6"
                       className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
                     >
                       {t("no_users")}

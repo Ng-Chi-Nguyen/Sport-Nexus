@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { trimText, toText, toInt, rowHasOwnData } from "../helpers.js";
+import { trimText, toText, toInt, rowHasOwnData, upsertRecord } from "../helpers.js";
 import { buildSingleSheetModule } from "../builders.js";
 import { productAttributeKeyColumns } from "../columns.js";
 import { ACTIVE } from "../../../../utils/prisma.js";
@@ -25,9 +25,8 @@ export const productAttributeKey = buildSingleSheetModule({
       return { values, rawValues: values, errors: [] };
     }
 
-    const id = toInt(values[0]);
-    const product_id = toInt(values[1]);
-    const attribute_key_id = toInt(values[2]);
+    const product_id = toInt(values[0]);
+    const attribute_key_id = toInt(values[1]);
     const errors = [];
 
     if (!product_id) errors.push({ field: 'product_id', message: 'ID sản phẩm không được để trống' });
@@ -36,7 +35,6 @@ export const productAttributeKey = buildSingleSheetModule({
     return {
       values,
       rawValues: values,
-      id,
       data: {
         product_id: product_id || undefined,
         attribute_key_id: attribute_key_id || undefined,
@@ -46,11 +44,6 @@ export const productAttributeKey = buildSingleSheetModule({
   },
   importRow: async (db, row) => {
     const data = Object.fromEntries(Object.entries(row.data).filter(([, value]) => value !== undefined));
-    if (row.id) {
-      const record = await db.ProductAttributeKeys.update({ where: { id: row.id }, data });
-      return { action: 'update', record };
-    }
-    const record = await db.ProductAttributeKeys.create({ data });
-    return { action: 'create', record };
+    return await upsertRecord(db, 'ProductAttributeKeys', { id: row.id }, data, { notFoundMessage: `Không tìm thấy mapping thuộc tính có ID #${row.id}` });
   },
 });

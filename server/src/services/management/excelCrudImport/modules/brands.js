@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { toText, rowHasOwnData } from "../helpers.js";
+import { toText, rowHasOwnData, upsertRecord } from "../helpers.js";
 import { buildSingleSheetModule } from "../builders.js";
 import { brandColumns } from "../columns.js";
 import { ACTIVE } from "../../../../utils/prisma.js";
@@ -44,6 +44,7 @@ export const brands = buildSingleSheetModule({
     return rows.map((item) => {
       const country = COUNTRIES.find((c) => c.name === item.origin);
       return {
+        id: item.id,
         name: item.name || '',
         origin: country ? `[${country.code}] ${item.origin}` : (item.origin || ''),
       };
@@ -72,7 +73,6 @@ export const brands = buildSingleSheetModule({
   },
   importRow: async (db, row) => {
     const data = Object.fromEntries(Object.entries(row.data).filter(([, value]) => value !== undefined));
-    const record = await db.Brands.create({ data });
-    return { action: 'create', record };
+    return await upsertRecord(db, 'Brands', { id: row.id }, data, { notFoundMessage: `Không tìm thấy thương hiệu có ID #${row.id}` });
   },
 });

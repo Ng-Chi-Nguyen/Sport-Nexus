@@ -209,6 +209,9 @@ const VariantPage = () => {
           <table className="w-full text-sm text-left text-slate-700 dark:text-slate-200 min-w-[600px]">
             <thead className="text-xs uppercase bg-slate-100 dark:bg-[#161F32] border-b border-slate-200 dark:border-slate-800">
               <tr>
+                <th className="px-6 py-4 font-black text-slate-600 dark:text-slate-400 !text-start w-[6%]">
+                  ID
+                </th>
                 <th className="px-6 py-4 font-black text-slate-600 dark:text-slate-400 !text-start">
                   {t("product_info_col")}
                 </th>
@@ -230,6 +233,9 @@ const VariantPage = () => {
                     key={variant.id}
                     className="hover:bg-slate-50 dark:hover:bg-[#161F32]/40 transition-colors duration-150"
                   >
+                    <td className="px-6 py-4 font-mono text-xs text-slate-600">
+                      {variant.id}
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
                         <div className="w-[60px] h-[60px] border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden bg-slate-100 dark:bg-[#111827] flex-shrink-0 p-1">
@@ -305,7 +311,7 @@ const VariantPage = () => {
               ) : (
                 <tr>
                   <td
-                    colSpan="4"
+                    colSpan="6"
                     className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
                   >
                     {t("no_variants")}

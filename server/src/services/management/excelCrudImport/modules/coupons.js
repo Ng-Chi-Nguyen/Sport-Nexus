@@ -15,6 +15,7 @@ export const coupons = buildSingleSheetModule({
     });
 
     return rows.map((item) => ({
+      id: item.id,
       code: item.code || "",
       discount_type: DISCOUNT_TYPE_REVERSE_MAP[item.discount_type] || item.discount_type || "",
       discount_value: Number(item.discount_value ?? 0),
@@ -67,7 +68,8 @@ export const coupons = buildSingleSheetModule({
   },
   importRow: async (db, row) => {
     const data = Object.fromEntries(Object.entries(row.data).filter(([, value]) => value !== undefined));
-    const record = await db.Coupons.create({ data: { ...data, usage_count: 0 } });
-    return { action: "create", record };
+    // ensure usage_count default on create
+    if (!row.id) data.usage_count = 0;
+    return await upsertRecord(db, 'Coupons', { id: row.id }, data, { notFoundMessage: `Không tìm thấy mã giảm giá có ID #${row.id}` });
   },
 });

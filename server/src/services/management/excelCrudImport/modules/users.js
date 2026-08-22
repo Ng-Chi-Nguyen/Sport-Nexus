@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { trimText, toText, toInt, toBoolean, rowHasOwnData } from "../helpers.js";
+import { trimText, toText, toInt, toBoolean, rowHasOwnData, upsertRecord } from "../helpers.js";
 import { buildSingleSheetModule } from "../builders.js";
 import { userColumns } from "../columns.js";
 import { ACTIVE } from "../../../../utils/prisma.js";
@@ -122,7 +122,7 @@ export const users = buildSingleSheetModule({
       delete data.password;
     }
 
-    const record = await db.Users.create({ data });
-    return { action: 'create', record };
+    const upsertResult = await upsertRecord(db, 'Users', { id: row.id }, data, { notFoundMessage: `Không tìm thấy người dùng có ID #${row.id}` });
+    return upsertResult;
   },
 });

@@ -190,6 +190,7 @@ const CategoryPage = () => {
             <table className="w-full border-separate border-spacing-0 min-w-[600px]">
               <thead>
                 <tr>
+                  <th scope="col">ID</th>
                   <th scope="col">{t("category_avatar")}</th>
                   <th scope="col">{t("category_name_column")}</th>
                   <th scope="col">{t("status_column")}</th>
@@ -201,6 +202,9 @@ const CategoryPage = () => {
                 {categories.length > 0 ? (
                   categories.map((category) => (
                     <tr key={category.id}>
+                      <td className="px-6 py-4 font-mono text-xs text-slate-600">
+                        {category.id}
+                      </td>
                       <td className="whitespace-nowrap">
                         <img
                           src={
@@ -243,7 +247,7 @@ const CategoryPage = () => {
                 ) : (
                   <tr>
                     <td
-                      colSpan="5"
+                      colSpan="6"
                       className="px-6 py-20 text-center text-slate-400 dark:text-slate-500 italic text-sm"
                     >
                       {t("no_categories_found")}

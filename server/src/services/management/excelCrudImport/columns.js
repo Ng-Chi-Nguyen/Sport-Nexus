@@ -1,11 +1,13 @@
 // @ts-nocheck
 
 export const brandColumns = [
+  { header: 'ID', key: 'id', width: 10 },
   { header: 'Tên thương hiệu', key: 'name', width: 30 },
   { header: 'Xuất xứ', key: 'origin', width: 25 },
 ];
 
 export const supplierColumns = [
+  { header: 'ID', key: 'id', width: 10 },
   { header: 'Người liên hệ', key: 'contact_person', width: 24 },
   { header: 'Email', key: 'email', width: 28 },
   { header: 'Số điện thoại', key: 'phone', width: 18 },
@@ -14,6 +16,7 @@ export const supplierColumns = [
 ];
 
 export const userColumns = [
+  { header: 'ID', key: 'id', width: 10 },
   { header: 'Họ tên', key: 'full_name', width: 28 },
   { header: 'Email', key: 'email', width: 28 },
   { header: 'Mật khẩu', key: 'password', width: 24 },
@@ -24,11 +27,13 @@ export const userColumns = [
 ];
 
 export const attributeKeyColumns = [
+  { header: 'ID', key: 'id', width: 10 },
   { header: 'Tên thuộc tính', key: 'name', width: 28 },
   { header: 'Đơn vị', key: 'unit', width: 18 },
 ];
 
 export const productAttributeKeyColumns = [
+  { header: 'ID', key: 'id', width: 10 },
   { header: 'ID sản phẩm', key: 'product_id', width: 14 },
   { header: 'ID thuộc tính', key: 'attribute_key_id', width: 14 },
 ];
@@ -36,6 +41,7 @@ export const productAttributeKeyColumns = [
 export const PRODUCT_STATUS_LABELS = ['Hoạt động', 'Ngừng'];
 
 export const productColumns = [
+  { header: 'ID', key: 'id', width: 10 },
   { header: 'Sản phẩm', key: 'name', width: 30 },
   { header: 'Giá gốc', key: 'base_price', width: 14, numFmt: '#,##0' },
   { header: 'Mô tả', key: 'description', width: 38 },
@@ -46,6 +52,7 @@ export const productColumns = [
 ];
 
 export const productVariantColumns = [
+  { header: 'ID', key: 'id', width: 10 },
   { header: 'Sản phẩm', key: 'product_name', width: 30 },
   { header: 'Tồn kho', key: 'stock', width: 12 },
   { header: 'Giá bán', key: 'price', width: 14, numFmt: '#,##0' },
@@ -58,6 +65,7 @@ export const DISCOUNT_TYPE_REVERSE_MAP = { 'CASH': 'Tiền mặt', 'PERCENTAGE':
 export const BOOLEAN_LABELS = ['Có', 'Không'];
 
 export const couponColumns = [
+  { header: 'ID', key: 'id', width: 10 },
   { header: 'Mã code', key: 'code', width: 16 },
   { header: 'Loại giảm giá', key: 'discount_type', width: 18 },
   { header: 'Giá trị giảm', key: 'discount_value', width: 14, numFmt: '#,##0₫' },
@@ -131,6 +139,7 @@ export const stockMovementColumns = [
 ];
 
 export const categoryColumns = [
+  { header: 'ID', key: 'id', width: 10 },
   { header: 'Tên danh mục', key: 'name', width: 30 },
   { header: 'Slug', key: 'slug', width: 28 },
   { header: 'ID danh mục cha', key: 'parent_id', width: 16 },

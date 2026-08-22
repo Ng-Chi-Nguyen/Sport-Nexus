@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { toText, toInt, toNumber, toBoolean, rowHasOwnData } from "../helpers.js";
+import { toText, toInt, toNumber, toBoolean, rowHasOwnData, upsertRecord } from "../helpers.js";
 import { buildSingleSheetModule } from "../builders.js";
 import { productColumns, PRODUCT_STATUS_LABELS } from "../columns.js";
 import { ACTIVE } from "../../../../utils/prisma.js";
@@ -45,6 +45,7 @@ export const products = buildSingleSheetModule({
     });
 
     return rows.map((item) => ({
+      id: item.id,
       name: item.name || '',
       base_price: Number(item.base_price),
       description: item.description || '',
@@ -135,11 +136,6 @@ export const products = buildSingleSheetModule({
 
     const cleanData = Object.fromEntries(Object.entries(data).filter(([, v]) => v !== undefined));
 
-    if (row.id) {
-      const record = await db.Products.update({ where: { id: row.id }, data: cleanData });
-      return { action: 'update', record };
-    }
-    const record = await db.Products.create({ data: cleanData });
-    return { action: 'create', record };
+    return await upsertRecord(db, 'Products', { id: row.id }, cleanData, { notFoundMessage: `Không tìm thấy sản phẩm có ID #${row.id}` });
   },
 });

@@ -145,6 +145,9 @@ const ProductAttributeKey = () => {
             <table className="w-full border-separate border-spacing-0 min-w-[600px]">
               <thead>
                 <tr>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider w-[6%]">
+                    ID
+                  </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                     {t("product_col")}
                   </th>
@@ -166,6 +169,9 @@ const ProductAttributeKey = () => {
                       key={item.id}
                       className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors duration-200"
                     >
+                      <td className="px-6 py-4 font-mono text-xs text-slate-600">
+                        {item.id}
+                      </td>
                       <td className="px-6 py-4 font-medium text-slate-900 dark:text-slate-200 whitespace-nowrap">
                         {item.product?.name}
                       </td>
@@ -191,7 +197,7 @@ const ProductAttributeKey = () => {
                 ) : (
                   <tr>
                     <td
-                      colSpan="4"
+                      colSpan="5"
                       className="px-6 py-20 text-center text-slate-400 dark:text-slate-500 italic text-sm"
                     >
                       {t("no_records")}
