@@ -1,4 +1,5 @@
 import businessDashboardService from '../../services/management/dashboard.service.js';
+import dashboardExportService from '../../services/management/dashboardExport.service.js';
 
 import { t } from "../../locales/messages.js";
 export const createDashboardController = ({ dashboardService = businessDashboardService } = {}) => ({
@@ -97,6 +98,21 @@ export const createDashboardController = ({ dashboardService = businessDashboard
         success: false,
         message: t(req, 'Lỗi khi lấy thống kê tổng quan kinh doanh.'),
         error: error.message,
+      });
+    }
+  },
+
+  exportOverview: async (req, res) => {
+    try {
+      const { buffer, fileName } = await dashboardExportService.exportOverview(req.query);
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+      return res.send(buffer);
+    } catch (error) {
+      const status = error.statusCode || 500;
+      return res.status(status).json({
+        success: false,
+        message: t(req, error.message || 'Lỗi khi xuất thống kê.'),
       });
     }
   },

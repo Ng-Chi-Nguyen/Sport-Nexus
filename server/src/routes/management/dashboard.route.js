@@ -15,6 +15,7 @@ dashboardRoute
     .get('/system-overview', dashboardController.getSystemOverview)
     .get('/order-overview', dashboardController.getOrderOverview)
     .get('/inventory-overview', dashboardController.getInventoryOverview)
+    .get('/export', verifyToken, isAdmin, dashboardController.exportOverview)
 // .get('/business-overview', verifyToken, isAdmin, dashboardController.getBusinessOverview)
 // .get('/customer-overview', verifyToken, isAdmin, dashboardController.getCustomerOverview)
 // .get('/product-overview', verifyToken, isAdmin, dashboardController.getProductOverview)
