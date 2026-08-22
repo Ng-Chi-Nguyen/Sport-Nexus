@@ -684,10 +684,22 @@ export const createBusinessDashboardService = ({ db = prisma } = {}) => ({
       ? String(query.group_by || 'day')
       : 'day';
 
+    // BỔ SUNG QUAN TRỌNG: Kẹp thêm OrderItems vào query để lấy được quantity
+    const extendedSelect = {
+      ...selectOrderFields,
+      OrderItems: {
+        select: {
+          product_variant_id: true,
+          quantity: true
+        }
+      }
+    };
+
+    // QUÉT DATABASE (Đoạn này lúc nãy bạn bị xóa nhầm)
     const [baseOrders, trendOrders, paymentOrders] = await Promise.all([
       db.Orders.findMany({
         where: { created_at: { gte: baseRange.from, lte: baseRange.to } },
-        select: selectOrderFields,
+        select: extendedSelect, // Dùng extendedSelect thay vì selectOrderFields
       }),
       db.Orders.findMany({
         where: { created_at: { gte: trendRange.from, lte: trendRange.to } },
@@ -700,10 +712,59 @@ export const createBusinessDashboardService = ({ db = prisma } = {}) => ({
     ]);
 
     const totalOrders = baseOrders.length;
-    const totalRevenue = money(baseOrders.reduce((sum, order) => sum + Number(order.final_amount || 0), 0));
+    const totalRevenue = baseOrders.reduce((sum, order) => sum + Number(order.final_amount || 0), 0);
     const delivered = baseOrders.filter((order) => order.status === 'Delivered').length;
     const cancelled = baseOrders.filter((order) => order.status === 'Cancelled').length;
     const refunded = baseOrders.filter((order) => order.status === 'Refunded').length;
+
+    // ==========================================
+    // LOGIC TÍNH TỔNG GIÁ VỐN VÀ LỢI NHUẬN
+    // ==========================================
+    const variantIdsSet = new Set();
+    baseOrders.forEach(order => {
+      // (Tùy chọn: Bạn có thể thêm điều kiện chỉ tính giá vốn cho đơn 'Delivered')
+      if (order.OrderItems) {
+        order.OrderItems.forEach(item => variantIdsSet.add(item.product_variant_id));
+      }
+    });
+    const variantIds = Array.from(variantIdsSet);
+
+    // Tìm lịch sử nhập hàng của các món đã bán
+    const purchaseHistory = await db.PurchaseOrderItems.findMany({
+      where: {
+        product_variant_id: { in: variantIds }
+      },
+      orderBy: {
+        purchase_order: { order_date: 'desc' } // Lấy đợt nhập mới nhất
+      },
+      select: {
+        product_variant_id: true,
+        unit_cost_price: true
+      }
+    });
+
+    // Gom dữ liệu giá vốn vào Map
+    const latestCostMap = new Map();
+    for (const purchase of purchaseHistory) {
+      if (!latestCostMap.has(purchase.product_variant_id)) {
+        latestCostMap.set(purchase.product_variant_id, Number(purchase.unit_cost_price || 0));
+      }
+    }
+
+    // Tính tổng chi phí (Vốn)
+    let totalCost = 0;
+    baseOrders.forEach(order => {
+      if (order.OrderItems) {
+        order.OrderItems.forEach(item => {
+          const unitCost = latestCostMap.get(item.product_variant_id) || 0;
+          totalCost += (unitCost * item.quantity);
+        });
+      }
+    });
+
+    // Chốt lợi nhuận 
+    const totalProfit = totalRevenue - totalCost;
+    // ==========================================
 
     const ordersByStatus = createZeroMap(ORDER_STATUSES);
     for (const order of baseOrders) {
@@ -735,7 +796,10 @@ export const createBusinessDashboardService = ({ db = prisma } = {}) => ({
 
     return {
       summary: {
-        totalRevenue,
+        totalRevenue: money(totalRevenue),
+        totalCost: money(totalCost),           // Chi phí gốc
+        totalProfit: money(totalProfit),       // Lời / Lỗ
+        profitMargin: percent(totalProfit, totalRevenue),
         totalOrders,
         averageOrderValue: money(totalOrders ? totalRevenue / totalOrders : 0),
         successRate: percent(delivered, totalOrders),
@@ -757,7 +821,7 @@ export const createBusinessDashboardService = ({ db = prisma } = {}) => ({
         group_by: groupBy,
       },
     };
-  },
+  }
 });
 
 const businessDashboardService = createBusinessDashboardService();

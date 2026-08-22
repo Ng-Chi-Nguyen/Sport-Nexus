@@ -21,6 +21,7 @@ export const BusinessOverview = ({ data = {} }) => {
 
   return (
     <div className="space-y-4">
+      {/* TRUYỀN DATA SUMMARY VÀO ĐÂY */}
       <OverviewCards summary={summary} />
 
       <div className="grid gap-4 lg:grid-cols-2 items-start">
