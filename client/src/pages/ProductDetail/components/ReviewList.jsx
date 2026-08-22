@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+import { Star, Store } from "lucide-react";
 import { formatDate } from "@/utils/formatters";
 import { useTranslation } from "react-i18next";
 
@@ -33,7 +33,7 @@ const ReviewItem = ({ review }) => {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">
-            {review.user?.full_name || t("default_user_name")}
+            {review.user?.full_name || t("default_user_name")} {review.id}
           </p>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-0.5 text-amber-400">
@@ -60,6 +60,17 @@ const ReviewItem = ({ review }) => {
               className="w-20 h-20 object-cover rounded-lg border border-slate-200 dark:border-slate-800"
             />
           ))}
+        </div>
+      )}
+      {review.reply_comment && (
+        <div className="ml-11 mt-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <p className="text-xs font-bold text-sky-600 dark:text-[#4facf3] mb-1 flex items-center gap-1.5">
+            <Store size={12} />
+            {t("store_reply_heading")}
+          </p>
+          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
+            {review.reply_comment}
+          </p>
         </div>
       )}
     </div>

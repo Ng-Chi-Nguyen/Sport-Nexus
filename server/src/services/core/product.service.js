@@ -83,8 +83,9 @@ const productService = {
                     orderBy: { price: "asc" },
                 },
                 Reviews: {
+                    where: { is_hidden: false },
                     select: {
-                        id: true, rating: true, comment: true, user_id: true, created_at: true, media_urls: true,
+                        id: true, rating: true, comment: true, reply_comment: true, user_id: true, created_at: true, media_urls: true,
                         user: { select: { id: true, full_name: true, avatar: true } },
                     },
                     take: 10,

@@ -36,6 +36,7 @@ import customerShippingRoute from "./customer/shipping.route.js";
 import loyaltyCustomerRoute from "./customer/loyalty.route.js";
 import managementShippingRoute from "./management/shipping.route.js";
 import loyaltyManagementRoute from "./management/loyalty.route.js";
+import managementReviewRoute from "./management/review.route.js";
 import chatRoute from "./core/chat.route.js";
 
 const Routes = (app) => {
@@ -59,6 +60,7 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}management/payment/`, managementPaymentRoute)
     app.use(`${api_prefix_v1}management/shipping/`, managementShippingRoute)
     app.use(`${api_prefix_v1}management/loyalty/`, loyaltyManagementRoute)
+    app.use(`${api_prefix_v1}management/review/`, managementReviewRoute)
 
     // Customer - Khách hàng
     app.use(`${api_prefix_v1}user/`, customerUserRoute)

@@ -148,7 +148,7 @@ export const adminRoutes = {
     { path: "carts", element: <CartPage /> },
     { path: "logs", element: <LogPage />, loader: RouteLoaders.logsLoader },
     { path: "addresses", element: <AddressPage /> },
-    { path: "reviews", element: <Review /> },
+    { path: "reviews", element: <Review />, loader: RouteLoaders.reviewsLoader },
 
     // Hệ thống User & Phân quyền
     { path: "users", element: <UserPage />, loader: RouteLoaders.usersLoader },

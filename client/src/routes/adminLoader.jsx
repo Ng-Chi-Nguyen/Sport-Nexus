@@ -16,6 +16,7 @@ import LoaderStock from "@/loaders/management/stockMovement";
 import LoaderLog from "@/loaders/management/logLoader";
 import LoaderDashboard from "@/loaders/management/dashboardLoader";
 import LoaderLoyalty from "@/loaders/management/loyaltyLoader";
+import LoaderReview from "@/loaders/management/reviewLoader";
 
 // Hàm tiện ích bóc tách số trang từ URL
 const getPage = (request) => new URL(request.url).searchParams.get("page") || 1;
@@ -473,3 +474,25 @@ export const loyaltyUsersLoader = ({ request }) =>
       tierId: getSearchParam(request, "tierId"),
     }),
   });
+
+export const reviewsLoader = async ({ request }) => {
+  const [reviews, products] = await Promise.all([
+    queryClient.fetchQuery({
+      queryKey: ["reviews", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "product_id"), getSearchParam(request, "rating"), getSearchParam(request, "status"), getSearchParam(request, "reply")],
+      queryFn: () => LoaderReview.getAllReviews({
+        page: getPage(request),
+        search: getSearchParam(request, "search"),
+        product_id: getSearchParam(request, "product_id"),
+        rating: getSearchParam(request, "rating"),
+        status: getSearchParam(request, "status"),
+        reply: getSearchParam(request, "reply"),
+      }),
+    }),
+    queryClient.fetchQuery({
+      queryKey: ["product-dropdown"],
+      queryFn: () => LoaderProduct.getProductsDropdown(),
+      staleTime: 60000,
+    }),
+  ]);
+  return { ...reviews, products: products?.data || [] };
+};
