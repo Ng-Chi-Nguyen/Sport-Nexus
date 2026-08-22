@@ -25,19 +25,19 @@ export const OverviewCards = ({ summary = {} }) => {
     },
     {
       // Nếu chưa cập nhật i18n thì nó sẽ hiển thị "Tổng vốn"
-      label: t("total_cost", "Tổng vốn"),
+      label: t("total_cost"),
       value: formatCurrency(summary.totalCost || 0),
       icon: <Wallet size={16} />,
       tone: "from-slate-500/10 border-slate-200 dark:from-slate-500/15 dark:border-slate-500/20 text-slate-600 dark:text-slate-400",
     },
     {
-      label: t("total_profit", "Lợi nhuận"),
+      label: t("total_profit"),
       value: formatCurrency(summary.totalProfit || 0),
       icon: <PiggyBank size={16} />,
       tone: "from-indigo-500/10 border-indigo-200 dark:from-indigo-500/15 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400",
     },
     {
-      label: t("profit_margin", "Biên LN"),
+      label: t("profit_margin"),
       value: `${summary.profitMargin ?? 0}%`,
       icon: <PieChart size={16} />,
       tone: "from-fuchsia-500/10 border-fuchsia-200 dark:from-fuchsia-500/15 dark:border-fuchsia-500/20 text-fuchsia-600 dark:text-fuchsia-400",

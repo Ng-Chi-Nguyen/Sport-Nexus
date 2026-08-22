@@ -953,6 +953,9 @@
     "user_col": "User",
     "action_col": "Action",
     "entity_col": "Entity",
-    "time_col": "Time"
+    "time_col": "Time",
+    "total_profit": "Total profit",
+    "profit_margin": "Profit marginn",
+    "total_cost": "Total cost"
   }
 }

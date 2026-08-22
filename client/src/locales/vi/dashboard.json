@@ -953,6 +953,9 @@
     "user_col": "Người dùng",
     "action_col": "Hành động",
     "entity_col": "Đối tượng",
-    "time_col": "Thời gian"
+    "time_col": "Thời gian",
+    "total_profit": "Lợi nhuận",
+    "profit_margin": "Biên lợi nhuận",
+    "total_cost": "Tổng vốn"
   }
 }
