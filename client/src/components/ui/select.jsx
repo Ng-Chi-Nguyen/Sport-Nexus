@@ -305,6 +305,7 @@ const AddressSelector = ({ onAddressChange, initialProvince, initialWard }) => {
       });
 
       if (foundProvince) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedProvince(foundProvince.Code);
 
         if (initialWard) {

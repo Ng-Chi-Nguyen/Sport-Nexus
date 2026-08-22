@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useTranslation } from "react-i18next";
+import countries from "@/assets/data/countries.json";
 
 const GRADIENTS = [
   "from-blue-500 to-cyan-500",
@@ -22,11 +23,41 @@ const CardBrand = ({ data }) => {
   const { t } = useTranslation("translation", {
     keyPrefix: "component.common",
   });
-  const { logo, name, origin } = data || {};
+
+  // Lấy dữ liệu từ object data
+  // Giả sử bạn truyền thêm 'originCode' (VD: "VN", "AG", "US")
+  const { logo, name, origin, originCode } = data || {};
+
+  // Hỗ trợ cả 2 trường hợp:
+  // 1. origin là một object chứa { code: "VN", name: "Việt Nam" }
+  // 2. origin là string "Việt Nam" và originCode là "VN"
+  const originName = typeof origin === "object" ? origin?.name : origin;
+  const finalOriginCode =
+    typeof origin === "object" ? origin?.code : originCode;
 
   const placeholderImage =
     "https://placehold.co/200x200/0d121f/94a3b8?text=No+Logo";
+  const normalize = (s) =>
+    s
+      ? s
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .trim()
+      : "";
 
+  // Xây map từ file countries.json (hỗ trợ tên tiếng Việt và tên tiếng Anh trong file)
+  const countryMap = (countries || []).reduce((m, c) => {
+    if (!c) return m;
+    const nameKey = normalize(String(c.name || ""));
+    if (nameKey) m[nameKey] = String(c.code || "").toLowerCase();
+    const codeKey = String(c.code || "").toLowerCase();
+    if (codeKey) m[codeKey] = codeKey;
+    return m;
+  }, {});
+
+  const guessedCode = countryMap[normalize(originName)];
+  const codeToUse = (finalOriginCode || guessedCode || "").toLowerCase();
   return (
     <div
       className="group relative bg-white dark:bg-[#111827]/40 p-5 cursor-pointer w-[90%]
@@ -37,6 +68,7 @@ const CardBrand = ({ data }) => {
                  hover:shadow-[0_0_40px_rgba(14,165,233,0.12)]
                  overflow-hidden"
     >
+      {/* Hiệu ứng hover background */}
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100
                    transition-opacity duration-500 pointer-events-none
@@ -44,6 +76,7 @@ const CardBrand = ({ data }) => {
       />
 
       <div className="relative z-10 flex flex-col items-center text-center gap-4">
+        {/* AVATAR THƯƠNG HIỆU */}
         <div
           className="w-[70%] h-auto p-2 flex items-center justify-center
                      bg-slate-50 dark:bg-[#0D121F] overflow-hidden flex-shrink-0 rounded-lg
@@ -63,18 +96,31 @@ const CardBrand = ({ data }) => {
           />
         </div>
 
-        <div className="space-y-1">
+        {/* THÔNG TIN THƯƠNG HIỆU & XUẤT XỨ */}
+        <div className="space-y-1 w-full flex flex-col items-center">
           <h3
-            className="text-base font-bold text-slate-800 dark:text-slate-100 truncate max-w-[180px] mx-auto group-hover:text-sky-600 dark:group-hover:text-white transition-colors duration-200 tracking-wide"
+            className="text-base font-bold text-slate-800 dark:text-slate-100 truncate max-w-[180px] group-hover:text-sky-600 dark:group-hover:text-white transition-colors duration-200 tracking-wide"
             title={name}
           >
             {name || t("brand_name")}
           </h3>
 
-          {origin ? (
-            <Badge color="blue">
-              <Earth size={12} className="shrink-0" strokeWidth={2} />
-              <span className="pl-1 truncate max-w-[140px]">{origin}</span>
+          {/* XỬ LÝ LOGO CỜ QUỐC GIA */}
+          {originName ? (
+            <Badge
+              color="blue"
+              className="flex items-center gap-1.5 max-w-[90%]"
+            >
+              {codeToUse ? (
+                <img
+                  src={`https://flagcdn.com/w20/${codeToUse}.png`}
+                  alt={codeToUse}
+                  className="w-4 h-3 object-cover rounded-[2px] shadow-sm shrink-0"
+                />
+              ) : (
+                <Earth size={12} className="shrink-0" strokeWidth={2} />
+              )}
+              <span className="truncate">{originName}</span>
             </Badge>
           ) : (
             <span className="text-[12px] text-slate-400 dark:text-slate-600 italic block">
@@ -201,7 +247,9 @@ const ProductCard = ({ product, index = 0 }) => {
         {Number(product.sold_count) > 0 && (
           <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
             <ShoppingCart size={12} className="shrink-0" />
-            <span>{t("sold_count")}: {Number(product.sold_count)}</span>
+            <span>
+              {t("sold_count")}: {Number(product.sold_count)}
+            </span>
           </div>
         )}
 
