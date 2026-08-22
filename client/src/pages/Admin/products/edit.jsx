@@ -152,7 +152,8 @@ const EditProductPage = () => {
       >
         {/* CỘT TRÁI */}
         <div className="w-full lg:w-1/2 flex flex-col gap-4">
-          <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
+          {/* Đã thêm relative và z-50 ở đây */}
+          <div className="relative z-50 rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="amber">
               {t("system_classification")}
             </TitleManagement>

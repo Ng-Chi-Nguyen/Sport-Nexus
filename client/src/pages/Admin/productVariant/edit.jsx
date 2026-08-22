@@ -6,11 +6,11 @@ import { LayoutDashboard, PlusCircle, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import productVariantdApi from "@/api/core/productVariantApi";
-import productAttributeKeyApi from "@/api/management/productAttributeKeyApi";
 import ShowToast from "@/components/ui/toast";
 import { queryClient } from "@/lib/react-query";
 import { TitleManagement } from "@/components/ui/title";
 import { useTranslation } from "react-i18next";
+import LoaderAttr from "@/loaders/core/attributeKey";
 
 const EditProductVariant = () => {
   const { t } = useTranslation("translation", { keyPrefix: "productVariant" });
@@ -72,21 +72,14 @@ const EditProductVariant = () => {
   );
 
   useEffect(() => {
-    if (!selectProdut) {
-      setAssignedAttrKeys([]);
-      return;
-    }
-    productAttributeKeyApi
-      .getByProduct(selectProdut)
+    LoaderAttr.getAllAttributesDropdown()
       .then((res) => {
         if (res.success) {
-          setAssignedAttrKeys(
-            res.data.map((item) => item.attributeKey).filter(Boolean),
-          );
+          setAssignedAttrKeys(res.data || []);
         }
       })
       .catch(() => setAssignedAttrKeys([]));
-  }, [selectProdut]);
+  }, []);
 
   const handleProductChange = (productId) => {
     setSelectProduct(productId);

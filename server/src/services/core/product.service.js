@@ -119,7 +119,7 @@ const productService = {
     },
 
     getAllProduct: async ({ page, search, is_active, category_id, brand_id, supplier_id, price_min, price_max, include_deleted } = {}) => {
-        const limit = 6;
+        const limit = 20;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
         const where = { deleted_at: ACTIVE };
