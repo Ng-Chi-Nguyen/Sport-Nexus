@@ -1,7 +1,16 @@
 import axiosClient from "@/lib/axiosClient";
 
 const LoaderCoupon = {
-  getAllCoupons: async ({ page = 1, is_active = "", search = "", discount_type = "", date_from = "", date_to = "", discount_min = "", discount_max = "" } = {}) => {
+  getAllCoupons: async ({
+    page = 1,
+    is_active = "",
+    search = "",
+    discount_type = "",
+    date_from = "",
+    date_to = "",
+    discount_min = "",
+    discount_max = "",
+  } = {}) => {
     const params = new URLSearchParams();
     params.set("page", page);
     if (is_active !== "") params.set("is_active", is_active);

@@ -1,7 +1,8 @@
 import { queryClient } from "@/lib/react-query";
 import dashboardApi from "@/api/management/dashboardApi";
 
-const getSearchParam = (request, key) => new URL(request.url).searchParams.get(key) || "";
+const getSearchParam = (request, key) =>
+  new URL(request.url).searchParams.get(key) || "";
 
 const LoaderDashboard = {
   getBusinessOverview: async (params = {}) => {
