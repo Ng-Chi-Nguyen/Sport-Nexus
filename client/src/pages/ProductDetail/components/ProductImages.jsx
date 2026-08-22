@@ -47,7 +47,7 @@ const ProductImages = ({ thumbnail, images }) => {
               src={list[selected].url}
               alt={t("product_preview_alt")}
               // SỬA DÒNG CLASS DƯỚI ĐÂY: object-contain -> object-scale-down
-              className="w-full h-full object-scale-down p-2 transition-all duration-300"
+              className="w-[400px] h-auto object-cover transition-all duration-300"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600 text-6xl font-black">
