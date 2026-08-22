@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useSearchParams, useRevalidator } from "react-router-dom";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, FileSpreadsheet, Loader2 } from "lucide-react";
 import {
   buildDashboardGroupParams,
   buildDashboardRangeParams,
 } from "@/utils/dashboard.utils";
+import dashboardApi from "@/api/management/dashboardApi";
+import downloadBlob from "@/utils/download.utils";
+import ShowToast from "@/components/ui/toast";
 import { useTranslation } from "react-i18next";
 
 export const FilterBar = ({ meta = {} }) => {
@@ -12,6 +15,22 @@ export const FilterBar = ({ meta = {} }) => {
   const revalidator = useRevalidator();
   const [searchParams, setSearchParams] = useSearchParams();
   const [activePreset, setActivePreset] = useState("30d");
+  const [exporting, setExporting] = useState(false);
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const params = Object.fromEntries(searchParams.entries());
+      params.tab = searchParams.get("tab") || "business";
+      const res = await dashboardApi.exportOverview(params);
+      downloadBlob(res, `bao-cao-${params.tab}.xlsx`);
+      ShowToast("success", t("export_success"));
+    } catch (err) {
+      ShowToast("error", err?.message || t("export_error"));
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const PRESETS = [
     { key: "1d", label: t("today"), days: 1 },
@@ -110,6 +129,24 @@ export const FilterBar = ({ meta = {} }) => {
             </button>
           ))}
         </div>
+
+        {/* Nút Xuất Excel */}
+        <button
+          onClick={handleExport}
+          disabled={exporting}
+          className="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-semibold transition-colors cursor-pointer
+                     border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100
+                     dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300 dark:hover:bg-emerald-500/20
+                     disabled:opacity-50 disabled:cursor-not-allowed"
+          title={t("export_excel")}
+        >
+          {exporting ? (
+            <Loader2 size={12} className="animate-spin" />
+          ) : (
+            <FileSpreadsheet size={12} />
+          )}
+          {exporting ? t("exporting") : t("export_excel")}
+        </button>
 
         {/* Nút Làm mới (Refresh) */}
         <button
