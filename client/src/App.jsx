@@ -84,7 +84,7 @@ function App() {
             <Outlet />
           </Suspense>
         )}
-        <ChatWidget />
+        {/* <ChatWidget /> */}
       </main>
 
       {!isManagementView && (
