@@ -40,9 +40,6 @@ const OrderPage = lazy(() => import("@/pages/Admin/orders/index.jsx"));
 const EditOrderPage = lazy(() => import("@/pages/Admin/orders/edit.jsx"));
 const CreateOrderPage = lazy(() => import("@/pages/Admin/orders/create.jsx"));
 
-// Vận đơn (mô phỏng GHN)
-const ShippingPage = lazy(() => import("@/pages/Admin/shipping/index.jsx"));
-
 // Nhập hàng & Chuỗi cung ứng (Thư mục)
 const PurchaseOrderItemPage = lazy(
   () => import("@/pages/Admin/purchaseorderitems/index.jsx"),
@@ -94,7 +91,9 @@ const EditCategoryPage = lazy(
 );
 
 // Bộ sưu tập (Thư mục)
-const CollectionPage = lazy(() => import("@/pages/Admin/collections/index.jsx"));
+const CollectionPage = lazy(
+  () => import("@/pages/Admin/collections/index.jsx"),
+);
 const CreateCollectionPage = lazy(
   () => import("@/pages/Admin/collections/create.jsx"),
 );
@@ -148,7 +147,11 @@ export const adminRoutes = {
     { path: "carts", element: <CartPage /> },
     { path: "logs", element: <LogPage />, loader: RouteLoaders.logsLoader },
     { path: "addresses", element: <AddressPage /> },
-    { path: "reviews", element: <Review />, loader: RouteLoaders.reviewsLoader },
+    {
+      path: "reviews",
+      element: <Review />,
+      loader: RouteLoaders.reviewsLoader,
+    },
 
     // Hệ thống User & Phân quyền
     { path: "users", element: <UserPage />, loader: RouteLoaders.usersLoader },
@@ -236,7 +239,6 @@ export const adminRoutes = {
       element: <OrderPage />,
       loader: RouteLoaders.ordersLoader,
     },
-    { path: "shipping", element: <ShippingPage /> },
     {
       path: "orders/create",
       element: <CreateOrderPage />,
@@ -339,8 +341,16 @@ export const adminRoutes = {
     // Chương trình thành viên & tích điểm
     { path: "loyalty", element: <LoyaltyAdminPage /> },
     { path: "loyalty/tiers", element: <LoyaltyTiersPage /> },
-    { path: "loyalty/rewards", element: <LoyaltyRewardsPage />, loader: RouteLoaders.loyaltyRewardsLoader },
+    {
+      path: "loyalty/rewards",
+      element: <LoyaltyRewardsPage />,
+      loader: RouteLoaders.loyaltyRewardsLoader,
+    },
     { path: "loyalty/settings", element: <LoyaltySettingsPage /> },
-    { path: "loyalty/users", element: <LoyaltyUsersPage />, loader: RouteLoaders.loyaltyUsersLoader },
+    {
+      path: "loyalty/users",
+      element: <LoyaltyUsersPage />,
+      loader: RouteLoaders.loyaltyUsersLoader,
+    },
   ],
 };

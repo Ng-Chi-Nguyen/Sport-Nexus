@@ -42,7 +42,6 @@ const LoyaltyPage = lazy(() => import("@/pages/profile/loyalty"));
 const Invoice = lazy(() => import("@/pages/settings/invoices"));
 const InvoiceDetail = lazy(() => import("@/pages/settings/invoices/detail"));
 
-const TrackingPage = lazy(() => import("@/pages/Tracking"));
 const CollectionsPage = lazy(() => import("@/pages/Collections"));
 const CollectionDetailPage = lazy(() => import("@/pages/Collections/detail"));
 
@@ -88,10 +87,6 @@ export const webRoutes = {
     {
       path: "thanh-toan/success",
       element: <PaymentSuccessPage />,
-    },
-    {
-      path: "tra-cuu-don",
-      element: <TrackingPage />,
     },
     {
       path: "he-thong-cua-hang",

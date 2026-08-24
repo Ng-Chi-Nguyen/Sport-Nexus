@@ -32,9 +32,7 @@ import sendEmailRoute from "./email/sendEmail.route.js";
 import paymentRoute from "./customer/payment.route.js";
 import managementPaymentRoute from "./management/payment.route.js";
 import customerCouponRoute from "./customer/coupon.route.js";
-import customerShippingRoute from "./customer/shipping.route.js";
 import loyaltyCustomerRoute from "./customer/loyalty.route.js";
-import managementShippingRoute from "./management/shipping.route.js";
 import loyaltyManagementRoute from "./management/loyalty.route.js";
 import managementReviewRoute from "./management/review.route.js";
 import chatRoute from "./core/chat.route.js";
@@ -58,7 +56,6 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}management/product-attribute-key/`, productAttributeKeyRoute)
     app.use(`${api_prefix_v1}management/invoice/`, invoiceRoute)
     app.use(`${api_prefix_v1}management/payment/`, managementPaymentRoute)
-    app.use(`${api_prefix_v1}management/shipping/`, managementShippingRoute)
     app.use(`${api_prefix_v1}management/loyalty/`, loyaltyManagementRoute)
     app.use(`${api_prefix_v1}management/review/`, managementReviewRoute)
 
@@ -72,7 +69,6 @@ const Routes = (app) => {
     app.use(`${api_prefix_v1}customer/invoice/`, customerInvoiceRoute)
     app.use(`${api_prefix_v1}customer/review/`, reviewRoute)
     app.use(`${api_prefix_v1}customer/payment/`, paymentRoute)
-    app.use(`${api_prefix_v1}customer/shipping/`, customerShippingRoute)
     app.use(`${api_prefix_v1}customer/loyalty/`, loyaltyCustomerRoute)
 
     // Core - cat lai của hệ thống (Management vs Customer)

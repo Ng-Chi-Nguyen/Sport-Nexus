@@ -6,7 +6,6 @@ import orderApi from "@/api/customer/orderApi";
 import addressApi from "@/api/customer/addressApi";
 import { resolveLocation } from "@/utils/location";
 import paymentApi from "@/api/customer/paymentApi";
-import shippingApi from "@/api/customer/shippingApi";
 import useCoupon from "@/hooks/useCoupon";
 import loyaltyApi from "@/api/customer/loyaltyApi";
 import useMemberDiscount from "@/hooks/useMemberDiscount";
@@ -55,7 +54,6 @@ const Checkout = () => {
   const [orderResult, setOrderResult] = useState(null);
   const [paymentInfo, setPaymentInfo] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [shippingEstimate, setShippingEstimate] = useState(null);
   const [pointsDiscount, setPointsDiscount] = useState(0);
   const [pointsLoading, setPointsLoading] = useState(false);
 
@@ -150,43 +148,7 @@ const Checkout = () => {
   const finalAmount =
     (couponData?.newAmount ?? totalAmount) - tierDiscount - pointsDiscount;
 
-  const defaultWeight = useMemo(
-    () => items.reduce((sum, item) => sum + (item.quantity || 1) * 500, 0),
-    [items],
-  );
-
-  useEffect(() => {
-    if (!selectedProvinceName || items.length === 0) return;
-    let cancelled = false;
-    shippingApi
-      .calculate({
-        province_name: selectedProvinceName,
-        weight_grams: defaultWeight,
-        service_type: "FAST",
-        cod_amount: paymentMethod === "COD" ? finalAmount : 0,
-        item_value: totalAmount,
-      })
-      .then((res) => {
-        if (!cancelled) setShippingEstimate(res.data || null);
-      })
-      .catch(() => {
-        if (!cancelled) setShippingEstimate(null);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [
-    selectedProvinceName,
-    items,
-    defaultWeight,
-    paymentMethod,
-    finalAmount,
-    totalAmount,
-  ]);
-
-  const hasShippingAddress = Boolean(selectedProvinceName && items.length > 0);
-  const shippingFee = hasShippingAddress ? shippingEstimate?.totalFee || 0 : 0;
-  const grandTotal = finalAmount + shippingFee;
+  const grandTotal = finalAmount;
 
   const orderPayload = useMemo(
     () => ({
@@ -198,12 +160,6 @@ const Checkout = () => {
       payment_method: paymentMethod,
       coupon_code: couponCode || null,
       user_email: email || null,
-      shipping_name: recipientName.trim() || null,
-      shipping_phone: recipientPhone.trim() || null,
-      province_name: selectedProvinceName || null,
-      ward_name: selectedWardName || null,
-      weight_grams: defaultWeight,
-      service_type: "FAST",
       items: items.map((item) => ({
         product_variant_id: item.product_variant_id,
         quantity: item.quantity,
@@ -221,11 +177,6 @@ const Checkout = () => {
       couponCode,
       email,
       items,
-      recipientName,
-      recipientPhone,
-      selectedProvinceName,
-      selectedWardName,
-      defaultWeight,
     ],
   );
 
@@ -291,7 +242,6 @@ const Checkout = () => {
         orderId={orderResult.id}
         paymentMethod={paymentMethod}
         paymentInfo={paymentInfo}
-        trackingCode={orderResult?.shipment?.tracking_code}
       />
     );
   }
@@ -346,8 +296,6 @@ const Checkout = () => {
               totalAmount={totalAmount}
               discount={discount}
               finalAmount={finalAmount}
-              shippingFee={shippingFee}
-              shippingEstimate={shippingEstimate}
               recipientName={recipientName}
               recipientPhone={recipientPhone}
               couponCode={couponCode}
@@ -382,7 +330,6 @@ const Checkout = () => {
           totalAmount,
           discount,
           finalAmount,
-          shippingFee,
           email,
           fullAddress,
           paymentMethod,

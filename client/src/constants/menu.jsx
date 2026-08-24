@@ -26,11 +26,6 @@ export const SIDEBAR_MENU_STRUCTURE = (prefix) => [
         label: "orders",
         iconName: "ClipboardList",
       },
-      {
-        path: `${prefix}/shipping`,
-        label: "shipping",
-        iconName: "Truck",
-      },
       { path: `${prefix}/coupons`, label: "coupons", iconName: "Barcode" },
       {
         path: `${prefix}/reviews`,
