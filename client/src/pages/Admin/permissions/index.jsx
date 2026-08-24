@@ -1,287 +1,186 @@
-import { useMemo, useState, useRef, useEffect } from "react";
-import {
-  useLoaderData,
-  useRevalidator,
-  useSearchParams,
-} from "react-router-dom";
-import { LayoutDashboard, HelpCircle, RefreshCw } from "lucide-react";
-// components
-import ShowToast from "@/components/ui/toast";
-import Breadcrumbs from "@/components/ui/breadcrumbs";
-import { BtnAdd, BtnActions } from "@/components/ui/button";
-import Pagination from "@/components/ui/pagination";
-import { SearchTable } from "@/components/ui/search";
-import { ConfirmDelete } from "@/components/ui/confirm";
-import Badge from "@/components/ui/badge";
-// constants
-import { PERMISSION_TRANSLATIONS } from "@/constants/permission";
-// api
-import permissionApi from "@/api/management/permissionApi";
-import { queryClient } from "@/lib/react-query";
-import { getActionColor } from "@/utils/statusStyles";
+import { useState, useEffect } from "react";
+import { Save, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { MODULE_LABELS } from "@/constants/permission";
 
-const PermissionPage = () => {
+const PermissionTable = ({
+  allPermissions = {},
+  userPermissions = [],
+  onSave,
+}) => {
   const { t } = useTranslation("translation", { keyPrefix: "permission" });
   const { t: tc } = useTranslation("translation", { keyPrefix: "constants" });
-  const response = useLoaderData();
+  const navigate = useNavigate();
+  const actions = ["Read", "Create", "Update", "Delete", "Gift"];
 
-  const breadcrumbData = [
-    { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
-    { title: t("user_management"), route: "" },
-    { title: t("permission_title"), route: "" },
-  ];
+  const [selectedIds, setSelectedIds] = useState([]);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const revalidator = useRevalidator();
-
-  // state quản lý modal xóa
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState(null);
-
-  // --- LOGIC QUẢN LÝ BẢNG POP-UP MODULES ---
-  const [isModuleOpen, setIsModuleOpen] = useState(false);
-  const popoverRef = useRef(null);
-
-  // Tự động đóng bảng tra cứu khi người dùng click ra vùng ngoài màn hình
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
-        setIsModuleOpen(false);
-      }
-    };
-    if (isModuleOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+    if (Array.isArray(userPermissions)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedIds(userPermissions.map((p) => p?.id).filter(Boolean));
+    } else {
+      setSelectedIds([]);
     }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isModuleOpen]);
+  }, [userPermissions]);
 
-  const permissionsData = response?.data || {};
-  const paginationInfo = response?.pagination || {
-    totalPages: 1,
-    currentPage: 1,
+  const handleToggle = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+    );
   };
 
-  const allPermissions = useMemo(() => {
-    if (!permissionsData) return [];
-    return Object.values(permissionsData).flat();
-  }, [permissionsData]);
-
-  const handleRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: ["permissions"] });
-    setTimeout(() => revalidator.revalidate(), 0);
-  };
-
-  const handlePageChange = (newPage) => {
-    setSearchParams({ page: newPage });
-  };
-
-  const openConfirm = (slug) => {
-    setDeleteTarget(slug);
-    setIsConfirmOpen(true);
-  };
-
-  const handleDelete = async () => {
-    try {
-      const response = await permissionApi.delete(deleteTarget);
-      if (response.success) {
-        await queryClient.invalidateQueries({ queryKey: ["permissions"] });
-        revalidator.revalidate();
-        ShowToast("success", response.message);
-        setIsConfirmOpen(false);
-      }
-    } catch (error) {
-      setIsConfirmOpen(false);
-      const errorMessage =
-        error.message || error.response?.data?.message || t("error_occurred");
-      ShowToast("error", errorMessage);
+  const handleSaveData = () => {
+    if (onSave) {
+      onSave(selectedIds);
     }
   };
+
+  if (!allPermissions || Object.keys(allPermissions).length === 0) {
+    return (
+      <div className="py-12 text-center text-slate-400 dark:text-slate-500 animate-pulse font-medium text-sm tracking-wide">
+        {t("loading_matrix")}
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-      <Breadcrumbs data={breadcrumbData} />
+    <div className="w-full space-y-4">
+      {/* Khung chứa bảng căn chỉnh full-width, hỗ trợ cuộn ngang mượt mà */}
+      <div className="w-full overflow-x-auto custom-scrollbar border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-[#0a0f1d]/40 shadow-sm">
+        <table className="w-full border-collapse text-sm text-left min-w-[650px]">
+          <thead className="text-xs text-slate-600 dark:text-slate-400 uppercase bg-slate-100 dark:bg-[#161F32]/60 border-b border-slate-200 dark:border-slate-900 font-semibold tracking-wider">
+            <tr>
+              <th className="px-4 sm:px-6 py-3.5 border-b border-slate-200 dark:border-slate-800 sticky left-0 bg-slate-100 dark:bg-[#161F32] z-10">
+                {t("module_function_col")}
+              </th>
+              {actions.map((action) => (
+                <th
+                  key={action}
+                  className="px-3 sm:px-6 py-3.5 text-center border-b border-slate-200 dark:border-slate-800"
+                >
+                  {t(`action.${action.toLowerCase()}`)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-900/40">
+            {Object.entries(allPermissions).map(([moduleName, perms]) => (
+              <tr
+                key={moduleName}
+                className="hover:bg-slate-50 dark:hover:bg-[#161F32]/30 transition-colors duration-100 group"
+              >
+                <td className="px-4 sm:px-6 py-3.5 font-bold text-slate-700 dark:text-slate-300 capitalize bg-slate-50 dark:bg-[#0D121F] border-r border-slate-200 dark:border-slate-900/40 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors text-xs sm:text-sm whitespace-nowrap sticky left-0 z-10">
+                  {MODULE_LABELS[moduleName]
+                    ? tc(MODULE_LABELS[moduleName])
+                    : moduleName}
+                </td>
 
-      {/* THANH TÌM KIẾM & CỤM NÚT HÀNH ĐỘNG PHÍA NGOÀI */}
-      <div className="flex items-center gap-4 relative">
-        <div className="flex-1 relative group">
-          <SearchTable placeholder={t("search_placeholder")} />
-        </div>
+                {actions.map((action) => {
+                  const perm =
+                    Array.isArray(perms) &&
+                    perms.find((p) => {
+                      const rawValue = p.action || p.name || p.type || p.code;
+                      if (!rawValue) return false;
 
-        {/* NÚT BẤM TRA CỨU MODULE ĐỘC LẬP NGOÀI BẢNG */}
-        <div className="relative" ref={popoverRef}>
-          <button
-            type="button"
-            onClick={() => setIsModuleOpen(!isModuleOpen)}
-            className={`h-[44px] px-4 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center gap-2 border transition-all duration-200 cursor-pointer ${
-              isModuleOpen
-                ? "bg-sky-500/20 text-sky-600 dark:text-sky-400 border-sky-300 dark:border-sky-500/40 shadow-sm"
-                : "bg-white dark:bg-slate-900/60 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
-            }`}
-          >
-            <HelpCircle size={15} strokeWidth={2.5} />
-            {t("lookup_module")}
-          </button>
+                      const dbValue = String(rawValue).toLowerCase();
+                      const uiValue = action.toLowerCase();
 
-          {/* BẢNG HIỂN THỊ NỘI DUNG POP-UP MODULES */}
-          {isModuleOpen && (
-            <div className="absolute right-0 top-full mt-2.5 z-50 w-[320px] p-4 bg-white dark:bg-[#0D121F]/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-150 transition-colors duration-200">
-              <p className="text-sky-600 dark:text-sky-400 border-b border-slate-200 dark:border-white/5 mb-3 pb-1.5 font-bold font-mono text-xs tracking-wider">
-                {t("modules_header")}
-              </p>
-              <div className="flex flex-col gap-1.5 max-h-[350px] overflow-y-auto pr-1 custom-scrollbar">
-                {Object.entries(PERMISSION_TRANSLATIONS.modules).map(
-                  ([key, value]) => (
-                    <div
-                      key={key}
-                      className="flex justify-between items-center text-xs py-0.5 border-b border-slate-100 dark:border-white/[0.02]"
+                      if (
+                        uiValue === "read" &&
+                        (dbValue === "xem" ||
+                          dbValue === "read" ||
+                          dbValue === "view")
+                      )
+                        return true;
+                      if (
+                        uiValue === "create" &&
+                        (dbValue === "them" ||
+                          dbValue === "create" ||
+                          dbValue === "add")
+                      )
+                        return true;
+                      if (
+                        uiValue === "update" &&
+                        (dbValue === "sua" ||
+                          dbValue === "update" ||
+                          dbValue === "edit")
+                      )
+                        return true;
+                      if (
+                        uiValue === "delete" &&
+                        (dbValue === "xoa" ||
+                          dbValue === "delete" ||
+                          dbValue === "remove")
+                      )
+                        return true;
+                      if (
+                        uiValue === "gift" &&
+                        (dbValue === "tang" ||
+                          dbValue === "gift" ||
+                          dbValue === "tặng")
+                      )
+                        return true;
+
+                      return dbValue === uiValue;
+                    });
+
+                  if (!perm) {
+                    return (
+                      <td
+                        key={action}
+                        className="text-center text-slate-300 dark:text-slate-700 font-mono select-none"
+                      >
+                        -
+                      </td>
+                    );
+                  }
+
+                  const isChecked = selectedIds.includes(perm.id);
+
+                  return (
+                    <td
+                      key={action}
+                      className="px-3 sm:px-6 py-3.5 text-center border-r border-slate-100 dark:border-slate-900/20 last:border-r-0"
                     >
-                      <span className="text-slate-400 dark:text-slate-500 font-mono font-bold uppercase">
-                        {key}
-                      </span>
-                      <span className="text-slate-700 dark:text-slate-300 font-medium">
-                        {tc(value)}
-                      </span>
-                    </div>
-                  ),
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <BtnAdd
-          route={"/management/permissions/create"}
-          name={t("add_permission")}
-        />
+                      <div className="flex items-center justify-center">
+                        <input
+                          type="checkbox"
+                          className="w-5 h-5 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0D121F] text-sky-600 dark:text-sky-500 cursor-pointer focus:ring-offset-0 focus:ring-0 checked:bg-sky-500 shadow-sm"
+                          checked={isChecked}
+                          onChange={() => handleToggle(perm.id)}
+                        />
+                      </div>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      {/* KHỐI LAYOUT CHỦ ĐẠO */}
-      <div className="">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="section-title mb-0">{t("list_title")}</h3>
-          <button
-            onClick={handleRefresh}
-            disabled={revalidator.state === "loading"}
-            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title={t("reload")}
-          >
-            <RefreshCw
-              size={18}
-              className={revalidator.state === "loading" ? "animate-spin" : ""}
-            />
-          </button>
-        </div>
+      {/* Cụm nút bấm thao tác ở chân trang */}
+      <div className="flex items-center justify-end gap-3 border-t border-slate-200 dark:border-white/5 pt-4 mt-4 w-full">
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="h-[38px] px-4 sm:px-5 bg-slate-100 text-slate-600 border border-slate-200 rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-slate-200 dark:bg-slate-900/60 dark:text-slate-400 dark:border-slate-800 dark:hover:bg-slate-800 transition-all flex items-center gap-1.5 cursor-pointer"
+        >
+          <ArrowLeft size={14} /> {t("go_back")}
+        </button>
 
-        <div className="mb-2 table-retro">
-          <div className="overflow-x-auto">
-            <table className="w-full border-separate border-spacing-0 min-w-[600px]">
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 w-[35%] text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
-                  >
-                    {t("name_col")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 w-[20%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
-                  >
-                    {t("module_col")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 w-[15%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
-                  >
-                    {t("action_col")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 w-[20%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
-                  >
-                    {t("slug_col")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 w-[10%] text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider"
-                  >
-                    {t("actions_col")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-                {allPermissions.length > 0 ? (
-                  allPermissions.map((permission, index) => (
-                    <tr
-                      key={permission.id || index}
-                      className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors duration-200"
-                    >
-                      <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-200 tracking-wide whitespace-nowrap">
-                        {permission.name}
-                      </td>
-
-                      <td className="px-6 py-4 text-center">
-                        <Badge color="slate">
-                          <span className="font-mono uppercase tracking-wide">
-                            {permission.module}
-                          </span>
-                        </Badge>
-                      </td>
-
-                      <td className="px-6 py-4 text-center">
-                        <Badge color={getActionColor(permission.action)}>
-                          <span className="font-bold uppercase min-w-[55px] text-center inline-block">
-                            {permission.action}
-                          </span>
-                        </Badge>
-                      </td>
-
-                      <td className="px-6 py-4 text-center font-mono text-slate-400 dark:text-slate-500 text-[12px] tracking-wide">
-                        {permission.slug}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <BtnActions
-                          route={`/management/permissions/edit/${permission.slug}`}
-                          id={permission.slug}
-                          onDelete={() => openConfirm(permission.slug)}
-                        />
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan="5"
-                      className="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic"
-                    >
-                      {t("no_permissions")}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-          <Pagination
-            totalPages={paginationInfo.totalPages}
-            currentPage={paginationInfo.currentPage}
-            onPageChange={handlePageChange}
-          />
-        </div>
-
-        <ConfirmDelete
-          isOpen={isConfirmOpen}
-          title={t("delete_title")}
-          message={t("delete_message", { slug: deleteTarget })}
-          onConfirm={handleDelete}
-          onCancel={() => setIsConfirmOpen(false)}
-        />
+        <button
+          type="button"
+          onClick={handleSaveData}
+          className="h-[38px] px-5 sm:px-6 bg-sky-500/10 text-sky-600 border border-sky-300 dark:text-sky-400 dark:border-sky-500/20 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all duration-200 shadow-sm cursor-pointer"
+        >
+          <Save size={14} /> {t("save_permissions")}
+        </button>
       </div>
     </div>
   );
 };
 
-export default PermissionPage;
+export default PermissionTable;

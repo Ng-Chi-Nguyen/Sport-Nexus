@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { LayoutDashboard } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLoaderData } from "react-router-dom";
 // components
 import ShowToast from "@/components/ui/toast";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
@@ -25,7 +25,7 @@ const EditPermissionPage = () => {
   const breadcrumbData = [
     { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
     { title: t("user_management"), route: "" },
-    { title: t("permission_title"), route: "/management/permissions" },
+    { title: t("permission_title"), route: "/management/quyen-han" },
     { title: t("edit_breadcrumb"), route: "#" },
   ];
 
