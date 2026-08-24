@@ -89,19 +89,23 @@ const Invoice = () => {
                       </td>
                       <td className="py-3.5 px-4">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full border transition-colors ${
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full border transition-colors whitespace-nowrap ${
                             INVOICE_BADGE[invoice.status] ||
                             "bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700"
                           }`}
                         >
                           {/* Chấm tròn biểu tượng trạng thái */}
                           <span
-                            className={`w-1.5 h-1.5 rounded-full ${INVOICE_DOT[invoice.status] || "bg-slate-400"}`}
+                            className={`w-1.5 h-1.5 rounded-full shrink-0 ${INVOICE_DOT[invoice.status] || "bg-slate-400"}`}
                           />
 
-                          {INVOICE_STATUS_KEYS[invoice.status]
-                            ? t(INVOICE_STATUS_KEYS[invoice.status])
-                            : invoice.status}
+                          <span>
+                            {INVOICE_STATUS_KEYS[invoice.status]
+                              ? t(
+                                  `detail.${INVOICE_STATUS_KEYS[invoice.status]}`,
+                                )
+                              : invoice.status}
+                          </span>
                         </span>
                       </td>
                     </tr>

@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 
 const InvoiceDetail = () => {
   const { t } = useTranslation("translation", { keyPrefix: "invoice" });
-  // Hoặc nếu muốn tách hẳn namespace detail, dùng: keyPrefix: "invoice.detail"
 
   const { invoice } = useLoaderData();
   const receiptRef = useRef(null);
@@ -33,7 +32,7 @@ const InvoiceDetail = () => {
 
   return (
     <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-      <div className="mx-auto max-w-[1400px] mt-6 md:mt-8 px-4 sm:px-6">
+      <div className="mx-auto max-w-[1400px] mt-16 md:mt-12 px-4 sm:px-6">
         <Breadcrumbs
           data={[
             { title: t("home"), route: "/" },
@@ -48,7 +47,7 @@ const InvoiceDetail = () => {
         />
 
         {!invoice ? (
-          <div className="text-center py-16 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900">
+          <div className="text-center py-16 bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 rounded-lg">
             <p className="text-slate-500 dark:text-slate-400 font-medium">
               {t("detail.no_invoice_found", "Không tìm thấy hóa đơn")}
             </p>
@@ -72,7 +71,7 @@ const InvoiceDetail = () => {
 
               <button
                 onClick={handlePrint}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-sky-600 hover:bg-sky-700 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-sky-600 hover:bg-sky-700 transition-colors cursor-pointer rounded-md shadow-sm"
               >
                 <Printer size={16} />
                 {t("detail.print_invoice", "In hóa đơn")}
@@ -80,26 +79,28 @@ const InvoiceDetail = () => {
             </div>
 
             <div className="flex flex-col items-center">
-              {/* Phiếu hóa đơn kiểu to hơn */}
+              {/* Phiếu hóa đơn responsive tối ưu cho điện thoại và máy tính */}
               <div
                 ref={receiptRef}
                 id="invoice-receipt"
-                className="mt-[-50px] w-full max-w-[450px] bg-white text-black font-mono text-sm leading-relaxed p-8 shadow-xl mx-auto"
+                className="mt-2 sm:mt-[-50px] w-full max-w-[450px] bg-white text-black font-mono text-xs sm:text-sm leading-relaxed p-4 sm:p-8 shadow-xl mx-auto rounded-lg overflow-hidden border border-slate-200 sm:border-none"
               >
                 <div className="text-center">
-                  <p className="text-2xl font-bold tracking-widest">
+                  <p className="text-xl sm:text-2xl font-bold tracking-widest">
                     SPORTNEXUS
                   </p>
-                  <p className="text-xs mt-1">
+                  <p className="text-[11px] sm:text-xs mt-1">
                     {t("detail.store_subtitle", "Cửa hàng thể thao chính hãng")}
                   </p>
-                  <p className="text-xs">123 Nguyễn Huệ, Q.1, TP.HCM</p>
-                  <p className="text-xs">Hotline: 1900 0000</p>
+                  <p className="text-[11px] sm:text-xs">
+                    123 Nguyễn Huệ, Q.1, TP.HCM
+                  </p>
+                  <p className="text-[11px] sm:text-xs">Hotline: 1900 0000</p>
                 </div>
 
-                <div className="border-t border-dashed border-black my-4" />
+                <div className="border-t border-dashed border-black my-3 sm:my-4" />
 
-                <div className="space-y-1.5 text-xs">
+                <div className="space-y-1.5 text-[11px] sm:text-xs">
                   <div className="flex justify-between">
                     <span>{t("detail.receipt_number", "Hóa đơn:")}</span>
                     <span className="font-bold">{invoice.invoice_number}</span>
@@ -132,9 +133,9 @@ const InvoiceDetail = () => {
                   )}
                 </div>
 
-                <div className="border-t border-dashed border-black my-4" />
+                <div className="border-t border-dashed border-black my-3 sm:my-4" />
 
-                <div className="space-y-3 text-xs">
+                <div className="space-y-3 text-[11px] sm:text-xs">
                   {invoice.order?.OrderItems?.map((item) => {
                     const variant = item.product_variant;
                     const attributes = variant?.VariableAttributes?.map(
@@ -142,12 +143,12 @@ const InvoiceDetail = () => {
                     ).join(", ");
                     return (
                       <div key={item.id}>
-                        <p className="font-bold text-sm">
+                        <p className="font-bold text-[13px] sm:text-sm">
                           {variant?.product?.name ||
                             t("detail.default_product_name", "Sản phẩm")}
                         </p>
                         {attributes && (
-                          <p className="text-[11px] text-gray-600">
+                          <p className="text-[10px] sm:text-[11px] text-gray-600">
                             {attributes}
                           </p>
                         )}
@@ -168,9 +169,9 @@ const InvoiceDetail = () => {
                   })}
                 </div>
 
-                <div className="border-t border-dashed border-black my-4" />
+                <div className="border-t border-dashed border-black my-3 sm:my-4" />
 
-                <div className="space-y-1.5 text-xs">
+                <div className="space-y-1.5 text-[11px] sm:text-xs">
                   <div className="flex justify-between">
                     <span>{t("detail.subtotal", "Tạm tính")}</span>
                     <span>{formatCurrency(invoice.subtotal)}</span>
@@ -185,25 +186,19 @@ const InvoiceDetail = () => {
                     <span>VAT ({Number(invoice.vat_rate) * 100}%)</span>
                     <span>{formatCurrency(invoice.vat_amount)}</span>
                   </div>
-                  <div className="flex justify-between text-base font-black pt-2 border-t border-black/10">
+                  <div className="flex justify-between text-sm sm:text-base font-black pt-2 border-t border-black/10">
                     <span>{t("detail.total_caps", "TỔNG CỘNG")}</span>
                     <span>{formatCurrency(invoice.total_amount)}</span>
                   </div>
                 </div>
 
-                <div className="border-t border-dashed border-black my-4" />
+                <div className="border-t border-dashed border-black my-3 sm:my-4" />
 
                 <div className="text-center">
-                  <p className="text-xs font-medium">
+                  <p className="text-[11px] sm:text-xs font-medium">
                     {t(
                       "detail.thank_you_message",
                       "Cảm ơn quý khách đã mua hàng tại SportNexus!",
-                    )}
-                  </p>
-                  <p className="text-[11px] text-gray-600 mt-1">
-                    {t(
-                      "detail.return_policy_note",
-                      "Hàng đã mua chỉ đổi trả khi còn hóa đơn",
                     )}
                   </p>
                 </div>

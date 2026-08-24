@@ -29,15 +29,31 @@ const ProfilePage = () => {
   const currentPath = location.pathname;
 
   let breadcrumbsData = [...base];
+  const matchedPath = Object.entries(breadcrumbNameMap).find(
+    ([path]) => currentPath === path || currentPath.startsWith(`${path}/`),
+  );
+
   if (currentPath === "/tai-khoan") {
     breadcrumbsData.push({
       title: tProfile("account", "Tài khoản"),
       route: "",
     });
-  } else if (breadcrumbNameMap[currentPath]) {
+  } else if (currentPath.startsWith("/tai-khoan/don-hang/")) {
     breadcrumbsData.push(
       { title: tProfile("account", "Tài khoản"), route: "/tai-khoan" },
-      { title: breadcrumbNameMap[currentPath], route: "" },
+      {
+        title: breadcrumbNameMap["/tai-khoan/don-hang"],
+        route: "/tai-khoan/don-hang",
+      },
+      {
+        title: `Chi tiết #${currentPath.split("/").filter(Boolean).at(-1)}`,
+        route: "",
+      },
+    );
+  } else if (matchedPath) {
+    breadcrumbsData.push(
+      { title: tProfile("account", "Tài khoản"), route: "/tai-khoan" },
+      { title: matchedPath[1], route: "" },
     );
   }
 

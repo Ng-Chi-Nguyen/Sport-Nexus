@@ -67,7 +67,7 @@ const Support = () => {
 
   return (
     <div className="min-h-screen pb-12 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-      <div className="mx-auto max-w-[1400px] px-4 pt-4 md:pt-6 mt-10">
+      <div className="mx-auto max-w-[1400px] px-4 pt-4 md:pt-6 mt-12">
         <Breadcrumbs
           data={[
             { title: t("home"), route: "/" },
@@ -246,7 +246,7 @@ const Support = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-sky-600 dark:bg-sky-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 dark:hover:bg-sky-600 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed shadow-sm cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 bg-primary dark:bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:bg-primaryHover dark:hover:bg-primaryHover active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed shadow-sm cursor-pointer"
               >
                 {loading ? (
                   "Đang gửi..."

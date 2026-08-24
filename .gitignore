@@ -6,6 +6,7 @@ dist/
 dist-ssr/
 */dist-ssr/
 generated/prisma/
+*/generated/prisma/
 
 # Environment files
 .env
@@ -22,6 +23,13 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+
+# Test coverage and caches
+coverage/
+*/coverage/
+.eslintcache
+*.tsbuildinfo
+*.tgz
 
 # OS and editor files
 .DS_Store
@@ -49,3 +57,4 @@ codemap.md
 
 .vercel
 start-dev.bat
+vercel.json

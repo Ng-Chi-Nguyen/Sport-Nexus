@@ -34,7 +34,8 @@ const FavoritesPage = () => {
   if (ids.length === 0) {
     return (
       <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-        <div className="mx-auto max-w-[1400px] mt-6 md:mt-8 px-4 sm:px-6">
+        {/* FIX 1: Đổi mt-[45p] thành mt-20 để thoát khỏi Header */}
+        <div className="max-w-[1400px] mt-12 md:mt-12 px-4 sm:px-6 mx-auto">
           <Breadcrumbs
             data={[
               { title: t("home"), route: "/" },
@@ -60,19 +61,17 @@ const FavoritesPage = () => {
 
   return (
     <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-      <div className="mx-auto max-w-[1400px] mt-6 md:mt-8 px-4 sm:px-6">
+      <div className="max-w-[1400px] mt-12 md:mt-12 px-4 sm:px-6 mx-auto">
         <Breadcrumbs
           data={[
             { title: t("home"), route: "/" },
             { title: t("liked_products"), route: "" },
           ]}
         />
-
         <TitleWithIcon
           icon={Heart}
           title={`${t("liked_products")} (${ids.length})`}
         />
-
         {isLoading ? (
           <div className="py-20 flex justify-center">
             <LoadingSpinner />

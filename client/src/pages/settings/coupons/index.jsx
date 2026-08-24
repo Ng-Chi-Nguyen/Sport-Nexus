@@ -16,7 +16,9 @@ const CouponsPage = () => {
   const isLoggedIn = Boolean(localStorage.getItem("accessToken"));
   const [dismissedGifted, setDismissedGifted] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem("dismissed-gifted-coupons") || "[]");
+      return JSON.parse(
+        localStorage.getItem("dismissed-gifted-coupons") || "[]",
+      );
     } catch {
       return [];
     }
@@ -56,7 +58,7 @@ const CouponsPage = () => {
 
   return (
     <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-      <div className="mx-auto max-w-[1400px] mt-6 md:mt-8 px-4 sm:px-6">
+      <div className="mx-auto max-w-[1400px] mt-12 md:mt-8 px-4 sm:px-6">
         <Breadcrumbs
           data={[
             { title: t("home"), route: "/" },

@@ -6,6 +6,7 @@ const LoaderOrder = {
     status = "",
     payment_status = "",
     payment_method = "",
+    refund_status = "",
     date_from = "",
     date_to = "",
     amount_min = "",
@@ -20,6 +21,7 @@ const LoaderOrder = {
     if (status) params.set("status", status);
     if (payment_status) params.set("payment_status", payment_status);
     if (payment_method) params.set("payment_method", payment_method);
+    if (refund_status) params.set("refund_status", refund_status);
     if (date_from) params.set("date_from", date_from);
     if (date_to) params.set("date_to", date_to);
     if (amount_min) params.set("amount_min", amount_min);

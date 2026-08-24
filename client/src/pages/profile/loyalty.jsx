@@ -9,6 +9,7 @@ import ShowToast from "@/components/ui/toast";
 import { Confirm } from "@/components/ui/confirm";
 import CouponCard from "@/components/ui/couponCard";
 import { CarouselPagination } from "@/components/ui/pagination";
+import { TitleWithIcon } from "@/components/ui/title";
 
 const ITEMS_PER_PAGE = 4;
 const TX_PER_PAGE = 10;
@@ -80,10 +81,7 @@ const LoyaltyPage = () => {
       <MembershipBlock refreshKey={refreshKey} />
 
       <section>
-        <h3 className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-100 mb-3">
-          <Gift size={18} className="text-primary" />
-          {t("loyalty.rewards")}
-        </h3>
+        <TitleWithIcon icon={Gift} title={t("loyalty.rewards")} />
         {rewards.length === 0 ? (
           <p className="text-sm text-slate-500">{t("loyalty.no_rewards")}</p>
         ) : (
@@ -136,10 +134,7 @@ const LoyaltyPage = () => {
       </section>
 
       <section>
-        <h3 className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-100 mb-3">
-          <History size={18} className="text-sky-500" />
-          {t("loyalty.history")}
-        </h3>
+        <TitleWithIcon icon={History} title={t("loyalty.history")} />
         {transactions.length === 0 ? (
           <p className="text-sm text-slate-500">{t("loyalty.no_history")}</p>
         ) : (

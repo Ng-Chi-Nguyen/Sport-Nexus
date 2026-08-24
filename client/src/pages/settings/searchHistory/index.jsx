@@ -80,7 +80,7 @@ const SearchHistoryPage = () => {
 
   return (
     <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-      <div className="mx-auto max-w-5xl mt-6 md:mt-8 px-4 sm:px-6">
+      <div className="mx-auto max-w-5xl mt-12 md:mt-8 px-4 sm:px-6">
         <Breadcrumbs
           data={[
             { title: t("home"), route: "/" },
