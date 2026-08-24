@@ -1,6 +1,7 @@
 import paymentService from "../../services/customer/payment.service.js";
 
 import { t } from "../../locales/messages.js";
+
 const paymentController = {
     getMethods: async (req, res) => {
         return res.json({
@@ -22,7 +23,7 @@ const paymentController = {
         } catch (error) {
             const status =
                 { NOT_FOUND: 404, INVALID_METHOD: 400, PAYOS_NOT_CONFIGURED: 503 }[
-                    error.code
+                error.code
                 ] || 500;
             return res
                 .status(status)
