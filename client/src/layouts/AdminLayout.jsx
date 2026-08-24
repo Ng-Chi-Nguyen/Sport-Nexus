@@ -40,7 +40,7 @@ const AdminLayout = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const settingsRef = useRef(null);
 
-  // State quáº£n lĂ½ Theme (SĂ¡ng / Tá»‘i)
+  // State quản lý Theme (Sáng / Tối)
   const [isDarkMode, setIsDarkMode] = useState(() => {
     return (
       localStorage.getItem("theme") === "dark" ||
@@ -49,14 +49,14 @@ const AdminLayout = () => {
     );
   });
 
-  // State quáº£n lĂ½ NgĂ´n ngá»¯
+  // State quản lý Ngôn ngữ
   const [currentLang, setCurrentLang] = useState(() => {
     return (
       localStorage.getItem("language") || i18n.language?.split("-")[0] || "vi"
     );
   });
 
-  // Äá»“ng bá»™ class "dark" vĂ o tháº» html
+  // Đồng bộ class "dark" vào thẻ html
   useEffect(() => {
     const root = document.documentElement;
     if (isDarkMode) {
@@ -70,7 +70,7 @@ const AdminLayout = () => {
 
   const toggleTheme = () => setIsDarkMode((prev) => !prev);
 
-  // HĂ m thay Ä‘á»•i ngĂ´n ngá»¯
+  // Hàm thay đổi ngôn ngữ
   const handleLanguageChange = (langCode) => {
     setCurrentLang(langCode);
     i18n.changeLanguage(langCode);
@@ -251,14 +251,14 @@ const AdminLayout = () => {
                   </div>
                 )}
 
-                {/* NĂºt Thu nhá» / Má»Ÿ rá»™ng */}
+                {/* Nút Thu nhỏ / Mở rộng */}
                 <button
                   type="button"
                   onClick={() => {
                     setIsCollapsed(!isCollapsed);
                     setIsOpenSettings(false);
                   }}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-sky-600 bg-sky-50 dark:text-sky-400 dark:bg-sky-500/5 border border-sky-200 dark:border-sky-500/10 hover:bg-sky-100 dark:hover:bg-sky-500/10 transition-all text-left mt-1"
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-sky-600 bg-sky-50 dark:text-sky-400 dark:bg-sky-500/5 border border-sky-200 dark:border-sky-500/10 hover:bg-sky-100 dark:hover:bg-sky-500/10 transition-all text-left mt-1 cursor-pointer"
                 >
                   {isCollapsed ? (
                     <ChevronRight size={16} />
@@ -274,7 +274,7 @@ const AdminLayout = () => {
 
                 <div className="border-t border-slate-100 dark:border-white/5 my-1" />
 
-                {/* NĂºt settings hover */}
+                {/* Nút settings hover */}
                 <div
                   className="relative"
                   onMouseEnter={() => setIsHoverSettings(true)}
@@ -286,7 +286,7 @@ const AdminLayout = () => {
                   <button
                     type="button"
                     onClick={() => setIsHoverSettings((prev) => !prev)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all text-left ${
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all text-left cursor-pointer ${
                       isHoverSettings
                         ? "bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-200"
                         : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200"
@@ -301,7 +301,7 @@ const AdminLayout = () => {
                       <button
                         type="button"
                         onClick={toggleTheme}
-                        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all text-left"
+                        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all text-left cursor-pointer"
                       >
                         {isDarkMode ? (
                           <Sun size={16} className="text-amber-500" />
@@ -315,7 +315,7 @@ const AdminLayout = () => {
                         </span>
                       </button>
 
-                      {/* NgĂ´n ngá»¯ */}
+                      {/* Ngôn ngữ */}
                       <div
                         className="relative"
                         onMouseEnter={() => setIsLangHovered(true)}
@@ -323,7 +323,7 @@ const AdminLayout = () => {
                       >
                         <button
                           type="button"
-                          className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200 transition-all text-left"
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200 transition-all text-left cursor-pointer"
                         >
                           <div className="flex items-center gap-3">
                             <Languages size={16} className="shrink-0" />
@@ -346,7 +346,7 @@ const AdminLayout = () => {
                                   onClick={() =>
                                     handleLanguageChange(lang.code)
                                   }
-                                  className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all text-left ${
+                                  className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all text-left cursor-pointer ${
                                     isActive
                                       ? "text-sky-600 bg-sky-50 dark:text-sky-400 dark:bg-sky-500/10 font-semibold"
                                       : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800/60"
@@ -386,7 +386,7 @@ const AdminLayout = () => {
                         <button
                           type="button"
                           onClick={handleLogout}
-                          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-rose-600 hover:bg-rose-50 dark:text-rose-500/90 dark:hover:bg-rose-950/20 dark:hover:text-rose-400 transition-all text-left"
+                          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-rose-600 hover:bg-rose-50 dark:text-rose-500/90 dark:hover:bg-rose-950/20 dark:hover:text-rose-400 transition-all text-left cursor-pointer"
                         >
                           {item.icon}
                           <span>{tMenu(item.label)}</span>
@@ -404,7 +404,7 @@ const AdminLayout = () => {
                           setIsOpenSettings(false);
                         }
                       }}
-                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200 transition-all text-left"
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200 transition-all text-left cursor-pointer"
                     >
                       {item.icon}
                       <span>{tMenu(item.label)}</span>
@@ -457,6 +457,126 @@ const AdminLayout = () => {
 
       {/* Content Area */}
       <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-[#080C14] overflow-hidden transition-colors duration-300">
+        {/* TỐI ƯU MOBILE: Header nhỏ chứa nút Avatar/Cài đặt góc trên cùng để đổi giao diện/ngôn ngữ */}
+        {isMobile && (
+          <div
+            className="flex items-center justify-between px-4 py-3 bg-white dark:bg-[#0D121F] border-b border-slate-200 dark:border-slate-900 shrink-0 relative"
+            ref={settingsRef}
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center text-white shadow-md font-black text-xs italic tracking-tighter">
+                SN
+              </span>
+              <span className="font-bold text-sm tracking-wide text-slate-900 dark:text-slate-100">
+                SportNexus Admin
+              </span>
+            </div>
+
+            {/* Nút bấm mở cài đặt tài khoản trên Mobile */}
+            <div
+              onClick={() => setIsOpenSettings(!isOpenSettings)}
+              className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-slate-200 dark:ring-slate-800 cursor-pointer shrink-0"
+            >
+              <img
+                src={localUser.avatar}
+                alt={localUser.full_name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Popover Cài đặt cho Mobile (Đổ xuống từ góc phải) */}
+            {isOpenSettings && (
+              <div className="absolute right-4 top-full mt-2 w-64 bg-white/95 dark:bg-[#0D121F]/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl backdrop-blur-xl p-2 z-50 flex flex-col gap-1">
+                <div className="px-3 py-2 border-b border-slate-100 dark:border-white/5 mb-1">
+                  <p className="text-[12px] font-bold text-slate-900 dark:text-slate-100 truncate">
+                    {localUser.full_name}
+                  </p>
+                  <p className="text-[10px] text-slate-500 font-mono truncate">
+                    {localUser.email}
+                  </p>
+                </div>
+
+                {/* Đổi Giao Diện Sáng/Tối */}
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left cursor-pointer"
+                >
+                  {isDarkMode ? (
+                    <Sun size={16} className="text-amber-500" />
+                  ) : (
+                    <Moon size={16} className="text-indigo-500" />
+                  )}
+                  <span>
+                    {isDarkMode ? tCommon("light_mode") : tCommon("dark_mode")}
+                  </span>
+                </button>
+
+                {/* Chọn Ngôn Ngữ trên Mobile */}
+                <div className="py-1 border-t border-slate-100 dark:border-white/5">
+                  <p className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase">
+                    {tCommon("language")}
+                  </p>
+                  <div className="grid grid-cols-2 gap-1 px-1">
+                    {LANGUAGES.map((lang) => {
+                      const isActive = currentLang === lang.code;
+                      return (
+                        <button
+                          key={lang.code}
+                          type="button"
+                          onClick={() => handleLanguageChange(lang.code)}
+                          className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium cursor-pointer ${
+                            isActive
+                              ? "bg-sky-50 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400 font-bold"
+                              : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                          }`}
+                        >
+                          <span>{lang.flag}</span>
+                          <span className="truncate">{lang.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="border-t border-slate-100 dark:border-white/5 my-1" />
+
+                {popoverItems.map((item, idx) => {
+                  if (item.type === "logout") {
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/20 transition-all text-left cursor-pointer"
+                      >
+                        {item.icon}
+                        <span>{tMenu(item.label)}</span>
+                      </button>
+                    );
+                  }
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        if (item.targetPath) {
+                          navigate(`${prefix_path}${item.targetPath}`);
+                          setIsOpenSettings(false);
+                        }
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-all text-left cursor-pointer"
+                    >
+                      {item.icon}
+                      <span>{tMenu(item.label)}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
         <main className="flex-1 overflow-y-auto p-4 lg:p-6 custom-scrollbar pb-20 md:pb-6">
           <Outlet />
         </main>

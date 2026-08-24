@@ -114,8 +114,10 @@ const ProductAttributeKey = () => {
   return (
     <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
-      <div className="flex items-center gap-4 rounded-xl">
-        <div className="w-[300px]">
+
+      {/* TỐI ƯU MOBILE: Chuyển sang flex-col trên màn hình nhỏ để cân đối bố cục */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="w-full sm:w-[320px]">
           <SelectPro
             value={currentProductId}
             options={productOptions}
@@ -125,16 +127,17 @@ const ProductAttributeKey = () => {
         </div>
         <BtnAdd
           route={"/management/product-attribute-key/create"}
-          className="w-[200px]"
+          className="w-full sm:w-auto"
           name={t("assign_btn")}
         />
       </div>
-      <div className="bg-white dark:bg-[#0D121F]/40">
+
+      <div className="bg-white dark:bg-[#0D121F]/40 p-4 sm:p-6 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-900">
         <div className="flex items-center justify-between mb-4">
           <h2 className="section-title mb-0">{t("list_title")}</h2>
           <button
             onClick={handleRefresh}
-            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             title={t("reload")}
           >
             <RefreshCw size={18} />

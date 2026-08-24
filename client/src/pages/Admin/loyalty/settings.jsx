@@ -10,7 +10,9 @@ import LoadingSpinner from "@/components/ui/loadingSpinner";
 
 const SettingsPage = () => {
   const { t } = useTranslation("translation", { keyPrefix: "loyalty_admin" });
-  const { t: tMenu } = useTranslation("translation", { keyPrefix: "component.menu" });
+  const { t: tMenu } = useTranslation("translation", {
+    keyPrefix: "component.menu",
+  });
   const [form, setForm] = useState({ points_to_money_rate: 1000 });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -30,7 +32,9 @@ const SettingsPage = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await loyaltyApi.updateSettings({ points_to_money_rate: Number(form.points_to_money_rate) });
+      await loyaltyApi.updateSettings({
+        points_to_money_rate: Number(form.points_to_money_rate),
+      });
       ShowToast("success", t("save_success"));
     } catch (err) {
       ShowToast("error", err?.response?.data?.message || t("save_fail"));
@@ -61,17 +65,23 @@ const SettingsPage = () => {
           type="number"
           label={t("points_to_money_rate")}
           value={form.points_to_money_rate}
-          onChange={(e) => setForm({ ...form, points_to_money_rate: e.target.value })}
+          onChange={(e) =>
+            setForm({ ...form, points_to_money_rate: e.target.value })
+          }
         />
         <p className="mt-1 text-xs text-slate-400">
           {t("points_to_money_rate_hint")}
         </p>
-      <div className="flex items-stretch gap-2">
-        <BtnGoback />
-        <BtnSave onClick={handleSave} loading={saving} loadingText={t("saving")}>
-          {t("save")}
-        </BtnSave>
-      </div>
+        <div className="flex items-stretch gap-2">
+          <BtnGoback />
+          <BtnSave
+            onClick={handleSave}
+            loading={saving}
+            loadingText={t("saving")}
+          >
+            {t("save")}
+          </BtnSave>
+        </div>
       </div>
     </div>
   );

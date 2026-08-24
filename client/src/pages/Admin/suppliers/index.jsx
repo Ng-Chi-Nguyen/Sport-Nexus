@@ -144,57 +144,66 @@ const SupplierPage = () => {
     <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
-      {/* THANH TÌM KIẾM & NÚT THÊM */}
-      <div className="flex items-center gap-4">
-        <div className="flex-1 relative group">
-          <SearchTable
-            placeholder={t("search_placeholder")}
-            value={searchInput}
-            onChange={(val) => setSearchInput(val)}
+      {/* THANH TÌM KIẾM & NÚT THÊM - TỐI ƯU RESPONSIVE CHO MOBILE */}
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="flex-1 relative group">
+            <SearchTable
+              placeholder={t("search_placeholder")}
+              value={searchInput}
+              onChange={(val) => setSearchInput(val)}
+            />
+          </div>
+          <div className="w-full sm:w-[200px]">
+            <SimpleSelect
+              placeholder={t("all_provinces")}
+              value={currentProvince}
+              onChange={(val) => handleProvinceChange(val)}
+              options={[
+                { slug: "", name: t("all") },
+                ...(response.provinces || []).map((p) => ({
+                  slug: p,
+                  name: p,
+                })),
+              ]}
+            />
+          </div>
+
+          {hasAllClear && (
+            <button
+              type="button"
+              onClick={clearAllFilters}
+              className="px-3 py-2 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-800 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer shrink-0"
+            >
+              {t("clear_filter")}
+            </button>
+          )}
+        </div>
+
+        {/* Cụm công cụ Excel và Nút Thêm mới */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+          <ExcelCrudActions
+            basePath="/management/supplier"
+            title={t("import_export_title")}
+            templateFileName="template-nha-cung-cap.xlsx"
+            exportFileName="nha-cung-cap.xlsx"
+          />
+
+          <BtnAdd
+            route={"/management/suppliers/create"}
+            className="w-full sm:w-auto"
+            name={t("add_supplier")}
           />
         </div>
-        <div className="w-[180px]">
-          <SimpleSelect
-            placeholder={t("all_provinces")}
-            value={currentProvince}
-            onChange={(val) => handleProvinceChange(val)}
-            options={[
-              { slug: "", name: t("all") },
-              ...(response.provinces || []).map((p) => ({ slug: p, name: p })),
-            ]}
-          />
-        </div>
-
-        {hasAllClear && (
-          <button
-            type="button"
-            onClick={clearAllFilters}
-            className="px-2.5 py-1.5 text-[10px] font-bold rounded border border-slate-200 dark:border-slate-800 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer shrink-0"
-          >
-            {t("clear_filter")}
-          </button>
-        )}
-
-        <ExcelCrudActions
-          basePath="/management/supplier"
-          title={t("import_export_title")}
-          templateFileName="template-nha-cung-cap.xlsx"
-          exportFileName="nha-cung-cap.xlsx"
-        />
-
-        <BtnAdd
-          route={"/management/suppliers/create"}
-          name={t("add_supplier")}
-        />
       </div>
 
-      <div className="">
+      <div className="bg-white dark:bg-[#0D121F]/40 p-4 sm:p-6 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-900">
         <div className="flex items-center justify-between mb-4">
           <h2 className="section-title mb-0">{t("list_title")}</h2>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
-            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             title={t("reload")}
           >
             <RefreshCw
@@ -204,7 +213,7 @@ const SupplierPage = () => {
           </button>
         </div>
 
-        {/* BẢNG CHUYỂN ĐỔI SANG LAYOUT 5 CỘT TÁCH BIỆT */}
+        {/* BẢNG HIỂN THỊ DANH SÁCH NHÀ CUNG CẤP */}
         <div className="table-retro">
           <div className="overflow-x-auto">
             <table className="w-full border-separate border-spacing-0 min-w-[600px]">

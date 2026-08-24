@@ -212,6 +212,7 @@ export {
   BtnGoback,
   BtnEdit,
   BtnDelete,
+  // eslint-disable-next-line react-refresh/only-export-components
   Submit_GoBack,
   BtnActions,
   BtnSave,

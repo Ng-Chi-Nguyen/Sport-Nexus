@@ -118,50 +118,56 @@ const AttributeKey = () => {
     <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs data={breadcrumbData} />
 
-      <div className="flex items-center gap-4 rounded-xl">
-        <div className="flex-1 relative group">
-          <SearchTable
-            placeholder={t("attributeKey.search_placeholder")}
-            value={searchInput}
-            onChange={(val) => setSearchInput(val)}
-          />
-        </div>
-        <div className="w-[160px]">
-          <SimpleSelect
-            placeholder={t("attributeKey.all_units")}
-            value={currentUnit}
-            onChange={(val) => handleUnitClick(val)}
-            options={[
-              { slug: "", name: t("attributeKey.all") },
-              ...units.map((u) => ({
-                slug: u || "null",
-                name: u || t("attributeKey.none"),
-              })),
-            ]}
-          />
+      {/* TỐI ƯU MOBILE: Thay đổi cấu trúc thành flex-col trên điện thoại để không bị bóp méo giao diện */}
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="flex-1 relative group">
+            <SearchTable
+              placeholder={t("attributeKey.search_placeholder")}
+              value={searchInput}
+              onChange={(val) => setSearchInput(val)}
+            />
+          </div>
+          <div className="w-full sm:w-[180px]">
+            <SimpleSelect
+              placeholder={t("attributeKey.all_units")}
+              value={currentUnit}
+              onChange={(val) => handleUnitClick(val)}
+              options={[
+                { slug: "", name: t("attributeKey.all") },
+                ...units.map((u) => ({
+                  slug: u || "null",
+                  name: u || t("attributeKey.none"),
+                })),
+              ]}
+            />
+          </div>
         </div>
 
-        <ExcelCrudActions
-          basePath="/core/variant-attribute-key"
-          title={t("attributeKey.import_export")}
-          templateFileName="template-thuoc-tinh.xlsx"
-          exportFileName="thuoc-tinh.xlsx"
-        />
+        {/* Cụm nút Excel và Thêm mới: Dàn ngang cuộn hoặc căn chỉnh gọn gàng trên mobile */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+          <ExcelCrudActions
+            basePath="/core/variant-attribute-key"
+            title={t("attributeKey.import_export")}
+            templateFileName="template-thuoc-tinh.xlsx"
+            exportFileName="thuoc-tinh.xlsx"
+          />
 
-        <BtnAdd
-          route={"/management/attribute-key/create"}
-          className="w-[200px]"
-          name={t("attributeKey.add_attribute")}
-        />
+          <BtnAdd
+            route={"/management/attribute-key/create"}
+            className="w-full sm:w-auto"
+            name={t("attributeKey.add_attribute")}
+          />
+        </div>
       </div>
 
-      <div className="bg-white dark:bg-[#0D121F]/40">
+      <div className="bg-white dark:bg-[#0D121F]/40 p-4 sm:p-6 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-900">
         <div className="flex items-center justify-between mb-4">
           <h2 className="section-title mb-0">{t("attributeKey.title")}</h2>
           <button
             onClick={handleRefresh}
             disabled={revalidator.state === "loading"}
-            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             title={t("attributeKey.reload")}
           >
             <RefreshCw

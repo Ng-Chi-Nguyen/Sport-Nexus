@@ -79,7 +79,7 @@ const UserDetailModal = ({ detail, onClose, onAdjust }) => {
         </div>
 
         <div className="p-5 space-y-5">
-          <div className="grid grid-cols-2 gap-3 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800">
               <div className="text-slate-400">{t("email")}</div>
               <div className="font-medium truncate">{user?.email}</div>
@@ -100,7 +100,7 @@ const UserDetailModal = ({ detail, onClose, onAdjust }) => {
                 <SpentValue value={user?.total_spent} />
               </div>
             </div>
-            <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+            <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 col-span-1 sm:col-span-2">
               <div className="text-slate-400 flex items-center gap-1">
                 {t("points_balance")}
               </div>
@@ -136,7 +136,6 @@ const UserDetailModal = ({ detail, onClose, onAdjust }) => {
                   className="text-xs h-9"
                 />
               </div>
-              {/* Nút Save đã được thu nhỏ chiều cao (h-9) và thu gọn padding */}
               <BtnSave
                 onClick={submit}
                 className="h-9 px-3.5 text-xs font-semibold shrink-0"
@@ -150,8 +149,8 @@ const UserDetailModal = ({ detail, onClose, onAdjust }) => {
             <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">
               {t("transactions")}
             </h4>
-            <div className="max-h-64 overflow-y-auto border border-slate-200 dark:border-slate-800 rounded-lg">
-              <table className="w-full text-sm">
+            <div className="max-h-64 overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-lg">
+              <table className="w-full text-sm min-w-[500px]">
                 <thead className="bg-slate-50 dark:bg-slate-800">
                   <tr>
                     <th className="text-left p-2">{t("type")}</th>
@@ -256,7 +255,7 @@ const UsersPage = () => {
       ShowToast("error", err?.response?.data?.message || t("load_fail"));
     }
   };
-  // console.log(users);
+
   const handleAdjust = async (id, points, note) => {
     try {
       await loyaltyApi.adjustPoints(id, { points, note });
@@ -269,7 +268,7 @@ const UsersPage = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Breadcrumbs
         data={[
           { title: <LayoutDashboard size={18} strokeWidth={1.5} />, route: "" },
@@ -278,24 +277,34 @@ const UsersPage = () => {
           { title: t("users"), route: "" },
         ]}
       />
-      <div className="flex justify-between items-center">
-        <h3 className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-100">
-          <Users size={20} className="text-sky-500" /> {t("users")}
-        </h3>
-        <div className="flex items-center gap-2">
-          <BtnGoback />
-          <div className="w-44">
+
+      {/* TỐI ƯU MOBILE: Xếp dọc các bộ lọc và ô tìm kiếm, co giãn hợp lý trên PC */}
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h3 className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-100 shrink-0">
+            <Users size={20} className="text-sky-500" /> {t("users")}
+          </h3>
+          <div className="flex items-center gap-2">
+            <BtnGoback />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:items-center gap-2.5">
+          <div className="w-full lg:w-44">
             <SimpleSelect
               placeholder={t("all_tiers")}
               options={[
                 { slug: "", name: t("all_tiers") },
-                ...tiers.map((tier) => ({ slug: String(tier.id), name: tier.name })),
+                ...tiers.map((tier) => ({
+                  slug: String(tier.id),
+                  name: tier.name,
+                })),
               ]}
               value={tierId}
               onChange={handleTierChange}
             />
           </div>
-          <div className="w-44">
+          <div className="w-full lg:w-44">
             <SimpleSelect
               placeholder={t("sort_by")}
               options={[
@@ -307,7 +316,7 @@ const UsersPage = () => {
               onChange={handleSortChange}
             />
           </div>
-          <div className="w-36">
+          <div className="w-full lg:w-36">
             <SimpleSelect
               placeholder={t("order")}
               options={[
@@ -318,7 +327,7 @@ const UsersPage = () => {
               onChange={handleOrderChange}
             />
           </div>
-          <div className="w-72">
+          <div className="w-full lg:flex-1">
             <SearchTable
               value={searchInput}
               onChange={setSearchInput}
@@ -329,46 +338,54 @@ const UsersPage = () => {
         </div>
       </div>
 
-      <div className="relative overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+      <div className="relative overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-[#0D121F]/40 shadow-sm">
         {isFetching && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 dark:bg-slate-900/60 backdrop-blur-[1px]">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-300 dark:border-slate-700 border-t-[#4facf3]"></div>
           </div>
         )}
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 dark:bg-slate-800">
+        <table className="w-full text-sm min-w-[700px]">
+          <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300">
             <tr>
-              <th className="text-left p-3">{t("email")}</th>
-              <th className="text-left p-3">{t("full_name")}</th>
-              <th className="text-left p-3">{t("tier")}</th>
-              <th className="text-left p-3">{t("points_balance")}</th>
-              <th className="text-left p-3">{t("total_spent")}</th>
-              <th className="text-right p-3">{t("actions")}</th>
+              <th className="text-left p-3.5 font-semibold">{t("email")}</th>
+              <th className="text-left p-3.5 font-semibold">
+                {t("full_name")}
+              </th>
+              <th className="text-left p-3.5 font-semibold">{t("tier")}</th>
+              <th className="text-left p-3.5 font-semibold">
+                {t("points_balance")}
+              </th>
+              <th className="text-left p-3.5 font-semibold">
+                {t("total_spent")}
+              </th>
+              <th className="text-right p-3.5 font-semibold">{t("actions")}</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
             {users.map((user) => (
               <tr
                 key={user.id}
-                className="border-t border-slate-100 dark:border-slate-800"
+                className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors"
               >
-                <td className="p-3">{user.email}</td>
-                <td className="p-3">{user.full_name || "—"}</td>
-                <td className="p-3">
+                <td className="p-3.5 font-mono text-xs">{user.email}</td>
+                <td className="p-3.5 font-medium text-slate-900 dark:text-slate-100">
+                  {user.full_name || "—"}
+                </td>
+                <td className="p-3.5">
                   <TierBadge name={user.tier?.name} />
                 </td>
-                <td className="p-3">
+                <td className="p-3.5">
                   <PointsValue value={user.points_balance} />
                 </td>
-                <td className="p-3">
+                <td className="p-3.5">
                   <SpentValue value={user.total_spent} />
                 </td>
-                <td className="p-3">
+                <td className="p-3.5">
                   <div className="flex justify-end">
                     <button
                       type="button"
                       onClick={() => openDetail(user.id)}
-                      className="px-3 py-1.5 text-xs border border-sky-500/30 text-sky-600 dark:text-sky-400 rounded-lg cursor-pointer hover:bg-sky-500/10"
+                      className="px-3 py-1.5 text-xs font-semibold border border-sky-500/30 text-sky-600 dark:text-sky-400 rounded-lg cursor-pointer hover:bg-sky-500/10 active:scale-95 transition-all"
                     >
                       {t("view_detail")}
                     </button>
