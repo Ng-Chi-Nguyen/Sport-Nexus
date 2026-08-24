@@ -34,7 +34,8 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
   const shipping = subtotal >= 500000 ? 0 : 30000;
 
   return (
-    <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4 transition-colors duration-200 text-slate-800 dark:text-slate-100">
+    // Đã sửa: p-4 sm:p-6 và thêm rounded-lg
+    <div className="bg-white dark:bg-[#0D121F]/40 border border-slate-200 dark:border-slate-900 p-4 sm:p-6 rounded-lg shadow-xl dark:shadow-2xl backdrop-blur-md space-y-4 transition-colors duration-200 text-slate-800 dark:text-slate-100">
       <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wide">
         {t("order_summary_heading")}
       </h3>
@@ -52,7 +53,7 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
         suggestions={suggestions}
       />
 
-      <div className="space-y-2.5 text-sm border-t border-slate-200 dark:border-slate-800 pt-3">
+      <div className="space-y-2.5 text-[13px] sm:text-sm border-t border-slate-200 dark:border-slate-800 pt-3">
         <div className="flex justify-between text-slate-600 dark:text-slate-400">
           <span>{t("subtotal")}</span>
           <span>{formatCurrency(subtotal)}</span>
@@ -79,7 +80,7 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
             {shipping === 0 ? t("free_shipping") : formatCurrency(shipping)}
           </span>
         </div>
-        <div className="flex justify-between font-bold text-slate-900 dark:text-slate-100 text-base border-t border-slate-200 dark:border-slate-800 pt-2.5">
+        <div className="flex justify-between font-bold text-slate-900 dark:text-slate-100 text-sm sm:text-base border-t border-slate-200 dark:border-slate-800 pt-2.5">
           <span>{t("total")}</span>
           <span className="text-rose-600 dark:text-rose-400">
             {formatCurrency(finalAmount - memberDiscount + shipping)}
@@ -91,7 +92,7 @@ const CartSummary = ({ selectedItems, onCheckout }) => {
         type="button"
         onClick={() => onCheckout(selectedItems, couponCode)}
         disabled={selectedItems.length === 0}
-        className="w-full py-3 bg-amber-500 dark:bg-amber-600 text-white hover:bg-amber-600 dark:hover:bg-amber-500 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
+        className="w-full py-3 bg-primary dark:bg-primary text-white hover:bg-primaryHover dark:hover:bg-primaryHover transition-colors text-[13px] sm:text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
       >
         {t("checkout_btn", { count: selectedItems.length })}
       </button>

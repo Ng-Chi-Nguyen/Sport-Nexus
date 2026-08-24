@@ -190,7 +190,7 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen py-4 md:py-8 mt-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
+      <div className="max-w-[1400px] px-4 sm:px-6 mt-8">
         <Breadcrumbs
           data={[
             { title: "Trang chủ", route: "/" },

@@ -12,8 +12,6 @@ const OrderSummary = ({
   totalAmount,
   discount,
   finalAmount,
-  shippingFee = 0,
-  shippingEstimate = null,
   recipientName,
   recipientPhone,
   couponCode,
@@ -100,32 +98,11 @@ const OrderSummary = ({
             <span>-{formatCurrency(tierDiscount)}</span>
           </div>
         )}
-        <div className="flex justify-between items-center text-slate-600 dark:text-slate-400">
-          <span>{t("shipping_fee")}</span>
-          <span className="text-right">
-            {shippingFee ? (
-              <>
-                {formatCurrency(shippingFee)}
-                {shippingEstimate?.estimateDays && (
-                  <span className="block text-[10px] text-slate-400 dark:text-slate-500">
-                    {t("shipping_estimate", {
-                      days: shippingEstimate.estimateDays,
-                    })}
-                  </span>
-                )}
-              </>
-            ) : (
-              <span className="text-[11px]">
-                {t("select_province_prompt", "Chọn tỉnh để tính phí")}
-              </span>
-            )}
-          </span>
-        </div>
         <hr className="border-slate-200 dark:border-slate-800 my-1" />
         <div className="flex justify-between text-base font-bold text-slate-900 dark:text-slate-100">
           <span>{t("total")}</span>
           <span className="text-rose-600 dark:text-rose-400">
-            {formatCurrency(finalAmount + shippingFee)}
+            {formatCurrency(finalAmount)}
           </span>
         </div>
       </div>

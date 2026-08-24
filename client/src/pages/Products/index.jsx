@@ -98,18 +98,19 @@ const ProductsPage = () => {
           />
         </div>
 
-        <div className="flex items-center justify-between mb-4">
+        {/* ĐÃ TỐI ƯU MOBILE: Chuyển flex ngang thành flex-col trên màn hình nhỏ */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4">
           <p className="text-sm text-slate-500 dark:text-slate-400">
             {t("results_count", {
               count: products.length,
               total: pagination.totalItems || 0,
             })}
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 self-start sm:self-auto">
             <label className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider shrink-0">
               {t("sort_label")}
             </label>
-            <div className="w-44">
+            <div className="w-40 sm:w-44">
               <SimpleSelect
                 options={SORT_OPTIONS}
                 value={currentSort}
@@ -129,7 +130,7 @@ const ProductsPage = () => {
               {t("active_filters_label")}
             </span>
             {currentSearch && (
-              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 px-3 py-1 font-medium shadow-sm">
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 px-3 py-1 font-medium shadow-sm rounded-md">
                 Tìm: "{currentSearch}"
                 <button
                   type="button"
@@ -141,7 +142,7 @@ const ProductsPage = () => {
               </span>
             )}
             {currentCategoryIds && (
-              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 px-3 py-1 font-medium shadow-sm">
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 px-3 py-1 font-medium shadow-sm rounded-md">
                 Danh mục ({currentCategoryIds.split(",").length})
                 <button
                   type="button"
@@ -153,7 +154,7 @@ const ProductsPage = () => {
               </span>
             )}
             {currentBrandIds && (
-              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 px-3 py-1 font-medium shadow-sm">
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 px-3 py-1 font-medium shadow-sm rounded-md">
                 Thương hiệu ({currentBrandIds.split(",").length})
                 <button
                   type="button"
@@ -165,7 +166,7 @@ const ProductsPage = () => {
               </span>
             )}
             {currentPriceMin && (
-              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 px-3 py-1 font-medium shadow-sm">
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 px-3 py-1 font-medium shadow-sm rounded-md">
                 Giá: {Number(currentPriceMin).toLocaleString()}₫{" "}
                 {currentPriceMax
                   ? `- ${Number(currentPriceMax).toLocaleString()}₫`
@@ -180,7 +181,7 @@ const ProductsPage = () => {
               </span>
             )}
             {currentAttrFilter && (
-              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 px-3 py-1 font-medium shadow-sm">
+              <span className="inline-flex items-center gap-1.5 text-[12px] bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-500/30 px-3 py-1 font-medium shadow-sm rounded-md">
                 Size ({(currentAttrFilter.match(/Size:/g) || []).length})
                 <button
                   type="button"

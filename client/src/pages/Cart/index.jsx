@@ -53,7 +53,7 @@ const CartPage = () => {
 
   return (
     <div className="min-h-screen py-4 md:py-8 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 mt-[30px]">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 mt-[45px]">
         <Breadcrumbs
           data={[
             { title: t("breadcrumb_home"), route: "/" },
