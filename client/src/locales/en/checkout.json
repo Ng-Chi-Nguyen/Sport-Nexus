@@ -38,6 +38,7 @@
   "error_create_order": "Failed to create order",
   "error_generic": "An error occurred",
   "order_success_heading": "Order placed successfully!",
+  "order_pending_heading": "Confirming payment...",
   "order_id_label": "Your order ID:",
   "tracking_code_label": "Tracking code:",
   "scan_qr_heading": "Scan QR code to pay for the order",

@@ -5,6 +5,7 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const orderId = searchParams.get("orderId");
   const method = searchParams.get("method");
+  const cancelled = searchParams.get("cancelled") === "true";
 
   if (!orderId) {
     return (
@@ -14,7 +15,7 @@ const PaymentSuccess = () => {
     );
   }
 
-  return <OrderSuccess orderId={orderId} paymentMethod={method} />;
+  return <OrderSuccess orderId={orderId} paymentMethod={method} cancelled={cancelled} />;
 };
 
 export default PaymentSuccess;

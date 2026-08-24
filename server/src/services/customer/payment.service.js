@@ -55,7 +55,7 @@ const paymentService = {
         const baseUrl =
             process.env.PAYOS_RETURN_URL || process.env.FRONTEND_URL;
         const returnUrl = `${baseUrl}/thanh-toan/success?orderId=${order.id}&method=${order.payment_method}`;
-        const cancelUrl = `${baseUrl}/thanh-toan?orderId=${order.id}`;
+        const cancelUrl = `${baseUrl}/thanh-toan/success?orderId=${order.id}&cancelled=true`;
         const created = await provider.createPayment({
             order,
             transaction,

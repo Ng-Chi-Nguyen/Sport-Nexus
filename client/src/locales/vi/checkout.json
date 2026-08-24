@@ -38,6 +38,7 @@
   "error_create_order": "Tạo đơn thất bại",
   "error_generic": "Đã có lỗi xảy ra",
   "order_success_heading": "Đặt hàng thành công!",
+  "order_pending_heading": "Đang xác nhận thanh toán...",
   "order_id_label": "Mã đơn hàng của bạn:",
   "tracking_code_label": "Mã vận đơn:",
   "scan_qr_heading": "Quét mã QR để thanh toán đơn hàng",
