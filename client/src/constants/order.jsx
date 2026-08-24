@@ -36,16 +36,6 @@ export const PAYMENT_OPTIONS = [
   { value: "Refunded", label: "Hoàn tiền" },
 ];
 
-// Nhãn Tiếng Việt dịch trạng thái vận đơn (tra cứu)
-export const SHIPPING_STATUS_LABELS = {
-  RECEIVED: "Đã tiếp nhận đơn",
-  PICKED_UP: "Đã lấy hàng",
-  IN_TRANSIT: "Đang vận chuyển",
-  OUT_FOR_DELIVERY: "Đang giao",
-  DELIVERED: "Đã giao thành công",
-  CANCELLED: "Đã huỷ",
-};
-
 // Danh sách Option cho dropdown Phương thức thanh toán
 export const METHOD_OPTIONS = [
   { value: "COD", label: "Thanh toán khi nhận hàng (COD)" },
@@ -53,4 +43,10 @@ export const METHOD_OPTIONS = [
   { value: "MOMO", label: "Ví MoMo" },
   { value: "VNPAY", label: "Cổng VNPay" },
   { value: "CREDIT_CARD", label: "Thẻ tín dụng" },
+];
+
+// Danh sách Option cho dropdown Trạng thái hoàn tiền
+export const REFUND_STATUS_OPTIONS = [
+  { value: "pending", label: "Chờ hoàn tiền" },
+  { value: "completed", label: "Đã hoàn tiền" },
 ];

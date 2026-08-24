@@ -9,7 +9,8 @@ import { formatDate, formatCurrency } from "@/utils/formatters";
 import { STATUS_LABELS, STATUS_PAYMENT } from "@/constants/order";
 import Pagination from "@/components/ui/pagination";
 import ReviewModal from "@/components/customer/ReviewModal";
-import { Package } from "lucide-react";
+import CancelOrderModal from "@/components/customer/CancelOrderModal";
+import { Package, XCircle } from "lucide-react";
 import { TitleWithIcon } from "@/components/ui/title";
 import Badge from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
@@ -21,6 +22,7 @@ const Order = () => {
   const revalidator = useRevalidator();
   const [, setSearchParams] = useSearchParams();
   const [reviewOrder, setReviewOrder] = useState(null);
+  const [cancelOrder, setCancelOrder] = useState(null);
 
   if (!user) return null;
 
@@ -134,6 +136,18 @@ const Order = () => {
                               {t("review_button")}
                             </button>
                           )}
+                          {order.status === "Processing" && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setCancelOrder(order);
+                              }}
+                              className="text-xs font-medium text-red-600 dark:text-red-400 hover:underline cursor-pointer"
+                            >
+                              {t("cancel_order_button", "Hủy đơn")}
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -160,6 +174,13 @@ const Order = () => {
         <ReviewModal
           order={reviewOrder}
           onClose={() => setReviewOrder(null)}
+          onSuccess={() => revalidator.revalidate()}
+        />
+      )}
+      {cancelOrder && (
+        <CancelOrderModal
+          order={cancelOrder}
+          onClose={() => setCancelOrder(null)}
           onSuccess={() => revalidator.revalidate()}
         />
       )}

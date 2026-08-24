@@ -8,7 +8,9 @@ import {
   PAYMENT_METHOD_LABELS,
 } from "@/constants/web/profile";
 import ReviewModal from "@/components/customer/ReviewModal";
-import { ArrowLeft, PackageCheck, Star } from "lucide-react";
+import CancelOrderModal from "@/components/customer/CancelOrderModal";
+import ReturnOrderModal from "@/components/customer/ReturnOrderModal";
+import { ArrowLeft, PackageCheck, Star, XCircle, RotateCcw } from "lucide-react";
 import { TitleWithIcon } from "@/components/ui/title";
 import Badge from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
@@ -18,6 +20,8 @@ const OrderDetail = () => {
   const { order } = useLoaderData();
   const revalidator = useRevalidator();
   const [showReview, setShowReview] = useState(false);
+  const [showCancel, setShowCancel] = useState(false);
+  const [showReturn, setShowReturn] = useState(false);
 
   if (!order) {
     return (
@@ -83,6 +87,26 @@ const OrderDetail = () => {
             >
               <Star size={15} />
               {hasPendingReview ? t("review_button") : t("review_edit_button")}
+            </button>
+          )}
+          {order.status === "Processing" && (
+            <button
+              type="button"
+              onClick={() => setShowCancel(true)}
+              className="inline-flex items-center gap-1.5 py-1 px-2 text-[10px] font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors cursor-pointer"
+            >
+              <XCircle size={15} />
+              {t("cancel_order_button", "Hủy đơn")}
+            </button>
+          )}
+          {order.status === "Delivered" && (
+            <button
+              type="button"
+              onClick={() => setShowReturn(true)}
+              className="inline-flex items-center gap-1.5 py-1 px-2 text-[10px] font-semibold text-white bg-purple-600 hover:bg-purple-700 transition-colors cursor-pointer"
+            >
+              <RotateCcw size={15} />
+              {t("return_button", "Trả hàng")}
             </button>
           )}
           <Badge color={ORDER_COLOR_MAP[order.status] || "gray"}>
@@ -234,6 +258,20 @@ const OrderDetail = () => {
         <ReviewModal
           order={order}
           onClose={() => setShowReview(false)}
+          onSuccess={() => revalidator.revalidate()}
+        />
+      )}
+      {showCancel && (
+        <CancelOrderModal
+          order={order}
+          onClose={() => setShowCancel(false)}
+          onSuccess={() => revalidator.revalidate()}
+        />
+      )}
+      {showReturn && (
+        <ReturnOrderModal
+          order={order}
+          onClose={() => setShowReturn(false)}
           onSuccess={() => revalidator.revalidate()}
         />
       )}

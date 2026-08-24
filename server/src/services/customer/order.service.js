@@ -1,7 +1,6 @@
 import prisma from "../../db/prisma.js";
 import paymentService from "./payment.service.js";
 import { computeCouponDiscount } from "./coupon.service.js";
-import { createShipmentForOrder } from "../shipping/ghnSimulator.service.js";
 import { ACTIVE } from "../../utils/prisma.js";
 import loyaltyService from "./loyalty.service.js";
 
@@ -9,7 +8,6 @@ const orderService = {
     createOrder: async (orderData, authUser) => {
         let { total_amount, status, shipping_address, payment_method,
             payment_status, discount_amount, final_amount, coupon_code, user_email, items,
-            shipping_name, shipping_phone, province_name, ward_name, weight_grams, service_type,
             points_discount_amount } = orderData;
 
         const clientDiscountAmount = Number(discount_amount) || 0;
@@ -229,25 +227,7 @@ const orderService = {
                 })
             }
 
-            // Tự động tạo vận đơn giả lập nếu có thông tin giao hàng
-            let shipment = null;
-            if (shipping_name && shipping_phone && province_name) {
-                shipment = await createShipmentForOrder({
-                    order: newOrder,
-                    data: {
-                        recipient_name: shipping_name,
-                        recipient_phone: shipping_phone,
-                        province_name,
-                        ward_name: ward_name || "",
-                        detail_address: shipping_address,
-                        weight_grams,
-                        service_type,
-                    },
-                    client: tx,
-                });
-            }
-
-            return { ...newOrder, shipment };
+            return newOrder;
         });
     },
 
@@ -337,7 +317,7 @@ const orderService = {
         return orders;
     },
 
-    getAllOrders: async ({ page, status, payment_status, payment_method, date_from, date_to, amount_min, amount_max, search } = {}) => {
+    getAllOrders: async ({ page, status, payment_status, payment_method, refund_status, date_from, date_to, amount_min, amount_max, search } = {}) => {
         const limit = 5;
         const currentPage = Math.max(1, page || 1);
         const skip = (currentPage - 1) * limit;
@@ -346,6 +326,7 @@ const orderService = {
         if (status) where.status = status;
         if (payment_status) where.payment_status = payment_status;
         if (payment_method) where.payment_method = payment_method;
+        if (refund_status) where.refund_status = refund_status;
         if (search) {
             const conditions = [
                 { user_email: { contains: search } },
@@ -415,6 +396,7 @@ const orderService = {
         const discount = Number(dataUpdate.discount_amount) || 0;
 
         // 2. Dùng Nested Write để xóa/tạo item trong 1 lệnh duy nhất
+        // KHÔNG cho phép sửa payment_status — chỉ webhook PayOS mới được cập nhật
         const updatedOrder = await prisma.orders.update({
             where: { id: Number(orderId) },
             data: {
@@ -422,7 +404,6 @@ const orderService = {
                 status: dataUpdate.status,
                 total_amount: total,
                 final_amount: final,
-                payment_status: dataUpdate.payment_status,
                 payment_method: dataUpdate.payment_method,
                 discount_amount: discount,
                 user_email: dataUpdate.user_email || null,
@@ -475,6 +456,272 @@ const orderService = {
         await prisma.Orders.delete({
             where: { id: orderId }
         })
+    },
+
+    cancelOrder: async (orderId, userId, userEmail, refund_method, refund_note) => {
+        const order = await prisma.Orders.findUnique({
+            where: { id: Number(orderId) },
+            include: {
+                OrderItems: true,
+                invoice: true,
+                coupon: true,
+                PaymentTransactions: true,
+            }
+        });
+
+        if (!order) {
+            const err = new Error("Không tìm thấy đơn hàng");
+            err.code = "ORDER_NOT_FOUND";
+            throw err;
+        }
+
+        // Kiểm tra quyền: usersId khớp HOẶC email khớp
+        const isOwner = order.usersId === userId || 
+                        (userEmail && order.user_email === userEmail);
+        if (!isOwner) {
+            const err = new Error("Bạn không có quyền hủy đơn hàng này");
+            err.code = "FORBIDDEN";
+            throw err;
+        }
+
+        if (order.status !== "Processing") {
+            const err = new Error("Chỉ có thể hủy đơn hàng đang chờ xử lý");
+            err.code = "INVALID_STATUS";
+            throw err;
+        }
+
+        const wasPaid = order.payment_status === "Paid";
+
+        return await prisma.$transaction(async (tx) => {
+            // 1. Update order status to Cancelled
+            const updatedOrder = await tx.Orders.update({
+                where: { id: Number(orderId) },
+                data: {
+                    status: "Cancelled",
+                    payment_status: wasPaid ? "Refunded" : order.payment_status,
+                    refund_method: wasPaid ? refund_method : null,
+                    refund_status: wasPaid && refund_method === "bank_transfer" ? "pending" : (wasPaid && refund_method === "coins" ? "completed" : null),
+                    refund_note: wasPaid ? refund_note : null,
+                    refunded_at: wasPaid ? new Date() : null,
+                },
+                include: { OrderItems: true }
+            });
+
+            // 2. Restore stock for all items
+            for (const item of order.OrderItems) {
+                await tx.productVariants.update({
+                    where: { id: item.product_variant_id },
+                    data: { stock: { increment: item.quantity } }
+                });
+
+                // Log stock movement
+                await tx.StockMovements.create({
+                    data: {
+                        variant_id: item.product_variant_id,
+                        type: "IN",
+                        quantity_change: item.quantity,
+                        reason: `Hoàn hàng do hủy đơn #${orderId}`,
+                        reference_id: Number(orderId)
+                    }
+                });
+            }
+
+            // 3. Update invoice status if exists
+            if (order.invoice) {
+                await tx.invoices.update({
+                    where: { id: order.invoice.id },
+                    data: { status: "Cancelled" }
+                });
+            }
+
+            // 4. Restore coupon usage if coupon was used
+            if (order.coupon_code) {
+                await tx.coupons.update({
+                    where: { code: order.coupon_code },
+                    data: { usage_count: { decrement: 1 } }
+                });
+
+                // Restore user coupon usage count
+                if (order.usersId) {
+                    await tx.userCoupons.updateMany({
+                        where: {
+                            user_id: order.usersId,
+                            coupon: { code: order.coupon_code }
+                        },
+                        data: { used_count: { decrement: 1 } }
+                    });
+                }
+            }
+
+            // 5. Process refund based on refund_method
+            if (wasPaid) {
+                const paidTx = order.PaymentTransactions.find(t => t.status === "Paid");
+                if (paidTx) {
+                    await tx.paymentTransactions.update({
+                        where: { id: paidTx.id },
+                        data: { status: "Refunded", paid_at: null }
+                    });
+                }
+
+                // Nếu chọn hoàn tiền bằng xu, cộng điểm vào tài khoản
+                if (refund_method === "coins" && order.usersId) {
+                    const refundAmount = Number(order.final_amount);
+                    // Tỷ lệ: 1đ = 1 xu (có thể điều chỉnh)
+                    const coinsToAdd = refundAmount;
+                    
+                    const user = await tx.Users.findUnique({
+                        where: { id: order.usersId },
+                        select: { points_balance: true }
+                    });
+                    
+                    const newBalance = user.points_balance + coinsToAdd;
+                    
+                    await tx.Users.update({
+                        where: { id: order.usersId },
+                        data: { points_balance: newBalance }
+                    });
+
+                    await tx.PointTransactions.create({
+                        data: {
+                            user_id: order.usersId,
+                            type: "REFUND",
+                            points: coinsToAdd,
+                            balance_after: newBalance,
+                            order_id: Number(orderId),
+                            note: `Hoàn tiền bằng xu đơn hàng #${orderId}`
+                        }
+                    });
+                }
+            }
+
+            return updatedOrder;
+        });
+    },
+
+    completeRefund: async (orderId) => {
+        const order = await prisma.Orders.findUnique({
+            where: { id: Number(orderId) },
+        });
+
+        if (!order) {
+            const err = new Error("Không tìm thấy đơn hàng");
+            err.code = "ORDER_NOT_FOUND";
+            throw err;
+        }
+
+        if (order.refund_method !== "bank_transfer" || order.refund_status !== "pending") {
+            const err = new Error("Đơn hàng này không có yêu cầu hoàn tiền chuyển khoản đang chờ xử lý");
+            err.code = "INVALID_REFUND";
+            throw err;
+        }
+
+        return await prisma.Orders.update({
+            where: { id: Number(orderId) },
+            data: { refund_status: "completed" },
+        });
+    },
+
+    returnOrder: async (orderId, userId, returnData, userEmail) => {
+        const { items, reason } = returnData;
+
+        const order = await prisma.Orders.findUnique({
+            where: { id: Number(orderId) },
+            include: {
+                OrderItems: true,
+                invoice: true,
+                PaymentTransactions: true,
+            }
+        });
+
+        if (!order) {
+            const err = new Error("Không tìm thấy đơn hàng");
+            err.code = "ORDER_NOT_FOUND";
+            throw err;
+        }
+
+        // Kiểm tra quyền: usersId khớp HOẶC email khớp
+        const isOwner = order.usersId === userId || 
+                        (userEmail && order.user_email === userEmail);
+        if (!isOwner) {
+            const err = new Error("Bạn không có quyền trả hàng đơn này");
+            err.code = "FORBIDDEN";
+            throw err;
+        }
+
+        if (order.status !== "Delivered") {
+            const err = new Error("Chỉ có thể trả hàng đơn đã giao thành công");
+            err.code = "INVALID_STATUS";
+            throw err;
+        }
+
+        // Validate return items exist in order
+        const orderItemIds = order.OrderItems.map(item => item.id);
+        for (const item of items) {
+            if (!orderItemIds.includes(item.order_item_id)) {
+                const err = new Error(`Sản phẩm ID ${item.order_item_id} không tồn tại trong đơn hàng`);
+                err.code = "INVALID_ITEM";
+                throw err;
+            }
+        }
+
+        return await prisma.$transaction(async (tx) => {
+            // 1. Update order status to Refunded
+            const updatedOrder = await tx.Orders.update({
+                where: { id: Number(orderId) },
+                data: { status: "Refunded" },
+                include: { OrderItems: true }
+            });
+
+            // 2. Restore stock for returned items
+            for (const item of items) {
+                const orderItem = order.OrderItems.find(oi => oi.id === item.order_item_id);
+                if (orderItem) {
+                    await tx.productVariants.update({
+                        where: { id: orderItem.product_variant_id },
+                        data: { stock: { increment: orderItem.quantity } }
+                    });
+
+                    // Log stock movement
+                    await tx.StockMovements.create({
+                        data: {
+                            variant_id: orderItem.product_variant_id,
+                            type: "IN",
+                            quantity_change: orderItem.quantity,
+                            reason: `Hoàn hàng do trả hàng đơn #${orderId}: ${reason || "Không có lý do"}`,
+                            reference_id: Number(orderId)
+                        }
+                    });
+                }
+            }
+
+            // 3. Update invoice status if exists
+            if (order.invoice) {
+                await tx.invoices.update({
+                    where: { id: order.invoice.id },
+                    data: { status: "Cancelled" }
+                });
+            }
+
+            // 4. Process refund for payment transactions
+            const paidTransactions = order.PaymentTransactions.filter(
+                tx => tx.status === "Paid"
+            );
+
+            for (const transaction of paidTransactions) {
+                await tx.paymentTransactions.update({
+                    where: { id: transaction.id },
+                    data: { status: "Refunded" }
+                });
+            }
+
+            // 5. Update order payment status
+            await tx.Orders.update({
+                where: { id: Number(orderId) },
+                data: { payment_status: "Refunded" }
+            });
+
+            return updatedOrder;
+        });
     }
 }
 

@@ -1,5 +1,6 @@
 import orderService from "../../services/customer/order.service.js";
 import emailService from "../../services/email/email.service.js";
+import prisma from "../../db/prisma.js";
 
 import { t } from "../../locales/messages.js";
 const PAYMENT_LABELS = {
@@ -198,13 +199,14 @@ const orderController = {
         const status = req.query.status || '';
         const payment_status = req.query.payment_status || '';
         const payment_method = req.query.payment_method || '';
+        const refund_status = req.query.refund_status || '';
         const date_from = req.query.date_from || '';
         const date_to = req.query.date_to || '';
         const amount_min = req.query.amount_min || '';
         const amount_max = req.query.amount_max || '';
         const search = req.query.search || '';
         try {
-            let result = await orderService.getAllOrders({ page, status, payment_status, payment_method, date_from, date_to, amount_min, amount_max, search });
+            let result = await orderService.getAllOrders({ page, status, payment_status, payment_method, refund_status, date_from, date_to, amount_min, amount_max, search });
             if (!result || result.orders.length === 0) {
                 return res.status(404).json({
                     success: false,
@@ -306,6 +308,173 @@ const orderController = {
                 message: t(req, "Lỗi server nội bộ trong quá trình tạo tài khoản."),
                 error: error.message
             })
+        }
+    },
+
+    cancelOrder: async (req, res) => {
+        const orderId = parseInt(req.params.id);
+        const userId = req.user?.id;
+        const userEmail = req.user?.email;
+        const { refund_method, refund_note } = req.body;
+
+        try {
+            if (!userId) {
+                return res.status(401).json({
+                    success: false,
+                    message: t(req, "Vui lòng đăng nhập để hủy đơn hàng")
+                });
+            }
+
+            const updatedOrder = await orderService.cancelOrder(orderId, userId, userEmail, refund_method, refund_note);
+
+            // Send email notification
+            if (updatedOrder.user_email) {
+                try {
+                    await emailService.sendOrderStatusUpdateEmail(
+                        updatedOrder.user_email,
+                        updatedOrder.user_email,
+                        updatedOrder,
+                        "Chuẩn bị hàng",
+                        "Đã hủy",
+                        PAYMENT_LABELS[updatedOrder.payment_method] || updatedOrder.payment_method,
+                        PAYMENT_STATUS_LABELS[updatedOrder.payment_status] || updatedOrder.payment_status,
+                    );
+                } catch (emailErr) {
+                    console.error(`[EMAIL] Gửi email hủy đơn thất bại:`, emailErr);
+                }
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: t(req, "Hủy đơn hàng thành công"),
+                data: updatedOrder
+            });
+        } catch (error) {
+            const status = error.code === "FORBIDDEN" ? 403 :
+                           error.code === "INVALID_STATUS" ? 400 :
+                           error.code === "ORDER_NOT_FOUND" ? 404 : 500;
+            return res.status(status).json({
+                success: false,
+                message: t(req, error.message) || "Lỗi server nội bộ"
+            });
+        }
+    },
+
+    cancelPendingOrder: async (req, res) => {
+        const orderId = parseInt(req.params.id);
+        const { email } = req.body;
+
+        try {
+            const order = await prisma.Orders.findUnique({
+                where: { id: orderId },
+                include: { OrderItems: true, invoice: true, coupon: true, PaymentTransactions: true }
+            });
+
+            if (!order) {
+                return res.status(404).json({ success: false, message: "Đơn hàng không tồn tại" });
+            }
+
+            if (order.status !== "Processing") {
+                return res.status(400).json({ success: false, message: "Đơn hàng không thể hủy" });
+            }
+
+            const isGuest = !order.usersId;
+            if (isGuest && email && order.user_email !== email) {
+                return res.status(403).json({ success: false, message: "Email không khớp" });
+            }
+
+            const updatedOrder = await orderService.cancelOrder(orderId, order.usersId, order.user_email);
+
+            const paymentStatusLabel = order.payment_status === "Paid" ? "Đã thanh toán" : "Chờ thanh toán";
+            const refundNote = order.payment_status === "Paid" ? " (đã hoàn tiền)" : "";
+
+            if (order.user_email) {
+                try {
+                    await emailService.sendOrderStatusUpdateEmail(
+                        order.user_email, order.user_email, order,
+                        "Chuẩn bị hàng", "Đã hủy",
+                        PAYMENT_LABELS[order.payment_method] || order.payment_method,
+                        PAYMENT_STATUS_LABELS[updatedOrder.payment_status] || updatedOrder.payment_status,
+                    );
+                } catch {}
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: `Hủy đơn hàng thành công${refundNote}`,
+                data: updatedOrder
+            });
+        } catch (error) {
+            return res.status(500).json({ success: false, message: error.message || "Lỗi server" });
+        }
+    },
+
+    completeRefund: async (req, res) => {
+        const orderId = parseInt(req.params.id);
+        try {
+            const updatedOrder = await orderService.completeRefund(orderId);
+            return res.status(200).json({
+                success: true,
+                message: t(req, "Đánh dấu hoàn tiền thành công"),
+                data: updatedOrder
+            });
+        } catch (error) {
+            const status = error.code === "ORDER_NOT_FOUND" ? 404 :
+                           error.code === "INVALID_REFUND" ? 400 : 500;
+            return res.status(status).json({
+                success: false,
+                message: t(req, error.message) || "Lỗi server nội bộ"
+            });
+        }
+    },
+
+    returnOrder: async (req, res) => {
+        const orderId = parseInt(req.params.id);
+        const userId = req.user?.id;
+        const userEmail = req.user?.email;
+        const returnData = req.body;
+
+        try {
+            if (!userId) {
+                return res.status(401).json({
+                    success: false,
+                    message: t(req, "Vui lòng đăng nhập để trả hàng")
+                });
+            }
+
+            const updatedOrder = await orderService.returnOrder(orderId, userId, returnData, userEmail);
+
+            // Send email notification
+            if (updatedOrder.user_email) {
+                try {
+                    await emailService.sendOrderStatusUpdateEmail(
+                        updatedOrder.user_email,
+                        updatedOrder.user_email,
+                        updatedOrder,
+                        "Đã giao",
+                        "Hoàn tiền",
+                        PAYMENT_LABELS[updatedOrder.payment_method] || updatedOrder.payment_method,
+                        "Đã hoàn tiền",
+                    );
+                } catch (emailErr) {
+                    console.error(`[EMAIL] Gửi email trả hàng thất bại:`, emailErr);
+                }
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: t(req, "Yêu cầu trả hàng thành công"),
+                data: updatedOrder
+            });
+        } catch (error) {
+            const status = error.code === "FORBIDDEN" ? 403 :
+                           error.code === "INVALID_STATUS" ? 400 :
+                           error.code === "INVALID_ITEM" ? 400 :
+                           error.code === "ORDER_NOT_FOUND" ? 404 : 500;
+            return res.status(status).json({
+                success: false,
+                message: t(req, error.message) || "Lỗi server nội bộ"
+            });
         }
     }
 }

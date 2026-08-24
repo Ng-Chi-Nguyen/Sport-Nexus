@@ -25,12 +25,6 @@ const orderSchema = {
 
         coupon_code: Joi.string().allow(null).default(null),
         user_email: Joi.string().allow(null).default(null),
-        shipping_name: Joi.string().trim().allow(null).default(null),
-        shipping_phone: Joi.string().trim().allow(null).default(null),
-        province_name: Joi.string().trim().allow(null).default(null),
-        ward_name: Joi.string().trim().allow(null).default(null),
-        weight_grams: Joi.number().integer().min(1).max(50000).default(500),
-        service_type: Joi.string().valid('FAST', 'ECONOMY').default('FAST'),
         items: Joi.array().items(
             Joi.object({
                 product_variant_id: Joi.number().integer().required().messages({
@@ -80,6 +74,27 @@ const orderSchema = {
         ).min(1).messages({
             'array.min': 'Đơn hàng phải có ít nhất một sản phẩm'
         })
+    }),
+
+    cancelOrder: Joi.object({
+        refund_method: Joi.string().valid('coins', 'bank_transfer').required().messages({
+            'any.required': 'Vui lòng chọn phương thức hoàn tiền',
+            'any.only': 'Phương thức hoàn tiền không hợp lệ'
+        }),
+        refund_note: Joi.string().max(500).allow(null).default(null)
+    }),
+
+    returnOrder: Joi.object({
+        items: Joi.array().items(
+            Joi.object({
+                order_item_id: Joi.number().integer().required().messages({
+                    'any.required': 'ID sản phẩm là bắt buộc'
+                })
+            })
+        ).min(1).required().messages({
+            'array.min': 'Phải chọn ít nhất một sản phẩm để trả'
+        }),
+        reason: Joi.string().max(500).allow(null).default(null)
     }),
 }
 

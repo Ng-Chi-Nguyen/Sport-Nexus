@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/purity */
 import { useState, useMemo } from "react";
 import { LayoutDashboard, Plus, Trash2 } from "lucide-react";
 import { useLoaderData, useNavigate } from "react-router-dom";
@@ -33,7 +34,7 @@ const CreateOrderPage = () => {
   const [items, setItems] = useState([
     {
       id: Date.now(),
-      product_variant_id: "",
+      variantId: "",
       quantity: 1,
       price_at_purchase: 0,
     },
@@ -57,7 +58,7 @@ const CreateOrderPage = () => {
       ...items,
       {
         id: Date.now(),
-        product_variant_id: "",
+        variantId: "",
         quantity: 1,
         price_at_purchase: 0,
       },
@@ -186,7 +187,6 @@ const CreateOrderPage = () => {
       >
         {/* CỘT TRÁI (THÔNG TIN KHÁCH HÀNG & TỔNG KẾT) */}
         <div className="w-full lg:w-[30%] flex flex-col gap-4">
-          {/* CARD: THÔNG TIN KHÁCH HÀNG */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="cyan">
               {t("customer_info_title")}
@@ -205,7 +205,6 @@ const CreateOrderPage = () => {
             </div>
           </div>
 
-          {/* CARD: MÃ GIẢM GIÁ */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="orange">
               {t("payment_coupon")}
@@ -221,14 +220,13 @@ const CreateOrderPage = () => {
               <button
                 type="button"
                 onClick={handleApplyCoupon}
-                className="h-[46px] px-4 rounded-lg text-xs font-bold transition-all uppercase tracking-wider flex-shrink-0 border bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 dark:hover:bg-sky-500/20"
+                className="h-[46px] px-4 rounded-lg text-xs font-bold transition-all uppercase tracking-wider flex-shrink-0 border bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 dark:hover:bg-sky-500/20 cursor-pointer"
               >
                 {t("check_btn")}
               </button>
             </div>
           </div>
 
-          {/* CARD: TỔNG KẾT ĐƠN HÀNG */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="emerald">
               {t("order_summary")}
@@ -262,7 +260,6 @@ const CreateOrderPage = () => {
 
         {/* CỘT PHẢI (THÔNG TIN ĐƠN HÀNG & DANH SÁCH MÓN HÀNG) */}
         <div className="flex-1 flex flex-col gap-4 w-full">
-          {/* CARD: THÔNG TIN ĐƠN HÀNG */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 relative z-20 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
             <TitleManagement color="violet">{t("order_info")}</TitleManagement>
             <div className="flex flex-col sm:flex-row gap-4 mt-3">
@@ -309,29 +306,29 @@ const CreateOrderPage = () => {
 
           {/* CARD: DANH SÁCH SẢN PHẨM MUA */}
           <div className="rounded-xl p-5 shadow-xl backdrop-blur-md border transition-colors duration-200 relative z-10 bg-white border-slate-200 dark:bg-[#0D121F]/40 dark:border-slate-900">
-            <div className="flex justify-between items-center mb-5">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-5">
               <TitleManagement color="blue">
                 {t("product_list_title")}
               </TitleManagement>
               <button
                 type="button"
                 onClick={handleAddItem}
-                className="px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all duration-150 border bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 dark:hover:bg-sky-500/20 shadow-sm"
+                className="px-4 py-2.5 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all duration-150 border bg-sky-50 text-sky-600 border-sky-200 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 dark:hover:bg-sky-500/20 shadow-sm cursor-pointer"
               >
                 <Plus size={16} strokeWidth={2.5} /> {t("add_product")}
               </button>
             </div>
 
-            {/* VÙNG SCROLL CHỨA CÁC ITEM DÒNG SẢN PHẨM */}
-            <div className="flex flex-col gap-3 min-h-[500px] max-h-[500px] overflow-y-auto pr-2 custom-scrollbar pb-10">
+            {/* VÙNG ITEM SẢN PHẨM - TỐI ƯU RESPONSIVE CHO MOBILE */}
+            <div className="flex flex-col gap-3 min-h-[500px] max-h-[500px] overflow-y-auto pr-1 custom-scrollbar pb-10">
               {items.map((item, index) => (
                 <div
                   key={item.id}
-                  className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 p-4 rounded-xl border relative transition-all duration-150 bg-slate-50/80 border-slate-200 dark:bg-[#111827]/40 dark:border-slate-800/60"
+                  className="flex flex-col gap-3 p-3.5 sm:p-4 rounded-xl border relative transition-all duration-150 bg-slate-50/80 border-slate-200 dark:bg-[#111827]/40 dark:border-slate-800/60"
                   style={{ zIndex: items.length - index }}
                 >
-                  {/* Select sản phẩm */}
-                  <div className="flex-1 min-w-0">
+                  {/* Dòng 1: Chọn sản phẩm */}
+                  <div className="w-full min-w-0">
                     <SelectPro
                       value={item.variantId}
                       options={variantsOptions}
@@ -342,53 +339,52 @@ const CreateOrderPage = () => {
                     />
                   </div>
 
-                  {/* Số lượng */}
-                  <div className="w-full sm:w-24 flex-shrink-0">
-                    <FloatingInput
-                      label={t("quantity")}
-                      type="number"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        handleItemChange(item.id, "quantity", e.target.value)
-                      }
-                    />
-                  </div>
+                  {/* Dòng 2: Số lượng, Đơn giá, Thành tiền & Nút xóa căn chỉnh mượt mà trên mobile */}
+                  <div className="grid grid-cols-2 sm:flex sm:items-center gap-2.5">
+                    <div className="flex-1">
+                      <FloatingInput
+                        label={t("quantity")}
+                        type="number"
+                        value={item.quantity}
+                        onChange={(e) =>
+                          handleItemChange(item.id, "quantity", e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="flex-1 sm:w-36">
+                      <FloatingInput
+                        label={t("unit_price")}
+                        type="number"
+                        value={item.price_at_purchase}
+                        onChange={(e) =>
+                          handleItemChange(
+                            item.id,
+                            "price_at_purchase",
+                            e.target.value,
+                          )
+                        }
+                      />
+                    </div>
 
-                  {/* Đơn giá */}
-                  <div className="w-full sm:w-36 flex-shrink-0">
-                    <FloatingInput
-                      label={t("unit_price")}
-                      type="number"
-                      value={item.price_at_purchase}
-                      onChange={(e) =>
-                        handleItemChange(
-                          item.id,
-                          "price_at_purchase",
-                          e.target.value,
-                        )
-                      }
-                    />
-                  </div>
+                    <div className="col-span-2 sm:w-auto flex items-center justify-between sm:justify-end gap-3 pt-1 sm:pt-0">
+                      <span className="text-xs font-bold font-mono px-2.5 py-2 rounded-lg border bg-sky-50 text-sky-600 border-sky-200 dark:bg-sky-500/5 dark:text-sky-400 dark:border-sky-500/10 text-center">
+                        {formatCurrency(item.quantity * item.price_at_purchase)}
+                      </span>
 
-                  {/* Thành tiền từng item */}
-                  <div className="w-full sm:w-[100px] text-left sm:text-right pr-2 flex-shrink-0 flex items-center sm:block">
-                    <span className="text-xs font-bold font-mono px-2 py-1 rounded border bg-sky-50 text-sky-600 border-sky-200 dark:bg-sky-500/5 dark:text-sky-400 dark:border-sky-500/10">
-                      {formatCurrency(item.quantity * item.price_at_purchase)}
-                    </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setItems(items.filter((i) => i.id !== item.id));
+                          setDiscount(0);
+                          setFinal(0);
+                        }}
+                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:text-rose-400 dark:hover:bg-rose-500/10 rounded-lg transition-all duration-150 cursor-pointer"
+                        title={t("delete")}
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
                   </div>
-
-                  {/* Nút xóa item */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setItems(items.filter((i) => i.id !== item.id));
-                      setDiscount(0);
-                      setFinal(0);
-                    }}
-                    className="p-2 self-end sm:self-auto text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:text-rose-400 dark:hover:bg-rose-500/10 rounded-lg transition-all duration-150 flex-shrink-0"
-                  >
-                    <Trash2 size={18} />
-                  </button>
                 </div>
               ))}
             </div>

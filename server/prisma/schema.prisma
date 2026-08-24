@@ -364,11 +364,14 @@ model Orders {
   OrderItems          OrderItems[]
   Reviews             Reviews[]
   PaymentTransactions PaymentTransactions[]
-  Shipments           Shipments[]
   Users               Users?                @relation(fields: [usersId], references: [id])
   usersId             Int?
   invoice             Invoices?
   PointTransactions   PointTransactions[]
+  refund_method       String?               // "coins" hoặc "bank_transfer"
+  refund_status       String?               @default("pending") // "pending" hoặc "completed"
+  refund_note         String?               @db.Text
+  refunded_at         DateTime?
 
   @@map("orders")
 }
@@ -391,35 +394,6 @@ model PaymentTransactions {
 
   @@index([order_id])
   @@map("payment_transactions")
-}
-
-// Shipments - Vận đơn giả lập (GHN simulator)
-model Shipments {
-  id                 Int       @id @default(autoincrement())
-  order_id           Int
-  order              Orders    @relation(fields: [order_id], references: [id], onDelete: Cascade)
-  tracking_code      String    @unique
-  service_type       String    @default("FAST") // FAST | ECONOMY
-  status             String    @default("RECEIVED")
-  weight_grams       Int       @default(500)
-  cod_amount         Decimal   @default(0) @db.Decimal(10, 2)
-  shipping_fee       Decimal   @default(0) @db.Decimal(10, 2)
-  cod_fee            Decimal   @default(0) @db.Decimal(10, 2)
-  insurance_fee      Decimal   @default(0) @db.Decimal(10, 2)
-  total_fee          Decimal   @default(0) @db.Decimal(10, 2)
-  estimated_delivery DateTime
-  delivered_at       DateTime?
-  recipient_name     String
-  recipient_phone    String
-  province_name      String
-  ward_name          String
-  detail_address     String
-  timeline           Json
-  created_at         DateTime  @default(now())
-  updated_at         DateTime  @updatedAt
-
-  @@index([order_id])
-  @@map("shipments")
 }
 
 // OrderItems Done

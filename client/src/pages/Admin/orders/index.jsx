@@ -19,6 +19,7 @@ import {
   STATUS_OPTIONS,
   PAYMENT_OPTIONS,
   METHOD_OPTIONS,
+  REFUND_STATUS_OPTIONS,
 } from "@/constants/order";
 
 import {
@@ -54,6 +55,7 @@ const OrderPage = () => {
   const currentStatus = searchParams.get("status") || "";
   const currentPaymentStatus = searchParams.get("payment_status") || "";
   const currentPaymentMethod = searchParams.get("payment_method") || "";
+  const currentRefundStatus = searchParams.get("refund_status") || "";
   const currentDateFrom = searchParams.get("date_from") || "";
   const currentDateTo = searchParams.get("date_to") || "";
   const currentAmountMin = searchParams.get("amount_min") || "";
@@ -100,6 +102,14 @@ const OrderPage = () => {
         slug: opt.value,
         name: t(`method_${opt.value.toLowerCase()}`),
       })),
+    [t],
+  );
+
+  const refundStatusOptionsMapped = useMemo(
+    () => [
+      { slug: "pending", name: t("refund_pending") },
+      { slug: "completed", name: t("refund_completed") },
+    ],
     [t],
   );
 
@@ -163,6 +173,17 @@ const OrderPage = () => {
               value={currentPaymentMethod}
               onChange={(val) => setFilter("payment_method", val)}
               placeholder={t("all_methods")}
+            />
+          </div>
+
+          {/* 3.5. Dropdown Trạng thái hoàn tiền */}
+          <div className="flex-1 min-w-[150px]">
+            <SimpleSelect
+              label={t("refund_status_label", "Hoàn tiền")}
+              options={refundStatusOptionsMapped}
+              value={currentRefundStatus}
+              onChange={(val) => setFilter("refund_status", val)}
+              placeholder={t("all_refund_status", "Tất cả hoàn tiền")}
             />
           </div>
 
@@ -364,8 +385,32 @@ const OrderPage = () => {
                               </span>
                             )}
                           </div>
-                        </div>
-                      </td>
+                          {order.status === "Cancelled" && order.refund_method && (
+                            <div className="flex items-center gap-2">
+                              <Badge color="nexus">{t("refund_badge", "Hoàn tiền")}</Badge>
+                              <span className={`text-[11px] font-bold px-2 py-0.5 rounded border ${
+                                order.refund_method === "coins"
+                                  ? "text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20"
+                                  : order.refund_status === "completed"
+                                    ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20"
+                                    : "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-500/10 border-blue-200 dark:border-blue-500/20"
+                              }`}>
+                                {order.refund_method === "coins"
+                                  ? t("refund_coins_label", "Xu")
+                                  : order.refund_status === "completed"
+                                    ? t("refund_bank_completed", "CK - Đã hoàn")
+                                    : t("refund_bank_pending", "CK - Chờ xử lý")
+                                }
+                              </span>
+                              {order.refund_method === "bank_transfer" && order.refund_note && (
+                                <span className="text-[10px] text-slate-500 dark:text-slate-400 max-w-[150px] truncate" title={order.refund_note}>
+                                  {order.refund_note}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                          </div>
+                        </td>
 
                       <td className="px-6 py-5 text-center">
                         <BtnActions

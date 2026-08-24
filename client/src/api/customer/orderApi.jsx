@@ -31,6 +31,26 @@ const orderApi = {
     const url = `/customer/order/${orderId}`;
     return axiosClient.delete(url);
   },
+
+  cancel: (orderId, data = {}) => {
+    const url = `/customer/order/${orderId}/cancel`;
+    return axiosClient.patch(url, data);
+  },
+
+  cancelPending: (orderId, email) => {
+    const url = `/customer/order/${orderId}/cancel-pending`;
+    return axiosClient.patch(url, { email });
+  },
+
+  returnOrder: (orderId, data) => {
+    const url = `/customer/order/${orderId}/return`;
+    return axiosClient.patch(url, data);
+  },
+
+  completeRefund: (orderId) => {
+    const url = `/customer/order/${orderId}/complete-refund`;
+    return axiosClient.patch(url);
+  },
 };
 
 export default orderApi;

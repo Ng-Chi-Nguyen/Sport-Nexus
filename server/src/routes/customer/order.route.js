@@ -6,7 +6,7 @@ import { logAction } from "../../middlewares/log.middleware.js";
 import { createDetails, updateDetails, deleteDetails, fetchEntity } from "../../middlewares/log.helpers.js";
 import orderService from "../../services/customer/order.service.js";
 import { attachExcelCrudImportRoutes } from "../helpers/excelCrudImport.route.js";
-import { verifyTokenOptional } from "../../middlewares/verifyToken.middlware.js";
+import { verifyTokenOptional, verifyToken } from "../../middlewares/verifyToken.middlware.js";
 
 const orderRoute = express.Router();
 
@@ -26,6 +26,10 @@ orderRoute
     .put("/:id", validate(orderSchema.updateOrder),
       logAction({ actionType: "UPDATE", entityType: "Orders", getOldData: fetchEntity(orderService.getOrderById), getChanges: updateDetails }),
       orderController.updateOrder)
+    .patch("/:id/cancel-pending", orderController.cancelPendingOrder)
+    .patch("/:id/cancel", verifyToken, orderController.cancelOrder)
+    .patch("/:id/complete-refund", verifyToken, orderController.completeRefund)
+    .patch("/:id/return", verifyToken, validate(orderSchema.returnOrder), orderController.returnOrder)
     .delete("/:id",
       logAction({ actionType: "DELETE", entityType: "Orders", getOldData: fetchEntity(orderService.getOrderById), getChanges: deleteDetails }),
       orderController.deleteOrder)

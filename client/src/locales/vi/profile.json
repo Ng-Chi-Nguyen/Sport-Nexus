@@ -35,7 +35,8 @@
       "success_update": "Cập nhật thông tin thành công!",
       "error_update": "Cập nhật thất bại, vui lòng thử lại!",
       "error_api": "Lỗi khi cập nhật thông tin!"
-    }
+    },
+    "unverified": "Chưa xác thực"
   },
   "address": {
     "address": "Địa chỉ",
@@ -106,7 +107,33 @@
     "review_edit_button": "Sửa đánh giá",
     "review_edit_title": "Chỉnh sửa đánh giá",
     "review_updated": "Cập nhật đánh giá thành công",
-    "review_update_submit": "Cập nhật đánh giá"
+    "review_update_submit": "Cập nhật đánh giá",
+    "cancel_order_button": "Hủy đơn",
+    "cancel_title": "Xác nhận hủy đơn",
+    "cancel_warning": "Bạn có chắc chắn muốn hủy đơn hàng này? Hành động này không thể hoàn tác.",
+    "cancel_success": "Hủy đơn hàng thành công",
+    "cancel_error": "Không thể hủy đơn hàng",
+    "cancel_button": "Giữ đơn",
+    "confirm_cancel": "Hủy đơn hàng",
+    "cancelling": "Đang hủy...",
+    "return_button": "Trả hàng",
+    "return_title": "Trả hàng hoàn tiền",
+    "return_description": "Chọn các sản phẩm bạn muốn trả hàng. Số tiền hoàn lại sẽ được xử lý trong 3-5 ngày làm việc.",
+    "return_select_products": "Chọn sản phẩm trả",
+    "return_reason": "Lý do trả hàng",
+    "return_reason_placeholder": "Nhập lý do trả hàng (không bắt buộc)...",
+    "return_select_items": "Vui lòng chọn ít nhất một sản phẩm để trả",
+    "return_success": "Yêu cầu trả hàng thành công",
+    "return_error": "Không thể xử lý yêu cầu trả hàng",
+    "return_submit": "Trả hàng",
+    "return_submitting": "Đang xử lý...",
+    "select_refund_method": "Chọn phương thức hoàn tiền",
+    "refund_coins": "Đổi thành xu",
+    "refund_coins_desc": "Nhận {{amount}} xu tương đương số tiền hoàn. Có thể sử dụng cho đơn hàng sau.",
+    "refund_bank": "Chuyển khoản ngân hàng",
+    "refund_bank_desc": "Yêu cầu hoàn tiền về tài khoản ngân hàng. Nhân viên sẽ xử lý trong vòng 1-3 ngày làm việc.",
+    "refund_note_label": "Ghi chú (tùy chọn)",
+    "refund_note_placeholder": "Nhập thông tin tài khoản ngân hàng hoặc ghi chú khác..."
   },
   "change_password": {
     "change_password": "Đổi mật khẩu",

@@ -165,12 +165,13 @@ const getSearchParam = (request, key) => new URL(request.url).searchParams.get(k
 
 export const ordersLoader = ({ request }) =>
   queryClient.fetchQuery({
-    queryKey: ["orders", getPage(request), getSearchParam(request, "status"), getSearchParam(request, "payment_status"), getSearchParam(request, "payment_method"), getSearchParam(request, "date_from"), getSearchParam(request, "date_to"), getSearchParam(request, "amount_min"), getSearchParam(request, "amount_max"), getSearchParam(request, "search")],
+    queryKey: ["orders", getPage(request), getSearchParam(request, "status"), getSearchParam(request, "payment_status"), getSearchParam(request, "payment_method"), getSearchParam(request, "refund_status"), getSearchParam(request, "date_from"), getSearchParam(request, "date_to"), getSearchParam(request, "amount_min"), getSearchParam(request, "amount_max"), getSearchParam(request, "search")],
     queryFn: () => LoaderOrder.getAllOrders({
       page: getPage(request),
       status: getSearchParam(request, "status"),
       payment_status: getSearchParam(request, "payment_status"),
       payment_method: getSearchParam(request, "payment_method"),
+      refund_status: getSearchParam(request, "refund_status"),
       date_from: getSearchParam(request, "date_from"),
       date_to: getSearchParam(request, "date_to"),
       amount_min: getSearchParam(request, "amount_min"),
