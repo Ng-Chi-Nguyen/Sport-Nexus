@@ -276,6 +276,22 @@ const paymentService = {
         return { transactionId: tx.id, orderId: tx.order_id };
     },
 
+    syncPayosPayment: async (transactionId) => {
+        const { getPayos } = await import("../../configs/payos.config.js");
+        const tx = await paymentService.getTransactionById(transactionId);
+        if (tx.status === "Paid") return tx;
+
+        const paymentLink = await getPayos().paymentRequests.get(tx.id);
+        if (paymentLink.status !== "PAID") return tx;
+
+        await paymentService.updateTransactionStatus(tx.id, "Paid");
+        await prisma.orders.update({
+            where: { id: tx.order_id },
+            data: { payment_status: "Paid" },
+        });
+        return paymentService.getTransactionById(tx.id);
+    },
+
     handleCassoWebhook: async ({ headers, body }) => {
         if (!isCassoConfigured()) return { handled: false, reason: "CASSO_NOT_CONFIGURED" };
 

@@ -142,26 +142,25 @@ const AttributeKey = () => {
               ]}
             />
           </div>
-        </div>
+          {/* Cụm nút Excel và Thêm mới: Dàn ngang cuộn hoặc căn chỉnh gọn gàng trên mobile */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <ExcelCrudActions
+              basePath="/core/variant-attribute-key"
+              title={t("attributeKey.import_export")}
+              templateFileName="template-thuoc-tinh.xlsx"
+              exportFileName="thuoc-tinh.xlsx"
+            />
 
-        {/* Cụm nút Excel và Thêm mới: Dàn ngang cuộn hoặc căn chỉnh gọn gàng trên mobile */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-          <ExcelCrudActions
-            basePath="/core/variant-attribute-key"
-            title={t("attributeKey.import_export")}
-            templateFileName="template-thuoc-tinh.xlsx"
-            exportFileName="thuoc-tinh.xlsx"
-          />
-
-          <BtnAdd
-            route={"/management/attribute-key/create"}
-            className="w-full sm:w-auto"
-            name={t("attributeKey.add_attribute")}
-          />
+            <BtnAdd
+              route={"/management/attribute-key/create"}
+              className="w-full sm:w-auto"
+              name={t("attributeKey.add_attribute")}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#0D121F]/40 p-4 sm:p-6 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-900">
+      <div className="shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <h2 className="section-title mb-0">{t("attributeKey.title")}</h2>
           <button

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <style>
+    .entity{fill:#eaf4ff;stroke:#1769aa;stroke-width:3}.rel{fill:#fff4d6;stroke:#b7791f;stroke-width:3}.line{stroke:#555;stroke-width:3}.title{font:700 28px Arial;fill:#17324d}.name{font:700 21px Arial;fill:#123}.text{font:18px Arial;fill:#234}.card{rx:12;ry:12}
+  </style>
+  <rect width="1600" height="1000" fill="#f8fbff"/>
+  <text x="800" y="48" text-anchor="middle" class="title">MCD - Mo hinh khai niem du lieu SportNexus</text>
+  <text x="800" y="78" text-anchor="middle" class="text">Cac thuc the nghiep vu va moi quan he chinh</text>
+  <line x1="280" y1="220" x2="520" y2="220" class="line"/><line x1="740" y1="220" x2="980" y2="220" class="line"/>
+  <line x1="280" y1="500" x2="520" y2="500" class="line"/><line x1="740" y1="500" x2="980" y2="500" class="line"/>
+  <line x1="280" y1="780" x2="520" y2="780" class="line"/><line x1="740" y1="780" x2="980" y2="780" class="line"/>
+  <line x1="630" y1="300" x2="630" y2="420" class="line"/><line x1="630" y1="580" x2="630" y2="700" class="line"/>
+  <line x1="1080" y1="300" x2="1080" y2="420" class="line"/><line x1="1080" y1="580" x2="1080" y2="700" class="line"/>
+  <rect x="40" y="145" width="240" height="150" class="entity card"/><text x="160" y="180" text-anchor="middle" class="name">NGUOI DUNG</text><text x="65" y="215" class="text">id, ho ten, email</text><text x="65" y="245" class="text">so dien thoai, trang thai</text><text x="65" y="275" class="text">vai tro, hang thanh vien</text>
+  <rect x="520" y="145" width="220" height="150" class="rel card"/><text x="630" y="180" text-anchor="middle" class="name">DAT HANG</text><text x="535" y="220" class="text">tao va theo doi</text><text x="535" y="250" class="text">1 nguoi - nhieu don</text>
+  <rect x="980" y="145" width="240" height="150" class="entity card"/><text x="1100" y="180" text-anchor="middle" class="name">DON HANG</text><text x="1005" y="215" class="text">ma don, tong tien</text><text x="1005" y="245" class="text">trang thai, dia chi</text><text x="1005" y="275" class="text">phuong thuc thanh toan</text>
+  <rect x="40" y="425" width="240" height="150" class="entity card"/><text x="160" y="460" text-anchor="middle" class="name">SAN PHAM</text><text x="65" y="495" class="text">ten, mo ta, gia co ban</text><text x="65" y="525" class="text">danh muc, thuong hieu</text><text x="65" y="555" class="text">nha cung cap</text>
+  <rect x="520" y="425" width="220" height="150" class="rel card"/><text x="630" y="460" text-anchor="middle" class="name">BAO GOM</text><text x="535" y="500" class="text">don hang - san pham</text><text x="535" y="530" class="text">so luong, don gia</text>
+  <rect x="980" y="425" width="240" height="150" class="entity card"/><text x="1100" y="460" text-anchor="middle" class="name">BIEN THE</text><text x="1005" y="495" class="text">SKU, mau, kich thuoc</text><text x="1005" y="525" class="text">gia ban, ton kho</text><text x="1005" y="555" class="text">thuoc mot san pham</text>
+  <rect x="40" y="705" width="240" height="150" class="entity card"/><text x="160" y="740" text-anchor="middle" class="name">GIAO DICH</text><text x="65" y="775" class="text">phuong thuc, so tien</text><text x="65" y="805" class="text">trang thai, ma doi soat</text><text x="65" y="835" class="text">thoi diem thanh toan</text>
+  <rect x="520" y="705" width="220" height="150" class="rel card"/><text x="630" y="740" text-anchor="middle" class="name">THUOC VE</text><text x="535" y="780" class="text">giao dich cua don</text><text x="535" y="810" class="text">1 don - nhieu giao dich</text>
+  <rect x="980" y="705" width="240" height="150" class="entity card"/><text x="1100" y="740" text-anchor="middle" class="name">KHO HANG</text><text x="1005" y="775" class="text">nhap, xuat, dieu chinh</text><text x="1005" y="805" class="text">lich su bien dong</text><text x="1005" y="835" class="text">gan voi bien the</text>
+  <rect x="1320" y="145" width="240" height="150" class="entity card"/><text x="1440" y="180" text-anchor="middle" class="name">COUPON</text><text x="1345" y="220" class="text">ma giam gia, dieu kien</text><text x="1345" y="250" class="text">thoi han, luot dung</text>
+  <rect x="1320" y="425" width="240" height="150" class="entity card"/><text x="1440" y="460" text-anchor="middle" class="name">THANH VIEN</text><text x="1345" y="500" class="text">hang, diem, uu dai</text><text x="1345" y="530" class="text">lich su tich diem</text>
+  <rect x="1320" y="705" width="240" height="150" class="entity card"/><text x="1440" y="740" text-anchor="middle" class="name">HOA DON</text><text x="1345" y="780" class="text">so hoa don, VAT</text><text x="1345" y="810" class="text">tong tien, trang thai</text>
+  <line x1="1220" y1="220" x2="1320" y2="220" class="line"/><line x1="1220" y1="500" x2="1320" y2="500" class="line"/><line x1="1220" y1="780" x2="1320" y2="780" class="line"/>
+  <text x="800" y="940" text-anchor="middle" class="text">MCD khong phu thuoc MySQL, Prisma hay kieu du lieu vat ly</text>
+</svg>

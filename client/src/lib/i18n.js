@@ -20,6 +20,7 @@ import viCollection from "@/locales/vi/collection.json";
 import viLoyalty from "@/locales/vi/loyalty.json";
 import viLoyaltyAdmin from "@/locales/vi/loyalty_admin.json";
 import viReviewAdmin from "@/locales/vi/review_admin.json";
+import viAuth from "@/locales/vi/auth.json";
 
 // 2. Tiếng Anh (en)
 import enHome from "@/locales/en/home.json";
@@ -39,6 +40,7 @@ import enCollection from "@/locales/en/collection.json";
 import enLoyalty from "@/locales/en/loyalty.json";
 import enLoyaltyAdmin from "@/locales/en/loyalty_admin.json";
 import enReviewAdmin from "@/locales/en/review_admin.json";
+import enAuth from "@/locales/en/auth.json";
 
 i18n
     .use(LanguageDetector)
@@ -72,6 +74,7 @@ i18n
                     loyalty: viLoyalty,
                     loyalty_admin: viLoyaltyAdmin,
                     review_admin: viReviewAdmin,
+                    auth: viAuth,
                     order: { ...viProfile.order, ...vndashboard.order },
                 },
             },
@@ -101,6 +104,7 @@ i18n
                     loyalty: enLoyalty,
                     loyalty_admin: enLoyaltyAdmin,
                     review_admin: enReviewAdmin,
+                    auth: enAuth,
                     order: { ...enProfile.order, ...endashboard.order },
                 },
             },

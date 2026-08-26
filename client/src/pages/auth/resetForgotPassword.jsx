@@ -5,8 +5,10 @@ import { LabelInput } from "@/components/ui/input";
 import { BtnSave } from "@/components/ui/button";
 import ShowToast from "@/components/ui/toast";
 import authApi from "@/api/auth/auth";
+import { useTranslation } from "react-i18next";
 
 const ResetForgotPassword = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "auth" });
   const { token } = useParams();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -18,15 +20,15 @@ const ResetForgotPassword = () => {
     return (
       <div className="text-center space-y-4 py-4">
         <AlertCircle size={48} className="mx-auto text-red-400" />
-        <h3 className="text-lg font-bold text-slate-800">Link không hợp lệ</h3>
-        <p className="text-sm text-slate-500">
-          Vui lòng kiểm tra lại email hoặc yêu cầu gửi lại link mới.
-        </p>
+        <h3 className="text-lg font-bold text-slate-800">
+          {t("invalid_link_title")}
+        </h3>
+        <p className="text-sm text-slate-500">{t("invalid_link_desc")}</p>
         <Link
           to="/auth/quen-mat-khau"
           className="text-sm text-blue-500 hover:underline font-medium"
         >
-          Gửi lại yêu cầu
+          {t("resend_request")}
         </Link>
       </div>
     );
@@ -36,7 +38,7 @@ const ResetForgotPassword = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      ShowToast("error", "Mật khẩu xác nhận không khớp!");
+      ShowToast("error", t("password_mismatch"));
       return;
     }
 
@@ -49,13 +51,10 @@ const ResetForgotPassword = () => {
       if (res?.success) {
         setDone(true);
       } else {
-        ShowToast("error", res?.message || "Đặt lại mật khẩu thất bại!");
+        ShowToast("error", res?.message || t("reset_failed"));
       }
     } catch (error) {
-      ShowToast(
-        "error",
-        error?.response?.data?.message || "Lỗi khi đặt lại mật khẩu!",
-      );
+      ShowToast("error", error?.response?.data?.message || t("reset_error"));
     } finally {
       setLoading(false);
     }
@@ -66,11 +65,9 @@ const ResetForgotPassword = () => {
       <div className="text-center space-y-4 py-4">
         <CheckCircle size={48} className="mx-auto text-green-500" />
         <h3 className="text-lg font-bold text-slate-800">
-          Đặt lại mật khẩu thành công!
+          {t("reset_success_title")}
         </h3>
-        <p className="text-sm text-slate-500">
-          Bạn có thể đăng nhập bằng mật khẩu mới ngay bây giờ.
-        </p>
+        <p className="text-sm text-slate-500">{t("reset_success_desc")}</p>
         <Link
           to="/auth/login"
           className="inline-block mt-2 px-6 py-2.5 rounded-xl font-bold text-sm uppercase tracking-wider
@@ -79,7 +76,7 @@ const ResetForgotPassword = () => {
                      hover:shadow-[0_6px_30px_rgba(255,107,53,0.4)]
                      transition-all duration-200"
         >
-          Đăng nhập ngay
+          {t("login_now")}
         </Link>
       </div>
     );
@@ -88,12 +85,12 @@ const ResetForgotPassword = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <p className="text-sm text-slate-500 leading-relaxed">
-        Nhập mật khẩu mới cho tài khoản của bạn.
+        {t("reset_intro")}
       </p>
 
       <LabelInput
         id="password"
-        label="Mật khẩu mới"
+        label={t("new_password")}
         type={show.pass ? "text" : "password"}
         required
         minLength={6}
@@ -112,7 +109,7 @@ const ResetForgotPassword = () => {
 
       <LabelInput
         id="confirmPassword"
-        label="Xác nhận mật khẩu"
+        label={t("confirm_password")}
         type={show.confirm ? "text" : "password"}
         required
         minLength={6}
@@ -131,10 +128,10 @@ const ResetForgotPassword = () => {
 
       <BtnSave
         loading={loading}
-        loadingText="Đang xử lý..."
+        loadingText={t("processing")}
         className="!w-full !py-3 !rounded-xl !text-sm"
       >
-        Đặt lại mật khẩu
+        {t("reset_now")}
       </BtnSave>
     </form>
   );

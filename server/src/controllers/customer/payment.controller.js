@@ -84,6 +84,21 @@ const paymentController = {
         }
     },
 
+    syncPayosPayment: async (req, res) => {
+        try {
+            const tx = await paymentService.syncPayosPayment(
+                req.params.transactionId,
+            );
+            return res.json({ success: true, data: tx });
+        } catch (error) {
+            const status = error.code === "NOT_FOUND" ? 404 : 502;
+            return res.status(status).json({
+                success: false,
+                message: t(req, error.message) || "Không thể kiểm tra thanh toán PayOS.",
+            });
+        }
+    },
+
     uploadReceipt: async (req, res) => {
         try {
             const tx = await paymentService.uploadReceipt(req.params.transactionId, {

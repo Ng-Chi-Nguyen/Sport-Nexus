@@ -110,6 +110,116 @@ Cơ sở dữ liệu của hệ thống được xây dựng theo mô hình quan
 
 ## 2.3. Mô hình dữ liệu của hệ thống
 
+### 2.3.1. Phân biệt MCD, MLD và MPD
+
+Trong quá trình phân tích và thiết kế cơ sở dữ liệu SportNexus, cần phân biệt ba mức mô hình hóa dữ liệu. Ba mô hình có liên quan với nhau nhưng không thể xem là một mô hình duy nhất.
+
+- **MCD (mô hình khái niệm dữ liệu):** mô tả các thực thể nghiệp vụ, thuộc tính quan trọng và mối liên hệ giữa chúng. MCD chưa phụ thuộc vào MySQL, Prisma hay tên bảng vật lý.
+- **MLD (mô hình logic dữ liệu):** chuyển các thực thể và quan hệ của MCD thành các quan hệ hoặc bảng logic, có khóa chính, khóa ngoại và bảng trung gian.
+- **MPD (mô hình vật lý dữ liệu):** mô tả cách cài đặt thật trong MySQL/Prisma, gồm tên bảng, tên cột, kiểu dữ liệu, `NULL`, mặc định, index, unique, enum và quy tắc xóa.
+
+Hình sơ đồ được cung cấp đang ở mức **gần với MPD** vì đã thể hiện tên bảng, cột, kiểu dữ liệu, khóa chính, khóa ngoại và đường liên kết. Khi đưa vào báo cáo, nên chú thích hình là **“Sơ đồ MPD của cơ sở dữ liệu SportNexus”**. Không nên gọi trực tiếp hình này là MCD vì MCD cần giản lược về các khái niệm nghiệp vụ và không phụ thuộc vào kiểu dữ liệu MySQL.
+
+### 2.3.2. MCD của hệ thống SportNexus
+
+Ở mức khái niệm, hệ thống gồm các nhóm thực thể sau:
+
+| Nhóm nghiệp vụ | Thực thể MCD                                            | Ý nghĩa                       |
+| -------------- | ------------------------------------------------------- | ----------------------------- |
+| Người dùng     | Người dùng, Vai trò, Quyền, Địa chỉ                     | Quản lý tài khoản và truy cập |
+| Danh mục       | Sản phẩm, Biến thể, Danh mục, Thương hiệu, Nhà cung cấp | Quản lý catalogue             |
+| Mua hàng       | Giỏ hàng, Dòng giỏ hàng, Đơn hàng, Dòng đơn hàng        | Hỗ trợ quá trình mua          |
+| Thanh toán     | Giao dịch thanh toán, Hóa đơn                           | Theo dõi tiền và chứng từ     |
+| Kho            | Biến động kho, Phiếu nhập, Dòng phiếu nhập              | Quản lý nhập xuất tồn         |
+| Chăm sóc khách | Đánh giá, Coupon, Coupon người dùng                     | Khuyến mãi và phản hồi        |
+| Thành viên     | Hạng thành viên, Giao dịch điểm, Phần thưởng            | Loyalty và điểm thưởng        |
+| Vận hành       | Nhật ký hệ thống, Vận chuyển                            | Theo dõi hoạt động            |
+
+Các quan hệ nghiệp vụ chính gồm: một người dùng thuộc một vai trò; một vai trò có nhiều quyền; một người dùng có nhiều địa chỉ và đơn hàng; một sản phẩm thuộc một danh mục, thương hiệu và nhà cung cấp; một sản phẩm có nhiều biến thể; một đơn hàng có nhiều dòng hàng và giao dịch thanh toán; một biến thể xuất hiện trong nhiều dòng giỏ hàng, dòng đơn hàng và biến động kho.
+
+MCD nên được vẽ bằng tên nghiệp vụ và bội số `1-N`, `N-N` hoặc `1-1`. Không cần đưa `VARCHAR`, `DECIMAL`, `DATETIME` hay tên bảng ánh xạ vào MCD.
+
+### 2.3.3. MLD của hệ thống SportNexus
+
+Từ MCD, các thực thể được chuyển thành những quan hệ logic sau. Ký hiệu `(PK)` là khóa chính và `(FK)` là khóa ngoại:
+
+```text
+ROLES(id PK, slug UNIQUE, name)
+PERMISSIONS(id PK, slug UNIQUE, name, module, action)
+USERS(id PK, full_name, email, password, role_id FK, tier_id FK, ...)
+USER_ADDRESSES(id PK, user_id FK, recipient_name, recipient_phone, ...)
+CATEGORIES(id PK, name, slug, image, is_active, ...)
+COLLECTIONS(id PK, category_id FK, name, slug, banner, description, ...)
+BRANDS(id PK, name, logo, origin, ...)
+SUPPLIERS(id PK, name, contact_person, email, phone, ...)
+PRODUCTS(id PK, category_id FK, supplier_id FK, brand_id FK, name, slug, ...)
+PRODUCT_IMAGES(id PK, product_id FK, url, is_primary)
+PRODUCT_VARIANTS(id PK, product_id FK, stock, price, ...)
+ATTRIBUTE_KEYS(id PK, name UNIQUE, unit)
+VARIABLE_ATTRIBUTES(id PK, variable_id FK, attribute_key_id FK, value)
+CARTS(id PK, user_id FK, updated_at)
+CART_ITEMS(id PK, cart_id FK, product_variant_id FK, quantity)
+ORDERS(id PK, users_id FK, coupon_code FK, total_amount, final_amount, ...)
+ORDER_ITEMS(id PK, order_id FK, product_variant_id FK, quantity, price_at_purchase)
+PAYMENT_TRANSACTIONS(id PK, order_id FK, method, amount, status, provider_ref, ...)
+INVOICES(id PK, order_id FK UNIQUE, invoice_number UNIQUE, total_amount, ...)
+COUPONS(id PK, code UNIQUE, discount_value, discount_type, start_date, end_date, ...)
+USER_COUPONS(id PK, user_id FK, coupon_id FK, used_count, quantity, ...)
+REVIEWS(id PK, user_id FK, order_id FK, product_id FK, rating, comment, ...)
+STOCK_MOVEMENTS(id PK, variant_id FK, type, quantity_change, reference_id, ...)
+PURCHASE_ORDERS(id PK, supplier_id FK, order_date, status, total_cost, ...)
+PURCHASE_ORDER_ITEMS(id PK, purchase_order_id FK, product_variant_id FK, quantity, ...)
+MEMBERSHIP_TIERS(id PK, name, min_spent, reward_rate, discount_percent, ...)
+POINT_TRANSACTIONS(id PK, user_id FK, order_id FK, coupon_id FK, points, ...)
+TIER_REWARDS(id PK, tier_id FK, name, point_cost, coupon_code, ...)
+LOYALTY_SETTINGS(id PK, key UNIQUE, value)
+SYSTEM_LOGS(id PK, user_id FK, action_type, entity_type, entity_id, ...)
+```
+
+Trong MLD, các quan hệ nhiều-nhiều được chuyển thành bảng trung gian. Ví dụ, người dùng và coupon dùng `USER_COUPONS`; giỏ hàng và biến thể dùng `CART_ITEMS`; sản phẩm và thuộc tính dùng `PRODUCT_ATTRIBUTE_KEYS`; vai trò và quyền được triển khai bằng quan hệ liên kết do Prisma quản lý.
+
+### 2.3.4. MPD và đối chiếu với Prisma
+
+MPD được cài đặt trong `server/prisma/schema.prisma` với datasource MySQL. Ví dụ bảng giao dịch thanh toán:
+
+```prisma
+model PaymentTransactions {
+  id                Int           @id @default(autoincrement())
+  order_id          Int
+  Orders            Orders        @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  method            PaymentMethod
+  amount            Decimal       @db.Decimal(10, 2)
+  status            PaymentStatus @default(Pending)
+  provider_ref      String?
+  transaction_code  String?
+  receipt_image_url String?
+  note              String?
+  paid_at           DateTime?
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+
+  @@index([order_id])
+  @@map("payment_transactions")
+}
+```
+
+Đoạn schema trên thể hiện đặc trưng của MPD: `id` là khóa chính tự tăng; `order_id` là khóa ngoại; `method` và `status` là enum; `amount` dùng `DECIMAL(10,2)`; dấu `?` cho biết trường có thể `NULL`; `created_at` có giá trị mặc định; `updated_at` tự cập nhật; `@@index` tạo chỉ mục; `@@map` xác định tên bảng vật lý.
+
+| Tiêu chí            | MCD                  | MLD                 | MPD                                 |
+| ------------------- | -------------------- | ------------------- | ----------------------------------- |
+| Mục đích            | Mô tả nghiệp vụ      | Mô tả quan hệ logic | Mô tả triển khai thật               |
+| Đối tượng           | Thực thể             | Bảng logic          | Bảng vật lý                         |
+| Khóa                | Mức khái niệm        | PK, FK              | PK, FK kèm cấu hình DB              |
+| Kiểu dữ liệu        | Không phụ thuộc DB   | Khái quát           | MySQL/Prisma cụ thể                 |
+| Index, unique, enum | Không cần            | Có thể ghi chú      | Phải thể hiện                       |
+| Ví dụ               | Người dùng - Đặt đơn | USERS - ORDERS      | `users`, `orders`, `INT`, `DECIMAL` |
+
+### 2.3.5. Lưu ý đối chiếu hình với mã nguồn
+
+Hình tổng thể có thể dùng làm MPD, nhưng nên kiểm tra lần cuối với `schema.prisma` và database đang chạy. Hình được cung cấp có bảng `Shipments`, trong khi schema Prisma hiện tại chưa thấy model `Shipments` tương ứng. Nếu bảng này thuộc thiết kế cũ, cần ghi rõ là thành phần dự kiến hoặc loại khỏi hình MPD chính thức. Nếu chức năng vận chuyển đã được triển khai ở database thật, cần bổ sung model Prisma hoặc cập nhật tài liệu để hai nguồn đồng bộ.
+
+Do hình có nhiều bảng và đường liên kết, khi dàn Word nên tách thành các hình nhỏ: nhóm người dùng và phân quyền; nhóm sản phẩm; nhóm đơn hàng và thanh toán; nhóm kho và nhập hàng; nhóm coupon và loyalty. Cách trình bày này giúp chữ đọc được và tạo thêm nội dung phân tích có giá trị.
+
 Một hệ thống thương mại điện tử cần quản lý nhiều thực thể phức tạp. Trong SportNexus, các thực thể cốt lõi bao gồm:
 
 - Người dùng (users)
@@ -234,7 +344,7 @@ SportNexus là một nền tảng thương mại điện tử thể thao, đư�
 
 ---
 
-# PHẦN MỞ RỘNG PHỤC VỤ BÁO CÁO CHI TIẾT
+## PHẦN MỞ RỘNG PHỤC VỤ BÁO CÁO CHI TIẾT
 
 > Phần này tiếp tục thuộc ba chương chính ở trên, được bổ sung để người viết có đủ dữ liệu triển khai báo cáo dài. Khi dàn trang chính thức, các bảng, sơ đồ và ảnh chụp màn hình có thể tách thành các tiểu mục độc lập.
 

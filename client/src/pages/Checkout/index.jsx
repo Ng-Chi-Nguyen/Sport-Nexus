@@ -66,7 +66,10 @@ const Checkout = () => {
       setPointsDiscount(res?.data?.discount || 0);
       ShowToast("success", res?.message || "Áp dụng điểm thành công");
     } catch (err) {
-      ShowToast("error", err?.response?.data?.message || "Áp dụng điểm thất bại");
+      ShowToast(
+        "error",
+        err?.response?.data?.message || "Áp dụng điểm thất bại",
+      );
     } finally {
       setPointsLoading(false);
     }
@@ -253,12 +256,13 @@ const Checkout = () => {
           <Breadcrumbs
             data={[
               { title: t("breadcrumb_home"), route: "/" },
+              { title: t("detail_product"), route: "-1" },
               { title: t("breadcrumb_checkout"), route: "" },
             ]}
           />
         </div>
 
-        <TitleWithIcon icon={CreditCard} title={t("page_heading")} />
+        <TitleWithIcon icon={CreditCard} title={t("breadcrumb_checkout")} />
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
           <div className="md:col-span-3 space-y-6">

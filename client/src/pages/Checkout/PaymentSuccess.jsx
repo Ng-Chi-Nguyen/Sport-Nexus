@@ -6,6 +6,8 @@ const PaymentSuccess = () => {
   const orderId = searchParams.get("orderId");
   const method = searchParams.get("method");
   const cancelled = searchParams.get("cancelled") === "true";
+  const orderCode = searchParams.get("orderCode");
+  const providerStatus = searchParams.get("status");
 
   if (!orderId) {
     return (
@@ -15,7 +17,15 @@ const PaymentSuccess = () => {
     );
   }
 
-  return <OrderSuccess orderId={orderId} paymentMethod={method} cancelled={cancelled} />;
+  return (
+    <OrderSuccess
+      orderId={orderId}
+      paymentMethod={method}
+      orderCode={orderCode}
+      providerStatus={providerStatus}
+      cancelled={cancelled}
+    />
+  );
 };
 
 export default PaymentSuccess;

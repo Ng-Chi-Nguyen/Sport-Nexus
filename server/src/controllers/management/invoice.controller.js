@@ -59,6 +59,23 @@ const invoiceController = {
                 error: error.message
             });
         }
+    },
+
+    getInvoiceByOrderId: async (req, res) => {
+        const orderId = parseInt(req.params.orderId);
+        try {
+            const invoice = await invoiceService.getInvoiceByOrderId(orderId);
+            if (!invoice) {
+                return res.status(404).json({ success: false, message: t(req, "Không tìm thấy hóa đơn.") });
+            }
+            return res.status(200).json({ success: true, data: invoice });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: t(req, "Lỗi server nội bộ."),
+                error: error.message
+            });
+        }
     }
 }
 

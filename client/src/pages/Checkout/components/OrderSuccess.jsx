@@ -19,6 +19,8 @@ const OrderSuccess = ({
   paymentMethod,
   paymentInfo,
   trackingCode,
+  orderCode,
+  providerStatus,
   cancelled,
 }) => {
   const { t } = useTranslation();
@@ -37,7 +39,26 @@ const OrderSuccess = ({
   }, [cancelled, orderId, cancelDone]);
 
   useEffect(() => {
-    if (!orderId || !ONLINE_METHODS.includes(paymentMethod) || cancelled) return;
+    if (
+      !orderCode ||
+      providerStatus !== "PAID" ||
+      paymentMethod !== "BANK_TRANSFER" ||
+      cancelled
+    ) {
+      return;
+    }
+
+    paymentApi
+      .syncPayosPayment(orderCode)
+      .then((res) => {
+        if (res?.data?.status === "Paid") setPaymentStatus("Paid");
+      })
+      .catch(() => {});
+  }, [orderCode, providerStatus, paymentMethod, cancelled]);
+
+  useEffect(() => {
+    if (!orderId || !ONLINE_METHODS.includes(paymentMethod) || cancelled)
+      return;
     let stopped = false;
     const poll = async () => {
       try {
@@ -73,7 +94,10 @@ const OrderSuccess = ({
             {t("order_cancelled_heading", "ĐÃ HỦY THANH TOÁN")}
           </h2>
           <p className="text-[13px] sm:text-sm text-slate-500 dark:text-slate-400 mt-2">
-            {t("order_cancelled_message", "Bạn đã hủy thanh toán. Đơn hàng đã được hủy.")}
+            {t(
+              "order_cancelled_message",
+              "Bạn đã hủy thanh toán. Đơn hàng đã được hủy.",
+            )}
           </p>
         </div>
         <div className="pt-2">
@@ -92,7 +116,8 @@ const OrderSuccess = ({
   const isOnline = ONLINE_METHODS.includes(paymentMethod);
   const isManualBankTransfer =
     paymentMethod === "BANK_TRANSFER" && paymentInfo?.bankAccount;
-  const showSpinner = isOnline && !isManualBankTransfer && paymentStatus !== "Paid";
+  const showSpinner =
+    isOnline && !isManualBankTransfer && paymentStatus !== "Paid";
 
   const statusLabel = t(
     PAYMENT_STATUS_KEYS[paymentStatus] || "payment_pending_status",

@@ -5,10 +5,12 @@ import { LabelInput } from "@/components/ui/input";
 import { BtnSave } from "@/components/ui/button";
 import ShowToast from "@/components/ui/toast";
 import { useGoogleLogin } from "@react-oauth/google";
+import { useTranslation } from "react-i18next";
 
 import authApi from "@/api/auth/auth";
 
 const LoginForm = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "auth" });
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -25,11 +27,11 @@ const LoginForm = () => {
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", user.refresh_token);
         localStorage.setItem("user", JSON.stringify(user));
-        ShowToast("success", "Chào mừng " + user.full_name);
+        ShowToast("success", t("welcome", { name: user.full_name }));
         navigate("/");
       }
     } catch (error) {
-      ShowToast("error", error.response?.data?.message || "Đăng nhập thất bại");
+      ShowToast("error", error.response?.data?.message || t("login_failed"));
     } finally {
       setLoading(false);
     }
@@ -40,7 +42,7 @@ const LoginForm = () => {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", user.refresh_token);
     localStorage.setItem("user", JSON.stringify(user));
-    ShowToast("success", "Chào mừng " + user.full_name);
+    ShowToast("success", t("welcome", { name: user.full_name }));
     navigate("/");
   };
 
@@ -53,14 +55,14 @@ const LoginForm = () => {
     } catch (error) {
       ShowToast(
         "error",
-        error.response?.data?.message || "Đăng nhập Google thất bại",
+        error.response?.data?.message || t("google_login_failed"),
       );
     }
   };
 
   const googleLogin = useGoogleLogin({
     onSuccess: handleGoogleSuccess,
-    onError: () => ShowToast("error", "Đăng nhập Google thất bại"),
+    onError: () => ShowToast("error", t("google_login_failed")),
   });
 
   const FACEBOOK_APP_ID = import.meta.env.VITE_FACEBOOK_APP_ID;
@@ -78,7 +80,7 @@ const LoginForm = () => {
     >
       <LabelInput
         id="email"
-        label="Email / Số điện thoại"
+        label={t("email_or_phone")}
         type="email"
         required
         value={username}
@@ -87,7 +89,7 @@ const LoginForm = () => {
 
       <LabelInput
         id="password"
-        label="Mật khẩu"
+        label={t("password")}
         type={showPass ? "text" : "password"}
         required
         value={password}
@@ -109,7 +111,7 @@ const LoginForm = () => {
           to="/auth/quen-mat-khau"
           className="text-xs text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 hover:underline font-semibold transition-colors"
         >
-          Quên mật khẩu?
+          {t("forgot_password")}
         </Link>
       </div>
 
@@ -117,7 +119,7 @@ const LoginForm = () => {
         loading={loading}
         className="!w-full !py-3 !rounded-xl !text-sm cursor-pointer"
       >
-        Đăng nhập ngay
+        {t("login_now")}
       </BtnSave>
 
       <div className="relative">
@@ -126,7 +128,7 @@ const LoginForm = () => {
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-white dark:bg-[#0D121F] px-3 text-slate-400 dark:text-slate-500 font-bold tracking-[0.2em]">
-            Hoặc
+            {t("or")}
           </span>
         </div>
       </div>
@@ -175,12 +177,12 @@ const LoginForm = () => {
       </div>
 
       <p className="text-center text-slate-400 dark:text-slate-500 text-xs">
-        Chưa có tài khoản?{" "}
+        {t("no_account")}{" "}
         <Link
           to="/auth/register"
           className="text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 font-bold hover:underline transition-colors"
         >
-          Đăng ký ngay
+          {t("register_now")}
         </Link>
       </p>
     </form>

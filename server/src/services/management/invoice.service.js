@@ -67,7 +67,7 @@ const invoiceService = {
             }
         });
 
-        return invoice;
+        return await invoiceService.getInvoiceById(invoice.id);
     },
 
     getAllInvoices: async ({ page, status, search, date_from, date_to } = {}) => {
@@ -141,6 +141,17 @@ const invoiceService = {
                 }
             }
         });
+    },
+
+    getInvoiceByOrderId: async (orderId) => {
+        const existingInvoice = await prisma.invoices.findUnique({
+            where: { order_id: Number(orderId) },
+        });
+
+        if (existingInvoice) return await invoiceService.getInvoiceById(existingInvoice.id);
+
+        // Các đơn cũ có thể chưa được tạo hóa đơn cùng lúc đặt hàng.
+        return await invoiceService.createInvoice({ order_id: Number(orderId) });
     }
 }
 

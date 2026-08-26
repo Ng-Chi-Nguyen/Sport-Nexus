@@ -1,18 +1,23 @@
 import { FooterAuth } from "@/components/footer";
 import { Outlet, useLocation } from "react-router-dom";
 import logoSvg from "@/assets/images/logo-sportnexus-dark-icon.svg";
+import { useTranslation } from "react-i18next";
 
 const pageTitleMap = {
-  login: "Đăng nhập",
-  register: "Đăng ký",
-  "quen-mat-khau": "Quên mật khẩu",
-  "dat-lai-mat-khau": "Đặt lại mật khẩu",
+  login: "login_title",
+  register: "register_title",
+  "quen-mat-khau": "forgot_title",
+  "dat-lai-mat-khau": "reset_title",
 };
 
 const AuthLayout = () => {
+  const { t, i18n } = useTranslation("translation", { keyPrefix: "auth" });
   const { pathname } = useLocation();
-  const segment = pathname.split("/").pop();
-  const pageTitle = pageTitleMap[segment] || "";
+  const segment = pathname.includes("/dat-lai-mat-khau/")
+    ? "dat-lai-mat-khau"
+    : pathname.split("/").pop();
+  const pageTitleKey = pageTitleMap[segment] || "";
+  const pageTitle = pageTitleKey ? t(pageTitleKey) : "";
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden bg-slate-50 dark:bg-[#090D16] transition-colors duration-200">
@@ -36,6 +41,31 @@ const AuthLayout = () => {
           <div className="relative bg-white/80 dark:bg-[#0D121F]/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-slate-200 dark:border-slate-900 rounded-3xl p-6 sm:p-8">
             {/* Logo + page title */}
             <div className="text-center mb-6">
+              <div className="absolute top-5 right-5 inline-flex items-center gap-1 rounded-lg border border-slate-200 dark:border-slate-800 p-1 bg-white/70 dark:bg-slate-900/70">
+                <button
+                  type="button"
+                  onClick={() => i18n.changeLanguage("vi")}
+                  className={`px-2 py-1 text-[11px] font-bold rounded-md transition-colors cursor-pointer ${
+                    i18n.language?.startsWith("vi")
+                      ? "bg-sky-500 text-white"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  }`}
+                >
+                  {t("lang_vi")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => i18n.changeLanguage("en")}
+                  className={`px-2 py-1 text-[11px] font-bold rounded-md transition-colors cursor-pointer ${
+                    i18n.language?.startsWith("en")
+                      ? "bg-sky-500 text-white"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  }`}
+                >
+                  {t("lang_en")}
+                </button>
+              </div>
+
               <img
                 src={logoSvg}
                 alt="Sport Nexus"

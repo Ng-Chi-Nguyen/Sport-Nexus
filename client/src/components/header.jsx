@@ -82,7 +82,6 @@ const Header = ({ isOpenMenu, setIsOpenMenu }) => {
       <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4 lg:gap-8">
         {/* LOGO & MENU */}
         <div className="flex items-center gap-1 sm:gap-3">
-          {/* NÚT DANH MỤC: Ẩn trên Mobile (hidden md:block) */}
           <button
             id="menu-toggle-btn"
             onClick={() => setIsOpenMenu((prev) => !prev)}
@@ -97,7 +96,7 @@ const Header = ({ isOpenMenu, setIsOpenMenu }) => {
           <Logo />
         </div>
 
-        {/* THANH TÌM KIẾM: Ẩn trên Mobile (hidden md:block) */}
+        {/* THANH TÌM KIẾM */}
         <div className="hidden md:block flex-1 mx-4 lg:mx-8">
           <SearchBar />
         </div>
@@ -151,7 +150,7 @@ const Header = ({ isOpenMenu, setIsOpenMenu }) => {
             </Link>
           )}
 
-          {/* GIỎ HÀNG: Ẩn trên Mobile (hidden md:flex) */}
+          {/* GIỎ HÀNG */}
           <Link
             to="/gio-hang"
             className="hidden md:flex relative p-2.5 rounded-full text-gray-500 dark:text-slate-300 hover:text-primary hover:bg-primary/10 transition-all duration-200"
@@ -164,12 +163,16 @@ const Header = ({ isOpenMenu, setIsOpenMenu }) => {
             )}
           </Link>
 
-          <div className="relative" ref={settingsRef}>
+          <div className="relative overflow-visible" ref={settingsRef}>
             <button
               onClick={() => setIsOpenSettings((prev) => !prev)}
-              className="p-2.5 rounded-full text-gray-500 dark:text-slate-300 hover:text-primary hover:bg-primary/10 transition-all duration-200"
+              className="relative p-2.5 rounded-full text-gray-500 dark:text-slate-300 hover:text-primary hover:bg-primary/10 transition-all duration-200"
             >
               <Settings size={20} strokeWidth={1.5} />
+              <ChevronRight
+                size={10}
+                className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2 text-gray-400 dark:text-slate-500 transition-transform duration-200 ${isOpenSettings ? "rotate-90" : ""}`}
+              />
             </button>
 
             {isOpenSettings && (
@@ -180,16 +183,14 @@ const Header = ({ isOpenMenu, setIsOpenMenu }) => {
             )}
 
             {isOpenSettings && (
-              <div className="fixed bottom-0 left-0 right-0 z-[70] max-h-[85vh] overflow-y-auto bg-white dark:bg-[#1e293b] rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)] flex flex-col pt-3 pb-8 custom-scrollbar md:absolute md:bottom-auto md:left-auto md:right-0 md:top-full md:mt-2 md:w-56 md:rounded-lg md:shadow-xl md:border md:border-gray-200 md:dark:border-slate-700 md:p-1 md:z-50 animate-in slide-in-from-bottom-5 md:animate-none md:pb-1">
+              <div className="fixed bottom-0 left-0 right-0 z-[70] max-h-[85vh] overflow-y-auto bg-white dark:bg-[#1e293b] rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)] flex flex-col pt-3 pb-8 custom-scrollbar md:absolute md:bottom-auto md:left-auto md:right-0 md:top-full md:mt-2 md:w-56 md:rounded-lg md:shadow-xl md:border md:border-gray-200 md:dark:border-slate-700 md:p-1 md:z-50 animate-in slide-in-from-bottom-5 md:animate-none md:pb-1 md:overflow-visible">
                 <div className="w-12 h-1.5 bg-gray-200 dark:bg-slate-700 rounded-full mx-auto mb-2 md:hidden" />
                 <span className="hidden md:block absolute -top-1.5 right-3 w-3 h-3 bg-white dark:bg-[#1e293b] border-t border-l border-gray-200 dark:border-slate-700 rotate-45" />
 
-                {/* THANH TÌM KIẾM BÊN TRONG SETTINGS (Chỉ hiện trên Mobile) */}
                 <div className="px-5 py-3 md:hidden border-b border-gray-100 dark:border-slate-700/50">
                   <SearchBar />
                 </div>
 
-                {/* NÚT DANH MỤC BÊN TRONG SETTINGS (Chỉ hiện trên Mobile) */}
                 <button
                   onClick={() => {
                     setIsOpenMenu(true);
@@ -201,7 +202,6 @@ const Header = ({ isOpenMenu, setIsOpenMenu }) => {
                   <span>{t("categories", "Danh mục sản phẩm")}</span>
                 </button>
 
-                {/* GIỎ HÀNG BÊN TRONG SETTINGS (Chỉ hiện trên Mobile) */}
                 <Link
                   to="/gio-hang"
                   onClick={() => setIsOpenSettings(false)}
@@ -218,7 +218,6 @@ const Header = ({ isOpenMenu, setIsOpenMenu }) => {
                   )}
                 </Link>
 
-                {/* CÁC MENU ITEM CŨ GIỮ NGUYÊN */}
                 {user && user.role?.slug !== "customer" && (
                   <Link
                     to="/management/orders"
@@ -294,9 +293,9 @@ const Header = ({ isOpenMenu, setIsOpenMenu }) => {
                   </Link>
                 )}
 
-                {/* MENU NGÔN NGỮ ĐÃ ĐƯỢC FIX HOẠT ĐỘNG HOÀN HẢO */}
+                {/* MENU NGÔN NGỮ HOẠT ĐỘNG HOÀN TOÀN BẰNG HOVER TRÊN PC */}
                 <div
-                  className="relative border-b border-gray-100 dark:border-slate-700/50 group"
+                  className="relative border-b border-gray-100 dark:border-slate-700/50 group z-[100]"
                   onMouseEnter={() => setIsLangHovered(true)}
                   onMouseLeave={() => setIsLangHovered(false)}
                 >
@@ -314,39 +313,33 @@ const Header = ({ isOpenMenu, setIsOpenMenu }) => {
                     />
                   </button>
 
-                  <div
-                    className={`
-                    ${isLangHovered ? "block" : "hidden"} md:hidden
-                    md:group-hover:block
-                    relative w-full bg-slate-50 dark:bg-slate-800/50 
-                    md:absolute md:right-full md:top-0 md:w-48 max-h-64 overflow-y-auto 
-                    md:bg-white md:dark:bg-[#1e293b] md:border md:border-gray-200 md:dark:border-slate-700 md:shadow-xl z-50 flex flex-col md:py-1 custom-scrollbar
-                  `}
-                  >
-                    {LANGUAGES.map((lang, index) => {
-                      const isActive = i18n.language.startsWith(lang.code);
-                      return (
-                        <button
-                          key={lang.code}
-                          onClick={() => handleChangeLanguage(lang.code)}
-                          className={`w-full flex items-center justify-between px-12 py-3.5 md:px-3 md:py-2 text-sm font-medium hover:bg-primary/5 transition-all text-left ${index !== LANGUAGES.length - 1 ? "border-b border-gray-100 dark:border-slate-700/50" : ""} ${isActive ? "text-primary bg-primary/5 font-semibold" : "text-gray-700 dark:text-slate-200"}`}
-                        >
-                          <span className="flex items-center gap-2.5">
-                            <span className="text-lg leading-none">
-                              {lang.flag}
+                  {isLangHovered && (
+                    <div className="hidden md:block absolute right-0 top-0 w-48 max-h-64 overflow-y-auto bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 shadow-2xl z-[999] py-1 custom-scrollbar">
+                      {LANGUAGES.map((lang, index) => {
+                        const isActive = i18n.language.startsWith(lang.code);
+                        return (
+                          <button
+                            key={lang.code}
+                            onClick={() => handleChangeLanguage(lang.code)}
+                            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium hover:bg-primary/5 transition-all text-left ${index !== LANGUAGES.length - 1 ? "border-b border-gray-100 dark:border-slate-700/50" : ""} ${isActive ? "text-primary bg-primary/5 font-semibold" : "text-gray-700 dark:text-slate-200"}`}
+                          >
+                            <span className="flex items-center gap-2.5">
+                              <span className="text-lg leading-none shrink-0">
+                                {lang.flag}
+                              </span>
+                              <span className="truncate">{lang.label}</span>
                             </span>
-                            <span className="truncate">{lang.label}</span>
-                          </span>
-                          {isActive && (
-                            <Check
-                              size={16}
-                              className="text-primary shrink-0"
-                            />
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
+                            {isActive && (
+                              <Check
+                                size={16}
+                                className="text-primary shrink-0"
+                              />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
                 <Link

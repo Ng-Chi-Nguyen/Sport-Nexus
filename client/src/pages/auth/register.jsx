@@ -5,8 +5,10 @@ import { LabelInput } from "@/components/ui/input";
 import { BtnSave } from "@/components/ui/button";
 import ShowToast from "@/components/ui/toast";
 import authApi from "@/api/auth/auth";
+import { useTranslation } from "react-i18next";
 
 const RegisterForm = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "auth" });
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -31,7 +33,7 @@ const RegisterForm = () => {
         navigate("/auth/login");
       }
     } catch (error) {
-      ShowToast("error", error.response?.data?.message || "Đăng ký thất bại");
+      ShowToast("error", error.response?.data?.message || t("register_failed"));
     } finally {
       setLoading(false);
     }
@@ -44,14 +46,14 @@ const RegisterForm = () => {
         name="full_name"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        label="Họ và tên"
+        label={t("full_name")}
         required
       />
 
       <LabelInput
         id="email"
         name="email"
-        label="Địa chỉ Email"
+        label={t("email_address")}
         type="email"
         required
         value={email}
@@ -61,7 +63,7 @@ const RegisterForm = () => {
       <LabelInput
         id="password"
         name="password"
-        label="Mật khẩu"
+        label={t("password")}
         type={showPass ? "text" : "password"}
         required
         value={password}
@@ -80,7 +82,7 @@ const RegisterForm = () => {
       <LabelInput
         id="phone_number"
         name="phone_number"
-        label="Số điện thoại"
+        label={t("phone")}
         type="tel"
         required
         value={phone}
@@ -88,16 +90,16 @@ const RegisterForm = () => {
       />
 
       <BtnSave loading={loading} className="!w-full !py-3 !rounded-xl !text-sm">
-        Đăng ký ngay
+        {t("register_now")}
       </BtnSave>
 
       <p className="text-center text-gray-400 text-xs pt-2">
-        Đã có tài khoản?{" "}
+        {t("already_have_account")}{" "}
         <Link
           to="/auth/login"
           className="text-blue-500 hover:text-blue-600 font-bold hover:underline transition-colors"
         >
-          Đăng nhập
+          {t("login")}
         </Link>
       </p>
     </form>

@@ -26,6 +26,11 @@ const paymentApi = {
     return axiosClient.get(url);
   },
 
+  syncPayosPayment: (transactionId) => {
+    const url = `/customer/payment/transactions/${transactionId}/sync-payos`;
+    return axiosClient.post(url);
+  },
+
   uploadReceipt: (transactionId, formData) => {
     const url = `/customer/payment/transactions/${transactionId}/receipt`;
     return axiosClient.post(url, formData, {

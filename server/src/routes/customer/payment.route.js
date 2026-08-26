@@ -30,6 +30,11 @@ paymentRoute
         paymentController.getTransaction,
     )
     .post(
+        "/transactions/:transactionId/sync-payos",
+        verifyToken,
+        paymentController.syncPayosPayment,
+    )
+    .post(
         "/orders/:orderId",
         verifyToken,
         validate(paymentSchema.createPayment),

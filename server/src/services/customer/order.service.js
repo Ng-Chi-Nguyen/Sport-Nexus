@@ -375,6 +375,10 @@ const orderService = {
                     Reviews: {
                         select: { product_id: true, rating: true }
                     }
+                    ,
+                    invoice: {
+                        select: { id: true }
+                    }
                 }
             }),
             prisma.Orders.count({ where })
@@ -476,8 +480,8 @@ const orderService = {
         }
 
         // Kiểm tra quyền: usersId khớp HOẶC email khớp
-        const isOwner = order.usersId === userId || 
-                        (userEmail && order.user_email === userEmail);
+        const isOwner = order.usersId === userId ||
+            (userEmail && order.user_email === userEmail);
         if (!isOwner) {
             const err = new Error("Bạn không có quyền hủy đơn hàng này");
             err.code = "FORBIDDEN";
@@ -568,14 +572,14 @@ const orderService = {
                     const refundAmount = Number(order.final_amount);
                     // Tỷ lệ: 1đ = 1 xu (có thể điều chỉnh)
                     const coinsToAdd = refundAmount;
-                    
+
                     const user = await tx.Users.findUnique({
                         where: { id: order.usersId },
                         select: { points_balance: true }
                     });
-                    
+
                     const newBalance = user.points_balance + coinsToAdd;
-                    
+
                     await tx.Users.update({
                         where: { id: order.usersId },
                         data: { points_balance: newBalance }
@@ -640,8 +644,8 @@ const orderService = {
         }
 
         // Kiểm tra quyền: usersId khớp HOẶC email khớp
-        const isOwner = order.usersId === userId || 
-                        (userEmail && order.user_email === userEmail);
+        const isOwner = order.usersId === userId ||
+            (userEmail && order.user_email === userEmail);
         if (!isOwner) {
             const err = new Error("Bạn không có quyền trả hàng đơn này");
             err.code = "FORBIDDEN";

@@ -39,6 +39,9 @@ const EditCouponPage = lazy(() => import("@/pages/Admin/coupons/edit.jsx"));
 const OrderPage = lazy(() => import("@/pages/Admin/orders/index.jsx"));
 const EditOrderPage = lazy(() => import("@/pages/Admin/orders/edit.jsx"));
 const CreateOrderPage = lazy(() => import("@/pages/Admin/orders/create.jsx"));
+const InvoiceDetail = lazy(
+  () => import("@/pages/settings/invoices/detail.jsx"),
+);
 
 // Nhập hàng & Chuỗi cung ứng (Thư mục)
 const PurchaseOrderItemPage = lazy(
@@ -248,6 +251,11 @@ export const adminRoutes = {
       path: "orders/edit/:orderId",
       element: <EditOrderPage />,
       loader: RouteLoaders.orderEditLoader,
+    },
+    {
+      path: "invoices/:invoiceId",
+      element: <InvoiceDetail />,
+      loader: RouteLoaders.managementInvoiceDetailLoader,
     },
     {
       path: "coupons",

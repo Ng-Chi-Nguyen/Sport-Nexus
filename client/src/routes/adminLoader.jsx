@@ -17,22 +17,33 @@ import LoaderLog from "@/loaders/management/logLoader";
 import LoaderDashboard from "@/loaders/management/dashboardLoader";
 import LoaderLoyalty from "@/loaders/management/loyaltyLoader";
 import LoaderReview from "@/loaders/management/reviewLoader";
+import managementInvoiceApi from "@/api/management/invoiceApi";
 
 // Hàm tiện ích bóc tách số trang từ URL
 const getPage = (request) => new URL(request.url).searchParams.get("page") || 1;
 
 export const usersLoader = async ({ request }) => {
   const usersPromise = queryClient.fetchQuery({
-    queryKey: ["users", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "status"), getSearchParam(request, "is_verified"), getSearchParam(request, "role_id"), getSearchParam(request, "date_from"), getSearchParam(request, "date_to")],
-    queryFn: () => LoaderUser.getAllUsers({
-      page: getPage(request),
-      search: getSearchParam(request, "search"),
-      status: getSearchParam(request, "status"),
-      is_verified: getSearchParam(request, "is_verified"),
-      role_id: getSearchParam(request, "role_id"),
-      date_from: getSearchParam(request, "date_from"),
-      date_to: getSearchParam(request, "date_to"),
-    }),
+    queryKey: [
+      "users",
+      getPage(request),
+      getSearchParam(request, "search"),
+      getSearchParam(request, "status"),
+      getSearchParam(request, "is_verified"),
+      getSearchParam(request, "role_id"),
+      getSearchParam(request, "date_from"),
+      getSearchParam(request, "date_to"),
+    ],
+    queryFn: () =>
+      LoaderUser.getAllUsers({
+        page: getPage(request),
+        search: getSearchParam(request, "search"),
+        status: getSearchParam(request, "status"),
+        is_verified: getSearchParam(request, "is_verified"),
+        role_id: getSearchParam(request, "role_id"),
+        date_from: getSearchParam(request, "date_from"),
+        date_to: getSearchParam(request, "date_to"),
+      }),
   });
   const rolesPromise = queryClient.fetchQuery({
     queryKey: ["user-roles"],
@@ -55,8 +66,28 @@ export const userAddRoleLoader = async ({ params, request }) => {
 
 export const productsLoader = async ({ request }) => {
   const productPromise = queryClient.fetchQuery({
-    queryKey: ["products", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "is_active"), getSearchParam(request, "category_id"), getSearchParam(request, "brand_id"), getSearchParam(request, "supplier_id"), getSearchParam(request, "price_min"), getSearchParam(request, "price_max")],
-    queryFn: () => LoaderProduct.getAllProducts({ page: getPage(request), search: getSearchParam(request, "search"), is_active: getSearchParam(request, "is_active"), category_id: getSearchParam(request, "category_id"), brand_id: getSearchParam(request, "brand_id"), supplier_id: getSearchParam(request, "supplier_id"), price_min: getSearchParam(request, "price_min"), price_max: getSearchParam(request, "price_max") }),
+    queryKey: [
+      "products",
+      getPage(request),
+      getSearchParam(request, "search"),
+      getSearchParam(request, "is_active"),
+      getSearchParam(request, "category_id"),
+      getSearchParam(request, "brand_id"),
+      getSearchParam(request, "supplier_id"),
+      getSearchParam(request, "price_min"),
+      getSearchParam(request, "price_max"),
+    ],
+    queryFn: () =>
+      LoaderProduct.getAllProducts({
+        page: getPage(request),
+        search: getSearchParam(request, "search"),
+        is_active: getSearchParam(request, "is_active"),
+        category_id: getSearchParam(request, "category_id"),
+        brand_id: getSearchParam(request, "brand_id"),
+        supplier_id: getSearchParam(request, "supplier_id"),
+        price_min: getSearchParam(request, "price_min"),
+        price_max: getSearchParam(request, "price_max"),
+      }),
   });
   const categoriesPromise = queryClient.fetchQuery({
     queryKey: ["category-dropdown"],
@@ -73,8 +104,18 @@ export const productsLoader = async ({ request }) => {
     queryFn: () => LoaderSupplier.getSuppliersDropdown(),
     staleTime: 60000,
   });
-  const [products, categories, brands, suppliers] = await Promise.all([productPromise, categoriesPromise, brandsPromise, suppliersPromise]);
-  return { ...products, categories: categories?.data || [], brands: brands?.data || [], suppliers: suppliers?.data || [] };
+  const [products, categories, brands, suppliers] = await Promise.all([
+    productPromise,
+    categoriesPromise,
+    brandsPromise,
+    suppliersPromise,
+  ]);
+  return {
+    ...products,
+    categories: categories?.data || [],
+    brands: brands?.data || [],
+    suppliers: suppliers?.data || [],
+  };
 };
 
 // export const productCreateLoader = async () => {
@@ -161,23 +202,37 @@ export const productEditLoader = async ({ params }) => {
   return { brands, suppliers, categories, product };
 };
 
-const getSearchParam = (request, key) => new URL(request.url).searchParams.get(key) || '';
+const getSearchParam = (request, key) =>
+  new URL(request.url).searchParams.get(key) || "";
 
 export const ordersLoader = ({ request }) =>
   queryClient.fetchQuery({
-    queryKey: ["orders", getPage(request), getSearchParam(request, "status"), getSearchParam(request, "payment_status"), getSearchParam(request, "payment_method"), getSearchParam(request, "refund_status"), getSearchParam(request, "date_from"), getSearchParam(request, "date_to"), getSearchParam(request, "amount_min"), getSearchParam(request, "amount_max"), getSearchParam(request, "search")],
-    queryFn: () => LoaderOrder.getAllOrders({
-      page: getPage(request),
-      status: getSearchParam(request, "status"),
-      payment_status: getSearchParam(request, "payment_status"),
-      payment_method: getSearchParam(request, "payment_method"),
-      refund_status: getSearchParam(request, "refund_status"),
-      date_from: getSearchParam(request, "date_from"),
-      date_to: getSearchParam(request, "date_to"),
-      amount_min: getSearchParam(request, "amount_min"),
-      amount_max: getSearchParam(request, "amount_max"),
-      search: getSearchParam(request, "search"),
-    }),
+    queryKey: [
+      "orders",
+      getPage(request),
+      getSearchParam(request, "status"),
+      getSearchParam(request, "payment_status"),
+      getSearchParam(request, "payment_method"),
+      getSearchParam(request, "refund_status"),
+      getSearchParam(request, "date_from"),
+      getSearchParam(request, "date_to"),
+      getSearchParam(request, "amount_min"),
+      getSearchParam(request, "amount_max"),
+      getSearchParam(request, "search"),
+    ],
+    queryFn: () =>
+      LoaderOrder.getAllOrders({
+        page: getPage(request),
+        status: getSearchParam(request, "status"),
+        payment_status: getSearchParam(request, "payment_status"),
+        payment_method: getSearchParam(request, "payment_method"),
+        refund_status: getSearchParam(request, "refund_status"),
+        date_from: getSearchParam(request, "date_from"),
+        date_to: getSearchParam(request, "date_to"),
+        amount_min: getSearchParam(request, "amount_min"),
+        amount_max: getSearchParam(request, "amount_max"),
+        search: getSearchParam(request, "search"),
+      }),
   });
 
 export const orderCreateLoader = async () => ({
@@ -202,27 +257,59 @@ export const orderEditLoader = async ({ params }) => {
   return { productVariants, order };
 };
 
+export const managementInvoiceDetailLoader = async ({ params }) => {
+  try {
+    const response = await managementInvoiceApi.getInvoiceDetail(
+      params.invoiceId,
+    );
+    return { invoice: response?.data || null };
+  } catch {
+    return { invoice: null };
+  }
+};
+
 export const brandsLoader = ({ request }) =>
   queryClient.fetchQuery({
-    queryKey: ["brands", getPage(request), getSearchParam(request, "origin"), getSearchParam(request, "search")],
-    queryFn: () => LoaderBrand.getAllBrands({ page: getPage(request), origin: getSearchParam(request, "origin"), search: getSearchParam(request, "search") }),
+    queryKey: [
+      "brands",
+      getPage(request),
+      getSearchParam(request, "origin"),
+      getSearchParam(request, "search"),
+    ],
+    queryFn: () =>
+      LoaderBrand.getAllBrands({
+        page: getPage(request),
+        origin: getSearchParam(request, "origin"),
+        search: getSearchParam(request, "search"),
+      }),
   });
 
 export const brandEditLoader = (args) => LoaderBrand.getBrandById(args);
 
 export const couponsLoader = ({ request }) =>
   queryClient.fetchQuery({
-    queryKey: ["coupons", getPage(request), getSearchParam(request, "is_active"), getSearchParam(request, "search"), getSearchParam(request, "discount_type"), getSearchParam(request, "date_from"), getSearchParam(request, "date_to"), getSearchParam(request, "discount_min"), getSearchParam(request, "discount_max")],
-    queryFn: () => LoaderCoupon.getAllCoupons({
-      page: getPage(request),
-      is_active: getSearchParam(request, "is_active"),
-      search: getSearchParam(request, "search"),
-      discount_type: getSearchParam(request, "discount_type"),
-      date_from: getSearchParam(request, "date_from"),
-      date_to: getSearchParam(request, "date_to"),
-      discount_min: getSearchParam(request, "discount_min"),
-      discount_max: getSearchParam(request, "discount_max"),
-    }),
+    queryKey: [
+      "coupons",
+      getPage(request),
+      getSearchParam(request, "is_active"),
+      getSearchParam(request, "search"),
+      getSearchParam(request, "discount_type"),
+      getSearchParam(request, "date_from"),
+      getSearchParam(request, "date_to"),
+      getSearchParam(request, "discount_min"),
+      getSearchParam(request, "discount_max"),
+    ],
+    queryFn: () =>
+      LoaderCoupon.getAllCoupons({
+        page: getPage(request),
+        is_active: getSearchParam(request, "is_active"),
+        search: getSearchParam(request, "search"),
+        discount_type: getSearchParam(request, "discount_type"),
+        date_from: getSearchParam(request, "date_from"),
+        date_to: getSearchParam(request, "date_to"),
+        discount_min: getSearchParam(request, "discount_min"),
+        discount_max: getSearchParam(request, "discount_max"),
+      }),
   });
 
 export const couponEditLoader = ({ params }) =>
@@ -234,24 +321,38 @@ export const couponEditLoader = ({ params }) =>
 
 export const purchaseLoader = async ({ request }) => {
   const purchasePromise = queryClient.fetchQuery({
-    queryKey: ["purchase-order", getPage(request), getSearchParam(request, "status"), getSearchParam(request, "supplier_id"), getSearchParam(request, "date_from"), getSearchParam(request, "date_to"), getSearchParam(request, "cost_min"), getSearchParam(request, "cost_max"), getSearchParam(request, "search")],
-    queryFn: () => LoaderPurchase.getAllPurchases({
-      page: getPage(request),
-      status: getSearchParam(request, "status"),
-      supplier_id: getSearchParam(request, "supplier_id"),
-      date_from: getSearchParam(request, "date_from"),
-      date_to: getSearchParam(request, "date_to"),
-      cost_min: getSearchParam(request, "cost_min"),
-      cost_max: getSearchParam(request, "cost_max"),
-      search: getSearchParam(request, "search"),
-    }),
+    queryKey: [
+      "purchase-order",
+      getPage(request),
+      getSearchParam(request, "status"),
+      getSearchParam(request, "supplier_id"),
+      getSearchParam(request, "date_from"),
+      getSearchParam(request, "date_to"),
+      getSearchParam(request, "cost_min"),
+      getSearchParam(request, "cost_max"),
+      getSearchParam(request, "search"),
+    ],
+    queryFn: () =>
+      LoaderPurchase.getAllPurchases({
+        page: getPage(request),
+        status: getSearchParam(request, "status"),
+        supplier_id: getSearchParam(request, "supplier_id"),
+        date_from: getSearchParam(request, "date_from"),
+        date_to: getSearchParam(request, "date_to"),
+        cost_min: getSearchParam(request, "cost_min"),
+        cost_max: getSearchParam(request, "cost_max"),
+        search: getSearchParam(request, "search"),
+      }),
   });
   const suppliersPromise = queryClient.fetchQuery({
     queryKey: ["purchase-suppliers"],
     queryFn: () => LoaderSupplier.getSuppliersDropdown(),
     staleTime: 60000,
   });
-  const [purchaseOrders, suppliers] = await Promise.all([purchasePromise, suppliersPromise]);
+  const [purchaseOrders, suppliers] = await Promise.all([
+    purchasePromise,
+    suppliersPromise,
+  ]);
   return { ...purchaseOrders, suppliers: suppliers?.data || [] };
 };
 
@@ -301,15 +402,36 @@ export const permissionEditLoader = (args) => LoaderPermissions.getBySlug(args);
 
 export const stocksLoader = async ({ request }) => {
   const stocksPromise = queryClient.fetchQuery({
-    queryKey: ["stocks", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "product_id"), getSearchParam(request, "stock_min"), getSearchParam(request, "stock_max"), getSearchParam(request, "price_min"), getSearchParam(request, "price_max")],
-    queryFn: () => LoaderStock.getAllStocks({ page: getPage(request), search: getSearchParam(request, "search"), product_id: getSearchParam(request, "product_id"), stock_min: getSearchParam(request, "stock_min"), stock_max: getSearchParam(request, "stock_max"), price_min: getSearchParam(request, "price_min"), price_max: getSearchParam(request, "price_max") }),
+    queryKey: [
+      "stocks",
+      getPage(request),
+      getSearchParam(request, "search"),
+      getSearchParam(request, "product_id"),
+      getSearchParam(request, "stock_min"),
+      getSearchParam(request, "stock_max"),
+      getSearchParam(request, "price_min"),
+      getSearchParam(request, "price_max"),
+    ],
+    queryFn: () =>
+      LoaderStock.getAllStocks({
+        page: getPage(request),
+        search: getSearchParam(request, "search"),
+        product_id: getSearchParam(request, "product_id"),
+        stock_min: getSearchParam(request, "stock_min"),
+        stock_max: getSearchParam(request, "stock_max"),
+        price_min: getSearchParam(request, "price_min"),
+        price_max: getSearchParam(request, "price_max"),
+      }),
   });
   const productsPromise = queryClient.fetchQuery({
     queryKey: ["stock-products"],
     queryFn: () => LoaderProduct.getProductsDropdown(),
     staleTime: 60000,
   });
-  const [stocks, products] = await Promise.all([stocksPromise, productsPromise]);
+  const [stocks, products] = await Promise.all([
+    stocksPromise,
+    productsPromise,
+  ]);
   return { ...stocks, products: products?.data || [] };
 };
 
@@ -333,15 +455,28 @@ export const stockCreateLoader = async () => {
 
 export const suppliersLoader = async ({ request }) => {
   const supplierPromise = queryClient.fetchQuery({
-    queryKey: ["suppliers", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "province")],
-    queryFn: () => LoaderSupplier.getAllSupplier({ page: getPage(request), search: getSearchParam(request, "search"), province: getSearchParam(request, "province") }),
+    queryKey: [
+      "suppliers",
+      getPage(request),
+      getSearchParam(request, "search"),
+      getSearchParam(request, "province"),
+    ],
+    queryFn: () =>
+      LoaderSupplier.getAllSupplier({
+        page: getPage(request),
+        search: getSearchParam(request, "search"),
+        province: getSearchParam(request, "province"),
+      }),
   });
   const provincesPromise = queryClient.fetchQuery({
     queryKey: ["supplier-provinces"],
     queryFn: () => LoaderSupplier.getDistinctProvinces(),
     staleTime: 60000,
   });
-  const [suppliers, provinces] = await Promise.all([supplierPromise, provincesPromise]);
+  const [suppliers, provinces] = await Promise.all([
+    supplierPromise,
+    provincesPromise,
+  ]);
   return { ...suppliers, provinces: provinces?.data || [] };
 };
 
@@ -350,8 +485,18 @@ export const supplierEditLoader = (args) =>
 
 export const categoriesLoader = ({ request }) =>
   queryClient.fetchQuery({
-    queryKey: ["categories", getPage(request), getSearchParam(request, "is_active"), getSearchParam(request, "search")],
-    queryFn: () => LoaderCategory.getAllCategories({ page: getPage(request), is_active: getSearchParam(request, "is_active"), search: getSearchParam(request, "search") }),
+    queryKey: [
+      "categories",
+      getPage(request),
+      getSearchParam(request, "is_active"),
+      getSearchParam(request, "search"),
+    ],
+    queryFn: () =>
+      LoaderCategory.getAllCategories({
+        page: getPage(request),
+        is_active: getSearchParam(request, "is_active"),
+        search: getSearchParam(request, "search"),
+      }),
   });
 
 export const categoryEditLoader = (args) =>
@@ -359,8 +504,18 @@ export const categoryEditLoader = (args) =>
 
 export const collectionsLoader = async ({ request }) => {
   const collectionsPromise = queryClient.fetchQuery({
-    queryKey: ["collections", getPage(request), getSearchParam(request, "is_active"), getSearchParam(request, "search")],
-    queryFn: () => LoaderCollection.getAllCollections({ page: getPage(request), is_active: getSearchParam(request, "is_active"), search: getSearchParam(request, "search") }),
+    queryKey: [
+      "collections",
+      getPage(request),
+      getSearchParam(request, "is_active"),
+      getSearchParam(request, "search"),
+    ],
+    queryFn: () =>
+      LoaderCollection.getAllCollections({
+        page: getPage(request),
+        is_active: getSearchParam(request, "is_active"),
+        search: getSearchParam(request, "search"),
+      }),
   });
   return collectionsPromise;
 };
@@ -392,15 +547,36 @@ export const collectionEditLoader = async ({ params }) => {
 
 export const productVariantsLoader = async ({ request }) => {
   const variantsPromise = queryClient.fetchQuery({
-    queryKey: ["product-variants", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "product_id"), getSearchParam(request, "stock_min"), getSearchParam(request, "stock_max"), getSearchParam(request, "price_min"), getSearchParam(request, "price_max")],
-    queryFn: () => LoaderProductVariant.getAllProducstVariants({ page: getPage(request), search: getSearchParam(request, "search"), product_id: getSearchParam(request, "product_id"), stock_min: getSearchParam(request, "stock_min"), stock_max: getSearchParam(request, "stock_max"), price_min: getSearchParam(request, "price_min"), price_max: getSearchParam(request, "price_max") }),
+    queryKey: [
+      "product-variants",
+      getPage(request),
+      getSearchParam(request, "search"),
+      getSearchParam(request, "product_id"),
+      getSearchParam(request, "stock_min"),
+      getSearchParam(request, "stock_max"),
+      getSearchParam(request, "price_min"),
+      getSearchParam(request, "price_max"),
+    ],
+    queryFn: () =>
+      LoaderProductVariant.getAllProducstVariants({
+        page: getPage(request),
+        search: getSearchParam(request, "search"),
+        product_id: getSearchParam(request, "product_id"),
+        stock_min: getSearchParam(request, "stock_min"),
+        stock_max: getSearchParam(request, "stock_max"),
+        price_min: getSearchParam(request, "price_min"),
+        price_max: getSearchParam(request, "price_max"),
+      }),
   });
   const productsPromise = queryClient.fetchQuery({
     queryKey: ["product-variant-products"],
     queryFn: () => LoaderProduct.getProductsDropdown(),
     staleTime: 60000,
   });
-  const [variants, products] = await Promise.all([variantsPromise, productsPromise]);
+  const [variants, products] = await Promise.all([
+    variantsPromise,
+    productsPromise,
+  ]);
   return { ...variants, products: products?.data || [] };
 };
 
@@ -429,8 +605,18 @@ export const variantEditLoader = async ({ params }) => {
 
 export const attributeKeyLoader = ({ request }) =>
   queryClient.fetchQuery({
-    queryKey: ["attribute-keys", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "unit")],
-    queryFn: () => LoaderAttr.getAllAttrs({ page: getPage(request), search: getSearchParam(request, "search"), unit: getSearchParam(request, "unit") }),
+    queryKey: [
+      "attribute-keys",
+      getPage(request),
+      getSearchParam(request, "search"),
+      getSearchParam(request, "unit"),
+    ],
+    queryFn: () =>
+      LoaderAttr.getAllAttrs({
+        page: getPage(request),
+        search: getSearchParam(request, "search"),
+        unit: getSearchParam(request, "unit"),
+      }),
   });
 
 export const attributeKeyEditLoader = ({ params }) =>
@@ -441,18 +627,26 @@ export const attributeKeyEditLoader = ({ params }) =>
 
 export const logsLoader = async ({ request }) => {
   return queryClient.fetchQuery({
-    queryKey: ["system-logs", getPage(request), getSearchParam(request, "action_type"), getSearchParam(request, "entity_type"), getSearchParam(request, "status"), getSearchParam(request, "from"), getSearchParam(request, "to")],
-    queryFn: () => LoaderLog.getAllLogs({
-      page: getPage(request),
-      action_type: getSearchParam(request, "action_type"),
-      entity_type: getSearchParam(request, "entity_type"),
-      status: getSearchParam(request, "status"),
-      from: getSearchParam(request, "from"),
-      to: getSearchParam(request, "to"),
-    }),
+    queryKey: [
+      "system-logs",
+      getPage(request),
+      getSearchParam(request, "action_type"),
+      getSearchParam(request, "entity_type"),
+      getSearchParam(request, "status"),
+      getSearchParam(request, "from"),
+      getSearchParam(request, "to"),
+    ],
+    queryFn: () =>
+      LoaderLog.getAllLogs({
+        page: getPage(request),
+        action_type: getSearchParam(request, "action_type"),
+        entity_type: getSearchParam(request, "entity_type"),
+        status: getSearchParam(request, "status"),
+        from: getSearchParam(request, "from"),
+        to: getSearchParam(request, "to"),
+      }),
   });
 };
-
 
 export const dashboardLoader = async ({ request }) => {
   return LoaderDashboard.fromRequest({ request });
@@ -466,28 +660,45 @@ export const loyaltyRewardsLoader = () =>
 
 export const loyaltyUsersLoader = ({ request }) =>
   queryClient.fetchQuery({
-    queryKey: ["loyalty-users", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "sortBy"), getSearchParam(request, "order"), getSearchParam(request, "tierId")],
-    queryFn: () => LoaderLoyalty.getUsersPage({
-      page: getPage(request),
-      search: getSearchParam(request, "search"),
-      sortBy: getSearchParam(request, "sortBy") || "points_balance",
-      order: getSearchParam(request, "order") || "desc",
-      tierId: getSearchParam(request, "tierId"),
-    }),
+    queryKey: [
+      "loyalty-users",
+      getPage(request),
+      getSearchParam(request, "search"),
+      getSearchParam(request, "sortBy"),
+      getSearchParam(request, "order"),
+      getSearchParam(request, "tierId"),
+    ],
+    queryFn: () =>
+      LoaderLoyalty.getUsersPage({
+        page: getPage(request),
+        search: getSearchParam(request, "search"),
+        sortBy: getSearchParam(request, "sortBy") || "points_balance",
+        order: getSearchParam(request, "order") || "desc",
+        tierId: getSearchParam(request, "tierId"),
+      }),
   });
 
 export const reviewsLoader = async ({ request }) => {
   const [reviews, products] = await Promise.all([
     queryClient.fetchQuery({
-      queryKey: ["reviews", getPage(request), getSearchParam(request, "search"), getSearchParam(request, "product_id"), getSearchParam(request, "rating"), getSearchParam(request, "status"), getSearchParam(request, "reply")],
-      queryFn: () => LoaderReview.getAllReviews({
-        page: getPage(request),
-        search: getSearchParam(request, "search"),
-        product_id: getSearchParam(request, "product_id"),
-        rating: getSearchParam(request, "rating"),
-        status: getSearchParam(request, "status"),
-        reply: getSearchParam(request, "reply"),
-      }),
+      queryKey: [
+        "reviews",
+        getPage(request),
+        getSearchParam(request, "search"),
+        getSearchParam(request, "product_id"),
+        getSearchParam(request, "rating"),
+        getSearchParam(request, "status"),
+        getSearchParam(request, "reply"),
+      ],
+      queryFn: () =>
+        LoaderReview.getAllReviews({
+          page: getPage(request),
+          search: getSearchParam(request, "search"),
+          product_id: getSearchParam(request, "product_id"),
+          rating: getSearchParam(request, "rating"),
+          status: getSearchParam(request, "status"),
+          reply: getSearchParam(request, "reply"),
+        }),
     }),
     queryClient.fetchQuery({
       queryKey: ["product-dropdown"],

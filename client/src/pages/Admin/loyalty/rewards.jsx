@@ -13,6 +13,22 @@ import { BtnDelete, BtnGoback, BtnSave } from "@/components/ui/button";
 import { ConfirmDelete } from "@/components/ui/confirm";
 import { queryClient } from "@/lib/react-query";
 
+const normalizeRewardForm = (reward = {}, fallbackTierId = "") => ({
+  tier_id: reward?.tier_id ?? fallbackTierId,
+  name: reward?.name ?? "",
+  point_cost: Number(reward?.point_cost ?? 0),
+  coupon_code: reward?.coupon_code ?? reward?.coupon?.code ?? "",
+  is_active: reward?.is_active ?? true,
+});
+
+const toRewardPayload = (form = {}) => ({
+  tier_id: form.tier_id,
+  name: form.name,
+  point_cost: Number(form.point_cost),
+  coupon_code: form.coupon_code || "",
+  is_active: !!form.is_active,
+});
+
 const RewardForm = ({
   initial,
   tiers,
@@ -22,13 +38,7 @@ const RewardForm = ({
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "loyalty_admin" });
   const [form, setForm] = useState(
-    initial || {
-      tier_id: tiers?.[0]?.id ?? "",
-      name: "",
-      point_cost: 0,
-      coupon_code: "",
-      is_active: true,
-    },
+    normalizeRewardForm(initial, tiers?.[0]?.id ?? ""),
   );
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
   const setNum = (k) => (e) =>
@@ -133,8 +143,9 @@ const RewardPage = () => {
 
   const handleSave = async (form) => {
     try {
-      if (editing) await loyaltyApi.updateReward(editing.id, form);
-      else await loyaltyApi.createReward(form);
+      const payload = toRewardPayload(form);
+      if (editing) await loyaltyApi.updateReward(editing.id, payload);
+      else await loyaltyApi.createReward(payload);
       ShowToast("success", t("save_success"));
       setShowForm(false);
       setEditing(null);

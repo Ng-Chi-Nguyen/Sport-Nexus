@@ -15,8 +15,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['"Inter"', 'sans-serif'],
-        display: ['"Montserrat"', 'sans-serif'],
+        // Đã thêm các font hệ thống dự phòng hỗ trợ chuẩn Unicode Tiếng Việt
+        sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        display: ['"Montserrat"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
       },
       fontSize: {
         'heading-lg': ['3rem', { lineHeight: '1.1', fontWeight: '800' }],

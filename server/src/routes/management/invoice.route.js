@@ -11,6 +11,7 @@ invoiceRoute
     // .get("/:id", verifyToken, checkPermission("xem-hoa-don"), invoiceController.getInvoiceById)
     // .get("/", verifyToken, checkPermission("xem-hoa-don"), invoiceController.getAllInvoices)
     .post("/", validate(invoiceSchema.createInvoice), invoiceController.createInvoice)
+    .get("/order/:orderId", invoiceController.getInvoiceByOrderId)
     .get("/:id", invoiceController.getInvoiceById)
     .get("/", invoiceController.getAllInvoices)
 

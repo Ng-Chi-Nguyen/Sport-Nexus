@@ -168,7 +168,7 @@ const PermissionTable = ({
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="h-[38px] px-4 sm:px-5 bg-slate-100 text-slate-600 border border-slate-200 rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-slate-200 dark:bg-slate-900/60 dark:text-slate-400 dark:border-slate-800 dark:hover:bg-slate-800 transition-all flex items-center gap-1.5 cursor-pointer"
+          className="h-[38px] px-4 sm:px-5 bg-slate-100 text-slate-600 border border-slate-200 text-xs font-semibold uppercase tracking-wider hover:bg-slate-200 dark:bg-slate-900/60 dark:text-slate-400 dark:border-slate-800 dark:hover:bg-slate-800 transition-all flex items-center gap-1.5 cursor-pointer"
         >
           <ArrowLeft size={14} /> {t("go_back")}
         </button>
@@ -176,7 +176,7 @@ const PermissionTable = ({
         <button
           type="button"
           onClick={handleSaveData}
-          className="h-[38px] px-5 sm:px-6 bg-sky-500/10 text-sky-600 border border-sky-300 dark:text-sky-400 dark:border-sky-500/20 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all duration-200 shadow-sm cursor-pointer"
+          className="h-[38px] px-5 sm:px-6 bg-primary text-[#FFF] border border-primary dark:text-[#FFF] dark:border-primary text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 hover:bg-primaryHover hover:text-white hover:border-sky-500 transition-all duration-200 shadow-sm cursor-pointer"
         >
           <Save size={14} /> {t("save_permissions")}
         </button>
