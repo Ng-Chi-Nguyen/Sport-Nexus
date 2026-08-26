@@ -1,16 +1,15 @@
 {
-  "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "client/dist",
   "installCommand": "npm install --prefix client",
-  "rewrites": [
+  "framework": null,
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "handle": "filesystem"
     },
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }

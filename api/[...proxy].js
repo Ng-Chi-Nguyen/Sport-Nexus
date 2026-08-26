@@ -1,24 +1,30 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   const backendUrl = process.env.BACKEND_URL;
 
   if (!backendUrl) {
     return res.status(500).json({ error: "BACKEND_URL not configured" });
   }
 
-  const targetUrl = `${backendUrl}${req.url}`;
+  const url = new URL(req.url, `https://${req.headers.host}`);
+  const targetUrl = `${backendUrl}${url.pathname}${url.search}`;
 
   const headers = { ...req.headers };
   delete headers.host;
   headers["host"] = new URL(backendUrl).host;
 
   try {
-    const response = await fetch(targetUrl, {
+    const fetchOptions = {
       method: req.method,
       headers,
-      body: ["POST", "PUT", "PATCH"].includes(req.method)
-        ? await readBody(req)
-        : undefined,
-    });
+    };
+
+    if (["POST", "PUT", "PATCH"].includes(req.method)) {
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      fetchOptions.body = Buffer.concat(chunks);
+    }
+
+    const response = await fetch(targetUrl, fetchOptions);
 
     res.status(response.status);
 
@@ -43,18 +49,9 @@ export default async function handler(req, res) {
     console.error("Proxy error:", error.message);
     res.status(502).json({ error: "Backend unreachable", detail: error.message });
   }
-}
+};
 
-function readBody(req) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    req.on("data", (chunk) => chunks.push(chunk));
-    req.on("end", () => resolve(Buffer.concat(chunks)));
-    req.on("error", reject);
-  });
-}
-
-export const config = {
+module.exports.config = {
   api: {
     bodyParser: false,
   },
