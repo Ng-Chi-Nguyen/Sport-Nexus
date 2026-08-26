@@ -2,6 +2,14 @@
   "buildCommand": "npm run build",
   "outputDirectory": "client/dist",
   "installCommand": "npm install && npm install --prefix client",
-  "rewrites": [],
-  "headers": []
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://e403-125-235-239-5.ngrok-free.app/api/:path*"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
 }
