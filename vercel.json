@@ -2,14 +2,10 @@
   "buildCommand": "npm run build",
   "outputDirectory": "client/dist",
   "installCommand": "npm install && npm install --prefix client",
-  "framework": null,
-  "routes": [
+  "rewrites": [
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }
