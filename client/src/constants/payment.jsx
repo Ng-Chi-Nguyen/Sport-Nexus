@@ -8,9 +8,9 @@ export const PAYMENT_METHODS = [
     icon: Building,
     manual: true,
   },
-  { value: "MOMO", labelKey: "momo_payment", icon: Smartphone },
-  { value: "CREDIT_CARD", labelKey: "credit_card_payment", icon: CreditCard },
-  { value: "VNPAY", labelKey: "vnpay_payment", icon: Wallet },
+  // { value: "MOMO", labelKey: "momo_payment", icon: Smartphone },
+  // { value: "CREDIT_CARD", labelKey: "credit_card_payment", icon: CreditCard },
+  // { value: "VNPAY", labelKey: "vnpay_payment", icon: Wallet },
 ];
 
 export const PAYMENT_METHOD_KEYS = Object.fromEntries(
